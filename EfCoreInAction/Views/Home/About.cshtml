@@ -1,7 +1,78 @@
-﻿@{
+﻿@using EfCoreInAction.Services
+@inject AppInformation AppInformation
+@{
     ViewData["Title"] = "About";
 }
-<h2>@ViewData["Title"].</h2>
-<h3>@ViewData["Message"]</h3>
 
-<p>Use this area to provide additional information.</p>
+<h3>About EfCoreInAction </h3>
+
+<table class="table">
+    <tr>
+        <td>
+            <h2>
+                <a href="https://www.manning.com/books/entity-framework-core-in-action?a_aid=su4utaraxuTre8tuthup&a_bid=4cef27ce">Entity Framework Core in Action</a>
+            </h2>
+            <p>
+                Welcome to the <i>Live</i> example book selling site that is used to show some of the code
+                from the book <a href="https://www.manning.com/books/entity-framework-core-in-action?a_aid=su4utaraxuTre8tuthup&a_bid=4cef27ce">Entity Framework Core in Action</a>
+                working on a hosted site. Please visit the
+                <a href="https://www.manning.com/books/entity-framework-core-in-action?a_aid=su4utaraxuTre8tuthup&a_bid=4cef27ce">Manning Publications site</a>
+                to find out more about the book and its content.
+            </p>
+            <p>
+                On a hosted site you cannot change the data, but you can:
+                <ul>
+                    <li>Query the books in this site, using the controls at the top of the home page</li>
+                    <li>
+                        See the actual SQL commands that EF Core creates to do these book queries - Click the
+                        <strong>Logs</strong> menu item.
+                    </li>
+                    <li>
+                        'Purchase' books - No money needed, but then again we don't send you the books either :)
+                        <br />
+                        <span class="text-muted">Note: the checkout will use a cookie to hold your order.</span>
+                    </li>
+                </ul>
+            </p>
+            <p>
+                Note: There is a Git repo to support this site. Have a look at
+                <a href="https://www.manning.com/books/entity-framework-core-in-action?a_aid=su4utaraxuTre8tuthup&a_bid=4cef27ce">the book</a> to find out where that is.
+                If you can clone the Git repo and run the application locally then various update feature
+                will appear, as shown in chapter 3.
+            </p>
+            <p>See below for information of the library versions that were used to build this application.</p>
+            <h4>Jon P Smith</h4>
+            <p>Author of the <strong>Entity Framework Core in Action</strong> book.</p>
+            <a href="http://www.thereformedprogrammer.net/">My blog site</a>, where you will find articles on Entity Framework, ASP.NET, React.js and much more.
+        </td>
+        <td>
+            <a href="https://www.manning.com/books/entity-framework-core-in-action?a_aid=su4utaraxuTre8tuthup&a_bid=4cef27ce">
+                <img src="~/images/entity-framework-core-in-action.png"
+                     alt="Entity Framework Core in Action"/>
+            </a>
+        </td>
+    </tr>
+</table>
+
+<hr/>
+
+<p>
+    This application was built from git branch: <strong>@AppInformation.GitBranchName</strong>
+</p>
+<h3>Versions this application uses</h3>
+<table class="table-condensed">
+    <tr>
+        <th>Assembly</th>
+        <th>Version</th>
+    </tr>
+    @foreach (var tuple in @AppInformation.GetAssembliesInfo())
+    {
+        <tr>
+            <td>@tuple.Item1</td>
+            <td>@tuple.Item2</td>
+        </tr>
+    }
+</table>
+
+
+
