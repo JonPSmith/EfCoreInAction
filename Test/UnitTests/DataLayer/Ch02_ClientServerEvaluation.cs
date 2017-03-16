@@ -105,6 +105,8 @@ namespace test.UnitTests.DataLayer
 
             using (var context = new EfCoreContext(options))
             {
+                var logIt = new LogDbContext(context);
+
                 //ATTEMPT
                 var books = context.Books
                     .Select(p => new
@@ -122,6 +124,10 @@ namespace test.UnitTests.DataLayer
 
                 //VERIFY
                 books.Select(x => x.BookId).ShouldEqual(new []{3,4,1,2});
+                foreach (var log in logIt.Logs)
+                {
+                    _output.WriteLine(log);
+                }
             }
         }
     }
