@@ -24,7 +24,7 @@ var BookList = (function($, loggingDisplay) {
         }
     }
 
-    function loadFilterValueDropdown(filterByValue, filterValue) {
+    function loadFilterValueDropdown(filterByValue, filterValue, ignoreTrace) {
         filterValue = filterValue || '';
         var $fsearch = $('#filter-value-dropdown');
         enableDisableFilterDropdown($fsearch, false);
@@ -34,10 +34,11 @@ var BookList = (function($, loggingDisplay) {
                 url: filterApiUrl,
                 data: { FilterBy: filterByValue }
             })
-                .done(function (indentAndResult) {
-                    //This updates the logs with the trace from this
-                    loggingDisplay.newTrace(indentAndResult.traceIdentifier, indentAndResult.numLogs);
-
+                .done(function(indentAndResult) {
+                    if (!ignoreTrace) {
+                        //Only update the looging if not the main load
+                        loggingDisplay.newTrace(indentAndResult.traceIdentifier, indentAndResult.numLogs);
+                    }
                     //This removes the existing dropdownlist options
                     $fsearch
                         .find('option')
@@ -70,7 +71,7 @@ var BookList = (function($, loggingDisplay) {
     return {
         initialise: function(filterByValue, filterValue, exFilterApiUrl) {
             filterApiUrl = exFilterApiUrl;
-            loadFilterValueDropdown(filterByValue, filterValue);
+            loadFilterValueDropdown(filterByValue, filterValue, true);
         },
 
         sendForm: function(inputElem) {

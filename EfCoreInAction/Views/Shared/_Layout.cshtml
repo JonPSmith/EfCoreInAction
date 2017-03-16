@@ -1,4 +1,5 @@
-﻿@using EfCoreInAction.Services
+﻿@using EfCoreInAction.Helpers
+@using EfCoreInAction.Services
 @using Microsoft.ApplicationInsights.AspNetCore
 @inject AppInformation AppInformation
 <!DOCTYPE html>
@@ -35,7 +36,20 @@
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">All books</a></li>
                     <li><a href="#" id="show-logs" class="hidden">Logs&nbsp;<span class="badge"></span></a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">@AppInformation.GitBranchName</a></li>
+                    @if (Context.Request.IsLocal())
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                Admin
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownAdminItems">
+                                <li>@Html.ActionLink("Reset database", "ResetDatabase", "Admin")</li>
+                                @*<li>@Html.ActionLink("Add Book", "AddBook", "Admin")</li>*@
+                            </ul>
+                        </li>
+                    }
+                    <li><a asp-area="" asp-controller="Home" asp-action="About">About<small>&nbsp;(@AppInformation.GitBranchName)</small></a></li>
                     @*<li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>*@
                 </ul>
             </div>
@@ -43,6 +57,7 @@
     </div>
     <div class="container body-content">
         @RenderBody()
+        @Html.Partial("LogModal")
         <hr />
         <footer>
             <p>&copy; 2016 - EfCoreInAction</p>
@@ -68,5 +83,25 @@
     </environment>
 
     @RenderSection("scripts", required: false)
+    <script type='text/javascript'>
+    document.addEventListener("DOMContentLoaded",
+        function(event) {
+            var numLogs = @(ViewData["NumLogs"] ?? 0);
+            if (numLogs > 0) {
+                LoggingDisplay.initialise('@Url.Action("GetLog", "Logger")', '@ViewData["TraceIdent"]', numLogs);
+            }
+        });
+    @if (!Context.Request.IsLocal())
+    {
+        <text>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+          ga('create', 'UA-31130008-4', 'auto');
+          ga('send', 'pageview');
+        </text>
+   }
+    </script>
 </body>
 </html>

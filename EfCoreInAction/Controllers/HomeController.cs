@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DataLayer.EfCode;
+using EfCoreInAction.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.BookServices;
 using ServiceLayer.BookServices.Concrete;
@@ -8,7 +9,7 @@ using ServiceLayer.Logger;
 
 namespace EfCoreInAction.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseTraceController
     {
         private readonly EfCoreContext _context;
 
@@ -27,10 +28,10 @@ namespace EfCoreInAction.Controllers
                 .SortFilterPage(options)               //#E
                 .ToList();                             //#F
 
-            var traceIdent = HttpContext.TraceIdentifier; //REMOVE THIS FOR BOOK as it could be confusing
+            SetupTraceInfo();           //REMOVE THIS FOR BOOK as it could be confusing
 
             return View(new BookListCombinedDto         //#G
-                (traceIdent, options, bookList));       //#G
+                (options, bookList));                   //#G
         }
         /***************************************************
         #A The applications's DbContext is provided by ASP.NET Core
@@ -73,9 +74,8 @@ namespace EfCoreInAction.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
+            var isLocal = Request.IsLocal();
+            return View(isLocal);
         }
 
         public IActionResult Contact()

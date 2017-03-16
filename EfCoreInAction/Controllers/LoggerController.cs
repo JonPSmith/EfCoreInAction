@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Logger;
 
-namespace EFCoreExample.Controllers
+namespace EfCoreInAction.Controllers
 {
     public class LoggerController : Controller
     {
