@@ -1,32 +1,45 @@
 ﻿// Copyright (c) 2016 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 using DataLayer.EfClasses;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DataLayer.EfCode
 {
     public class EfCoreContext : DbContext
     {
-        public DbSet<Book> Books { get; set; }            //#A
-        public DbSet<Author> Authors { get; set; }        //#A
-        public DbSet<PriceOffer> PriceOffers { get; set; }//#A
+        public DbSet<Book> Books { get; set; }            
+        public DbSet<Author> Authors { get; set; }        
+        public DbSet<PriceOffer> PriceOffers { get; set; }
+        public DbSet<Order> Orders { get; set; } //#A
 
-        public EfCoreContext(                             //#B
-            DbContextOptions<EfCoreContext> options)      //#B
-            : base(options) {}                            //#B
+        public EfCoreContext(                             
+            DbContextOptions<EfCoreContext> options)      
+            : base(options) {}
 
         protected override void
-            OnModelCreating(ModelBuilder modelBuilder)    //#C
-        {                                                 //#C
-            modelBuilder.Entity<BookAuthor>()             //#C
-                .HasKey(x => new {x.BookId, x.AuthorId}); //#C
-        }                                                 //#C
+            OnModelCreating(ModelBuilder modelBuilder)    
+        {                                                 
+            modelBuilder.Entity<BookAuthor>()             
+                .HasKey(x => new {x.BookId, x.AuthorId});
+
+            modelBuilder.Entity<LineItem>()        //#B
+                .HasOne(p => p.ChosenBook)         //#B
+                .WithMany()                        //#B
+                .OnDelete(DeleteBehavior.Restrict);//#B
+        }                                                 
     }
     /*********************************************************
-    #A The three properties link to the database tables with the same name
-    #B This constructor is how the ASP.NET creates an instance of EfCoreContext 
-    #C I need to tell EF Core about the Many-to-Many table keys. I explain this in detail in chapters 5 and 6
+    #A I have added the Orders property to allow book orders to be added
+    #B This stops a book which is included in a LineItem from being deleted. 
     * ******************************************************/
 }
 
