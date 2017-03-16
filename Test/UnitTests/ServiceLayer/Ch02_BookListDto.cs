@@ -150,8 +150,6 @@ namespace test.UnitTests.ServiceLayer
                 {
                     _output.WriteLine(log);
                 }
-                //to get the logs you need to fail see https://github.com/aspnet/Tooling/issues/541
-                Assert.True(false, "failed the test so that the logs show");
             }
         }
 
