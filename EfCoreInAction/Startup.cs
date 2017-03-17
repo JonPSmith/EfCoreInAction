@@ -41,6 +41,7 @@ namespace EfCoreInAction
             // Add framework services.
             services.AddMvc();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton(_env);
             //This makes the Git branch name available via injection
             services.AddSingleton(new AppInformation(gitBranchName));
 
