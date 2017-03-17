@@ -8,9 +8,10 @@ using DataLayer.EfCode;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(EfCoreContext))]
-    partial class EfCoreContextModelSnapshot : ModelSnapshot
+    [Migration("20170317110945_Chapter04")]
+    partial class Chapter04
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
