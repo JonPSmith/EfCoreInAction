@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DataLayer.EfCode;
 using EfCoreInAction.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ServiceLayer.BookServices;
 using ServiceLayer.BookServices.Concrete;
 using ServiceLayer.Logger;
@@ -13,35 +15,31 @@ namespace EfCoreInAction.Controllers
     {
         private readonly EfCoreContext _context;
 
-        public HomeController(EfCoreContext context)   //#A
-        {                                              //#A
-            _context = context;                        //#A
-        }                                              //#A
+        public HomeController(EfCoreContext context)
+        {                                           
+            _context = context;                     
+        }                                           
 
-        public IActionResult Index                     //#B
-            (SortFilterPageOptions options)            //#C
+        public async Task<IActionResult> Index  //#A
+            (SortFilterPageOptions options)         
         {
-            var listService =                          //#D
-                new ListBooksService(_context);        //#D
+            var listService =                       
+                new ListBooksService(_context);     
 
-            var bookList = listService                 //#E
-                .SortFilterPage(options)               //#E
-                .ToList();                             //#F
+            var bookList = await listService //#B       
+                .SortFilterPage(options)            
+                .ToListAsync(); //#C                   
 
             SetupTraceInfo();           //REMOVE THIS FOR BOOK as it could be confusing
 
-            return View(new BookListCombinedDto         //#G
-                (options, bookList));                   //#G
+            return View(new BookListCombinedDto  
+                (options, bookList));              
         }
-        /***************************************************
-        #A The applications's DbContext is provided by ASP.NET Core
-        #B This is an ASP.NET action. It is called when the Home page is called up by the user
-        #C The options parameter is filled with various sort, filter, page options via the URL
-        #D The ListBooksService is created using the applications's DbContext in the field _context
-        #E The SortFilterPage method is called with the sort, filter, page options provided
-        #F The .ToList() is what executes the LINQ commands, which causes EF Core to translate the LINQ into the appropriate SQL to access the database
-        #G It then sends the options (to fill in the various controls at the top of the page) and the actual list of BookListDTo's to display as a HTML table
-          * *************************************************/
+        /*******************************************************
+        #A I have to make the Index action method async, by using the async keyword and the returned type has to be wrapped in a generic task
+        #B I have to await the result of the ToListAsync method, which is an async command
+        #C Because my SortFilterPage method returned IQueryable<T> I can change is to async simply by replacing the .ToList() by the .ToListAsync() method 
+        * *****************************************************/
 
         /// <summary>
         /// This provides the filter search dropdown content

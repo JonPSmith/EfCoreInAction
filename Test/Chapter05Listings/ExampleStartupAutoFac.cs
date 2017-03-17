@@ -1,9 +1,11 @@
-﻿using System;
+﻿// Copyright (c) 2017 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT licence. See License.txt in the project root for license information.
+
+using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using DataLayer.EfCode;
 using EfCoreInAction.Logger;
-using EfCoreInAction.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,66 +13,63 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ServiceLayer.DatabaseServices.Concrete;
+using ServiceLayer.AdminServices;
+using ServiceLayer.AdminServices.Concrete;
 
-namespace EfCoreInAction
+namespace test.Chapter05Listings
 {
-    public class Startup
+    public class ExampleStartupAutoFac
     {
-        private readonly IHostingEnvironment _env;
-
-        public Startup(IHostingEnvironment env)
+        public ExampleStartupAutoFac(IHostingEnvironment env)
         {
-            _env = env;
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables()
-                .AddInMemoryCollection();
+                .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
 
-        public IConfigurationRoot Configuration { get; }
+        public IConfigurationRoot Configuration { get; private set; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        // This method gets called by the runtime. 
+        //Use this method to add services to the container.
+        public IServiceProvider ConfigureServices //#A
+            (IServiceCollection services)
         {
-            var gitBranchName = _env.WebRootPath.GetBranchName();
-
             // Add framework services.
             services.AddMvc();
-
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton(_env);
-            //This makes the Git branch name available via injection
-            services.AddSingleton(new AppInformation(gitBranchName));
-
-            var connection = Configuration.GetConnectionString("DefaultConnection");
-            if (_env.IsDevelopment())
-            {
-                //if running in development mode then we alter the connection to have the branch name in it
-                connection = connection.FormDatabaseConnection(gitBranchName);
-            }
-            services.AddDbContext<EfCoreContext>(options => options.UseSqlServer(connection,
+            var connection = Configuration                
+                .GetConnectionString("DefaultConnection");
+            services.AddDbContext<EfCoreContext>(
+                options => options.UseSqlServer(connection,
                 b => b.MigrationsAssembly("DataLayer")));
 
-            var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterModule<ServiceLayer.Utils.MyAutoFacModule>();
-            containerBuilder.Populate(services);
-            var container = containerBuilder.Build();
-            return new AutofacServiceProvider(container);
+            // Add Autofac
+            var containerBuilder = new ContainerBuilder(); //#B
+            containerBuilder.RegisterModule             //#C
+                <ServiceLayer.Utils.MyAutoFacModule>(); //#C
+            containerBuilder.Populate(services); //#D
+            var container = containerBuilder.Build(); //#E
+            return new AutofacServiceProvider(container);//#F
         }
+        /*******************************************************
+        #A I needed to change the method's return type from void to IServiceProvider
+        #B I create an AutoFac container builder, which I use to add all the services to
+        #C I use my MyAutoFacModule class to register everything that I want as a service in the ServiceLayer
+        #D I need this to add all the services which were added using 'normal' ASP.NET Core service registering approach, sure and AddMVC and AddDbContext
+        #E This builds an AutoFac IContainer, which holds all the services to be available via DI
+        #F I then use this IContainer to create an alternative DI provider via AutoFac
+         * ********************************************************/
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app,
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, EfCoreContext db,
             ILoggerFactory loggerFactory, IHttpContextAccessor httpContextAccessor)
         {
-            //loggerFactory.AddConsole(Configuration.GetSection("Logging"));   //removed because it slows things down! 
-            //loggerFactory.AddDebug();  //removed because it slows things down! 
+            //loggerFactory.AddConsole(Configuration.GetSection("Logging"));   removed because it slows things down!   
             loggerFactory.AddProvider(new RequestTransientLogger(() => httpContextAccessor));
 
-            if (_env.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
@@ -88,18 +87,17 @@ namespace EfCoreInAction
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+
             //see https://blogs.msdn.microsoft.com/dotnet/2016/09/29/implementing-seeding-custom-conventions-and-interceptors-in-ef-core-1-0/
             using (var serviceScope = app                    //#A
                  .ApplicationServices                        //#A
                  .GetRequiredService<IServiceScopeFactory>() //#A
                  .CreateScope())                             //#A
             {
-                serviceScope.ServiceProvider     //#B
+                serviceScope.ServiceProvider //#B
                     .GetService<EfCoreContext>() //#B
-                    //.MigrateAndSeed() //#C
-                    .EnsureDatabaseCreatedAndSeeded(_env.WebRootPath,
-                    //if in development mode we use EnsureCreated, but in production mode we use migrations
-                    _env.IsDevelopment() ? DbStartupModes.EnsureCreated : DbStartupModes.UseMigrations);
+                    .MigrateAndSeed(); //#C
             }
             /******************************************************
             #A This gets the scoped service provider

@@ -7,7 +7,7 @@ using DataLayer.EfCode;
 
 namespace ServiceLayer.AdminServices.Concrete
 {
-    public class ChangePubDateService
+    public class ChangePubDateService : IChangePubDateService
     {
         private readonly EfCoreContext _context;
 

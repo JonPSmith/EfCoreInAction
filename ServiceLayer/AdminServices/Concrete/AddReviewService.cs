@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ServiceLayer.AdminServices.Concrete
 {
-    public class AddReviewService
+    public class AddReviewService : IAddReviewService
     {
         private readonly EfCoreContext _context;
 
