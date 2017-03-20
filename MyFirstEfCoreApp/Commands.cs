@@ -39,7 +39,7 @@ namespace MyFirstEfCoreApp
         /**************************************************************
         #A We create the application's DbContext through which all database accesses are done
         #B This reads all the books. The AsNoTracking() says this is a read-only access
-        #C The include 'eager' loads the Author information with each book
+        #C The include causes the Author information to be ‘eagerly’ loaded with each book. See chapter 2 for more on this
          * *************************************************************/
 
         public static void ChangeWebUrl()
