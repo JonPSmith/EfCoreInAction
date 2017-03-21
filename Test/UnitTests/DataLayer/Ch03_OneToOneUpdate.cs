@@ -34,19 +34,20 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 var book = context.Books                  //#A
-                    .Include(p => p.Promotion)            //#A
-                    .First(p => p.Promotion == null);     //#A
+                    .Include(p => p.Promotion)            //#B
+                    .First(p => p.Promotion == null);
 
-                book.Promotion = new PriceOffer           //#B
-                {                                         //#B
-                    NewPrice = book.Price / 2,            //#B
-                    PromotionalText = "Half price today!" //#B
-                };                                        //#B
-                context.SaveChanges();                    //#C                  
+                book.Promotion = new PriceOffer           //#C
+                {                                         //#C
+                    NewPrice = book.Price / 2,            //#C
+                    PromotionalText = "Half price today!" //#C
+                };                                        //#C
+                context.SaveChanges();                    //#D                  
                 /**********************************************************
                 #A This finds the first book that does not have an existing promotion
-                #B I add a new PriceOffer to this book
-                #C The SaveChanges method calls DetectChanges, which find that the Promotion property has changed, so it adds that entry to the PricerOffers table
+                #B While the include isn't needed because I am loading something without a Promotion it is good practice to include it, as you should load any any relationships if you are going to change a relationship
+                #C I add a new PriceOffer to this book
+                #D The SaveChanges method calls DetectChanges, which find that the Promotion property has changed, so it adds that entry to the PricerOffers table
                 * *******************************************************/
 
                 //VERIFY

@@ -36,11 +36,10 @@ namespace test.UnitTests.DataLayer
                 };
 
                 //ATTEMPT
-                context.SingleEntities.Add(//#A
-                    itemToAdd);            //#A
+                context.Add(itemToAdd); //#A
                 context.SaveChanges(); //#B
                 /*********************************************************
-                #A It use the Add method to add the SingleEntity to the application's DbContext property SingleEntities
+                #A It use the Add method to add the SingleEntity to the application's DbContext. The DbContext works what table to add it to based on its type of its parameter
                 #B It calls the SaveChanges() method from the application's DbContext to update the database
                  * ***********************************************************/
 

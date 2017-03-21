@@ -116,11 +116,11 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 var author = JsonConvert
-                    .DeserializeObject<Author>(json);           //#B
+                    .DeserializeObject<Author>(json);  //#B
 
 
-                context.Authors.Update(author);                 //#C                               
-                context.SaveChanges();                          //#D  
+                context.Update(author); //#C                               
+                context.SaveChanges();  //#D  
             /**********************************************************
             #A This simulates an external system returning a modified Author entity class as a JSON string
             #B This simulates receiving a JSON string from an external system and decoding it into an Author class

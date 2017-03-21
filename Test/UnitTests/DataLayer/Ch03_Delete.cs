@@ -36,11 +36,11 @@ namespace test.UnitTests.DataLayer
                 var promotion = context.PriceOffers     //#A
                     .First();                           //#A
 
-                context.PriceOffers.Remove(promotion);  //#B
+                context.Remove(promotion);  //#B
                 context.SaveChanges();                  //#C                  
                 /**********************************************************
                 #A I find the first PriceOffer
-                #B I then delete that PriceOffer
+                #B I then remove that PriceOffer from the application's DbContext. The DbContext works what to remove based on its type of its parameter
                 #C The SaveChanges calls DetectChanges which finds a tracked PriceOffer entity which is marked as deleted. It then deletes it from the database
                 * *******************************************************/
 

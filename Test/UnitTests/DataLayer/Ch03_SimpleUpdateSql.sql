@@ -24,5 +24,5 @@ SELECT @@ROWCOUNT;						  //#G
 #D This is the SQL UPDATE command in this case on the Books table
 #E Because EF Core's DetectChanges method found only the PublishedOn property had changed it can target that column in the table
 #F EF Core used the primary key from the original book to uniquely select the row it wants to update
-#G Finally it sends back the number of rows that were updated in this transaction. SaveChanges returns this integer, but normally we ignore it.
+#G Finally it sends back the number of rows that were inserted in this transaction. SaveChanges returns this integer, but normally I ignore it.
 
