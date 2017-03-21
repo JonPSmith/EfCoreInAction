@@ -22,8 +22,14 @@ namespace DataLayer.EfCode
             if (result.Any()) return result;
 
             context.ChangeTracker.AutoDetectChangesEnabled = false;
-            await context.SaveChangesAsync().ConfigureAwait(false);
-            context.ChangeTracker.AutoDetectChangesEnabled = true;
+            try
+            {
+                await context.SaveChangesAsync().ConfigureAwait(false);
+            }
+            finally
+            {
+                context.ChangeTracker.AutoDetectChangesEnabled = true;
+            }   
             return result;
         }
 
@@ -36,56 +42,59 @@ namespace DataLayer.EfCode
             var result = context.ExecuteValidation(); //#C
             if (result.Any()) return result;   //#D
 
-            context.ChangeTracker
-                .AutoDetectChangesEnabled = false;//#E
-            context.SaveChanges(); //#F
-            context.ChangeTracker
-                .AutoDetectChangesEnabled = true; //#G
-            return result; //#H
+            //I leave out the AutoDetectChangesEnabled on/off from the code shown in chapter 4 as its only a performance issue
+            //I'ts a concept that doesn't add anything to chapter 4. However I leave it in the real code as it has a (small) improvement on performance
+            context.ChangeTracker.AutoDetectChangesEnabled = false; //LEAVE OUT OF CHAPTER 4 - 
+            try
+            {
+                context.SaveChanges(); //#E
+            }
+            finally
+            {
+                context.ChangeTracker.AutoDetectChangesEnabled = true;       //LEAVE OUT OF CHAPTER 4 -      
+            }
+
+            return result; //#F
         }
         /********************************************************************
          #A The SaveChangesWithChecking returns a list of ValidationResults. If it is an empty collection then the data was saved. If it has errors then the data wasn't saved
          #B SaveChangesWithChecking is an extension method, which means I can call it in the same way I call SaveChanges
          #C I create a private method to do the validation as I need to apply this in SaveChangesWithChecking and SaveChangesWithCheckingAsync
          #D If there are errors then I return them immediately and don't call SaveChanges
-         #E There aren't any errors so I am going to call SaveChanges. I turn off AutoDetectChangesEnabled because ExecuteValidation has already called DetectChanges
-         #F Now I call SaveChanges
-         #G I turn AutoDetectChangesEnabled back on
-         #H I return the empty set of errors, which tells the caller that everything is OK
+         #E There aren't any errors so I am going to call SaveChanges. 
+         #F I return the empty set of errors, which tells the caller that everything is OK
          * *****************************************************************/
 
         private static ImmutableList<ValidationResult>
             ExecuteValidation(this DbContext context)
         {
             var result = new List<ValidationResult>();
-            context.ChangeTracker.DetectChanges(); //#A
             foreach (var entry in 
-                context.ChangeTracker.Entries() //#B
+                context.ChangeTracker.Entries() //#A
                     .Where(e =>
-                       (e.State == EntityState.Added) ||   //#C
-                       (e.State == EntityState.Modified))) //#C
+                       (e.State == EntityState.Added) ||   //#B
+                       (e.State == EntityState.Modified))) //#B
             {
                 var entity = entry.Entity;
                 var valProvider = new 
-                    ValidationDbContextServiceProvider(context);//#D
+                    ValidationDbContextServiceProvider(context);//#C
                 var valContext = new 
                     ValidationContext(entity, valProvider, null);
                 var entityErrors = new List<ValidationResult>();
-                if (!Validator.TryValidateObject(           //#E
-                    entity, valContext, entityErrors, true))//#E
+                if (!Validator.TryValidateObject(           //#D
+                    entity, valContext, entityErrors, true))//#D
                 {
-                    result.AddRange(entityErrors); //#F
+                    result.AddRange(entityErrors); //#E
                 }
             }
-            return result.ToImmutableList(); //#G
+            return result.ToImmutableList(); //#F
         }
         /*************************************************************
-        #A I call ChangeTracker.DetectChanges to make sure I have found all the possible changes
-        #B I then use EF Core's ChangeTracker to get access to all the entity classes it is tracking
-        #C I filter out only those that need to be added to, or update the database
-        #D I have created a simple class that implements the IServiceProvider interface, which makes the current DbContext available in the IValidatableObject.Validate method 
-        #E The Validator.TryValidateObject is the method which handles all validation checking for me
-        #F If there are errors I add them to the list
+        #A I use EF Core's ChangeTracker to get access to all the entity classes it is tracking. NOte: This calls ChangeTracker.DetectChanges, which makes sure all the changes I have made are found
+        #B I filter out only those that need to be added to, or update the database
+        #C I have created a simple class that implements the IServiceProvider interface, which makes the current DbContext available in the IValidatableObject.Validate method 
+        #D The Validator.TryValidateObject is the method which handles all validation checking for me
+        #E If there are errors I add them to the list
         #F Finally I return the list of all the errors found
          * *********************************************************/
     }
