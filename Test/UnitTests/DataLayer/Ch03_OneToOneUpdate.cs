@@ -164,8 +164,7 @@ namespace test.UnitTests.DataLayer
                     .First(p => p.Promotion == null);     //#A
 
                 //ATTEMPT
-                context.PriceOffers.Add(                  //#B
-                new PriceOffer                            //#C
+                context.Add(new PriceOffer                //#B
                 {                                         //#C
                     BookId = book.BookId,                 //#C
                     NewPrice = book.Price / 2,            //#C
@@ -202,7 +201,7 @@ namespace test.UnitTests.DataLayer
                     .First(p => p.Promotion != null);
 
                 //ATTEMPT
-                context.PriceOffers.Remove(context.PriceOffers.Find(book.Promotion.PriceOfferId));
+                context.Remove(context.PriceOffers.Find(book.Promotion.PriceOfferId));
                 context.SaveChanges();
 
                 //VERIFY
