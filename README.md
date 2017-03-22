@@ -21,7 +21,7 @@ so if you are looking at the master branch then you won't see any code!
 Just click the [Branches](https://github.com/JonPSmith/EfCoreInAction/branches) on the site and you will
 find all the branches I have created so far.
 
-##NOTE: Now updated to Visual Studio 2017 format
+## NOTE: Now updated to Visual Studio 2017 format
 
 Visual Studio 2017 (VS2017) is the recommended version of Visual Studio for developing .NET Core applications.
 The whole solution has been rebuild to use .csprog and to swap over to the recommended folder structure,
