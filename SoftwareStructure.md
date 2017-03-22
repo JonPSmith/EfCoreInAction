@@ -8,7 +8,7 @@ You need to select the branch in Visual Studio and `Pull` the branch you want to
 You have three parts you can look at: 
 
 1. A console application that is fairly simple, and a good place to start if you are new to .NET
-2. An ASP.NET Core application, which is much more complex and is meant to be similar to real-world applictaions.
+2. An ASP.NET Core application, which is much more complex and is meant to be similar to real-world applications.
 3. A `Test` project, which contains numerous unit tests.
 
 Read the notes below for more details on each of these three.
@@ -31,7 +31,7 @@ which contains the application's AppDbContext.
 
 ## 1. The ASP.NET Core application - an example book selling site 
 
-This is a multi-project applictaion. The figure below shows you the whole applictaion after chapter 4
+This is a multi-project application. The figure below shows you the whole application after chapter 4
 (before chapter 4 then the `BizLogic` and `BizDbAccess` projects aren't there).
 
 ![Diagram of site](https://github.com/JonPSmith/EfCoreInAction/blob/master/ExampleBookSellingSiteStructure.png)
