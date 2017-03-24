@@ -62,6 +62,73 @@ namespace test.UnitTests.DataLayer
             //VERIFY
         }
 
+        [Fact]
+        public async Task MediumAssessesOk()
+        {
+            //SETUP
+            using (var context = new EfCoreContext(_options))
+            {
+                //ATTEMPT
+                RunTest(context, 1, "First access, synch:", (c, id) => c.Books
+                    .Include(x => x.AuthorsLink)
+                    .ThenInclude(x => x.Author)
+                    .Include(x => x.Reviews)
+                    .Include(x => x.Promotion)
+                    .Single(x => x.BookId == id));
+                await Task.WhenAll(RunTestAsync(context, 1, "First access, async:", (c, id) => c.Books
+                    .Include(x => x.AuthorsLink)
+                    .ThenInclude(x => x.Author)
+                    .Include(x => x.Reviews)
+                    .Include(x => x.Promotion)
+                    .SingleAsync(x => x.BookId == id)));
+
+                await Task.WhenAll(RunTestAsync(context, 1, "First access, async:", (c, id) => c.Books
+                    .Include(x => x.AuthorsLink)
+                    .ThenInclude(x => x.Author)
+                    .Include(x => x.Reviews)
+                    .Include(x => x.Promotion)
+                    .SingleAsync(x => x.BookId == id)));
+                await Task.WhenAll(RunTestAsync(context, 100, "Second access, async:", (c, id) => c.Books
+                    .Include(x => x.AuthorsLink)
+                    .ThenInclude(x => x.Author)
+                    .Include(x => x.Reviews)
+                    .Include(x => x.Promotion)
+                    .SingleAsync(x => x.BookId == id)));
+                RunTest(context, 1, "First access, synch:", (c, id) => c.Books
+                    .Include(x => x.AuthorsLink)
+                    .ThenInclude(x => x.Author)
+                    .Include(x => x.Reviews)
+                    .Include(x => x.Promotion)
+                    .Single(x => x.BookId == id));
+                RunTest(context, 100, "Second access, synch:", (c, id) => c.Books
+                    .Include(x => x.AuthorsLink)
+                    .ThenInclude(x => x.Author)
+                    .Include(x => x.Reviews)
+                    .Include(x => x.Promotion)
+                    .Single(x => x.BookId == id));
+            }
+            //VERIFY
+        }
+
+        [Fact]
+        public async Task ManySimpleAssessesOk()
+        {
+            //SETUP
+            using (var context = new EfCoreContext(_options))
+            {
+                //ATTEMPT
+                RunTest(context, 1, "First access, synch:", MultipleSmall);
+                await Task.WhenAll(RunTestAsync(context, 1, "First access, async:", MultipleSmallAsync));
+
+                //NOTE: This takes so long that I have reduced the number of times from 100 to 10 - BUT that affects the perfomance figures!!
+                await Task.WhenAll(RunTestAsync(context, 1, "First access, async:", MultipleSmallAsync));
+                await Task.WhenAll(RunTestAsync(context, 10, "Second access, async:", MultipleSmallAsync));
+                RunTest(context, 1, "First access, synch:", MultipleSmall);
+                RunTest(context, 10, "Second access, synch:", MultipleSmall);
+            }
+            //VERIFY
+        }
+
 
         [Fact]
         public async Task ComplexAssessesOk()
@@ -109,6 +176,32 @@ namespace test.UnitTests.DataLayer
             _output.WriteLine("Ran {0}: total time = {1} ms ({2:f1} ms per action)", testType,
                 timer.ElapsedMilliseconds,
                 timer.ElapsedMilliseconds / ((double)numCyclesToRun));
+        }
+
+        private void MultipleSmall(EfCoreContext context, int id)
+        {
+            var book = context.Books.Single(x => x.BookId == id);
+            context.Entry(book).Collection(c => c.AuthorsLink).Load();
+            foreach (var authorLink in book.AuthorsLink)
+            {                                        
+                context.Entry(authorLink)            
+                    .Reference(r => r.Author).Load();
+            }
+            context.Entry(book).Collection(c => c.Reviews).Load();
+            context.Entry(book).Reference(r => r.Promotion).Load();
+        }
+
+        private async Task MultipleSmallAsync(EfCoreContext context, int id)
+        {
+            var book = await context.Books.SingleAsync(x => x.BookId == id);
+            await context.Entry(book).Collection(c => c.AuthorsLink).LoadAsync();
+            foreach (var authorLink in book.AuthorsLink)
+            {
+                await context.Entry(authorLink)
+                    .Reference(r => r.Author).LoadAsync();
+            }
+            await context.Entry(book).Collection(c => c.Reviews).LoadAsync();
+            await context.Entry(book).Reference(r => r.Promotion).LoadAsync();
         }
     }
 }
