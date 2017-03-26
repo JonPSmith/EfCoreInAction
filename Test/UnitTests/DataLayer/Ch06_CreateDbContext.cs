@@ -8,13 +8,13 @@ using Xunit;
 
 namespace test.UnitTests.DataLayer
 {
-    public class Ch02_CreateDbContext
+    public class Ch06_CreateDbContext
     {
-        public Ch02_CreateDbContext()
+        public Ch06_CreateDbContext()
         {
             const string connection =
      "Data Source=(localdb)\\mssqllocaldb;" +
-     "Database=EfCoreInActionDb.Chapter02;" +
+     "Database=EfCoreInActionDb.Chapter06;" +
      "Integrated Security=True;";
             var optionsBuilder =
                 new DbContextOptionsBuilder
@@ -35,7 +35,7 @@ namespace test.UnitTests.DataLayer
             //SETUP
             const string connection =
                  "Data Source=(localdb)\\mssqllocaldb;" +    //#A
-                 "Database=EfCoreInActionDb.Chapter02;" +    //#A
+                 "Database=EfCoreInActionDb.Chapter06;" +    //#A
                  "Integrated Security=True;";               //#A
             var optionsBuilder =                            //#B
                 new DbContextOptionsBuilder                 //#B

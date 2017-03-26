@@ -19,7 +19,7 @@ namespace DataLayer.EfCode
         public DbSet<Book> Books { get; set; }            
         public DbSet<Author> Authors { get; set; }        
         public DbSet<PriceOffer> PriceOffers { get; set; }
-        public DbSet<Order> Orders { get; set; } //#A
+        public DbSet<Order> Orders { get; set; } 
 
         public EfCoreContext(                             
             DbContextOptions<EfCoreContext> options)      
@@ -28,13 +28,21 @@ namespace DataLayer.EfCode
         protected override void
             OnModelCreating(ModelBuilder modelBuilder)    
         {                                                 
+            modelBuilder.Entity<Book>() //#A
+                .Property(x => x.PublishedOn)
+                .HasColumnType("date");
+
+            modelBuilder.Entity<Book>() //#B
+                .Property(x => x.ImageUrl)
+                .IsUnicode(false);
+
             modelBuilder.Entity<BookAuthor>()             
                 .HasKey(x => new {x.BookId, x.AuthorId});
 
-            modelBuilder.Entity<LineItem>()        //#B
-                .HasOne(p => p.ChosenBook)         //#B
-                .WithMany()                        //#B
-                .OnDelete(DeleteBehavior.Restrict);//#B
+            modelBuilder.Entity<LineItem>()        
+                .HasOne(p => p.ChosenBook)         
+                .WithMany()                        
+                .OnDelete(DeleteBehavior.Restrict);
         }                                                 
     }
     /*********************************************************
