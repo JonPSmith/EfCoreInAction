@@ -45,8 +45,13 @@
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownAdminItems">
-                                <li>@Html.ActionLink("Reset database", "ResetDatabase", "Admin")</li>
-                                @*<li>@Html.ActionLink("Add Book", "AddBook", "Admin")</li>*@
+                                <li>@Html.ActionLink("Run background Task", "RunTaskBackground", "Admin")</li>
+                                <li>@Html.ActionLink("Run tasks and wait", "RunTaskWait", "Admin")</li>
+                                @if (Context.Request.IsLocal())
+                                {
+                                    <li>@Html.ActionLink("Reset database", "ResetDatabase", "Admin")</li>
+                                    @*<li>@Html.ActionLink("Add Book", "AddBook", "Admin")</li>*@
+                                }
                             </ul>
                         </li>
                     }
