@@ -32,11 +32,15 @@ namespace DataLayer.EfCode
                 .Property(x => x.PublishedOn)
                 .HasColumnType("date");
 
-            modelBuilder.Entity<Book>() //#B
+            modelBuilder.Entity<Book>()
+                .Property(p => p.Price) //#B
+                .HasColumnType("decimal(9,2)");
+
+            modelBuilder.Entity<Book>() //#C
                 .Property(x => x.ImageUrl)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<BookAuthor>()             
+            modelBuilder.Entity<BookAuthor>()          
                 .HasKey(x => new {x.BookId, x.AuthorId});
 
             modelBuilder.Entity<LineItem>()        
@@ -47,7 +51,8 @@ namespace DataLayer.EfCode
     }
     /*********************************************************
     #A The convention-based mapping for .NET DateTime is SQL datetime2. This command changes the SQL column type to date, which only holds the date, not time
-    #B The convention-based mapping for .NET string is SQL nvarchar (16 bit Unicode). This command changes the SQL column type to varchar (8 bit ASCII)
+    #B I set a smaller precision and scale of (9,2) for the price instead of the default (18,2)
+    #C The convention-based mapping for .NET string is SQL nvarchar (16 bit Unicode). This command changes the SQL column type to varchar (8 bit ASCII)
     * ******************************************************/
 }
 
