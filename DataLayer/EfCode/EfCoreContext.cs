@@ -43,6 +43,10 @@ namespace DataLayer.EfCode
             modelBuilder.Entity<BookAuthor>()          
                 .HasKey(x => new {x.BookId, x.AuthorId});
 
+            modelBuilder.Entity<PriceOffer>()
+                .Property(p => p.NewPrice)
+                .HasColumnType("decimal(9,2)");
+
             modelBuilder.Entity<LineItem>()        
                 .HasOne(p => p.ChosenBook)         
                 .WithMany()                        
