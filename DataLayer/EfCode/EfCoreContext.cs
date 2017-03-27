@@ -46,8 +46,8 @@ namespace DataLayer.EfCode
         }                                                 
     }
     /*********************************************************
-    #A I have added the Orders property to allow book orders to be added
-    #B This stops a book which is included in a LineItem from being deleted. 
+    #A The convention-based mapping for .NET DateTime is SQL datetime2. This command changes the SQL column type to date, which only holds the date, not time
+    #B The convention-based mapping for .NET string is SQL nvarchar (16 bit Unicode). This command changes the SQL column type to varchar (8 bit ASCII)
     * ******************************************************/
 }
 
