@@ -1,0 +1,14 @@
+﻿@model int[]
+
+<h2>Run Tasks, and wait</h2>
+
+<p>
+    I ran two tasks to count the books in the database.
+    The answers were
+</p>
+<ul>
+    @foreach (var count in @Model)
+    {
+        <li>The count was @count</li>
+    }
+</ul>
