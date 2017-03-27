@@ -73,8 +73,8 @@ namespace DataLayer.EfCode
 * see https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/new-db
 * 
 * Add to EfCoreInAction the following NuGet libraries
-* 1. "Microsoft.EntityFrameworkCore.Tools"  AND MOVE TO tools part of project
-* 2. "Microsoft.EntityFrameworkCore.Design"
+* 1. "Microsoft.EntityFrameworkCore.Tools"  
+*    Note: You can move this package to the tools part of csproj file
 * 
 * 1. Using Package Manager Console commands
 * The steps are:
