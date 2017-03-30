@@ -13,7 +13,8 @@ namespace test.EfHelpers
         public static string GetTableName<TEntity>(this DbContext context)
         {
             var efType = context.Model.FindEntityType(typeof(TEntity).FullName);
-            return efType.Relational().TableName;
+            var relational = efType.Relational();
+            return relational.TableName;
         }
 
         public static string GetColumnName<TEntity, TProperty>(this DbContext context, TEntity source, 
@@ -22,6 +23,20 @@ namespace test.EfHelpers
             var efType = context.Model.FindEntityType(typeof(TEntity).FullName);
             var propInfo = GetPropertyInfoFromLambda(model);
             return efType.FindProperty(propInfo.Name).Relational().ColumnName;
+        }
+
+        public static string GetColumnName<TEntity>(this DbContext context, string propertyName) where TEntity : class
+        {
+            var efType = context.Model.FindEntityType(typeof(TEntity).FullName);
+            return efType.FindProperty(propertyName).Relational().ColumnName;
+        }
+
+        public static string GetColumnNameSqlite<TEntity, TProperty>(this DbContext context, TEntity source,
+            Expression<Func<TEntity, TProperty>> model) where TEntity : class
+        {
+            var efType = context.Model.FindEntityType(typeof(TEntity).FullName);
+            var propInfo = GetPropertyInfoFromLambda(model);
+            return efType.FindProperty(propInfo.Name).Sqlite().ColumnName;
         }
 
         public static string GetColumnRelationalType<TEntity, TProperty>(this DbContext context, 

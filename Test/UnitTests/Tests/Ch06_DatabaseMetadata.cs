@@ -46,6 +46,7 @@ namespace test.UnitTests.Tests
             }
         }
 
+        //see https://github.com/aspnet/EntityFramework/issues/8034
         [Fact]
         public void TestGetColumnRelationalTypeOk()
         {
@@ -78,6 +79,7 @@ namespace test.UnitTests.Tests
             }
         }
 
+        //see https://github.com/aspnet/EntityFramework/issues/8034
         [Fact]
         public void TestGetColumnRelationalTypeSQlDatabase()
         {
