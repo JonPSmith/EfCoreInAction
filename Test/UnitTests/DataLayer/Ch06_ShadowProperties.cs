@@ -85,10 +85,9 @@ namespace test.UnitTests.DataLayer
                     context.Entry(entity).Property("UpdatedOn").CurrentValue = timeNow; 
                     context.SaveChanges(); 
 
-
                     //VERIFY
-                    var readEntity = context.MyEntities.First();
-                    context.Entry(readEntity).Property("UpdatedOn").CurrentValue.ShouldEqual(timeNow);
+                    var shadowPropUpdatedOn = context.MyEntities.Select(b => EF.Property<DateTime>(b, "UpdatedOn")).First();
+                    shadowPropUpdatedOn.ShouldEqual(timeNow);
                 }
             }
         }
@@ -110,7 +109,6 @@ namespace test.UnitTests.DataLayer
                     context.Add(entity);
                     context.Entry(entity).Property("UpdatedOn").CurrentValue = timeNow;
                     context.SaveChanges();
-
 
                     //VERIFY
                     var readEntity = context.MyEntities.AsNoTracking().First();
