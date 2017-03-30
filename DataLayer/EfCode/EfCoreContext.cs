@@ -26,8 +26,11 @@ namespace DataLayer.EfCode
             : base(options) {}
 
         protected override void
-            OnModelCreating(ModelBuilder modelBuilder)    
-        {                                                 
+            OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Book>()  //Add a non-unique index to the publish date
+                .HasIndex(x => x.PublishedOn);
+
             modelBuilder.Entity<Book>() //#A
                 .Property(x => x.PublishedOn)
                 .HasColumnType("date");
