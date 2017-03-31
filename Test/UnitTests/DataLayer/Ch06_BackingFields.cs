@@ -8,18 +8,19 @@ using test.EfHelpers;
 using test.Helpers;
 using Test.Chapter06Listings;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
 
 namespace test.UnitTests.DataLayer
 {
     public class Ch06_BackingFields
     {
-        //private readonly ITestOutputHelper _output;
+        private readonly ITestOutputHelper _output;
 
-        //public Ch06_BackingFields(ITestOutputHelper output)
-        //{
-        //    _output = output;
-        //}
+        public Ch06_BackingFields(ITestOutputHelper output)
+        {
+            _output = output;
+        }
 
         [Fact]
         public void TestWriteEmptyPersonOk()
@@ -87,6 +88,38 @@ namespace test.UnitTests.DataLayer
                 context.People.Where(x => x.PersonId == personId)
                     .Select(x => EF.Property<DateTime>(x, "UpdatedOn"))
                     .Single().Kind.ShouldEqual(DateTimeKind.Unspecified);
+            }
+        }
+
+        [Fact]
+        public void TestUpdatedOnQuerywithLogsOk()
+        {
+            //SETUP
+            var connection = this.GetUniqueDatabaseConnectionString();
+            var optionsBuilder =
+                new DbContextOptionsBuilder<Chapter06DbContext>();
+            optionsBuilder.UseSqlServer(connection);
+            var now = DateTime.UtcNow;
+            int personId;
+            //ATTEMPT
+            using (var context = new Chapter06DbContext(optionsBuilder.Options))
+            {
+
+                var logIt = new LogDbContext(context);
+
+                context.Database.EnsureCreated();
+
+                var person = new Person { UpdatedOn = now };
+                context.Add(person);
+                context.SaveChanges();
+                personId = person.PersonId;
+
+                var peopleByUpdate = context.People.OrderBy(x => EF.Property<DateTime>(x, "UpdatedOn")).ToList();
+                foreach (var log in logIt.Logs)
+                {
+                    _output.WriteLine(log);
+                }
+
             }
         }
 
