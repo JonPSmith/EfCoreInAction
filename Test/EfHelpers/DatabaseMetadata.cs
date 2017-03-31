@@ -5,6 +5,8 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace test.EfHelpers
 {
@@ -39,26 +41,34 @@ namespace test.EfHelpers
             return efType.FindProperty(propInfo.Name).Sqlite().ColumnName;
         }
 
-        public static string GetColumnRelationalType<TEntity, TProperty>(this DbContext context, 
+        public static string GetColumnStoreType<TEntity, TProperty>(this DbContext context, 
             TEntity source, Expression<Func<TEntity, TProperty>> model) where TEntity : class
         {
             var efType = context.Model.FindEntityType(typeof(TEntity).FullName);
             var propInfo = GetPropertyInfoFromLambda(model);
-            var relational = efType.FindProperty(propInfo.Name).Relational();
-            return relational.ColumnType;
+            var efProperty = efType.FindProperty(propInfo.Name);
+
+            return GetStoreType(context, efProperty);
         }
 
-        public static string GetColumnSqliteType<TEntity, TProperty>(this DbContext context, TEntity source, 
-            Expression<Func<TEntity, TProperty>> model) where TEntity : class
+        public static string GetColumnStoreType<TEntity>(this DbContext context, string propertyName) where TEntity : class
         {
             var efType = context.Model.FindEntityType(typeof(TEntity).FullName);
-            var propInfo = GetPropertyInfoFromLambda(model);
-            var relational = efType.FindProperty(propInfo.Name).Sqlite();
-            return relational.ColumnType;
+            var efProperty = efType.FindProperty(propertyName);
+
+            return GetStoreType(context, efProperty);
         }
 
         //---------------------------------------------------
         //private methods
+
+        private static string GetStoreType(DbContext context, Microsoft.EntityFrameworkCore.Metadata.IProperty efProperty)
+        {
+            var typeMapper = context.GetService<IRelationalTypeMapper>();
+            var mappings = typeMapper.FindMapping(efProperty);
+
+            return mappings.StoreType;
+        }
 
         private static PropertyInfo GetPropertyInfoFromLambda<TEntity, TProperty>(Expression<Func<TEntity, TProperty>> model) where TEntity : class
         {
