@@ -104,6 +104,8 @@ namespace test.UnitTests.Tests
         [InlineData("BookId", "int")]
         [InlineData("PublishedOn", "date")]
         [InlineData("Price", "decimal(9,2)")]
+        [InlineData("Description", "nvarchar(max)")]
+        [InlineData("ImageUrl", "varchar(512)")]
         public void TestGetColumnStoreTypesOk(string propName, string expectedType)
         {
             //SETUP

@@ -11,6 +11,8 @@ namespace Test.Chapter06Listings
     {
         public DbSet<MyEntityClass> MyEntities { get; set; }
 
+        public DbSet<Person> People { get; set; }
+
         public Chapter06DbContext(
             DbContextOptions<Chapter06DbContext> options)
             : base(options)
@@ -27,18 +29,28 @@ namespace Test.Chapter06Listings
                 .HasColumnName("GenericInDatabaseProp") //#A
                 .ForSqlServerHasColumnName("SqlServerInDatabaseProp") //#B
                 .ForSqliteHasColumnName("SqliteInDatabaseProp"); //#C
-        /********************************************************************
+        /*Database provider specific command example **************************
         #A This would be the column name if a For... command didn't override it
         #B This defines the column name for the sql server database provider
         #C This defines the column name for the sqlite database provider
         * *******************************************************************/
 
-                modelBuilder.Entity<MyEntityClass>()
-                    .Property<DateTime>("UpdatedOn"); //#A
-        /*************************************************************************
+            modelBuilder.Entity<MyEntityClass>()
+                .Property<DateTime>("UpdatedOn"); //#A
+        /*Shadow property******************************************************
         #A I use the Property<T> method to define the shadow property type
          * ********************************************************************/
 
+            modelBuilder.Entity<Person>() //#A
+                .Property<DateTime>("DateOfBirth")//#A
+                .HasField("_dateOfBirth")
+                .HasColumnName("DateOfBirth"); //#B
+        /*Backing fields *********************************************************
+         #A I create a 'notional' property called DateOfBirth by which I can access this propery via EF Core 
+         #B Then I link it to a backing field _dateOfBirth
+         #B And I give it a more normal database column name
+         * **************************************************************************/
+            
             modelBuilder.Entity<MyEntityClass>()
                 .Ignore(b => b.LocalString); //#A
 

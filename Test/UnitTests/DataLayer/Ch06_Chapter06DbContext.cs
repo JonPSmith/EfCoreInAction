@@ -88,6 +88,23 @@ namespace test.UnitTests.DataLayer
             }
         }
 
+        [Fact]
+        public void TestColumnTypeSqliteOk()
+        {
+            //SETUP
+            using (var context = new Chapter06DbContext(
+                SqliteInMemory.CreateOptions<Chapter06DbContext>()))
+            {
+                {
+                    //ATTEMPT
+                    var colType = context.GetColumnStoreType(new MyEntityClass(), p => p.InDatabaseProp);
+
+                    //VERIFY
+                    colType.ShouldEqual("TEXT");
+                }
+            }
+        }
+
         //[Fact]
         //public void TestGetColumnRelationalTypeSqlDatabase()
         //{
