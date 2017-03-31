@@ -41,14 +41,12 @@ namespace Test.Chapter06Listings
         #A I use the Property<T> method to define the shadow property type
          * ********************************************************************/
 
-            modelBuilder.Entity<Person>() //#A
-                .Property<DateTime>("DateOfBirth")//#A
-                .HasField("_dateOfBirth")
-                .HasColumnName("DateOfBirth"); //#B
-        /*Backing fields *********************************************************
-         #A I create a 'notional' property called DateOfBirth by which I can access this propery via EF Core 
+            modelBuilder.Entity<Person>()
+                .Property<DateTime>("DateOfBirth") //#A
+                .HasField("_dateOfBirth"); //#B
+        /*Backing fields ********************************************************* 
+         #A I create a 'notional' property called DateOfBirth by which I can access this propery via EF Core. This also sets the column name in the database 
          #B Then I link it to a backing field _dateOfBirth
-         #B And I give it a more normal database column name
          * **************************************************************************/
             
             modelBuilder.Entity<MyEntityClass>()
