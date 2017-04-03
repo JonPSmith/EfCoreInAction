@@ -24,7 +24,8 @@ namespace DataLayer.EfCode
             optionsBuilder.UseSqlServer(ConnectionString,
                 b => b.MigrationsAssembly("DataLayer"));
 
-            return new EfCoreContext(optionsBuilder.Options);
+            //I need to set the second param, ignoreMigrations, to true
+            return new EfCoreContext(optionsBuilder.Options, true);
         }
     }
 }

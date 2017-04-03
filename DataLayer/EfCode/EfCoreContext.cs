@@ -11,6 +11,7 @@ using DataLayer.EfClasses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using TryAspNetCoreMirgate.EfCore;
 
 namespace DataLayer.EfCode
 {
@@ -21,9 +22,19 @@ namespace DataLayer.EfCode
         public DbSet<PriceOffer> PriceOffers { get; set; }
         public DbSet<Order> Orders { get; set; } //#A
 
-        public EfCoreContext(                             
-            DbContextOptions<EfCoreContext> options)      
-            : base(options) {}
+        public EfCoreContext(
+            DbContextOptions<EfCoreContext> options)
+            : base(options)
+        {
+            this.ThrowExceptionIfPendingMigrations();
+        }
+
+        public EfCoreContext(
+            DbContextOptions<EfCoreContext> options, bool ignoreMigations)
+            : base(options)
+        {
+            this.ThrowExceptionIfPendingMigrations(ignoreMigations);
+        }
 
         protected override void
             OnModelCreating(ModelBuilder modelBuilder)    

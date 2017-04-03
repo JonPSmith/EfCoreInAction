@@ -1,0 +1,13 @@
+﻿@model System.Collections.Immutable.ImmutableList<string>
+@{
+    ViewData["Title"] = "Migrated";
+}
+
+<h3>Migration stage done</h3>
+
+<ul>
+    @foreach (var log in @Model)
+    {
+        <li>@log</li>
+    }
+</ul>

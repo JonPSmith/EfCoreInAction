@@ -2,6 +2,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using DataLayer.EfCode;
+using EfCoreInAction.Filters;
 using EfCoreInAction.Logger;
 using EfCoreInAction.Services;
 using Microsoft.AspNetCore.Builder;
@@ -39,7 +40,8 @@ namespace EfCoreInAction
             var gitBranchName = _env.WebRootPath.GetBranchName();
 
             // Add framework services.
-            services.AddMvc();
+            //This adds an exception filter to catch the OutstandingMigrationException
+            services.AddMvc(options => options.Filters.Add(typeof(MigrateExceptionFilter)));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton(_env);
@@ -88,30 +90,7 @@ namespace EfCoreInAction
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            //see https://blogs.msdn.microsoft.com/dotnet/2016/09/29/implementing-seeding-custom-conventions-and-interceptors-in-ef-core-1-0/
-            using (var serviceScope = app                    //#A
-                 .ApplicationServices                        //#A
-                 .GetRequiredService<IServiceScopeFactory>() //#A
-                 .CreateScope())                             //#A
-            {
-                var context = serviceScope.ServiceProvider.GetService<EfCoreContext>();
-                if (_env.IsDevelopment())
-                {
-                    context.DevelopmentEnsureCreated();
-                }
-                if (_env.IsProduction())
-                {
-                    context.Database.Migrate();
-                }
-                //In either case we seed the database
-                context.SeedDatabase(_env.WebRootPath);
 
-            }
-            /******************************************************
-            #A This gets the scoped service provider
-            #B This creates an instance of teh application's DbContext that only has a lifetime of the outer using statement
-            #C This is my extension method for migrating and seeding the database
-             * ****************************************************/
         }
     }
 }

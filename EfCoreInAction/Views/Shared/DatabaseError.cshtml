@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Error";
+}
+
+<h1 class="text-danger">The database is offline for maintenance.</h1>
+
+<p>
+    Normally a user with some form of adminstration role would need to log in and run the migration.
+</p>
+<p>
+    However, in this case click @Html.ActionLink("this link", "Index", "Migrate", new {@class = "btn btn-danger" }) to migrate this database.
+</p>
