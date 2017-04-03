@@ -184,8 +184,8 @@ namespace EfCoreInAction.Controllers
         {
             Request.ThrowErrorIfNotLocal();
 
-            _context.DevelopmentEnsureCreated();
-            var numBooks = _context.SeedDatabase(_env.WebRootPath);
+            context.DevelopmentEnsureCreated();
+            var numBooks = context.SeedDatabase(env.WebRootPath);
             SetupTraceInfo();
             return View("BookUpdated", $"Successfully reset the database and added {numBooks} books.");
         }
