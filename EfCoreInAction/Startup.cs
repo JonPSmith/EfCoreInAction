@@ -94,12 +94,14 @@ namespace EfCoreInAction
                  .GetRequiredService<IServiceScopeFactory>() //#A
                  .CreateScope())                             //#A
             {
-                serviceScope.ServiceProvider     //#B
-                    .GetService<EfCoreContext>() //#B
-                    //.MigrateAndSeed() //#C
-                    .EnsureDatabaseCreatedAndSeeded(_env.WebRootPath,
-                    //if in development mode we use EnsureCreated, but in production mode we use migrations
-                    _env.IsDevelopment() ? DbStartupModes.EnsureCreated : DbStartupModes.UseMigrations);
+                var context = serviceScope.ServiceProvider.GetService<EfCoreContext>();
+                if (_env.IsDevelopment())
+                {
+                    context.DevelopmentEnsureCreated();
+                }
+                //if not develoment mode it assumes the database exists (
+                context.SeedDatabase(_env.WebRootPath);
+
             }
             /******************************************************
             #A This gets the scoped service provider

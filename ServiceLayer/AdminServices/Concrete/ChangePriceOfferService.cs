@@ -39,9 +39,19 @@ namespace ServiceLayer.AdminServices.Concrete
                 .Include(r => r.Promotion)          //#E
                 .Single(k => k.BookId               //#E
                       == promotion.BookId);         //#E
-            book.Promotion = promotion;             //#F
-            _context.SaveChanges();                 //#G
-            return book;                            //#H
+            if (book.Promotion == null)             //#F
+            {
+                book.Promotion = promotion;         //#G
+            }
+            else
+            {
+                book.Promotion.NewPrice             //#H
+                    = promotion.NewPrice;           //#H
+                book.Promotion.PromotionalText      //#H
+                    = promotion.PromotionalText;    //#H
+            }
+            _context.SaveChanges();                 //#I
+            return book;                            //#J
         }
     }
     /*********************************************************
@@ -50,8 +60,10 @@ namespace ServiceLayer.AdminServices.Concrete
     #C I return either the existing Promotion for editing, or create a new one. The important point is to set the BookId, as we need to pass that through to the second stage
     #D This method handles the second part of the update, i.e. performing a selective update of the chosen book
     #E This loads the book, with any existing promotion, which is important as otherwise our new PriceOffer will clash, and throw an error
-    #F I now set the book's Promotion property to the new PriceOffer class returned
-    #G The SaveChanges uses its DetectChanges method, which sees that the Book Promotion property has changed. It then sorts out the changes in the relationship.
+    #F I check if this an update of an existing PriceOffer or adding a new PriceOffer
+    #G I need to add a new ProceOffer, so I simply assign the promotion to the relational link. EF Core will see this and add a new row in the PriceOffer table
+    #H I need to do an update, so I copy over just the parts that I want to change. EF Core will see this update and produce code to unpdate just these two columns
+    #I The SaveChanges uses its DetectChanges method, which sees what has changes - either adding a new PriceOffer or updating an existing PriceOffer
     #H The method returns the updated book
      * ******************************************************/
 }

@@ -8,7 +8,7 @@ namespace DataLayer.EfClasses
 {
     public class Book                                   //#A
     {
-        public int BookId { get; set; }
+        public int BookId { get; set; } //#B
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime PublishedOn { get; set; }
@@ -22,14 +22,15 @@ namespace DataLayer.EfClasses
         //-----------------------------------------------
         //relationships
 
-        public PriceOffer Promotion { get; set; }        //#B 
-        public ICollection<Review> Reviews { get; set; } //#C
+        public PriceOffer Promotion { get; set; }        //#C
+        public ICollection<Review> Reviews { get; set; } //#D
         public ICollection<BookAuthor> 
-            AuthorsLink { get; set; }                    //#D
+            AuthorsLink { get; set; }                    //#E
     }
     /****************************************************#
     #A The Book class contains the main book information
-    #B This is the link to the optional PriceOffer
+    #B I use EF Core's 'by convention' approach to defining the primary key of this entity class. In this case I use <ClassName>Id, and because the property if of type int EF Core assumes that the database will use the SQL IDENTITY command to create a unique key when a new row is added
+    #C This is the link to the optional PriceOffer
     #C There can be zero to many Reviews of the book
     #D This provides a link to the Many-to-Many linking table that links to the Authors of this book
      * **************************************************/
