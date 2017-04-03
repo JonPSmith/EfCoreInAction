@@ -77,6 +77,7 @@ namespace test.UnitTests.ServiceLayer
             }
         }
 
+        //Fails - see https://github.com/aspnet/EntityFramework/issues/7714
         [Fact]
         public void TestIndividualBookListDtoOk()
         {
@@ -120,7 +121,7 @@ namespace test.UnitTests.ServiceLayer
             }
         }
 
-
+        //Fails - see https://github.com/aspnet/EntityFramework/issues/7714
         [Fact]
         public void TestAverageOk()
         {

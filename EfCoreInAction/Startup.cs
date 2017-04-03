@@ -82,11 +82,18 @@ namespace EfCoreInAction
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
             //see https://blogs.msdn.microsoft.com/dotnet/2016/09/29/implementing-seeding-custom-conventions-and-interceptors-in-ef-core-1-0/
+
+
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                //if in development mode we use 
-                serviceScope.ServiceProvider.GetService<EfCoreContext>().EnsureDatabaseCreatedAndSeeded(_env.WebRootPath,
-                    _env.IsDevelopment() ? DbStartupModes.EnsureCreated : DbStartupModes.UseMigrations);
+                var context = serviceScope.ServiceProvider.GetService<EfCoreContext>();
+                if (_env.IsDevelopment())
+                {
+                    context.DevelopmentEnsureCreated();
+                }
+                //if not develoment mode it assumes the database exists (
+                context.SeedDatabase(_env.WebRootPath);
+
             }
         }
     }
