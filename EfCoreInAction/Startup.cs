@@ -99,7 +99,11 @@ namespace EfCoreInAction
                 {
                     context.DevelopmentEnsureCreated();
                 }
-                //if not develoment mode it assumes the database exists (
+                if (_env.IsProduction())
+                {
+                    context.Database.Migrate();
+                }
+                //In either case we seed the database
                 context.SeedDatabase(_env.WebRootPath);
 
             }
