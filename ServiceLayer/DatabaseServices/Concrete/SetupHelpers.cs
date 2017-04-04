@@ -48,11 +48,6 @@ namespace ServiceLayer.DatabaseServices.Concrete
             return builder.ToString();
         }
 
-        public static void DevelopmentEnsureCreated(this EfCoreContext db)
-        {
-            db.Database.EnsureCreated();
-        }
-
         public static int SeedDatabase(this EfCoreContext context, string dataDirectory)
         {
             if (!(context.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists())
