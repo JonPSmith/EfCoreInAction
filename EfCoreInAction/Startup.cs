@@ -94,20 +94,16 @@ namespace EfCoreInAction
                  .GetRequiredService<IServiceScopeFactory>() //#A
                  .CreateScope())                             //#A
             {
-                var context = serviceScope.ServiceProvider.GetService<EfCoreContext>();
+                var context = serviceScope.ServiceProvider
+                    .GetService<EfCoreContext>(); //#B
                 if (_env.IsDevelopment())
                 {
-                    context.DevelopmentEnsureCreated();
+                    //In development mode I ensure the database is created. This means it will work "out of the box" for anyone running this application
+                    context.Database.EnsureCreated(); //#C
                 }
-                //if not develoment mode it assumes the database exists (
+                //if not develoment mode it assumes the database exists
                 context.SeedDatabase(_env.WebRootPath);
-
             }
-            /******************************************************
-            #A This gets the scoped service provider
-            #B This creates an instance of teh application's DbContext that only has a lifetime of the outer using statement
-            #C This is my extension method for migrating and seeding the database
-             * ****************************************************/
         }
     }
 }
