@@ -15,18 +15,13 @@ namespace DataLayer.EfCode
         public DbSet<PriceOffer> PriceOffers { get; set; }
         public DbSet<Order> Orders { get; set; } //#A
 
-        //public EfCoreContext(
-        //    DbContextOptions<EfCoreContext> options)
-        //    : base(options)
-        //{
-        //    this.ThrowExceptionIfPendingMigrations();
-        //}
-
         public EfCoreContext(
-            DbContextOptions<EfCoreContext> options, bool ignoreMigations = false)
+            DbContextOptions<EfCoreContext> options, 
+            bool ignoreMigations = false)
             : base(options)
         {
-            this.ThrowExceptionIfPendingMigrations(ignoreMigations);
+            this.ThrowExceptionIfPendingMigrations
+                (ignoreMigations);
         }
 
         protected override void

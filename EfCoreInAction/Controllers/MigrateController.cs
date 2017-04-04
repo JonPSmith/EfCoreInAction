@@ -23,13 +23,25 @@ namespace EfCoreInAction.Controllers
             return View(logs);
         }
 
-        public IActionResult ForceMigrateError()
+        /// <summary>
+        /// This tests the Exception filter will pick up the exception that ASP.NET Core DI will throw in migrations are outstanding
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult MigrateAspNetDi()
+        {
+            throw new OutstandingMigrationException();
+        }
+
+        /// <summary>
+        /// This tests the Exception filter will pick up the exception that AutoFac DI will throw in migrations are outstanding
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult MigrateAutoFac()
         {
             var exception = new DependencyResolutionException("Test",
                 new DependencyResolutionException("Test",
                     new OutstandingMigrationException()));
             throw exception;
-
         }
     }
 }

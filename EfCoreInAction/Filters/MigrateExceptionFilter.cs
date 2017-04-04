@@ -22,8 +22,11 @@ namespace EfCoreInAction.Filters
 
         public override void OnException(ExceptionContext context)
         {
-            if (!((context.Exception is DependencyResolutionException) 
-                && (context.Exception?.InnerException?.InnerException is OutstandingMigrationException))) return;
+            //ASP.NET Core DI returns OutstandingMigrationException
+            //while AutoFac returns DependencyResolutionException, with the InnerExeption.InnerException being OutstandingMigrationException
+            if (!(context.Exception is OutstandingMigrationException ||
+                (context.Exception is DependencyResolutionException 
+                && context.Exception?.InnerException?.InnerException is OutstandingMigrationException))) return;
 
             var result = new ViewResult
             {
