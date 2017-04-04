@@ -1,15 +1,8 @@
 ﻿// Copyright (c) 2016 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using DataLayer.EfClasses;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using TryAspNetCoreMirgate.EfCore;
 
@@ -22,15 +15,15 @@ namespace DataLayer.EfCode
         public DbSet<PriceOffer> PriceOffers { get; set; }
         public DbSet<Order> Orders { get; set; } //#A
 
-        public EfCoreContext(
-            DbContextOptions<EfCoreContext> options)
-            : base(options)
-        {
-            this.ThrowExceptionIfPendingMigrations();
-        }
+        //public EfCoreContext(
+        //    DbContextOptions<EfCoreContext> options)
+        //    : base(options)
+        //{
+        //    this.ThrowExceptionIfPendingMigrations();
+        //}
 
         public EfCoreContext(
-            DbContextOptions<EfCoreContext> options, bool ignoreMigations)
+            DbContextOptions<EfCoreContext> options, bool ignoreMigations = false)
             : base(options)
         {
             this.ThrowExceptionIfPendingMigrations(ignoreMigations);
