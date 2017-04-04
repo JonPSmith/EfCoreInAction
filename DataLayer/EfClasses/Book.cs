@@ -38,6 +38,6 @@ namespace DataLayer.EfClasses
     #B This tells EF Core that the string is non-nullable.
     #C This defines the the size of the string column in the database
     #D This also defines the size of the string column in the database
-    #E Again, I define the size of the string column in the database, but uses a constant, which I think is a better practice
+    #E Again, I define the size of the string column in the database, but I use a constant rather than a number, which I think is a better practice
      * **************************************************/
 }

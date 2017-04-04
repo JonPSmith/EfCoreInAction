@@ -16,5 +16,5 @@
 #D The Price I define the type and size using Fluent API
 #E The Publisher type and and nullability is defined by convention, while the size is set via the data attribute [MaxLength(64)]
 #F The PublishedOn SQL type has been set via some Fluent API to be of SQL type date (rather than the default of DATETIME2 (7)
-#G The ImageUrl has its type modified from NVARCHAR (that is, two byte Unicode) to VARCHAR (that is, one byte ASCII) via Fluent API, with the its size set by the data attribute [MaxLength(256)]
+#G The ImageUrl has its type modified from NVARCHAR (that is, two byte Unicode) to VARCHAR (that is, one byte ASCII) via Fluent API, with the size set by the data attribute [MaxLength(256)]
 
