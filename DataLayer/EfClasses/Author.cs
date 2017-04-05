@@ -2,22 +2,24 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DataLayer.EfClasses
 {
-    public class Author                          //#E
+    public class Author
     {
+        public const int NameLength = 100;
+
         public int AuthorId { get; set; }
+        [Required]
+        [MaxLength(NameLength)]
         public string Name { get; set; }
 
         //------------------------------
         //Relationships
 
         public ICollection<BookAuthor> 
-            BooksLink { get; set; }              //#F
+            BooksLink { get; set; }
     }
-    /*********************************************************
-    #E The Author class just contains the name of the author
-    #F This points to, via the linking table, all the books the Author has participated in
-     * *****************************************************/
+
 }
