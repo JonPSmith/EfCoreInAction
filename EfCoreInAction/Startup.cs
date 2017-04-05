@@ -103,7 +103,7 @@ namespace EfCoreInAction
             #A This gets the scoped service provider. This is the recommended way to obtain a new instance of the application’s DbContext in the Configure method
             #B This creates an instance of the application's DbContext that only has a lifetime of the outer using statement
             #C Then I call EF Core's Migrate command to apply any outstanding migrations at startup.
-            #D Then I have an extension method that checks that the database has any default data that I want it to have, called "Seeding the Database"
+            #D Then I have an extension method that checks that the database has any default data that I want it to have. This is called "Seeding the Database"
              * ****************************************************/
         }
     }
