@@ -16,11 +16,30 @@ namespace DataLayer.EfCode
                 if (!migrationLogs.Any())
                     return new[] { "No migrations needed to be applied - Seeding of database not done." };
 
-                context.Database.Migrate();
+                try
+                {
+                    context.Database.Migrate();
+                }
+                catch (Exception e)
+                {
+                    //Add logging here!
+                    migrationLogs.Add($"{e.GetType().Name} during Migration. See logs for details.");
+                    return migrationLogs;
+                }
+                migrationLogs.Add("Migration was successful.");
                 if (seedDatabase != null)
                 {
-                    seedDatabase.Invoke(context);
-                    migrationLogs.Add("Finally ran database seed method.");
+                    try
+                    {
+                        seedDatabase.Invoke(context);
+                    }
+                    catch (Exception e)
+                    {
+                        //Add logging here!
+                        migrationLogs.Add($"{e.GetType().Name} during seeding the database. See logs for details.");
+                        return migrationLogs;
+                    }
+                    migrationLogs.Add("Successfully ran database seed method.");
                 }
 
                 return migrationLogs;
