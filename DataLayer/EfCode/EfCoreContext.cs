@@ -17,12 +17,17 @@ namespace DataLayer.EfCode
 
         public EfCoreContext(
             DbContextOptions<EfCoreContext> options, 
-            bool ignoreMigations = false)
+            bool ignoreMigations = false) //#A
             : base(options)
         {
-            this.ThrowExceptionIfPendingMigrations
-                (ignoreMigations);
+            this.ThrowExceptionIfPendingMigrations //#B
+                (ignoreMigations); //#C
         }
+        /**********************************************************
+        #A I add a second parameter to the application's DbContext contructor, with a default value that will cause the Pending migrations check to be done
+        #B The method ThrowExceptionIfPendingMigrations does what it says - it throws a OutstandingMigrationException if there are pending migrations
+        #C The method can be turned off if the parameter ignoreMigations is true.
+        * *****************************************************/
 
         protected override void
             OnModelCreating(ModelBuilder modelBuilder)    
