@@ -41,12 +41,12 @@ namespace test.UnitTests.DataLayer
                 };                                      //#B
 
                 //ATTEMPT
-                context.Books.Add(book);                //#C
+                context.Add(book);                      //#C
                 context.SaveChanges();                  //#D
                 /******************************************************
                 #A This creates the book with the title "Test Book"
                 #B This adds a single author called "Test Author" using the linking table, BookAuthor
-                #C It uses the .Add method to add the book to the application's DbContext property Books
+                #C It uses the .Add method to add the book to the application's DbContext property, Books
                 #D It calls the SaveChanges() method from the application's DbContext to update the database
                  * *****************************************************/
 
@@ -66,7 +66,7 @@ namespace test.UnitTests.DataLayer
             {
                 var oneBook = 
                     EfTestData.CreateDummyBookOneAuthor();//#A
-                context.Books.Add(oneBook);               //#A
+                context.Add(oneBook);               //#A
                 context.SaveChanges();                    //#A
 
                 var book = new Book                     //#B
@@ -85,7 +85,7 @@ namespace test.UnitTests.DataLayer
                 };                                      //#C
 
                 //ATTEMPT
-                context.Books.Add(book);                //#D
+                context.Add(book);                //#D
                 context.SaveChanges();                  //#D
                 /************************************************************
                 #A This method creates dummy books for testing. I create one dummy book with one Author and add it to the empty database
@@ -110,7 +110,7 @@ namespace test.UnitTests.DataLayer
             {
                 var oneBook =
                     EfTestData.CreateDummyBookOneAuthor();
-                context.Books.Add(oneBook);               
+                context.Add(oneBook);               
 
                 var book = new Book                    
                 {                                      
@@ -128,7 +128,7 @@ namespace test.UnitTests.DataLayer
                 };                                     
 
                 //ATTEMPT
-                context.Books.Add(book);               
+                context.Add(book);               
                 context.SaveChanges();                 
 
                 //VERIFY
@@ -169,7 +169,7 @@ namespace test.UnitTests.DataLayer
                 };
 
                 //ATTEMPT
-                context.Books.Add(book);
+                context.Add(book);
                 context.SaveChanges();
 
                 //VERIFY
@@ -190,8 +190,8 @@ namespace test.UnitTests.DataLayer
                     EfTestData.CreateDummyBookOneAuthor();
 
                 //ATTEMPT
-                context.Books.Add(oneBook);
-                context.Books.Add(oneBook);
+                context.Add(oneBook);
+                context.Add(oneBook);
                 context.SaveChanges();
 
                 //VERIFY
@@ -200,7 +200,7 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void TestCreateBookWriteTwice()
+        public void TestCreateBookWriteTwiceBad()
         {
             //SETUP
             var inMemDb = new SqliteInMemory();
@@ -211,13 +211,17 @@ namespace test.UnitTests.DataLayer
                     EfTestData.CreateDummyBookOneAuthor();
 
                 //ATTEMPT
-                context.Books.Add(oneBook);
+                context.Add(oneBook);
                 context.SaveChanges();
-                context.Books.Add(oneBook);
+                var state1 = context.Entry(oneBook).State;
+                context.Add(oneBook);
+                var state2 = context.Entry(oneBook).State;
                 var ex = Assert.Throws<DbUpdateException>( () => context.SaveChanges());
 
                 //VERIFY
                 ex.Message.ShouldEqual("An error occurred while updating the entries. See the inner exception for details.");
+                state1.ShouldEqual(EntityState.Unchanged);
+                state2.ShouldEqual(EntityState.Added);
             }
         }
     }

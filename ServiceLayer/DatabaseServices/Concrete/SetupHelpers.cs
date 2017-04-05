@@ -8,6 +8,8 @@ using System.Linq;
 using DataLayer.EfCode;
 using EfCoreInAction.DatabaseHelpers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ServiceLayer.DatabaseServices.Concrete
 {
@@ -46,38 +48,22 @@ namespace ServiceLayer.DatabaseServices.Concrete
             return builder.ToString();
         }
 
-        /// <summary>
-        /// This handles database creation and seeding based in the startupMode 
-        /// </summary>
-        /// <param name="db"></param>
-        /// <param name="dataDirectory"></param>
-        /// <param name="startupMode"></param>
-        /// <returns>Number of books added, or -1 if database already existed</returns>
-        public static int EnsureDatabaseCreatedAndSeeded(this EfCoreContext db, string dataDirectory, DbStartupModes startupMode)
+        public static int SeedDatabase(this EfCoreContext context, string dataDirectory)
         {
-            if (startupMode == DbStartupModes.UseMigrations)
-            {
-                db.Database.Migrate();
-            }
-            else if (startupMode != DbStartupModes.UseExisting)
-            {
-                if (startupMode == DbStartupModes.EnsureDeletedCreated)
-                    db.Database.EnsureDeleted();
+            if (!(context.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists())
+                throw new InvalidOperationException("The database does not exist. If you are using Migrations then run PMC command update-database to create it");
 
-                if (!db.Database.EnsureCreated()) return -1;  //Database exists - leave it as it is
-            }
-
-            var numBooks = db.Books.Count();
+            var numBooks = context.Books.Count();
             if (numBooks == 0)
             {
                 //the database is emply so we fill it from a json file
                 var books = BookJsonLoader.LoadBooks(Path.Combine(dataDirectory, SeedFileSubDirectory),
                     SeedDataSearchName).ToList();
-                db.Books.AddRange(books);
-                db.SaveChanges();
+                context.Books.AddRange(books);
+                context.SaveChanges();
                 //We add this separately so that it has the highest Id. That will make it appear at the top of the default list
-                db.Books.Add(SpecialBook.CreateSpecialBook());
-                db.SaveChanges();
+                context.Books.Add(SpecialBook.CreateSpecialBook());
+                context.SaveChanges();
                 numBooks = books.Count + 1;
             }
 

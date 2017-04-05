@@ -83,23 +83,6 @@ namespace test.Chapter05Listings
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-
-
-            //see https://blogs.msdn.microsoft.com/dotnet/2016/09/29/implementing-seeding-custom-conventions-and-interceptors-in-ef-core-1-0/
-            using (var serviceScope = app                    //#A
-                 .ApplicationServices                        //#A
-                 .GetRequiredService<IServiceScopeFactory>() //#A
-                 .CreateScope())                             //#A
-            {
-                serviceScope.ServiceProvider //#B
-                    .GetService<EfCoreContext>() //#B
-                    .Database.Migrate(); //#C
-            }
-            /******************************************************
-            #A This gets the scoped service provider
-            #B This creates an instance of the application's DbContext that only has a lifetime of the outer using statement
-            #C This calls EF Core's Migrate command, which will update the database structure if the entity classes or EF configuration has changed
-             * ****************************************************/
         }
     }
 }
