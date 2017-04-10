@@ -2,6 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using DataLayer.EfClasses;
+using DataLayer.EfCode.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -21,46 +22,13 @@ namespace DataLayer.EfCode
         protected override void
             OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Book>()  //Add a non-unique index to the publish date
-                .HasIndex(x => x.PublishedOn);
-
-            modelBuilder.Entity<Book>() //#A
-                .Property(x => x.PublishedOn)
-                .HasColumnType("date");
-
-            modelBuilder.Entity<Book>()
-                .Property(p => p.Price) //#B
-                .HasColumnType("decimal(9,2)");
-
-            modelBuilder.Entity<Book>() //#C
-                .Property(x => x.ImageUrl)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Book>()
-                .HasKey(x => x.BookId); //#A
-
-            modelBuilder.Entity<BookAuthor>()          
-                .HasKey(x => new {x.BookId, x.AuthorId}); //#B
-
-            modelBuilder.Entity<PriceOffer>()
-                .Property(p => p.NewPrice)
-                .HasColumnType("decimal(9,2)");
-
-            modelBuilder.Entity<LineItem>()        
-                .HasOne(p => p.ChosenBook)         
-                .WithMany()                        
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Book>().Configure();
+            modelBuilder.Entity<BookAuthor>().Configure();
+            modelBuilder.Entity<PriceOffer>().Configure(); 
+            modelBuilder.Entity<LineItem>().Configure();  
         }                                                 
     }
-    /*Type/Size seeting**********************************************
-    #A The convention-based mapping for .NET DateTime is SQL datetime2. This command changes the SQL column type to date, which only holds the date, not time
-    #B I set a smaller precision and scale of (9,2) for the price instead of the default (18,2)
-    #C The convention-based mapping for .NET string is SQL nvarchar (16 bit Unicode). This command changes the SQL column type to varchar (8 bit ASCII)
-    * ******************************************************/
-    /*Primary key settings**********************************************
-    #A Here I define a single primary key
-    #B Here I use an anonymous object to define two (or more) properties to form a composite key. The order in which the properties appear in the anonymous object defines their order
-    * ******************************************************/
+
 }
 
 /******************************************************************************
