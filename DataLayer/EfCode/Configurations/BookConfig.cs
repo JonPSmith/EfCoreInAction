@@ -27,7 +27,8 @@ namespace DataLayer.EfCode.Configurations
             //relationships
 
             entity.HasOne(p => p.Promotion) //#A
-                .WithOne();                 //#A
+                .WithOne() //#A
+                .HasForeignKey<PriceOffer>(p => p.BookId); //#A
 
             entity.HasMany(p => p.Reviews)     //#B
                 .WithOne()                     //#B
@@ -35,7 +36,7 @@ namespace DataLayer.EfCode.Configurations
         }
     }
     /************************************************************
-    #A This defines the One-to-ZeroOrOne relationship to the promotion that a book can optionally have
+    #A This defines the One-to-One relationship to the promotion that a book can optionally have. The foreign key is in the PriceOffer
     #B This defines the One-to-Many relationship, with a book having zero to many reviews
      * ***********************************************************/
 }

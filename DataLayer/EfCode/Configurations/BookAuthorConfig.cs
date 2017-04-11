@@ -16,16 +16,18 @@ namespace DataLayer.EfCode.Configurations
             //-----------------------------
             //Relationships
 
-            //entity.HasOne(pt => pt.Book)
-            //    .WithMany(p => p.AuthorsLink)
-            //    .HasForeignKey(pt => pt.BookId);
+            entity.HasOne(pt => pt.Book)        //#C
+                .WithMany(p => p.AuthorsLink)   //#C
+                .HasForeignKey(pt => pt.BookId);//#C
 
-            //entity.HasOne(pt => pt.Author)
-            //    .WithMany(t => t.BooksLink)
-            //    .HasForeignKey(pt => pt.AuthorId);
+            entity.HasOne(pt => pt.Author)        //#C
+                .WithMany(t => t.BooksLink)       //#C
+                .HasForeignKey(pt => pt.AuthorId);//#C
         }
         /*******************************************************
         #A This uses the names of the Book and Author primary keys to form its own, composite key
+        #B I configure the one-to-many relationship from the Book to BookAuthor entity class
+        #C ... and I then configure the other one-to-many relationship from the Author to the BookAuthor entity class
          * ****************************************************/
     }
 }
