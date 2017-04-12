@@ -8,8 +8,16 @@ namespace Test.Chapter07Listings.EfClasses
         public int AttendeeId { get; set; }
         public string Name { get; set; }
 
-        public int TicketId { get; set; }
-        public Ticket Ticket { get; set; }
+        public int TicketId { get; set; } //#A
+        public Ticket Ticket { get; set; }//#B
 
+        //public OptionalTrack Optional { get; set; } //#C
+        //public RequiredTrack Required { get; set; } //#D
     }
+    /*******************************************************
+    #A This is the foreign key for the one-to-one relationship, Ticket
+    #B This is the one-to-one navigational property that accesses the Ticket entity
+    #C This is a one-to-one navigational property using a shadow property for the foreign key. By default, the foreign key is nullable, so the relationship is optional
+    #D This is a one-to-one navigational property using a shadow property for the foreign key. I use Fluent API commands to say that the foreign key is NOT nullable, so the relationship is required
+     * *****************************************************/
 }

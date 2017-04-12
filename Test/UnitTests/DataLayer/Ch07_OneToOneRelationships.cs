@@ -28,9 +28,21 @@ namespace test.UnitTests.DataLayer
                     //ATTEMPT
                     var attendees = new List<Attendee>
                     {
-                        new Attendee {Name = "Person1", Ticket = new Ticket{TicketType = Ticket.TicketTypes.Guest}},
-                        new Attendee {Name = "Person2", Ticket = new Ticket {TicketType = Ticket.TicketTypes.VIP }},
-                        new Attendee {Name = "Person3", Ticket = new Ticket{TicketType = Ticket.TicketTypes.Guest}},
+                        new Attendee
+                        {
+                            Name = "Person1", Ticket = new Ticket{TicketType = Ticket.TicketTypes.Guest},
+                            //Required = new RequiredTrack()
+                        },
+                        new Attendee
+                        {
+                            Name = "Person2", Ticket = new Ticket {TicketType = Ticket.TicketTypes.VIP },
+                            //Required = new RequiredTrack()
+                        },
+                        new Attendee
+                        {
+                            Name = "Person3", Ticket = new Ticket{TicketType = Ticket.TicketTypes.Guest},
+                            //Required = new RequiredTrack()
+                        },
                     };
                     context.AddRange(attendees);
                     context.SaveChanges();
@@ -52,7 +64,7 @@ namespace test.UnitTests.DataLayer
                     context.Database.EnsureCreated();
 
                     //ATTEMPT
-                    context.Add(new Attendee { Name = "Person1"});
+                    context.Add(new Attendee {Name = "Person1",});//Required = new RequiredTrack() });
                     var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
 
                     //VERIFY
@@ -69,20 +81,24 @@ namespace test.UnitTests.DataLayer
                 SqliteInMemory.CreateOptions<Chapter07DbContext>()))
             {
                 {
+                    var logs = new List<string>();
+                    SqliteInMemory.SetupLogging(context, logs);
                     context.Database.EnsureCreated();
 
                     //ATTEMPT
                     var dupTicket = new Ticket {TicketType = Ticket.TicketTypes.Guest};
                     var attendees = new List<Attendee>
                     {
-                        new Attendee {Name = "Person1", Ticket = dupTicket},
-                        new Attendee {Name = "Person2", Ticket = dupTicket},
+                        new Attendee {Name = "Person1", Ticket = dupTicket, },//Required = new RequiredTrack()},
+                        new Attendee {Name = "Person2", Ticket = dupTicket, },//Required = new RequiredTrack()},
                     };
                     context.AddRange(attendees);
-                    var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
+                    context.SaveChanges();
+                    //var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
 
                     //VERIFY
-                    ex.InnerException.Message.ShouldEqual("SQLite Error 19: 'UNIQUE constraint failed: Attendees.TicketId'.");
+                    //ex.InnerException.Message.ShouldEqual("SQLite Error 19: 'UNIQUE constraint failed: Attendees.TicketId'.");
+                    context.Tickets.Count().ShouldEqual(1);
                 }
             }
         }
@@ -105,9 +121,21 @@ namespace test.UnitTests.DataLayer
         //            //ATTEMPT
         //            var attendees = new List<Attendee>
         //            {
-        //                new Attendee {Name = "Person1", Ticket = new Ticket{TicketType = Ticket.TicketTypes.Guest}},
-        //                new Attendee {Name = "Person2", Ticket = new Ticket {TicketType = Ticket.TicketTypes.VIP }},
-        //                new Attendee {Name = "Person3", Ticket = new Ticket{TicketType = Ticket.TicketTypes.Guest}},
+        //                new Attendee
+        //                {
+        //                    Name = "Person1", Ticket = new Ticket{TicketType = Ticket.TicketTypes.Guest},
+        //                    //Required = new RequiredTrack()
+        //                },
+        //                new Attendee
+        //                {
+        //                    Name = "Person2", Ticket = new Ticket {TicketType = Ticket.TicketTypes.VIP },
+        //                    //Required = new RequiredTrack()
+        //                },
+        //                new Attendee
+        //                {
+        //                    Name = "Person3", Ticket = new Ticket{TicketType = Ticket.TicketTypes.Guest},
+        //                    //Required = new RequiredTrack()
+        //                },
         //            };
         //            context.AddRange(attendees);
         //            context.SaveChanges();
