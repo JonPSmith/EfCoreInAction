@@ -11,8 +11,8 @@ namespace Test.Chapter07Listings.EfClasses
         public int TicketId { get; set; } //#A
         public Ticket Ticket { get; set; }//#B
 
-        //public OptionalTrack Optional { get; set; } //#C
-        //public RequiredTrack Required { get; set; } //#D
+        public OptionalTrack Optional { get; set; } //#C
+        public RequiredTrack Required { get; set; } //#D
     }
     /*******************************************************
     #A This is the foreign key for the one-to-one relationship, Ticket

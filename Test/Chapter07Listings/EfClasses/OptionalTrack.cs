@@ -10,5 +10,7 @@ namespace Test.Chapter07Listings.EfClasses
         public int OptionalTrackId { get; set; }
 
         public TrackNames Track { get; set; }
+
+        public Attendee Attend { get; set; }
     }
 }

@@ -12,15 +12,21 @@ namespace Test.Chapter07Listings.EFCode.Configurations
             (this EntityTypeBuilder<Attendee> entity)
         {
             entity.HasOne(p => p.Ticket) //#A
-                .WithOne(p => p.Attendee)
+                //.WithOne(p => p.Attendee)
+                .WithOne()
                 .HasForeignKey<Attendee>
-                    (p => p.TicketId); //#B
+                    (p => p.TicketId) //#B
+                .IsRequired();
 
-            //entity.HasOne(p => p.Required) //#C
-            //    .WithOne()
-            //    .HasForeignKey<Attendee>(
-            //        "RequiredTrackId") //#D
-            //    .IsRequired(); //#E
+            entity.HasOne(p => p.Optional)
+                .WithOne(p => p.Attend)
+                .HasForeignKey<Attendee>("OptionalTrackId");
+
+            entity.HasOne(p => p.Required) //#C
+                .WithOne(p => p.Attend)
+                .HasForeignKey<Attendee>(
+                    "RequiredTrackId") //#D
+                .IsRequired(); //#E
         }
         /*******************************************************************
         #A This sets up the one-to-one navigational relationship, Ticket, which has a foreign key defined in the Attendee class

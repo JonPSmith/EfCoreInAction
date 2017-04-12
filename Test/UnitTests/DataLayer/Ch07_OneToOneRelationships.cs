@@ -31,17 +31,17 @@ namespace test.UnitTests.DataLayer
                         new Attendee
                         {
                             Name = "Person1", Ticket = new Ticket{TicketType = Ticket.TicketTypes.Guest},
-                            //Required = new RequiredTrack()
+                            Required = new RequiredTrack()
                         },
                         new Attendee
                         {
                             Name = "Person2", Ticket = new Ticket {TicketType = Ticket.TicketTypes.VIP },
-                            //Required = new RequiredTrack()
+                            Required = new RequiredTrack()
                         },
                         new Attendee
                         {
                             Name = "Person3", Ticket = new Ticket{TicketType = Ticket.TicketTypes.Guest},
-                            //Required = new RequiredTrack()
+                            Required = new RequiredTrack()
                         },
                     };
                     context.AddRange(attendees);
@@ -49,6 +49,36 @@ namespace test.UnitTests.DataLayer
 
                     //VERIFY
                     context.Tickets.Count().ShouldEqual(3);
+                }
+            }
+        }
+
+        [Fact]
+        public void TestOption1OneToOneDeleteOk()
+        {
+            //SETUP
+            using (var context = new Chapter07DbContext(
+                SqliteInMemory.CreateOptions<Chapter07DbContext>()))
+            {
+                {
+                    context.Database.EnsureCreated();
+                    var attendee = new Attendee
+                    {
+                        Name = "Person1",
+                        Ticket = new Ticket(),
+                        Required = new RequiredTrack()
+                    };
+                    context.Add(attendee);
+                    context.SaveChanges();
+
+                    //ATTEMPT
+                    context.Remove(attendee);
+                    context.SaveChanges();
+
+                    //VERIFY
+                    context.Attendees.Count().ShouldEqual(0);
+                    context.Tickets.Count().ShouldEqual(1);
+                    context.Set<RequiredTrack>().Count().ShouldEqual(1);
                 }
             }
         }
@@ -64,7 +94,7 @@ namespace test.UnitTests.DataLayer
                     context.Database.EnsureCreated();
 
                     //ATTEMPT
-                    context.Add(new Attendee {Name = "Person1",});//Required = new RequiredTrack() });
+                    context.Add(new Attendee {Name = "Person1", Required = new RequiredTrack() });
                     var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
 
                     //VERIFY
@@ -89,16 +119,16 @@ namespace test.UnitTests.DataLayer
                     var dupTicket = new Ticket {TicketType = Ticket.TicketTypes.Guest};
                     var attendees = new List<Attendee>
                     {
-                        new Attendee {Name = "Person1", Ticket = dupTicket, },//Required = new RequiredTrack()},
-                        new Attendee {Name = "Person2", Ticket = dupTicket, },//Required = new RequiredTrack()},
+                        new Attendee {Name = "Person1", Ticket = dupTicket, Required = new RequiredTrack()},
+                        new Attendee {Name = "Person2", Ticket = dupTicket, Required = new RequiredTrack()},
                     };
-                    context.AddRange(attendees);
-                    context.SaveChanges();
-                    //var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
+                    //context.AddRange(attendees);
+                    //context.SaveChanges();
+                    var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
 
                     //VERIFY
-                    //ex.InnerException.Message.ShouldEqual("SQLite Error 19: 'UNIQUE constraint failed: Attendees.TicketId'.");
-                    context.Tickets.Count().ShouldEqual(1);
+                    ex.InnerException.Message.ShouldEqual("SQLite Error 19: 'UNIQUE constraint failed: Attendees.TicketId'.");
+                    //context.Tickets.Count().ShouldEqual(1);
                 }
             }
         }
@@ -124,17 +154,17 @@ namespace test.UnitTests.DataLayer
         //                new Attendee
         //                {
         //                    Name = "Person1", Ticket = new Ticket{TicketType = Ticket.TicketTypes.Guest},
-        //                    //Required = new RequiredTrack()
+        //                    Required = new RequiredTrack()
         //                },
         //                new Attendee
         //                {
         //                    Name = "Person2", Ticket = new Ticket {TicketType = Ticket.TicketTypes.VIP },
-        //                    //Required = new RequiredTrack()
+        //                    Required = new RequiredTrack()
         //                },
         //                new Attendee
         //                {
         //                    Name = "Person3", Ticket = new Ticket{TicketType = Ticket.TicketTypes.Guest},
-        //                    //Required = new RequiredTrack()
+        //                    Required = new RequiredTrack()
         //                },
         //            };
         //            context.AddRange(attendees);
