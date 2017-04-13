@@ -65,7 +65,7 @@ namespace test.UnitTests.DataLayer
 
                 //VERIFY
                 ex.InnerException.Message.ShouldEqual(
-                    "SQLite Error 19: 'NOT NULL constraint failed: Attendees.RequiredTrackId'.");
+                    "SQLite Error 19: 'NOT NULL constraint failed: Attendees.MyShadowFk'.");
                 //context.Set<RequiredTrack>().Count().ShouldEqual(1);
             }
         }

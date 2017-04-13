@@ -118,7 +118,7 @@ namespace test.UnitTests.DataLayer
                     new Attendee {Name = "Person1", Ticket = dupTicket, Required = new RequiredTrack()},
                     new Attendee {Name = "Person2", Ticket = dupTicket, Required = new RequiredTrack()},
                 };
-                //context.AddRange(attendees);
+                context.AddRange(attendees);
                 //context.SaveChanges();
                 var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
 
