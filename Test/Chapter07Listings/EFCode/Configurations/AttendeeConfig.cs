@@ -12,8 +12,8 @@ namespace Test.Chapter07Listings.EFCode.Configurations
             (this EntityTypeBuilder<Attendee> entity)
         {
             entity.HasOne(p => p.Ticket) //#A
-                //.WithOne(p => p.Attendee)
-                .WithOne()
+                .WithOne(p => p.Attendee)
+                //.WithOne()
                 .HasForeignKey<Attendee>
                     (p => p.TicketId) //#B
                 .IsRequired();

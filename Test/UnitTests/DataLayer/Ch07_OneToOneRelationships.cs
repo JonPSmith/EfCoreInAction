@@ -3,18 +3,27 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 using test.EfHelpers;
 using test.Helpers;
 using Test.Chapter07Listings.EfClasses;
 using Test.Chapter07Listings.EFCode;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
 
 namespace test.UnitTests.DataLayer
 {
     public class Ch07_OneToOneRelationships
     {
+        private readonly ITestOutputHelper _output;
+
+        public Ch07_OneToOneRelationships(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
         public void TestOption1OneToOneOk()
         {
@@ -121,60 +130,62 @@ namespace test.UnitTests.DataLayer
                     {
                         new Attendee {Name = "Person1", Ticket = dupTicket, Required = new RequiredTrack()},
                         new Attendee {Name = "Person2", Ticket = dupTicket, Required = new RequiredTrack()},
+                        new Attendee {Name = "Person2", Ticket = dupTicket, Required = new RequiredTrack()},
+                        new Attendee {Name = "Person3", Ticket = new Ticket(), Required = new RequiredTrack()}
                     };
-                    //context.AddRange(attendees);
-                    //context.SaveChanges();
-                    var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
+                    context.AddRange(attendees);
+                    ListStates(context, "After AddRange", attendees);
+                    context.SaveChanges();
+                    ListStates(context, "After SaveChanges", attendees);
+                    //var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
 
                     //VERIFY
-                    ex.InnerException.Message.ShouldEqual("SQLite Error 19: 'UNIQUE constraint failed: Attendees.TicketId'.");
-                    //context.Tickets.Count().ShouldEqual(1);
+                    //ex.InnerException.Message.ShouldEqual("SQLite Error 19: 'UNIQUE constraint failed: Attendees.TicketId'.");
+                    context.Tickets.Count().ShouldEqual(1);
+                    context.Attendees.Count().ShouldEqual(2);
                 }
             }
         }
 
-        //[Fact]
-        //public void TestOption1OneToOneSqlOk()
-        //{
-        //    //SETUP
-        //    var connection = this.GetUniqueDatabaseConnectionString();
-        //    var optionsBuilder =
-        //        new DbContextOptionsBuilder<Chapter07DbContext>();
+        private void ListStates(DbContext context, string message,  List<Attendee> entities)
+        {
+            var line = message + ": " + string.Join(", ", entities.Select(x => context.Entry(x).State));
+            _output.WriteLine(line);
+        }
 
-        //    optionsBuilder.UseSqlServer(connection);
-        //    using (var context = new Chapter07DbContext(optionsBuilder.Options))
-        //    {
-        //        {
-        //            context.Database.EnsureCreated();
-        //            var orgTicketesCount = context.Tickets.Count();
+        [Fact]
+        public void TestOption1OneToOneSqlOk()
+        {
+            //SETUP
+            var connection = this.GetUniqueDatabaseConnectionString();
+            var optionsBuilder =
+                new DbContextOptionsBuilder<Chapter07DbContext>();
 
-        //            //ATTEMPT
-        //            var attendees = new List<Attendee>
-        //            {
-        //                new Attendee
-        //                {
-        //                    Name = "Person1", Ticket = new Ticket{TicketType = Ticket.TicketTypes.Guest},
-        //                    Required = new RequiredTrack()
-        //                },
-        //                new Attendee
-        //                {
-        //                    Name = "Person2", Ticket = new Ticket {TicketType = Ticket.TicketTypes.VIP },
-        //                    Required = new RequiredTrack()
-        //                },
-        //                new Attendee
-        //                {
-        //                    Name = "Person3", Ticket = new Ticket{TicketType = Ticket.TicketTypes.Guest},
-        //                    Required = new RequiredTrack()
-        //                },
-        //            };
-        //            context.AddRange(attendees);
-        //            context.SaveChanges();
+            optionsBuilder.UseSqlServer(connection);
+            using (var context = new Chapter07DbContext(optionsBuilder.Options))
+            {
+                {
+                    var logger = new LogDbContext(context);
 
-        //            //VERIFY
-        //            context.Tickets.Count().ShouldEqual(orgTicketesCount + 3);
-        //        }
-        //    }
-        //}
+                    context.Database.EnsureCreated();
+                    var orgTicketesCount = context.Tickets.Count();
+                    var orgAttendeesCount = context.Attendees.Count();
+
+                    var dupTicket = new Ticket { TicketType = Ticket.TicketTypes.Guest };
+                    var attendees = new List<Attendee>
+                    {
+                        new Attendee {Name = "Person1", Ticket = dupTicket, Required = new RequiredTrack()},
+                        new Attendee {Name = "Person2", Ticket = dupTicket, Required = new RequiredTrack()}
+                    };
+                    context.AddRange(attendees);
+                    context.SaveChanges();
+
+                    //VERIFY
+                    context.Tickets.Count().ShouldEqual(orgTicketesCount + 1);
+                    context.Attendees.Count().ShouldEqual(orgAttendeesCount + 2);
+                }
+            }
+        }
 
 
     }
