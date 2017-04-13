@@ -27,6 +27,7 @@ namespace Test.Chapter07Listings.EFCode
             (ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Attendee>().Configure();
+            modelBuilder.Entity<Person>().Configure();
         }
     }
 }
