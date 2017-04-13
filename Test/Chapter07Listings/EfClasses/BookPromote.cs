@@ -18,6 +18,7 @@ namespace Test.Chapter07Listings.EfClasses
         {
             return _orgPrice;
         }
+
         public BookPromote() { }
 
         public BookPromote(BookBase orgBook) : base(orgBook)
