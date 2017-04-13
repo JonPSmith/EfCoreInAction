@@ -18,6 +18,9 @@ namespace Test.Chapter07Listings.EFCode
         public DbSet<Attendee> Attendees { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
 
+        //Table-per-hierarchy
+        public DbSet<BookBase> Books { get; set; }
+
         public Chapter07DbContext(
             DbContextOptions<Chapter07DbContext> options)
             : base(options)
@@ -28,6 +31,7 @@ namespace Test.Chapter07Listings.EFCode
         {
             modelBuilder.Entity<Attendee>().Configure();
             modelBuilder.Entity<Person>().Configure();
+            modelBuilder.Entity<BookBase>().Configure();
         }
     }
 }
