@@ -74,6 +74,47 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void TestChangePaymentTypeOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter07DbContext>();
+            using (var context = new Chapter07DbContext(options))
+            {
+                var logs = new List<string>();
+                SqliteInMemory.SetupLogging(context, logs);
+
+                context.Database.EnsureCreated();
+
+                //ATTEMPT
+                context.Add(new PaymentCard{Amount =  12, ReceiptCode = "1234"});
+                context.SaveChanges();
+            }
+            //NOTE: this only works because the PaymentConfig code contains the following Fluent API command - see EF Core issue #7510
+            //entity.Property(p => p.PType).Metadata.IsReadOnlyAfterSave = false;
+            using (var context = new Chapter07DbContext(options))
+            {
+                //You MUST read it untracked because of issue #7340
+                var untracked = context.Payments.AsNoTracking().Single();
+                //Then you needto copy all the information to the new TPH type
+                var changed = new PaymentCash
+                {
+                    PaymentId = untracked.PaymentId,
+                    Amount = untracked.Amount,
+                    PType = PTypes.Cash //You have to explictly set the discriminator
+                };
+                context.Update(changed);
+                context.SaveChanges();
+            }
+            //VERITY
+            using (var context = new Chapter07DbContext(options))
+            {
+                //You MUST read it untracked because of issue #7340
+                var payment = context.Payments.Single();
+                payment.ShouldBeType<PaymentCash>();
+            }
+        }
+
+        [Fact]
         public void TestCreateSoldItTphPaymentCashOk()
         {
             //SETUP
