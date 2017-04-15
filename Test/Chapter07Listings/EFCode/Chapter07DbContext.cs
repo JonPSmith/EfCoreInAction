@@ -19,7 +19,9 @@ namespace Test.Chapter07Listings.EFCode
         public DbSet<Ticket> Tickets { get; set; }
 
         //Table-per-hierarchy
-        public DbSet<BookBase> Books { get; set; }
+        public DbSet<Payment> Payments { get; set; } //#A
+
+        public DbSet<SoldIt> SoldThings { get; set; } //#B
 
         public Chapter07DbContext(
             DbContextOptions<Chapter07DbContext> options)
@@ -31,7 +33,12 @@ namespace Test.Chapter07Listings.EFCode
         {
             modelBuilder.Entity<Attendee>().Configure();
             modelBuilder.Entity<Person>().Configure();
-            modelBuilder.Entity<BookBase>().Configure();
+            modelBuilder.Entity<Payment>().Configure(); //#C
         }
     }
+    /**TPH**************************************************
+    #A This defines the property through which I can access all the payments, both PaymentCash and PaymentCard
+    #B This is the list of sold items, with a required link to a Payment
+    #C I call the configureration code for the payment TPH via its extension method, Configure
+     * ******************************************************/
 }
