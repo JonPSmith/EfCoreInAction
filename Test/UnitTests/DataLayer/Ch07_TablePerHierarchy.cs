@@ -108,7 +108,6 @@ namespace test.UnitTests.DataLayer
             //VERITY
             using (var context = new Chapter07DbContext(options))
             {
-                //You MUST read it untracked because of issue #7340
                 var payment = context.Payments.Single();
                 payment.ShouldBeType<PaymentCash>();
             }
