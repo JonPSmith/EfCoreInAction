@@ -119,12 +119,13 @@ namespace test.UnitTests.DataLayer
         public void TestAddAuthorDisconnectedOk()
         {
             //SETUP
-            var options =
-                this.NewMethodUniqueDatabaseSeeded4Books();
-
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             ChangeAuthorDto dto;
             using (var context = new EfCoreContext(options))
             {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
                 var book = context.Books
                     .Include(p => p.AuthorsLink)
                     .Single(p => p.Title == "Quantum Networking");
@@ -171,12 +172,13 @@ namespace test.UnitTests.DataLayer
         public void TestChangeAllAuthorsViaForeignKeyOk()
         {
             //SETUP
-            var options =
-                this.NewMethodUniqueDatabaseSeeded4Books();
-
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             ChangeAuthorDto dto;
             using (var context = new EfCoreContext(options))
             {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
                 var book = context.Books
                     .Include(p => p.AuthorsLink)
                     .Single(p => p.Title == "Quantum Networking");
@@ -225,12 +227,13 @@ namespace test.UnitTests.DataLayer
         public void TestAddAuthorViaForeignKeyOk()
         {
             //SETUP
-            var options =
-                this.NewMethodUniqueDatabaseSeeded4Books();
-
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             ChangeAuthorDto dto;
             using (var context = new EfCoreContext(options))
             {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
                 var book = context.Books
                     .Include(p => p.AuthorsLink)
                     .Single(p => p.Title == "Quantum Networking");
