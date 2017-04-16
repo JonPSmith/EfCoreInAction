@@ -89,18 +89,19 @@ namespace test.UnitTests.DataLayer
                 context.Add(new PaymentCard{Amount =  12, ReceiptCode = "1234"});
                 context.SaveChanges();
             }
-            //NOTE: this only works because the PaymentConfig code contains the following Fluent API command - see EF Core issue #7510
-            //entity.Property(p => p.PType).Metadata.IsReadOnlyAfterSave = false;
             using (var context = new Chapter07DbContext(options))
             {
                 //You MUST read it untracked because of issue #7340
                 var untracked = context.Payments.AsNoTracking().Single();
-                //Then you needto copy all the information to the new TPH type
+                //Then you need to copy ALL the information to the new TPH type, especially its primary key.
                 var changed = new PaymentCash
                 {
                     PaymentId = untracked.PaymentId,
                     Amount = untracked.Amount,
-                    PType = PTypes.Cash //You have to explictly set the discriminator
+                    //You MUST explictly set the discriminator
+                    //NOTE: this only works because the PaymentConfig code contains the following Fluent API command below - see EF Core issue #7510
+                    //entity.Property(p => p.PType).Metadata.IsReadOnlyAfterSave = false;
+                    PType = PTypes.Cash //You MUST explictly set the discriminator
                 };
                 context.Update(changed);
                 context.SaveChanges();
