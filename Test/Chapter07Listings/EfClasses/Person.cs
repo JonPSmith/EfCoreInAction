@@ -25,11 +25,11 @@ namespace Test.Chapter07Listings.EfClasses
 
         public ContactInfo ContactInfo { get; set; }
 
-        [InverseProperty("Librarian")]   //#A
+        [InverseProperty(nameof(LibraryBook.Librarian))]   //#A
         public ICollection<LibraryBook> 
             LibrarianBooks { get; set; }
 
-        [InverseProperty("OnLoanTo")]    //#B
+        [InverseProperty(nameof(LibraryBook.OnLoanTo))]    //#B
         public ICollection<LibraryBook> 
             BooksBorrowedByMe { get; set; }
     }
