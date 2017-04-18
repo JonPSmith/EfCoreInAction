@@ -71,6 +71,36 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void TestChangeIndexesOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter06DbContext>();
+            using (var context = new Chapter06DbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                var entity = new IndexClass
+                {
+                    IndexNonUnique = "a",
+                    IndexUnique = "a"
+                };
+                context.Add(entity);
+                context.SaveChanges();
+            }
+            using (var context = new Chapter06DbContext(options))
+            {
+                //ATTEMPT
+                var entity = context.IndexClasses.First();
+                entity.IndexNonUnique = "b";
+                entity.IndexUnique = "hello";
+                context.SaveChanges();
+
+                //VERIFY
+                context.IndexClasses.Count().ShouldEqual(1);
+            }
+        }
+
+        [Fact]
         public void TestCreateMulipleIndexesOk()
         {
             //SETUP
@@ -126,11 +156,10 @@ namespace test.UnitTests.DataLayer
 
                     //VERIFY
                     ex.InnerException.Message.ShouldEqual(
-                        "SQLite Error 19: 'UNIQUE constraint failed: IndexClasses.IndexUnique'");
+                        "SQLite Error 19: 'UNIQUE constraint failed: IndexClasses.IndexUnique'.");
                 }
             }
         }
-
 
         [Fact]
         public void TestCreateMulipleIndexesNullOk()
