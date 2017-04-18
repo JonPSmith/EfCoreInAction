@@ -16,7 +16,7 @@ namespace test.UnitTests.DataLayer
     public class Ch07_InverseProperty
     {
         [Fact]
-        public void TestLibraryBookLibarianOnlyOk()
+        public void TestLibraryBookLibrarianOnlyOk()
         {
             //SETUP
             using (var context = new Chapter07DbContext(
@@ -43,7 +43,7 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void TestLibraryBookLibarianAndOnLoadOk()
+        public void TestLibraryBookLibrarianAndOnLoadOk()
         {
             //SETUP
             using (var context = new Chapter07DbContext(
@@ -69,8 +69,9 @@ namespace test.UnitTests.DataLayer
             }
         }
 
+        //Fails because of https://github.com/aspnet/EntityFramework/issues/8137
         [Fact]
-        public void TestLibraryBookNoLibarianBad()
+        public void TestLibraryBookNoLibrarianBad()
         {
             //SETUP
             using (var context = new Chapter07DbContext(

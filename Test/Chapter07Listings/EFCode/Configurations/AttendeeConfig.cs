@@ -12,6 +12,7 @@ namespace Test.Chapter07Listings.EFCode.Configurations
             (this EntityTypeBuilder<Attendee> entity)
         {
             entity.HasOne(p => p.Ticket) //#A
+                //If I use the command below it fails because of https://github.com/aspnet/EntityFramework/issues/8137
                 //.WithOne(p => p.Attendee)
                 .WithOne()
                 .HasForeignKey<Attendee>
