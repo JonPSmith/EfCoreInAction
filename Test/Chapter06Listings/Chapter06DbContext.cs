@@ -13,6 +13,8 @@ namespace Test.Chapter06Listings
 
         public DbSet<Person> People { get; set; }
 
+        public DbSet<IndexClass> IndexClasses { get; set; }
+
         public Chapter06DbContext(
             DbContextOptions<Chapter06DbContext> options)
             : base(options)
@@ -48,7 +50,15 @@ namespace Test.Chapter06Listings
          #A I create a 'notional' property called DateOfBirth by which I can access this propery via EF Core. This also sets the column name in the database 
          #B Then I link it to a backing field _dateOfBirth
          * **************************************************************************/
-            
+
+            modelBuilder.Entity<IndexClass>()
+                .HasIndex(p => p.IndexNonUnique);
+
+            modelBuilder.Entity<IndexClass>()
+                .HasIndex(p => p.IndexUnique)
+                .IsUnique()
+                .HasName("MyUniqueIndex");
+
             modelBuilder.Entity<MyEntityClass>()
                 .Ignore(b => b.LocalString); //#A
 
