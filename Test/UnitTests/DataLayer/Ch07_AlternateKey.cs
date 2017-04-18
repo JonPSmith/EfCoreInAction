@@ -14,6 +14,32 @@ namespace test.UnitTests.DataLayer
     public class Ch07_AlternateKey
     {
         [Fact]
+        public void TestPersonOnlyOk()
+        {
+            //SETUP
+            using (var context = new Chapter07DbContext(
+                SqliteInMemory.CreateOptions<Chapter07DbContext>()))
+            {
+                {
+                    var logs = new List<string>();
+                    SqliteInMemory.SetupLogging(context, logs);
+                    context.Database.EnsureCreated();
+
+                    //ATTEMPT
+                    var person = new Person
+                    {
+                        UserId = "me@somewhere.com",
+                    };
+                    context.Add(person);
+                    context.SaveChanges();
+
+                    //VERIFY
+                    context.People.Count().ShouldEqual(1);
+                }
+            }
+        }
+
+        [Fact]
         public void TestPersonWithContactInfoOk()
         {
             //SETUP
