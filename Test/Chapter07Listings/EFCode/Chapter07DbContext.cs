@@ -20,7 +20,6 @@ namespace Test.Chapter07Listings.EFCode
 
         //Table-per-hierarchy
         public DbSet<Payment> Payments { get; set; } //#A
-
         public DbSet<SoldIt> SoldThings { get; set; } //#B
 
         public Chapter07DbContext(
@@ -33,6 +32,7 @@ namespace Test.Chapter07Listings.EFCode
         {
             modelBuilder.Entity<Attendee>().Configure();
             modelBuilder.Entity<Person>().Configure();
+            modelBuilder.Entity<EmployeeShortFk>().Configure();
             modelBuilder.Entity<Payment>().Configure(); //#C
         }
     }
