@@ -92,6 +92,26 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void TestAutoPropertySetGetOk()
+        {
+            //SETUP
+            var options = EfInMemory.CreateNewContextOptions<Chapter06DbContext>();
+            //ATTEMPT
+            using (var context = new Chapter06DbContext(options))
+            {
+                var person = new Person();
+                person.SetAutoProperty(1234);
+                context.Add(person);
+                context.SaveChanges();
+            }
+            //VERIFY
+            using (var context = new Chapter06DbContext(options))
+            {
+                context.People.First().AutoProperty.ShouldEqual(1234);
+            }
+        }
+
+        [Fact]
         public void TestUpdatedOnQuerywithLogsOk()
         {
             //SETUP

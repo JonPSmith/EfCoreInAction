@@ -23,6 +23,16 @@ namespace Test.Chapter06Listings
             set { _myProperty = value; }
         }
 
+        //----------------------------------------------------
+        //C#6 auto-property
+
+        public int AutoProperty { get; private set; }
+
+        public void SetAutoProperty(int value)
+        {
+            AutoProperty = value;
+        }
+
         //-----------------------------------------------------
         //'private' backing field
 
