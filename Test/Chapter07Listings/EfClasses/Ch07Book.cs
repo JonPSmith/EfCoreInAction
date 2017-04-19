@@ -9,23 +9,21 @@ namespace Test.Chapter07Listings.EfClasses
 {
     public class Ch07Book
     {
-        private decimal _cachedPrice;
         private decimal _normalPrice;
-        private PriceOffer _promotion;
 
         public int BookId { get; set; }
 
         public string Title { get; set; }
 
-        public decimal CachedPrice => _cachedPrice;
+        public decimal CachedPrice { get; private set; }
 
-        public PriceOffer Promotion => _promotion;
+        public PriceOffer Promotion { get; private set; }
 
         public void SetNormalPrice(DbContext context, decimal normalPrice)
         {
             _normalPrice = normalPrice;
             MakeSureAnyPromotionIsLoaded(context);
-            _cachedPrice = Promotion?.NewPrice ?? _normalPrice;
+            CachedPrice = Promotion?.NewPrice ?? _normalPrice;
         }
 
         public void AddUpdatePromotion(DbContext context, PriceOffer promotion)
@@ -33,13 +31,13 @@ namespace Test.Chapter07Listings.EfClasses
             MakeSureAnyPromotionIsLoaded(context);
             if (Promotion == null)
             {
-                _promotion = promotion;
-                _cachedPrice = promotion.NewPrice;
+                Promotion = promotion;
+                CachedPrice = promotion.NewPrice;
             }
             else
             {
-                _promotion.NewPrice = promotion.NewPrice;
-                _promotion.PromotionalText = promotion.PromotionalText;
+                Promotion.NewPrice = promotion.NewPrice;
+                Promotion.PromotionalText = promotion.PromotionalText;
             }
         }
 
@@ -50,7 +48,7 @@ namespace Test.Chapter07Listings.EfClasses
                 throw new InvalidOperationException("There was no promotion on this book to remove.");
 
             context.Remove(Promotion);
-            _cachedPrice = _normalPrice;
+            CachedPrice = _normalPrice;
         }
 
         //-----------------------------------------

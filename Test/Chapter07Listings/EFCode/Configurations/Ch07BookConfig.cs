@@ -16,8 +16,8 @@ namespace Test.Chapter07Listings.EFCode.Configurations
         {
             entity.HasKey(p => p.BookId);
 
-            entity.Property(p => p.CachedPrice)
-                .HasField("_cachedPrice");
+            //entity.Property(p => p.CachedPrice)
+            //    .HasField("_cachedPrice");
 
             entity.Property<decimal>("NormalPrice")
                 .HasField("_normalPrice");
