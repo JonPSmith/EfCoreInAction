@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2017 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
+using DataLayer.EfClasses;
 using Microsoft.EntityFrameworkCore;
 using Test.Chapter07Listings.EfClasses;
 using Test.Chapter07Listings.EFCode.Configurations;
@@ -22,6 +23,10 @@ namespace Test.Chapter07Listings.EFCode
         public DbSet<Payment> Payments { get; set; } //#A
         public DbSet<SoldIt> SoldThings { get; set; } //#B
 
+        //Backing fields on relationships
+        public DbSet<Ch07Book> Books { get; set; }
+        public DbSet<PriceOffer> PriceOffers { get; set; }
+
         public Chapter07DbContext(
             DbContextOptions<Chapter07DbContext> options)
             : base(options)
@@ -33,6 +38,7 @@ namespace Test.Chapter07Listings.EFCode
             modelBuilder.Entity<Attendee>().Configure();
             modelBuilder.Entity<Person>().Configure();
             modelBuilder.Entity<EmployeeShortFk>().Configure();
+            modelBuilder.Entity<Ch07Book>().Configure();
             modelBuilder.Entity<Payment>().Configure(); //#C
         }
     }
