@@ -53,6 +53,8 @@ namespace Test.Chapter07Listings.EfClasses
             _cachedPrice = _normalPrice;
         }
 
+        //-----------------------------------------
+        //private methods
 
         private void MakeSureAnyPromotionIsLoaded(DbContext context)
         {
