@@ -19,16 +19,16 @@ namespace Test.Chapter07Listings.EFCode.Configurations
             //entity.Property(p => p.CachedPrice)
             //    .HasField("_cachedPrice");
 
-            entity.Property<decimal>("NormalPrice")
-                .HasField("_normalPrice");
+            //entity.Property<decimal>("NormalPrice")
+            //    .HasField("_normalPrice");
 
-            entity.HasOne(p => p.Promotion)
-                .WithOne()
-                .HasForeignKey<PriceOffer>(p => p.BookId);
+            //entity.HasOne(p => p.Promotion)
+            //    .WithOne()
+            //    .HasForeignKey<PriceOffer>(p => p.BookId);
 
-            entity.Metadata
-                .FindNavigation(nameof(Ch07Book.Promotion))
-                .SetPropertyAccessMode(PropertyAccessMode.Field);
+            //entity.Metadata
+            //    .FindNavigation(nameof(Ch07Book.Promotion))
+            //    .SetPropertyAccessMode(PropertyAccessMode.Field);
         }
 
     }

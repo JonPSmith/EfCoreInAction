@@ -31,9 +31,10 @@ namespace test.UnitTests.DataLayer
                 {
                     Title = "Quantem Networking"
                 };
-                entity.SetNormalPrice(context, 210);
+                entity.SetPrice(context, 210);
 
                 //VERIFY
+                entity.Price.ShouldEqual(210);
                 entity.CachedPrice.ShouldEqual(210);
             }
         }
@@ -51,10 +52,11 @@ namespace test.UnitTests.DataLayer
                 {
                     Title = "Quantem Networking"
                 };
-                entity.SetNormalPrice(context, 210);
+                entity.SetPrice(context, 210);
                 entity.AddUpdatePromotion(context, new PriceOffer {NewPrice = 111, PromotionalText = "Test"});
 
                 //VERIFY
+                entity.Price.ShouldEqual(210);
                 entity.CachedPrice.ShouldEqual(111);
             }
         }
@@ -74,7 +76,7 @@ namespace test.UnitTests.DataLayer
                 {
                     Title = "Quantem Networking"
                 };
-                entity.SetNormalPrice(context, 210);
+                entity.SetPrice(context, 210);
                 //ATTEMPT
                 context.Add(entity);
                 context.SaveChanges();
@@ -97,7 +99,7 @@ namespace test.UnitTests.DataLayer
                 {
                     Title = "Quantem Networking"
                 };
-                entity.SetNormalPrice(context, 210);
+                entity.SetPrice(context, 210);
                 var logs = new List<string>();
                 SqliteInMemory.SetupLogging(context, logs);
                 context.Add(entity);
@@ -109,6 +111,7 @@ namespace test.UnitTests.DataLayer
                 var book = context.Books.Single();
 
                 //VERIFY
+                book.Price.ShouldEqual(210);
                 book.CachedPrice.ShouldEqual(210);
             }
         }
@@ -126,7 +129,7 @@ namespace test.UnitTests.DataLayer
                 {
                     Title = "Quantem Networking"
                 };
-                entity.SetNormalPrice(context, 210);
+                entity.SetPrice(context, 210);
                 entity.AddUpdatePromotion(context, new PriceOffer { NewPrice = 111, PromotionalText = "Test" });
 
                 context.Add(entity);
@@ -139,6 +142,7 @@ namespace test.UnitTests.DataLayer
 
                 //VERIFY
                 book.Promotion.ShouldNotBeNull();
+                book.Price.ShouldEqual(210);
                 book.CachedPrice.ShouldEqual(111);
             }
         }
@@ -156,7 +160,7 @@ namespace test.UnitTests.DataLayer
                 {
                     Title = "Quantem Networking"
                 };
-                entity.SetNormalPrice(context, 210);
+                entity.SetPrice(context, 210);
                 entity.AddUpdatePromotion(context, new PriceOffer { NewPrice = 111, PromotionalText = "Test" });
 
                 context.Add(entity);

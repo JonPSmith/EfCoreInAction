@@ -11,11 +11,11 @@ namespace Test.Chapter07Listings.EFCode.Configurations
         public static void Configure
             (this EntityTypeBuilder<Person> entity)
         {
-            entity.HasOne(p => p.ContactInfo)
+            entity
+                .HasOne(p => p.ContactInfo)
                 .WithOne()
                 .HasForeignKey<ContactInfo>(p => p.EmailAddress)
                 .HasPrincipalKey<Person>(c => c.UserId);
         }
-
     }
 }
