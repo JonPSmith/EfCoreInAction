@@ -2,10 +2,13 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace test.EfHelpers
@@ -17,6 +20,12 @@ namespace test.EfHelpers
             var efType = context.Model.FindEntityType(typeof(TEntity).FullName);
             var relational = efType.Relational();
             return relational.TableName;
+        }
+
+        public static IEnumerable<IProperty> GetProperties<TEntity>(this DbContext context)
+        {
+            var efType = context.Model.FindEntityType(typeof(TEntity).FullName);
+            return efType.GetProperties();
         }
 
         public static string GetColumnName<TEntity, TProperty>(this DbContext context, TEntity source, 
