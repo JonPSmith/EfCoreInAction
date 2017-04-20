@@ -100,6 +100,7 @@ namespace test.UnitTests.DataLayer
             }
         }
 
+        //this fails because of issue #8137 https://github.com/aspnet/EntityFramework/issues/8137
         [Fact]
         public void TestOption1OneToOneDuplicateTicketBad()
         {
