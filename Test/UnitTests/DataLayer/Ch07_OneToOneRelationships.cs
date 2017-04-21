@@ -130,6 +130,41 @@ namespace test.UnitTests.DataLayer
             }
         }
 
+        //this fails because of issue #8137 https://github.com/aspnet/EntityFramework/issues/8137
+        [Fact]
+        public void TestOption1OneToOneAddDuplicateTicketBad()
+        {
+            //SETUP
+            var options =SqliteInMemory.CreateOptions<Chapter07DbContext>();
+            int dupticketId;
+            using (var context = new Chapter07DbContext(options))
+            {
+                var logs = new List<string>();
+                SqliteInMemory.SetupLogging(context, logs);
+                context.Database.EnsureCreated();
+
+                //ATTEMPT
+                var dupTicket = new Ticket {TicketType = Ticket.TicketTypes.Guest};
+                var attendee = new Attendee {Name = "Person1", Ticket = dupTicket, Required = new RequiredTrack()};
+                context.Add(attendee);
+                context.SaveChanges();
+                dupticketId = dupTicket.TicketId;
+            }
+            using (var context = new Chapter07DbContext(options))
+            {
+                var dupTicket = context.Tickets.Find(dupticketId);
+                var attendee = new Attendee { Name = "Person1", Ticket = dupTicket, Required = new RequiredTrack() };
+                context.Add(attendee);
+                //context.SaveChanges();
+                var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
+
+                //VERIFY
+                ex.InnerException.Message.ShouldEqual(
+                    "SQLite Error 19: 'UNIQUE constraint failed: Attendees.TicketId'.");
+                //context.Tickets.Count().ShouldEqual(1);
+            }
+        }
+
         //[Fact]
         //public void TestOption1OneToOneSqlOk()
         //{
