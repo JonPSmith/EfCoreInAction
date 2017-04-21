@@ -10,14 +10,14 @@ namespace Test.Chapter07Listings.EfClasses
     {
         public int LibraryBookId { get; set; }
 
-        public string BookRef { get; set; }
+        public string Title { get; set; }
 
         //-----------------------------------
         //Relationships
     
         [MaxLength(256)]
         [Required]
-        public string LibrarianUserId { get; set; }  
+        public int LibrarianUserId { get; set; }  
         public Person Librarian { get; set; }
 
         public int? OnLoanToPersonId { get; set; }

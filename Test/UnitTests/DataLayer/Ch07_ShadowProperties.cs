@@ -22,25 +22,23 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter07DbContext(
                 SqliteInMemory.CreateOptions<Chapter07DbContext>()))
             {
+                var logs = new List<string>();
+                SqliteInMemory.SetupLogging(context, logs);
+
+                context.Database.EnsureCreated();
+
+                //ATTEMPT
+                var attendee = new Attendee
                 {
-                    var logs = new List<string>();
-                    SqliteInMemory.SetupLogging(context, logs);
+                    Name = "Person1",
+                    Ticket = new Ticket {TicketType = Ticket.TicketTypes.VIP},
+                    Required = new RequiredTrack {Track = TrackNames.EfCore}
+                };
+                context.Add(attendee);
+                context.SaveChanges();
 
-                    context.Database.EnsureCreated();
-
-                    //ATTEMPT
-                    var attendee = new Attendee
-                    {
-                        Name = "Person1",
-                        Ticket = new Ticket {TicketType = Ticket.TicketTypes.VIP},
-                        Required = new RequiredTrack {Track = TrackNames.EfCore}
-                    };
-                    context.Add(attendee);
-                    context.SaveChanges();
-
-                    //VERIFY
-                    context.Set<RequiredTrack>().Count().ShouldEqual(1);
-                }
+                //VERIFY
+                context.Set<RequiredTrack>().Count().ShouldEqual(1);
             }
         }
 
@@ -51,25 +49,24 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter07DbContext(
                 SqliteInMemory.CreateOptions<Chapter07DbContext>()))
             {
+                var logs = new List<string>();
+                SqliteInMemory.SetupLogging(context, logs);
+                context.Database.EnsureCreated();
+
+                //ATTEMPT
+                var attendee = new Attendee
                 {
-                    var logs = new List<string>();
-                    SqliteInMemory.SetupLogging(context, logs);
-                    context.Database.EnsureCreated();
+                    Name = "Person1",
+                    Ticket = new Ticket {TicketType = Ticket.TicketTypes.VIP}
+                };
+                context.Add(attendee);
+                //context.SaveChanges();
+                var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
 
-                    //ATTEMPT
-                    var attendee = new Attendee
-                    {
-                        Name = "Person1",
-                        Ticket = new Ticket { TicketType = Ticket.TicketTypes.VIP }
-                    };
-                    context.Add(attendee);
-                    //context.SaveChanges();
-                    var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
-
-                    //VERIFY
-                    ex.InnerException.Message.ShouldEqual("SQLite Error 19: 'NOT NULL constraint failed: Attendees.RequiredTrackId'.");
-                    //context.Set<RequiredTrack>().Count().ShouldEqual(1);
-                }
+                //VERIFY
+                ex.InnerException.Message.ShouldEqual(
+                    "SQLite Error 19: 'NOT NULL constraint failed: Attendees.MyShadowFk'.");
+                //context.Set<RequiredTrack>().Count().ShouldEqual(1);
             }
         }
 
@@ -80,25 +77,23 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter07DbContext(
                 SqliteInMemory.CreateOptions<Chapter07DbContext>()))
             {
+                context.Database.EnsureCreated();
+
+                var attendee = new Attendee
                 {
-                    context.Database.EnsureCreated();
+                    Name = "Person1",
+                    Ticket = new Ticket {TicketType = Ticket.TicketTypes.VIP},
+                    Required = new RequiredTrack {Track = TrackNames.EfCore}
+                };
+                context.Add(attendee);
+                context.SaveChanges();
 
-                    var attendee = new Attendee
-                    {
-                        Name = "Person1",
-                        Ticket = new Ticket { TicketType = Ticket.TicketTypes.VIP },
-                        Required = new RequiredTrack { Track = TrackNames.EfCore }
-                    };
-                    context.Add(attendee);
-                    context.SaveChanges();
+                //ATTEMPT
+                attendee.Required = new RequiredTrack {Track = TrackNames.AspNetCore};
+                context.SaveChanges();
 
-                    //ATTEMPT
-                    attendee.Required = new RequiredTrack {Track = TrackNames.AspNetCore};
-                    context.SaveChanges();
-
-                    //VERIFY
-                    context.Set<RequiredTrack>().Count().ShouldEqual(2);
-                }
+                //VERIFY
+                context.Set<RequiredTrack>().Count().ShouldEqual(2);
             }
         }
 
@@ -109,26 +104,24 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter07DbContext(
                 SqliteInMemory.CreateOptions<Chapter07DbContext>()))
             {
+                context.Database.EnsureCreated();
+
+                var attendee = new Attendee
                 {
-                    context.Database.EnsureCreated();
+                    Name = "Person1",
+                    Ticket = new Ticket {TicketType = Ticket.TicketTypes.VIP},
+                    Required = new RequiredTrack {Track = TrackNames.EfCore}
+                };
+                context.Add(attendee);
+                context.SaveChanges();
 
-                    var attendee = new Attendee
-                    {
-                        Name = "Person1",
-                        Ticket = new Ticket {TicketType = Ticket.TicketTypes.VIP},
-                        Required = new RequiredTrack {Track = TrackNames.EfCore}
-                    };
-                    context.Add(attendee);
-                    context.SaveChanges();
+                //ATTEMPT
+                context.Remove(attendee);
+                context.SaveChanges();
 
-                    //ATTEMPT
-                    context.Remove(attendee);
-                    context.SaveChanges();
-
-                    //VERIFY
-                    context.Attendees.Count().ShouldEqual(0);
-                    context.Set<RequiredTrack>().Count().ShouldEqual(1);
-                }
+                //VERIFY
+                context.Attendees.Count().ShouldEqual(0);
+                context.Set<RequiredTrack>().Count().ShouldEqual(1);
             }
         }
 
@@ -140,24 +133,22 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter07DbContext(
                 SqliteInMemory.CreateOptions<Chapter07DbContext>()))
             {
+                context.Database.EnsureCreated();
+
+                //ATTEMPT
+                var attendee = new Attendee
                 {
-                    context.Database.EnsureCreated();
+                    Name = "Person1",
+                    Ticket = new Ticket {TicketType = Ticket.TicketTypes.VIP},
+                    Required = new RequiredTrack {Track = TrackNames.EfCore},
+                    Optional = new OptionalTrack {Track = TrackNames.EfCore}
+                };
+                context.Add(attendee);
+                context.SaveChanges();
 
-                    //ATTEMPT
-                    var attendee = new Attendee
-                    {
-                        Name = "Person1",
-                        Ticket = new Ticket { TicketType = Ticket.TicketTypes.VIP },
-                        Required = new RequiredTrack { Track = TrackNames.EfCore },
-                        Optional = new OptionalTrack {  Track = TrackNames.EfCore }
-                    };
-                    context.Add(attendee);
-                    context.SaveChanges();
-
-                    //VERIFY
-                    context.Set<RequiredTrack>().Count().ShouldEqual(1);
-                    context.Set<OptionalTrack>().Count().ShouldEqual(1);
-                }
+                //VERIFY
+                context.Set<RequiredTrack>().Count().ShouldEqual(1);
+                context.Set<OptionalTrack>().Count().ShouldEqual(1);
             }
         }
 
@@ -172,7 +163,6 @@ namespace test.UnitTests.DataLayer
         //    optionsBuilder.UseSqlServer(connection);
         //    using (var context = new Chapter07DbContext(optionsBuilder.Options))
         //    {
-        //        {
         //            context.Database.EnsureCreated();
         //            var orgCount = context.Set<RequiredTrack>().Count();
         //            var attendee = new Attendee
@@ -186,7 +176,6 @@ namespace test.UnitTests.DataLayer
 
         //            //VERIFY
         //            context.Set<RequiredTrack>().Count().ShouldEqual(orgCount + 1);
-        //        }
         //    }
         //}
     }

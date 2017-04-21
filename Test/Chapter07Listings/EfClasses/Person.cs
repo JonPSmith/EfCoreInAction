@@ -14,17 +14,22 @@ namespace Test.Chapter07Listings.EfClasses
         public string Name { get; set; }
 
         [MaxLength(256)]
-        [Required()]
-        public string UserId { get; set; }
+        [Required]
+        public string UserId { get; set; } //#A
+    /************************************************
+    #A The UserId holds the ASP.NET authorization UserId, which is the person's email address and is unique 
+     * *********************************************/
 
         //------------------------------
         //relationships
 
-        [InverseProperty("Librarian")]   //#A
+        public ContactInfo ContactInfo { get; set; }
+
+        [InverseProperty(nameof(LibraryBook.Librarian))]   //#A
         public ICollection<LibraryBook> 
             LibrarianBooks { get; set; }
 
-        [InverseProperty("OnLoanTo")]    //#B
+        [InverseProperty(nameof(LibraryBook.OnLoanTo))]    //#B
         public ICollection<LibraryBook> 
             BooksBorrowedByMe { get; set; }
     }
