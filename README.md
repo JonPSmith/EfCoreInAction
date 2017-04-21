@@ -27,7 +27,7 @@ The branches mainly inhert from each other (shown as `-->` in the diagram)
 but a few are on there own, like `master` and `Chapter01` (shown with spaces between them).
 The ones that are build for deployment to a web site are branches off the main stem (shown as higher offshoots).
 I did that because I built the normal code so you can run it locally without migrations.  
-**Note: to fit the diagram in I shorten the real banche names and use `Ch4` instead of `Chapter04`**
+**Note: to fit the diagram in I shorten the real branch names and use `Ch4` instead of `Chapter04`**
 
 ### Part 1 - Getting started
 ```
