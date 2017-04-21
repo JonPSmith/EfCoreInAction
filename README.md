@@ -21,6 +21,27 @@ so if you are looking at the master branch then you won't see any code!
 Just click the [Branches](https://github.com/JonPSmith/EfCoreInAction/branches) on the site and you will
 find all the branches I have created so far.
 
+## Map of the branches
+
+The branches mainly inhert from each other (shown as `-->` in the diagram)
+but a few are on there own, like `master` abd `Chapter01` (shown with spaces between them).
+The ones that are build for deployment to a web site are branches off the main stem (shown as higher offshoots).
+I did that because I built the normal code so you can run it locally without migrations.  
+**Note: to fit the diagram in I use `Ch4` instead of `Chapter04`**
+
+### Part 1 - Getting started
+```
+                                         Ch5MigrateMulti
+                                            /
+                                        Ch5Migrate
+                                          /
+master    Ch1    Ch2 --> Ch3 --> Ch4 --> Ch5 -->
+```
+### Part 2 - Entity Framework in depth
+```
+(ch5) --> Ch6 --> Ch7
+```
+
 ## NOTE: Now updated to Visual Studio 2017 format
 
 Visual Studio 2017 (VS2017) is the recommended version of Visual Studio for developing .NET Core applications.
