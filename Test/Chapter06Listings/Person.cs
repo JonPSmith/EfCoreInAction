@@ -58,7 +58,7 @@ namespace Test.Chapter06Listings
         }
 
         /**************************************************
-        #A This is the backing field. Because there is no property with a corresponding name then I will need to configure this via Fluent API
+        #A This is the private backing field. I cannot be directly accessed via normal .Net software.
         #B This method allows the backing field to be set
         #C I can access the person's age, but not their exact date of birth
          * **********************************************/
