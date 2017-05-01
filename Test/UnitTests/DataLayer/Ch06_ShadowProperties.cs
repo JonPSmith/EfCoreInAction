@@ -48,7 +48,7 @@ namespace test.UnitTests.DataLayer
 
                     //ATTEMPT
                     var entity = new MyEntityClass  //#A
-                        { InDatabaseProp = "Hello"};//#A
+                        { NormalProp = "Hello"};//#A
                     context.Add(entity); //#B
                     context.Entry(entity) //#C
                         .Property("UpdatedOn").CurrentValue //#D
@@ -80,7 +80,7 @@ namespace test.UnitTests.DataLayer
                     //ATTEMPT
                     var timeNow = DateTime.Now;
                     var entity = new MyEntityClass
-                    { InDatabaseProp = "Hello" };
+                    { NormalProp = "Hello" };
                     context.Add(entity); 
                     context.Entry(entity).Property("UpdatedOn").CurrentValue = timeNow; 
                     context.SaveChanges(); 
@@ -105,7 +105,7 @@ namespace test.UnitTests.DataLayer
                     //ATTEMPT
                     var timeNow = DateTime.Now;
                     var entity = new MyEntityClass
-                    { InDatabaseProp = "Hello" };
+                    { NormalProp = "Hello" };
                     context.Add(entity);
                     context.Entry(entity).Property("UpdatedOn").CurrentValue = timeNow;
                     context.SaveChanges();
