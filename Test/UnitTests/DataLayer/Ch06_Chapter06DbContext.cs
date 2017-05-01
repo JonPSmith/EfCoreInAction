@@ -29,7 +29,7 @@ namespace test.UnitTests.DataLayer
                     context.Database.EnsureCreated();
 
                     //ATTEMPT
-                    context.Add(new MyEntityClass{ InDatabaseProp = "Hello"});
+                    context.Add(new MyEntityClass{ NormalProp = "Hello"});
                     context.SaveChanges();
 
                     //VERIFY
@@ -63,10 +63,10 @@ namespace test.UnitTests.DataLayer
             {
                 {
                     //ATTEMPT
-                    var tableName = context.GetColumnName(new MyEntityClass(), p => p.InDatabaseProp);
+                    var tableName = context.GetColumnName(new MyEntityClass(), p => p.NormalProp);
 
                     //VERIFY
-                    tableName.ShouldEqual("GenericInDatabaseProp");
+                    tableName.ShouldEqual("GenericInDatabaseCol");
                 }
             }
         }
@@ -80,7 +80,7 @@ namespace test.UnitTests.DataLayer
             {
                 {
                     //ATTEMPT
-                    var tableName = context.GetColumnNameSqlite(new MyEntityClass(), p => p.InDatabaseProp);
+                    var tableName = context.GetColumnNameSqlite(new MyEntityClass(), p => p.NormalProp);
 
                     //VERIFY
                     tableName.ShouldEqual("SqliteInDatabaseProp");
@@ -97,7 +97,7 @@ namespace test.UnitTests.DataLayer
             {
                 {
                     //ATTEMPT
-                    var colType = context.GetColumnStoreType(new MyEntityClass(), p => p.InDatabaseProp);
+                    var colType = context.GetColumnStoreType(new MyEntityClass(), p => p.NormalProp);
 
                     //VERIFY
                     colType.ShouldEqual("TEXT");

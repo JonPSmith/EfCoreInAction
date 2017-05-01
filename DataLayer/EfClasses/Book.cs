@@ -9,20 +9,18 @@ namespace DataLayer.EfClasses
 {
     public class Book                        
     {
-        public const int WebUrlMaxlength = 512; //#A
-
         public int BookId { get; set; }
 
-        [Required] //#B
-        [MaxLength(256)] //#C
+        [Required] //#A
+        [MaxLength(256)] //#B
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime PublishedOn { get; set; }
-        [MaxLength(64)] //#D
+        [MaxLength(64)] //#B
         public string Publisher { get; set; }
         public decimal Price { get; set; }
 
-        [MaxLength(WebUrlMaxlength)] //#E
+        [MaxLength(512)] //#B
         public string ImageUrl { get; set; }
 
         //-----------------------------------------------
@@ -33,11 +31,8 @@ namespace DataLayer.EfClasses
         public ICollection<BookAuthor> 
             AuthorsLink { get; set; }                    
     }
-    /****************************************************#
-    #A I normally use constants for MaxLength attributes because I might need to repeat the MaxLength in DTO (Data Trasfer Object)
-    #B This tells EF Core that the string is non-nullable.
-    #C This defines the the size of the string column in the database
-    #D This also defines the size of the string column in the database
-    #E Again, I define the size of the string column in the database, but I use a constant rather than a number, which I think is a better practice
+    /****************************************************
+    #A This tells EF Core that the string is non-nullable.
+    #B The [MaxLength] attibute defines the the size of the string column in the database
      * **************************************************/
 }
