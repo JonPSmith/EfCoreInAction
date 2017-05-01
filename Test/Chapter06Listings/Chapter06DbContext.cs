@@ -27,10 +27,10 @@ namespace Test.Chapter06Listings
                 .ToTable("MyTable");
 
             modelBuilder.Entity<MyEntityClass>()
-                .Property(p => p.InDatabaseProp)
-                .HasColumnName("GenericInDatabaseProp") //#A
-                .ForSqlServerHasColumnName("SqlServerInDatabaseProp") //#B
-                .ForSqliteHasColumnName("SqliteInDatabaseProp"); //#C
+                .Property(p => p.NormalProp)
+                .HasColumnName("GenericInDatabaseCol") //#A
+                .ForSqlServerHasColumnName("SqlServerInDatabaseCol") //#B
+                .ForSqliteHasColumnName("SqliteInDatabaseCol"); //#C
         /*Database provider specific command example **************************
         #A This would be the column name if a For... command didn't override it
         #B This defines the column name for the sql server database provider
