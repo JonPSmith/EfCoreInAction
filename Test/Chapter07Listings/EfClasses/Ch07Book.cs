@@ -2,6 +2,8 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using DataLayer.EfClasses;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,60 +11,41 @@ namespace Test.Chapter07Listings.EfClasses
 {
     public class Ch07Book
     {
+        private readonly List<Review> _reviews = 
+            new List<Review>(); //#A
+
         public int BookId { get; set; }
         public string Title { get; set; }
 
-        public decimal Price { get; private set; } //#A
-        public decimal CachedPrice { get; private set; } //#B
-        public PriceOffer Promotion { get; private set; } //#C
+        public double? CachedVotes { get; private set; } //#B
 
-    /*********************************************************
-    #A This holds the standard price of the 
-     * *********************************************************/
+        public IEnumerable<Review> Reviews => _reviews.ToList(); //#C
 
-        public void SetPrice(DbContext context, decimal normalPrice)
+        public void AddReview(Review review) //#D
         {
-            Price = normalPrice;
-            MakeSureAnyPromotionIsLoaded(context);
-            CachedPrice = Promotion?.NewPrice ?? Price;
+            _reviews.Add(review); //#E
+            CachedVotes = 
+                _reviews.Average(x => x.NumStars); //#F
         }
 
-        public void AddUpdatePromotion(DbContext context, PriceOffer promotion)
+        public void RemoveReview(Review review) //#G
         {
-            MakeSureAnyPromotionIsLoaded(context);
-            if (Promotion == null)
-            {
-                Promotion = promotion;
-                CachedPrice = promotion.NewPrice;
-            }
-            else
-            {
-                Promotion.NewPrice = promotion.NewPrice;
-                Promotion.PromotionalText = promotion.PromotionalText;
-            }
-        }
-
-        public void RemovePromotion(DbContext context)
-        {
-            MakeSureAnyPromotionIsLoaded(context);
-            if (Promotion == null)
-                throw new InvalidOperationException("There was no promotion on this book to remove.");
-
-            context.Remove(Promotion);
-            CachedPrice = Price;
-        }
-
-        //-----------------------------------------
-        //private methods
-
-        private void MakeSureAnyPromotionIsLoaded(DbContext context)
-        {
-            if (Promotion == null)
-            {
-                //We need to make sure we have any existing promotion
-                context.Entry(this)
-                    .Reference(r => r.Promotion).Load();
-            }
+            _reviews.Remove(review); //#H
+            CachedVotes = _reviews.Any()
+                ? _reviews.Average(x => x.NumStars) //#I
+                : (double?)null; //#J
         }
     }
+    /*********************************************************
+    #A I add a backing field, which is a list. I then tell EF Core to use this for all reads and writes
+    #B This holds a pre-calculated average of the reviews. Note that it is read-only so that it cannot be changed outside this class
+    #C This returns a copy of the reviews that were loaded. By taking a copy it means no one can alter the list by cast the IEnumerable<T> to List<T>
+    #D I add a method to allow a new Review to be added to the _reviews collection
+    #E I add the new review to the backing field _reviews. This will update the database on the call to SaveChanges
+    #F I then recalculate the average votes for the book
+    #G I add a method to remove a review from the _reviews collection
+    #H I remove the review from the list. This will update the database on the call to SaveChanges
+    #I If ther are any reviews I recalculate the average votes for the book
+    #J If there are no reviews I set the value to null
+    * *********************************************************/
 }

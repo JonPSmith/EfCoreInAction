@@ -16,31 +16,7 @@ namespace test.UnitTests.DataLayer
     public class Ch07_RelationshipBackingFields
     {
         [Fact]
-        public void TestCreateBookPriceOk()
-        {
-            //SETUP
-            using (var context = new Chapter07DbContext(SqliteInMemory.CreateOptions<Chapter07DbContext>()))
-            {
-                //var logs = new List<string>();
-                //SqliteInMemory.SetupLogging(context, logs);
-
-                context.Database.EnsureCreated();
-
-                //ATTEMPT
-                var entity = new Ch07Book
-                {
-                    Title = "Quantem Networking"
-                };
-                entity.SetPrice(context, 210);
-
-                //VERIFY
-                entity.Price.ShouldEqual(210);
-                entity.CachedPrice.ShouldEqual(210);
-            }
-        }
-
-        [Fact]
-        public void TestCreateBookWithPromotionOk()
+        public void TestCreateBookOk()
         {
             //SETUP
             using (var context = new Chapter07DbContext(SqliteInMemory.CreateOptions<Chapter07DbContext>()))
@@ -52,42 +28,85 @@ namespace test.UnitTests.DataLayer
                 {
                     Title = "Quantem Networking"
                 };
-                entity.SetPrice(context, 210);
-                entity.AddUpdatePromotion(context, new PriceOffer {NewPrice = 111, PromotionalText = "Test"});
 
                 //VERIFY
-                entity.Price.ShouldEqual(210);
-                entity.CachedPrice.ShouldEqual(111);
+                entity.Reviews.ShouldNotBeNull();
+                entity.Reviews.Any().ShouldBeFalse();
+                entity.CachedVotes.ShouldBeNull();
             }
         }
 
         [Fact]
-        public void TestWriteBookOk()
+        public void TestCreateBookOneReviewOk()
         {
             //SETUP
             using (var context = new Chapter07DbContext(SqliteInMemory.CreateOptions<Chapter07DbContext>()))
             {
-                //var logs = new List<string>();
-                //SqliteInMemory.SetupLogging(context, logs);
-
                 context.Database.EnsureCreated();
 
+                //ATTEMPT
                 var entity = new Ch07Book
                 {
                     Title = "Quantem Networking"
                 };
-                entity.SetPrice(context, 210);
-                //ATTEMPT
-                context.Add(entity);
-                context.SaveChanges();
+                entity.AddReview(new Review{NumStars = 5, VoterName = "Unit Test"});
 
                 //VERIFY
-                context.Books.Count().ShouldEqual(1);
+                entity.Reviews.ShouldNotBeNull();
+                entity.Reviews.Count().ShouldEqual(1);
+                entity.CachedVotes.ShouldEqual(5);
             }
         }
 
         [Fact]
-        public void TestReadBookOk()
+        public void TestCreateBookTwoReviewOk()
+        {
+            //SETUP
+            using (var context = new Chapter07DbContext(SqliteInMemory.CreateOptions<Chapter07DbContext>()))
+            {
+                context.Database.EnsureCreated();
+
+                //ATTEMPT
+                var entity = new Ch07Book
+                {
+                    Title = "Quantem Networking"
+                };
+                entity.AddReview(new Review { NumStars = 4, VoterName = "Unit Test" });
+                entity.AddReview(new Review { NumStars = 2, VoterName = "Unit Test" });
+
+                //VERIFY
+                entity.Reviews.ShouldNotBeNull();
+                entity.Reviews.Count().ShouldEqual(2);
+                entity.CachedVotes.ShouldEqual(3);
+            }
+        }
+
+        [Fact]
+        public void TestCreateBookOneAddedOneRemovedReviewOk()
+        {
+            //SETUP
+            using (var context = new Chapter07DbContext(SqliteInMemory.CreateOptions<Chapter07DbContext>()))
+            {
+                context.Database.EnsureCreated();
+
+                //ATTEMPT
+                var entity = new Ch07Book
+                {
+                    Title = "Quantem Networking"
+                };
+                var review = new Review {NumStars = 5, VoterName = "Unit Test"};
+                entity.AddReview(review);
+                entity.RemoveReview(review);
+
+                //VERIFY
+                entity.Reviews.ShouldNotBeNull();
+                entity.Reviews.Count().ShouldEqual(0);
+                entity.CachedVotes.ShouldBeNull();
+            }
+        }
+
+        [Fact]
+        public void TestSaveBookOneReviewAndReadOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<Chapter07DbContext>();
@@ -95,90 +114,23 @@ namespace test.UnitTests.DataLayer
             {
                 context.Database.EnsureCreated();
 
+                //ATTEMPT
                 var entity = new Ch07Book
                 {
                     Title = "Quantem Networking"
                 };
-                entity.SetPrice(context, 210);
-                var logs = new List<string>();
-                SqliteInMemory.SetupLogging(context, logs);
+                entity.AddReview(new Review {NumStars = 5, VoterName = "Unit Test"});
                 context.Add(entity);
                 context.SaveChanges();
             }
             using (var context = new Chapter07DbContext(options))
             {
-                //ATTEMPT
-                var book = context.Books.Single();
-
                 //VERIFY
-                book.Price.ShouldEqual(210);
-                book.CachedPrice.ShouldEqual(210);
+                var entity = context.Books.Include(x => x.Reviews).Single();
+                entity.Reviews.ShouldNotBeNull();
+                entity.Reviews.Count().ShouldEqual(1);
+                entity.CachedVotes.ShouldEqual(5);
             }
         }
-
-        [Fact]
-        public void TestReadBookWithPromotionOk()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<Chapter07DbContext>();
-            using (var context = new Chapter07DbContext(options))
-            {
-                context.Database.EnsureCreated();
-
-                var entity = new Ch07Book
-                {
-                    Title = "Quantem Networking"
-                };
-                entity.SetPrice(context, 210);
-                entity.AddUpdatePromotion(context, new PriceOffer { NewPrice = 111, PromotionalText = "Test" });
-
-                context.Add(entity);
-                context.SaveChanges();
-            }
-            using (var context = new Chapter07DbContext(options))
-            {
-                //ATTEMPT
-                var book = context.Books.Include(p => p.Promotion).Single();
-
-                //VERIFY
-                book.Promotion.ShouldNotBeNull();
-                book.Price.ShouldEqual(210);
-                book.CachedPrice.ShouldEqual(111);
-            }
-        }
-
-        [Fact]
-        public void TestBookWithPromotionRemovedOk()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<Chapter07DbContext>();
-            using (var context = new Chapter07DbContext(options))
-            {
-                context.Database.EnsureCreated();
-
-                var entity = new Ch07Book
-                {
-                    Title = "Quantem Networking"
-                };
-                entity.SetPrice(context, 210);
-                entity.AddUpdatePromotion(context, new PriceOffer { NewPrice = 111, PromotionalText = "Test" });
-
-                context.Add(entity);
-                context.SaveChanges();
-
-                entity.RemovePromotion(context);
-                context.SaveChanges();
-            }
-            using (var context = new Chapter07DbContext(options))
-            {
-                //ATTEMPT
-                var book = context.Books.Include(p => p.Promotion).Single();
-
-                //VERIFY
-                book.Promotion.ShouldBeNull();
-                book.CachedPrice.ShouldEqual(210);
-            }
-        }
-
     }
 }
