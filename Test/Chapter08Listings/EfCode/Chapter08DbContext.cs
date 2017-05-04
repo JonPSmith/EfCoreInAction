@@ -11,6 +11,7 @@ namespace Test.Chapter08Listings.EfCode
     {
         public DbSet<DefaultTest> Defaults { get; set; }
         public DbSet<Person> Persons { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         public Chapter08DbContext(
             DbContextOptions<Chapter08DbContext> options)
@@ -23,6 +24,7 @@ namespace Test.Chapter08Listings.EfCode
             modelBuilder.Entity<DefaultTest>()
                 .Configure(new OrderIdValueGenerator());
             modelBuilder.Entity<Person>().Configure();
+            modelBuilder.ConfigureOrder();
         }
     }
 }
