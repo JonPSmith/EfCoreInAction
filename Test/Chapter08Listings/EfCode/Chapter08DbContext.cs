@@ -12,6 +12,7 @@ namespace Test.Chapter08Listings.EfCode
         public DbSet<DefaultTest> Defaults { get; set; }
         public DbSet<Person> Persons { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<MyClass> MyClasses { get; set; }
 
         public Chapter08DbContext(
             DbContextOptions<Chapter08DbContext> options)
