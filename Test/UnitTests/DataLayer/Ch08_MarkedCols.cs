@@ -18,8 +18,34 @@ namespace test.UnitTests.DataLayer
 {
     public class Ch08_MarkedCols
     {
+
         [Fact]
         public void TestGuidKeyNotSetOk()
+        {
+            //SETUP
+            var connection = this.GetUniqueDatabaseConnectionString();
+            var optionsBuilder =
+                new DbContextOptionsBuilder<Chapter08DbContext>();
+
+            optionsBuilder.UseSqlServer(connection);
+            using (var context = new Chapter08DbContext(optionsBuilder.Options))
+            {
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+
+                //ATTEMPT
+
+                var entity = new MyClass();
+                context.Add(entity);
+                context.SaveChanges();
+
+                //VERIFY
+                entity.MyClassId.ShouldEqual(new Guid());
+            }
+        }
+
+        [Fact]
+        public void TestGuidKeySetOk()
         {
             //SETUP
             var connection = this.GetUniqueDatabaseConnectionString();
