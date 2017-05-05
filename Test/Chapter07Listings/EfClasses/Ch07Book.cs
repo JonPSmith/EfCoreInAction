@@ -39,7 +39,7 @@ namespace Test.Chapter07Listings.EfClasses
     /*********************************************************
     #A I add a backing field, which is a list. I then tell EF Core to use this for all reads and writes
     #B This holds a pre-calculated average of the reviews. Note that it is read-only so that it cannot be changed outside this class
-    #C This returns a copy of the reviews that were loaded. By taking a copy it means no one can alter the list by cast the IEnumerable<T> to List<T>
+    #C This returns a copy of the reviews that were loaded. By taking a copy it means no one can alter the list by casting the IEnumerable<T> to List<T>
     #D I add a method to allow a new Review to be added to the _reviews collection
     #E I add the new review to the backing field _reviews. This will update the database on the call to SaveChanges
     #F I then recalculate the average votes for the book
