@@ -13,6 +13,8 @@ namespace Test.Chapter08Listings.EfCode
         public DbSet<Person> Persons { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<MyClass> MyClasses { get; set; }
+        //standard localdb is 2014, not 2016, so in-memory is not supported
+        //public DbSet<InMemoryTest> InMemory { get; set; }
 
         public Chapter08DbContext(
             DbContextOptions<Chapter08DbContext> options)
@@ -26,6 +28,9 @@ namespace Test.Chapter08Listings.EfCode
                 .Configure(new OrderIdValueGenerator());
             modelBuilder.Entity<Person>().Configure();
             modelBuilder.ConfigureOrder();
+            //standard localdb is 2014, not 2016, so in-memory is not supported
+            //modelBuilder.Entity<InMemoryTest>().Configure();
+
         }
     }
 }
