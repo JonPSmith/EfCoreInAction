@@ -2,7 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using Microsoft.EntityFrameworkCore;
-using test.Chapter05Listings;
+using Test.Chapter08Listings.EfClasses;
 
 namespace Test.Chapter08Listings.EfCode
 {
@@ -10,6 +10,7 @@ namespace Test.Chapter08Listings.EfCode
     {
         public DbSet<ConcurrecyBook> Books { get; set; }
         public DbSet<ConcurrencyAuthor> Authors { get; set; }
+        public DbSet<ConcurrentSalary> Employees { get; set; }
 
         public ConcurrencyDbContext(
             DbContextOptions<ConcurrencyDbContext> options)      
