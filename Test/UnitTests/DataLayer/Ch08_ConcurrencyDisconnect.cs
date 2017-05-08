@@ -57,7 +57,7 @@ namespace test.UnitTests.DataLayer
             {
                 //ATTEMPT
                 context.Update(entity);
-                entity.UpdateSalaryDisconnected(context, 1100, 1000, "The Boss");
+                entity.UpdateSalaryDisconnected(context, 1000, 1100, "The Boss");
                 context.SaveChanges();
 
                 //VERIFY

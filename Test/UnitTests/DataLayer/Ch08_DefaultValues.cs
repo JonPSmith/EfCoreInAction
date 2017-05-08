@@ -88,8 +88,12 @@ namespace test.UnitTests.DataLayer
         public void TestValueGeneratorCalledOnAddOk()
         {
             //SETUP
-            using (var context = new Chapter08DbContext(
-                SqliteInMemory.CreateOptions<Chapter08DbContext>()))
+            var connection = this.GetUniqueDatabaseConnectionString();
+            var optionsBuilder =
+                new DbContextOptionsBuilder<Chapter08DbContext>();
+
+            optionsBuilder.UseSqlServer(connection);
+            using (var context = new Chapter08DbContext(optionsBuilder.Options))
             {
                 context.Database.EnsureCreated();
 
@@ -106,8 +110,12 @@ namespace test.UnitTests.DataLayer
         public void TestValueGeneratorOverriddenOk()
         {
             //SETUP
-            using (var context = new Chapter08DbContext(
-                SqliteInMemory.CreateOptions<Chapter08DbContext>()))
+            var connection = this.GetUniqueDatabaseConnectionString();
+            var optionsBuilder =
+                new DbContextOptionsBuilder<Chapter08DbContext>();
+
+            optionsBuilder.UseSqlServer(connection);
+            using (var context = new Chapter08DbContext(optionsBuilder.Options))
             {
                 context.Database.EnsureCreated();
 
