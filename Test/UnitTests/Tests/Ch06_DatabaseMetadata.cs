@@ -57,7 +57,7 @@ namespace test.UnitTests.Tests
 
         [Theory]
         [InlineData("MyEntityClassId")]
-        [InlineData("InDatabaseProp")]
+        [InlineData("NormalProp")]
         public void ListColumnName(string propName)
         {
             using (var context = new Chapter06DbContext(

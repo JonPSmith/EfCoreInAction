@@ -37,7 +37,7 @@ namespace test.UnitTests.DataLayer
                     var props = context.GetProperties<MyEntityClass>().Select(x => x.Name).ToList();
 
                     //VERIFY
-                    props.ShouldEqual(new List<string>{ "MyEntityClassId", "InDatabaseProp", "InternalSet", "PrivateSet", "UpdatedOn" });
+                    props.ShouldEqual(new List<string>{ "MyEntityClassId", "InternalSet", "NormalProp", "PrivateSet", "UpdatedOn" });
                 }
             }
         }

@@ -83,7 +83,7 @@ namespace test.UnitTests.DataLayer
                     var tableName = context.GetColumnNameSqlite(new MyEntityClass(), p => p.NormalProp);
 
                     //VERIFY
-                    tableName.ShouldEqual("SqliteInDatabaseProp");
+                    tableName.ShouldEqual("SqliteInDatabaseCol");
                 }
             }
         }
