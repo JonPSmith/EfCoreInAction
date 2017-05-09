@@ -72,7 +72,7 @@ namespace test.UnitTests.DataLayer
             int johnDoeId;
             using (var context = new ConcurrencyDbContext(_options))
             {
-                johnDoeId = GetJohnDoeRecord(context).ConcurrentSalaryId;
+                johnDoeId = GetJohnDoeRecord(context).EmployeeId;
             }
 
             using (var contextBoss = new ConcurrencyDbContext(_options))

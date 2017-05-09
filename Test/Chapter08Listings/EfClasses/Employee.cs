@@ -8,7 +8,7 @@ namespace Test.Chapter08Listings.EfClasses
 {
     public class Employee
     {
-        public int ConcurrentSalaryId { get; set; }
+        public int EmployeeId { get; set; }
 
         public string Name { get; set; }
 
