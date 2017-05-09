@@ -162,6 +162,7 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(2);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
+                context.GetNavigationalIsModified(entity, x => x.Collection).ShouldBeFalse();
                 context.GetEntityState(entity.Collection.First()).ShouldEqual(EntityState.Added);
            }
         }
@@ -188,6 +189,7 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(2);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
+                context.GetNavigationalIsModified(entity, x => x.Collection).ShouldBeFalse();
                 context.GetEntityState(entity.Collection.First()).ShouldEqual(EntityState.Added);
             }
         }

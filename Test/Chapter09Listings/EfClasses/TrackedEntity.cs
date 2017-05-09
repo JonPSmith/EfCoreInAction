@@ -12,6 +12,8 @@ namespace Test.Chapter09Listings.EfClasses
 
         public string MyString { get; set; }
 
+        public SubTrackedEntity OneToOne { get; set; }
+
         public ICollection<SubTrackedEntity> Collection { get; } = new Collection<SubTrackedEntity>();
     }
 }

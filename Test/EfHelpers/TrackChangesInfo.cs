@@ -32,5 +32,13 @@ namespace test.EfHelpers
             var entityEntry = context.Entry(entity);
             return entityEntry.Property(propInfo.Name).IsModified;
         }
+
+        public static bool GetNavigationalIsModified<TEntity, TProperty>(this DbContext context, TEntity entity,
+            Expression<Func<TEntity, TProperty>> model) where TEntity : class
+        {
+            var propInfo = DatabaseMetadata.GetPropertyInfoFromLambda(model);
+            var entityEntry = context.Entry(entity);
+            return entityEntry.Navigation(propInfo.Name).IsModified;
+        }
     }
 }

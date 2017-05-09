@@ -11,6 +11,7 @@ namespace Test.Chapter09Listings.EfClasses
     {
         private int _id;
         private string _myString;
+        private SubTrackedEntity _oneToOne;
 
         public int Id
         {
@@ -22,6 +23,12 @@ namespace Test.Chapter09Listings.EfClasses
         {
             get => _myString;
             set => SetWithNotify(value, ref _myString);
+        }
+
+        public SubTrackedEntity OneToOne
+        {
+            get => _oneToOne;
+            set => SetWithNotify(value, ref _oneToOne);
         }
 
         public ICollection<SubNotifyEntity> Collection { get; } = new ObservableHashSet<SubNotifyEntity>();
