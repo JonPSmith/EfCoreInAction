@@ -28,7 +28,7 @@ namespace test.UnitTests.DataLayer
 
                 var johnDoe = GetJohnDoeRecord(context);
                 if (johnDoe == null)
-                    context.Add(new ConcurrentSalary { Name = "John Doe", Salary = 1000, WhoSetSalary = "HR" });
+                    context.Add(new Employee { Name = "John Doe", Salary = 1000});
                 else
                 {
                     johnDoe.Salary = 1000;
@@ -38,7 +38,7 @@ namespace test.UnitTests.DataLayer
         }
 
 
-        private static ConcurrentSalary GetJohnDoeRecord(ConcurrencyDbContext context)
+        private static Employee GetJohnDoeRecord(ConcurrencyDbContext context)
         {
             return context.Employees.SingleOrDefault(p => p.Name == "John Doe");
         }
@@ -47,7 +47,7 @@ namespace test.UnitTests.DataLayer
         public void TestDisconnectedUpdateOk()
         {
             //SETUP
-            ConcurrentSalary entity;
+            Employee entity;
             using (var context = new ConcurrencyDbContext(_options))
             {
                 entity = GetJohnDoeRecord(context);
@@ -57,7 +57,7 @@ namespace test.UnitTests.DataLayer
             {
                 //ATTEMPT
                 context.Update(entity);
-                entity.UpdateSalaryDisconnected(context, 1000, 1100, "The Boss");
+                entity.UpdateSalaryDisconnected(context, 1000, 1100);
                 context.SaveChanges();
 
                 //VERIFY
@@ -81,9 +81,9 @@ namespace test.UnitTests.DataLayer
                 //ATTEMPT
                 var jdBoss = contextBoss.Employees.Find(johnDoeId);
                 var jdHr = contextHr.Employees.Find(johnDoeId);
-                jdBoss.UpdateSalaryDisconnected(contextBoss, 1000, 1100, "The Boss");
+                jdBoss.UpdateSalaryDisconnected(contextBoss, 1000, 1100);
                 contextBoss.SaveChanges();
-                jdHr.UpdateSalaryDisconnected(contextHr,1000,1025,"Hr");
+                jdHr.UpdateSalaryDisconnected(contextHr,1000,1025);
 
                 var ex = Assert.Throws<DbUpdateConcurrencyException>(() => contextHr.SaveChanges());
 

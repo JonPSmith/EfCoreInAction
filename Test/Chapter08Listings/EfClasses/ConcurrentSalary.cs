@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Test.Chapter08Listings.EfClasses
 {
-    public class ConcurrentSalary
+    public class Employee
     {
         public int ConcurrentSalaryId { get; set; }
 
@@ -15,22 +15,18 @@ namespace Test.Chapter08Listings.EfClasses
         [ConcurrencyCheck]
         public int Salary { get; set; } //#A
 
-        public string WhoSetSalary { get; set; }
-
         public void UpdateSalaryDisconnected //#B
             (DbContext context, 
-             int oldSalary, int newSalary,
-             string whoSetSalary)
+             int orgSalary, int newSalary)
         {
             Salary = newSalary; //#C
             context.Entry(this).Property(p => p.Salary) //#D
-                .OriginalValue = oldSalary; //#D
-            WhoSetSalary = whoSetSalary;
+                .OriginalValue = orgSalary; //#D
         }
     }
     /************************************************************************
     #A The Salery property is set as a concurrency token by the attribute [ConcurrencyCheck]
-    #B This methid is used to update the Salary in a disconnected state
+    #B This method is used to update the Salary in a disconnected state
     #C I set the Salary to the new value
     #D I set the OriginalValue, which holds the data read from the database, to the original value that was shown to the user in the first part of the update
     * ********************************************************************/
