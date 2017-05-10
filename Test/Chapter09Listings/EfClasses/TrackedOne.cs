@@ -7,6 +7,6 @@ namespace Test.Chapter09Listings.EfClasses
     {
         public int Id { get; set; }
 
-        public int TrackedEntityId { get; set; }
+        public int? TrackedEntityId { get; set; }
     }
 }
