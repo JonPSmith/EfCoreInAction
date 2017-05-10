@@ -22,6 +22,59 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void TestAttachNoRelationshipOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+
+            MyEntity entity;
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                entity = new MyEntity();
+                context.Add(entity);
+                context.SaveChanges();
+            }
+
+            //ATTEMPT
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Attach(entity);
+                context.SaveChanges();
+
+                //VERIFY
+                context.MyEntities.Count().ShouldEqual(1);
+            }
+        }
+
+        [Fact]
+        public void TestChangeTrackerAttachNoRelationshipOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+
+            MyEntity entity;
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                entity = new MyEntity();
+                context.Add(entity);
+                context.SaveChanges();
+            }
+
+            //ATTEMPT
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Attach(entity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(1);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
+            }
+        }
+
+        [Fact]
         public void TestAttachOptionalOk()
         {
             //SETUP
@@ -132,6 +185,66 @@ namespace test.UnitTests.DataLayer
                 context.NumTrackedEntities().ShouldEqual(2);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
                 context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Added);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
+                context.GetAllPropsNavsIsModified(entity.OneToOne).ShouldEqual("");
+            }
+        }
+
+        [Fact]
+        public void TestAttachOptionalTrackedOneOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+            MyEntity entity;
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                entity = new MyEntity();
+                context.Add(entity);
+                context.Add(new OneEntity());
+                context.SaveChanges();
+            }
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var oneToOne = context.OneEntities.First();
+                entity.OneToOne = oneToOne;
+                context.Attach(entity);
+                context.SaveChanges();
+
+                //VERIFY
+                oneToOne.MyEntityId.ShouldNotBeNull();
+                context.MyEntities.Include(p => p.OneToOne).First().OneToOne.ShouldNotBeNull();
+            }
+        }
+
+        [Fact]
+        public void TestChangeTrackerAttachOptionalTrackedOneOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+            MyEntity entity;
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                entity = new MyEntity();
+                context.Add(entity);
+                context.Add(new OneEntity());
+                context.SaveChanges();
+            }
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var oneToOne = context.OneEntities.First();
+                entity.OneToOne = oneToOne;
+                context.Attach(entity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(2);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
+                context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Unchanged);
                 context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
                 context.GetAllPropsNavsIsModified(entity.OneToOne).ShouldEqual("");
             }
