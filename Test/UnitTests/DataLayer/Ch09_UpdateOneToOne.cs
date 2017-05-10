@@ -12,11 +12,11 @@ using Xunit.Extensions.AssertExtensions;
 
 namespace test.UnitTests.DataLayer
 {
-    public class Ch09_UpdateCollection
+    public class Ch09_UpdateOneToOne
     {
         private readonly ITestOutputHelper _output;
 
-        public Ch09_UpdateCollection(ITestOutputHelper output)
+        public Ch09_UpdateOneToOne(ITestOutputHelper output)
         {
             _output = output;
         }
@@ -33,10 +33,10 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 var track = new TrackedEntity();
-                track.Collection.Add(new TrackedMany());
+                track.OneToOne = new TrackedOne();
                 context.Add(track);
                 var notify = new NotifyEntity();
-                notify.Collection.Add(new NotifyMany());
+                notify.OneToOne = new NotifyOne();
                 context.Add(notify);
                 context.SaveChanges();
 
@@ -63,11 +63,11 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 var entity = context.Tracked.Single();
-                entity.Collection.Add(new TrackedMany());
+                entity.OneToOne = new TrackedOne();
                 context.SaveChanges();
 
                 //VERIFY
-                context.Tracked.Single().Collection.Count.ShouldEqual(1);
+                context.Tracked.Include(x => x.OneToOne).Single().ShouldNotBeNull();
             }
         }
 
@@ -88,11 +88,11 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 var entity = context.Notify.Single();
-                entity.Collection.Add(new NotifyMany());
+                entity.OneToOne = new NotifyOne();
                 context.SaveChanges();
 
                 //VERIFY
-                context.Notify.Single().Collection.Count.ShouldEqual(1);
+                context.Notify.Include(x => x.OneToOne).Single().ShouldNotBeNull();
             }
         }
 
@@ -108,13 +108,14 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 var entity = new TrackedEntity();
-                entity.Collection.Add(new TrackedMany());
+                entity.OneToOne = new TrackedOne();
                 context.Add(entity);
 
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(2);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Added);
-                context.GetEntityState(entity.Collection.First()).ShouldEqual(EntityState.Added);
+                context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Added);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
             }
         }
 
@@ -130,13 +131,14 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 var entity = new NotifyEntity();
-                entity.Collection.Add(new NotifyMany());
+                entity.OneToOne = new NotifyOne();
                 context.Add(entity);
 
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(2);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Added);
-                context.GetEntityState(entity.Collection.First()).ShouldEqual(EntityState.Added);
+                context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Added);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
             }
         }
 
@@ -156,14 +158,14 @@ namespace test.UnitTests.DataLayer
             //ATTEMPT
             using (var context = new Chapter09DbContext(options))
             {
-                var entity = context.Tracked.Include(x => x.Collection).Single();
-                entity.Collection.Add(new TrackedMany());
+                var entity = context.Tracked.Include(x => x.OneToOne).Single();
+                entity.OneToOne = new TrackedOne();
 
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(2);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
-                context.GetNavigationalIsModified(entity, x => x.Collection).ShouldBeFalse();
-                context.GetEntityState(entity.Collection.First()).ShouldEqual(EntityState.Added);
+                context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Added);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
            }
         }
 
@@ -184,13 +186,45 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 var entity = context.Notify.Single();
-                entity.Collection.Add(new NotifyMany());
+                entity.OneToOne = new NotifyOne();
 
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(2);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
-                context.GetNavigationalIsModified(entity, x => x.Collection).ShouldBeFalse();
-                context.GetEntityState(entity.Collection.First()).ShouldEqual(EntityState.Added);
+                context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Added);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
+            }
+        }
+
+        [Fact]
+        public void TestChangeTrackerUpdateReplaceTrackedOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                var track = new TrackedEntity();
+                track.OneToOne = new TrackedOne();
+                context.Add(track);
+                context.SaveChanges();
+            }
+
+            //ATTEMPT
+            using (var context = new Chapter09DbContext(options))
+            {
+                var entity = context.Tracked.Include(x => x.OneToOne).Single();
+                var oldOneToOne = entity.OneToOne;
+                entity.OneToOne = new TrackedOne();
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(3);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
+                context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Added);
+                context.GetEntityState(oldOneToOne).ShouldEqual(EntityState.Modified);
+                context.GetAllPropsNavsIsModified(oldOneToOne).ShouldEqual("TrackedEntityId");
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
             }
         }
     }

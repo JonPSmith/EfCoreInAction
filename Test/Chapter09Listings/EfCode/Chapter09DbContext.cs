@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Test.Chapter09Listings.EfClasses;
+using Test.Chapter09Listings.EfCode.Configuration;
 
 namespace Test.Chapter09Listings.EfCode
 {
@@ -16,13 +17,8 @@ namespace Test.Chapter09Listings.EfCode
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<NotifyEntity>()
-                .HasChangeTrackingStrategy(ChangeTrackingStrategy.ChangedNotifications);
-
-            //modelBuilder.Entity<NotifyEntity>()
-            //    .Metadata
-            //    .FindNavigation(nameof(NotifyEntity.Collection))
-            //    .SetPropertyAccessMode(PropertyAccessMode.Field);
+            modelBuilder.Entity<NotifyEntity>().Configure();
+            modelBuilder.Entity<TrackedEntity>().Configure();
         }
     }
 }

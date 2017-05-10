@@ -25,6 +25,15 @@ namespace test.EfHelpers
             return context.ChangeTracker.Entries().Count();
         }
 
+        public static string GetAllPropsNavsIsModified(this DbContext context, object entity)
+        {
+            var entityEntry = context.Entry(entity);
+            var isModifiedNames = entityEntry.Properties.Where(p => p.IsModified).Select(x => x.Metadata.Name)
+                .Union(entityEntry.Navigations.Where(p => p.IsModified).Select(x => x.Metadata.Name));
+            return string.Join(",", isModifiedNames);
+        }
+
+
         public static bool GetPropertyIsModified<TEntity, TProperty>(this DbContext context, TEntity entity, 
             Expression<Func<TEntity, TProperty>> model) where TEntity : class
         {
@@ -38,7 +47,8 @@ namespace test.EfHelpers
         {
             var propInfo = DatabaseMetadata.GetPropertyInfoFromLambda(model);
             var entityEntry = context.Entry(entity);
-            return entityEntry.Navigation(propInfo.Name).IsModified;
+            var navData = entityEntry.Navigation(propInfo.Name);
+            return navData.IsModified;
         }
     }
 }

@@ -3,10 +3,10 @@
 
 namespace Test.Chapter09Listings.EfClasses
 {
-    public class SubNotifyEntity
+    public class TrackedOne
     {
         public int Id { get; set; }
 
-        public int NotifyEntityId { get; set; }
+        public int TrackedEntityId { get; set; }
     }
 }

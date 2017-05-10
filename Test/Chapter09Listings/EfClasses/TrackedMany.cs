@@ -3,7 +3,7 @@
 
 namespace Test.Chapter09Listings.EfClasses
 {
-    public class SubTrackedEntity
+    public class TrackedMany
     {
         public int Id { get; set; }
 

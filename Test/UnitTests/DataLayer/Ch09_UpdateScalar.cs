@@ -109,7 +109,7 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(1);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Added);
-                context.GetPropertyIsModified(entity, x => x.MyString).ShouldBeFalse();
+                                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
             }
         }
 
@@ -130,7 +130,7 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(1);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Added);
-                context.GetPropertyIsModified(entity, x => x.MyString).ShouldBeFalse();
+                                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
             }
         }
 
@@ -156,7 +156,7 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(1);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Modified);
-                context.GetPropertyIsModified(entity, x => x.MyString).ShouldBeTrue();
+                                context.GetAllPropsNavsIsModified(entity).ShouldEqual("MyString");
            }
         }
 
@@ -182,7 +182,7 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(1);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Modified);
-                context.GetPropertyIsModified(entity, x => x.MyString).ShouldBeTrue();
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("MyString");
             }
         }
     }
