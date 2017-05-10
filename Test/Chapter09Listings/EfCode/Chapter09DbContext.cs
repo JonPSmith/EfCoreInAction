@@ -9,6 +9,7 @@ namespace Test.Chapter09Listings.EfCode
     {
         public DbSet<TrackedEntity> Tracked { get; set; }
         public DbSet<NotifyEntity> Notify { get; set; }
+        public DbSet<GuidKeyEntity> GuidKeyEntities { get; set; }
 
         public Chapter09DbContext(
             DbContextOptions<Chapter09DbContext> options)

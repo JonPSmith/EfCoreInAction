@@ -2,9 +2,11 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace test.EfHelpers
 {
@@ -18,6 +20,11 @@ namespace test.EfHelpers
         public static bool GetEntityIsKeySet(this DbContext context, object entity)
         {
             return context.Entry(entity).IsKeySet;
+        }
+
+        public static IReadOnlyList<IProperty> GetEntityPrimaryKeys<TEntity>(this DbContext context, TEntity entity)
+        {
+            return context.Model.FindEntityType(typeof(TEntity)).FindPrimaryKey().Properties;
         }
 
         public static int NumTrackedEntities(this DbContext context)
