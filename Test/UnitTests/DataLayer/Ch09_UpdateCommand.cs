@@ -12,13 +12,39 @@ using Xunit.Extensions.AssertExtensions;
 
 namespace test.UnitTests.DataLayer
 {
-    public class Ch09_UpdateOneToOne
+    public class Ch09_UpdateCommand
     {
         private readonly ITestOutputHelper _output;
 
-        public Ch09_UpdateOneToOne(ITestOutputHelper output)
+        public Ch09_UpdateCommand(ITestOutputHelper output)
         {
             _output = output;
+        }
+
+        [Fact]
+        public void TestChangeTrackerUpdateScalarOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                var entity = new MyEntity {MyString = "Test"};
+                context.Add(entity);
+                context.SaveChanges();
+            }
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var entity = context.MyEntities.First();
+                context.Update(entity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(1);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Modified);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("MyString");
+            }
         }
 
         [Fact]
@@ -37,7 +63,8 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 //ATTEMPT
-                var entity = context.MyEntities.Include(x => x.OneToOne).Single();
+                var entity = context.MyEntities
+                    .Include(x => x.OneToOne).First();
                 context.Update(entity);
 
                 //VERIFY
