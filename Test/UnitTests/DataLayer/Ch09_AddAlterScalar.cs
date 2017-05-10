@@ -32,7 +32,7 @@ namespace test.UnitTests.DataLayer
                 context.Database.EnsureCreated();
 
                 //ATTEMPT
-                context.Add(new MyEntity {MyString = "Tracked"});
+                context.Add(new MyEntity {MyString = "Test"});
                 context.Add(new NotifyEntity { MyString = "Notify" });
                 context.SaveChanges();
 
@@ -51,7 +51,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                context.Add(new MyEntity { MyString = "Tracked" });
+                context.Add(new MyEntity { MyString = "Test" });
                 context.SaveChanges();
             }
 
@@ -103,7 +103,8 @@ namespace test.UnitTests.DataLayer
                 context.Database.EnsureCreated();
 
                 //ATTEMPT
-                var entity = new MyEntity {MyString = "Tracked"};
+                var entity = new MyEntity();
+                entity.MyString = "Test";
                 context.Add(entity);
 
                 //VERIFY
@@ -143,7 +144,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                context.Add(new MyEntity { MyString = "Tracked" });
+                context.Add(new MyEntity { MyString = "Test" });
                 context.SaveChanges();
             }
 

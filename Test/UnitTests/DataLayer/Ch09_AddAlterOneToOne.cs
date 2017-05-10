@@ -105,7 +105,9 @@ namespace test.UnitTests.DataLayer
                 context.Database.EnsureCreated();
 
                 //ATTEMPT
-                var entity = new MyEntity {OneToOne = new OneEntity()};
+                var entity = new MyEntity();
+                var oneToOne = new OneEntity();
+                entity.OneToOne = oneToOne;
                 context.Add(entity);
 
                 //VERIFY
@@ -131,8 +133,9 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 //ATTEMPT
-                var one = context.OneEntities.Single();
-                var entity = new MyEntity { OneToOne = one };
+                var entity = new MyEntity();
+                var oneToOne = context.OneEntities.First();
+                entity.OneToOne = oneToOne;
                 context.Add(entity);
 
                 //VERIFY
@@ -300,7 +303,7 @@ namespace test.UnitTests.DataLayer
             //ATTEMPT
             using (var context = new Chapter09DbContext(options))
             {
-                var entity = context.MyEntities.Include(x => x.OneToOne).Single();
+                var entity = context.MyEntities.Single();
                 var existing = context.OneEntities.First();
                 entity.OneToOne = existing;
 
