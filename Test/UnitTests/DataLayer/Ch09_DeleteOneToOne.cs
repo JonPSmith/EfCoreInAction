@@ -32,14 +32,14 @@ namespace test.UnitTests.DataLayer
                 context.Database.EnsureCreated();
 
                 //ATTEMPT
-                var track = new TrackedEntity {OneToOne = new TrackedOne()};
+                var track = new MyEntity {OneToOne = new OneEntity()};
                 context.Add(track);
                 var notify = new NotifyEntity {OneToOne = new NotifyOne()};
                 context.Add(notify);
                 context.SaveChanges();
 
                 //VERIFY
-                context.Tracked.Count().ShouldEqual(1);
+                context.MyEntities.Count().ShouldEqual(1);
                 context.Notify.Count().ShouldEqual(1);
             }
         }
@@ -53,7 +53,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                var track = new TrackedEntity { OneToOne = new TrackedOne() };
+                var track = new MyEntity { OneToOne = new OneEntity() };
                 context.Add(track);
                 context.SaveChanges();
             }
@@ -61,13 +61,13 @@ namespace test.UnitTests.DataLayer
             //ATTEMPT
             using (var context = new Chapter09DbContext(options))
             {
-                var entity = context.Tracked.Include(x => x.OneToOne).Single();
+                var entity = context.MyEntities.Include(x => x.OneToOne).Single();
                 context.Remove(entity);
                 context.SaveChanges();
 
                 //VERIFY
-                context.Tracked.Count().ShouldEqual(0);
-                context.Set<TrackedOne>().Count().ShouldEqual(1);
+                context.MyEntities.Count().ShouldEqual(0);
+                context.OneEntities.Count().ShouldEqual(1);
             }
         }
 
@@ -106,7 +106,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                var track = new TrackedEntity { OneToOne = new TrackedOne() };
+                var track = new MyEntity { OneToOne = new OneEntity() };
                 context.Add(track);
                 context.SaveChanges();
             }
@@ -114,7 +114,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 //ATTEMPT
-                var entity = context.Tracked.Include(x => x.OneToOne).Single();
+                var entity = context.MyEntities.Include(x => x.OneToOne).Single();
                 context.Remove(entity);
 
                 //VERIFY

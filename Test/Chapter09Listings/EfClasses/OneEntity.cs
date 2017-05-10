@@ -3,10 +3,12 @@
 
 namespace Test.Chapter09Listings.EfClasses
 {
-    public class TrackedMany
+    public class OneEntity
     {
         public int Id { get; set; }
 
-        public int TrackedEntityId { get; set; }
+        public string One { get; set; }
+
+        public int? MyEntityId { get; set; }
     }
 }

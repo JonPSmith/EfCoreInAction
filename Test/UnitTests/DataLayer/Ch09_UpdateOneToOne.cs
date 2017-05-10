@@ -29,7 +29,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                var entity = new TrackedEntity{ OneToOne = new TrackedOne()};
+                var entity = new MyEntity{ OneToOne = new OneEntity()};
                 context.Add(entity);
                 context.SaveChanges();
             }
@@ -37,7 +37,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 //ATTEMPT
-                var entity = context.Tracked.Include(x => x.OneToOne).Single();
+                var entity = context.MyEntities.Include(x => x.OneToOne).Single();
                 context.Update(entity);
 
                 //VERIFY
@@ -54,11 +54,11 @@ namespace test.UnitTests.DataLayer
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
-            TrackedEntity entity;
+            MyEntity entity;
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                entity = new TrackedEntity();
+                entity = new MyEntity();
                 context.Add(entity);
                 context.SaveChanges();
             }
@@ -66,7 +66,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 //ATTEMPT
-                entity.OneToOne = new TrackedOne();
+                entity.OneToOne = new OneEntity();
                 context.Update(entity);
 
                 //VERIFY
@@ -86,7 +86,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                var entity = new TrackedEntity();
+                var entity = new MyEntity();
                 context.Add(entity);
                 context.SaveChanges();
             }
@@ -94,8 +94,8 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 //ATTEMPT
-                var entity = context.Tracked.Single();
-                entity.OneToOne = new TrackedOne();
+                var entity = context.MyEntities.Single();
+                entity.OneToOne = new OneEntity();
                 context.Update(entity);
 
                 //VERIFY
@@ -115,16 +115,16 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                context.Add(new TrackedEntity());
-                context.Add(new TrackedOne());
+                context.Add(new MyEntity());
+                context.Add(new OneEntity());
                 context.SaveChanges();
             }
 
             using (var context = new Chapter09DbContext(options))
             {
                 //ATTEMPT
-                var entity = context.Tracked.Single();
-                entity.OneToOne = context.Set<TrackedOne>().Single();
+                var entity = context.MyEntities.Single();
+                entity.OneToOne = context.OneEntities.Single();
                 context.Update(entity);
 
                 //VERIFY
@@ -132,7 +132,7 @@ namespace test.UnitTests.DataLayer
                 context.GetEntityState(entity).ShouldEqual(EntityState.Modified);
                 context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Modified);
                 context.GetAllPropsNavsIsModified(entity).ShouldEqual("MyString,OneToOne");
-                context.GetAllPropsNavsIsModified(entity.OneToOne).ShouldEqual("TrackedEntityId");
+                context.GetAllPropsNavsIsModified(entity.OneToOne).ShouldEqual("MyEntityId");
             }
         }
 
@@ -144,7 +144,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                var entity = new TrackedEntity();
+                var entity = new MyEntity();
                 context.Add(entity);
                 context.SaveChanges();
             }
@@ -152,8 +152,8 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 //ATTEMPT
-                var entity = context.Tracked.Single();
-                var many = new TrackedMany();
+                var entity = context.MyEntities.Single();
+                var many = new ManyEntity();
                 entity.Collection.Add(many);
                 context.Update(entity);
 

@@ -9,11 +9,11 @@ namespace Test.Chapter09Listings.EfCode.Configuration
     public static class TrackedConfig
     {
         public static void Configure
-        (this EntityTypeBuilder<TrackedEntity> entity)
+        (this EntityTypeBuilder<MyEntity> entity)
         {
             //entity.HasOne(p => p.OneToOne)
             //    .WithOne()
-            //    .HasForeignKey<TrackedOne>(x => x.TrackedEntityId);
+            //    .HasForeignKey<OneEntity>(x => x.TrackedEntityId);
 
             //entity.HasMany(p => p.Collection)
             //    .WithOne()

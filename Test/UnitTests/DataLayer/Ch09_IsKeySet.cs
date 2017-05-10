@@ -25,7 +25,7 @@ namespace test.UnitTests.DataLayer
                 //context.Database.EnsureCreated();
 
                 //ATTEMPT
-                var storeKey = new TrackedOne();
+                var storeKey = new OneEntity();
                 var clientKey = new GuidKeyEntity();
 
                 //VERIFY
@@ -45,7 +45,7 @@ namespace test.UnitTests.DataLayer
                 //context.Database.EnsureCreated();
 
                 //ATTEMPT
-                var storeKey = new TrackedOne();
+                var storeKey = new OneEntity();
                 context.Attach(storeKey);
                 var clientKey = new GuidKeyEntity();
                 context.Attach(clientKey);
@@ -67,7 +67,7 @@ namespace test.UnitTests.DataLayer
                 //context.Database.EnsureCreated();
 
                 //ATTEMPT
-                var storeKey = new TrackedOne();
+                var storeKey = new OneEntity();
                 context.Add(storeKey);
                 var clientKey = new GuidKeyEntity();
                 context.Add(clientKey);

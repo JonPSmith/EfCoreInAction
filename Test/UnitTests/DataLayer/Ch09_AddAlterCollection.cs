@@ -32,8 +32,8 @@ namespace test.UnitTests.DataLayer
                 context.Database.EnsureCreated();
 
                 //ATTEMPT
-                var track = new TrackedEntity();
-                track.Collection.Add(new TrackedMany());
+                var track = new MyEntity();
+                track.Collection.Add(new ManyEntity());
                 context.Add(track);
                 var notify = new NotifyEntity();
                 notify.Collection.Add(new NotifyMany());
@@ -41,7 +41,7 @@ namespace test.UnitTests.DataLayer
                 context.SaveChanges();
 
                 //VERIFY
-                context.Tracked.Count().ShouldEqual(1);
+                context.MyEntities.Count().ShouldEqual(1);
                 context.Notify.Count().ShouldEqual(1);
             }
         }
@@ -55,19 +55,19 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                context.Add(new TrackedEntity ());
+                context.Add(new MyEntity ());
                 context.SaveChanges();
             }
 
             //ATTEMPT
             using (var context = new Chapter09DbContext(options))
             {
-                var entity = context.Tracked.Single();
-                entity.Collection.Add(new TrackedMany());
+                var entity = context.MyEntities.Single();
+                entity.Collection.Add(new ManyEntity());
                 context.SaveChanges();
 
                 //VERIFY
-                context.Tracked.Single().Collection.Count.ShouldEqual(1);
+                context.MyEntities.Single().Collection.Count.ShouldEqual(1);
             }
         }
 
@@ -107,8 +107,8 @@ namespace test.UnitTests.DataLayer
                 context.Database.EnsureCreated();
 
                 //ATTEMPT
-                var entity = new TrackedEntity();
-                entity.Collection.Add(new TrackedMany());
+                var entity = new MyEntity();
+                entity.Collection.Add(new ManyEntity());
                 context.Add(entity);
 
                 //VERIFY
@@ -149,15 +149,15 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                context.Add(new TrackedEntity());
+                context.Add(new MyEntity());
                 context.SaveChanges();
             }
 
             //ATTEMPT
             using (var context = new Chapter09DbContext(options))
             {
-                var entity = context.Tracked.Include(x => x.Collection).Single();
-                entity.Collection.Add(new TrackedMany());
+                var entity = context.MyEntities.Include(x => x.Collection).Single();
+                entity.Collection.Add(new ManyEntity());
 
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(2);

@@ -32,12 +32,12 @@ namespace test.UnitTests.DataLayer
                 context.Database.EnsureCreated();
 
                 //ATTEMPT
-                context.Add(new TrackedEntity {MyString = "Tracked"});
+                context.Add(new MyEntity {MyString = "Tracked"});
                 context.Add(new NotifyEntity { MyString = "Notify" });
                 context.SaveChanges();
 
                 //VERIFY
-                context.Tracked.Count().ShouldEqual(1);
+                context.MyEntities.Count().ShouldEqual(1);
                 context.Notify.Count().ShouldEqual(1);
             }
         }
@@ -51,19 +51,19 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                context.Add(new TrackedEntity { MyString = "Tracked" });
+                context.Add(new MyEntity { MyString = "Tracked" });
                 context.SaveChanges();
             }
 
             //ATTEMPT
             using (var context = new Chapter09DbContext(options))
             {
-                var entity = context.Tracked.Single();
+                var entity = context.MyEntities.Single();
                 entity.MyString = "Changed";
                 context.SaveChanges();
 
                 //VERIFY
-                context.Tracked.Single().MyString.ShouldEqual("Changed");
+                context.MyEntities.Single().MyString.ShouldEqual("Changed");
             }
         }
 
@@ -103,13 +103,13 @@ namespace test.UnitTests.DataLayer
                 context.Database.EnsureCreated();
 
                 //ATTEMPT
-                var entity = new TrackedEntity {MyString = "Tracked"};
+                var entity = new MyEntity {MyString = "Tracked"};
                 context.Add(entity);
 
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(1);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Added);
-                                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
             }
         }
 
@@ -130,7 +130,7 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(1);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Added);
-                                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
             }
         }
 
@@ -143,20 +143,20 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                context.Add(new TrackedEntity { MyString = "Tracked" });
+                context.Add(new MyEntity { MyString = "Tracked" });
                 context.SaveChanges();
             }
 
             //ATTEMPT
             using (var context = new Chapter09DbContext(options))
             {
-                var entity = context.Tracked.Single();
+                var entity = context.MyEntities.Single();
                 entity.MyString = "Changed";
 
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(1);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Modified);
-                                context.GetAllPropsNavsIsModified(entity).ShouldEqual("MyString");
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("MyString");
            }
         }
 

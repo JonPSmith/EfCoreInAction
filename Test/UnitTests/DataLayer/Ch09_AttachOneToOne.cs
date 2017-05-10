@@ -27,11 +27,11 @@ namespace test.UnitTests.DataLayer
             //SETUP
             var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
 
-            TrackedEntity entity;
+            MyEntity entity;
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                entity = new TrackedEntity();
+                entity = new MyEntity();
                 context.Add(entity);
                 context.SaveChanges();
             }
@@ -39,13 +39,13 @@ namespace test.UnitTests.DataLayer
             //ATTEMPT
             using (var context = new Chapter09DbContext(options))
             {
-                entity.OneToOne = new TrackedOne();
+                entity.OneToOne = new OneEntity();
                 context.Attach(entity);
                 context.SaveChanges();
 
                 //VERIFY
-                context.Tracked.Count().ShouldEqual(1);
-                context.Set<TrackedOne>().Count().ShouldEqual(1);
+                context.MyEntities.Count().ShouldEqual(1);
+                context.OneEntities.Count().ShouldEqual(1);
             }
         }
 
@@ -82,11 +82,11 @@ namespace test.UnitTests.DataLayer
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
-            TrackedEntity entity;
+            MyEntity entity;
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                entity = new TrackedEntity();
+                entity = new MyEntity();
                 context.Add(entity);
                 context.SaveChanges();
             }
@@ -94,7 +94,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 //ATTEMPT
-                entity.OneToOne = new TrackedOne();
+                entity.OneToOne = new OneEntity();
                 context.Attach(entity);
 
                 //VERIFY

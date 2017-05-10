@@ -7,7 +7,8 @@ namespace Test.Chapter09Listings.EfCode
 {
     public class Chapter09DbContext : DbContext
     {
-        public DbSet<TrackedEntity> Tracked { get; set; }
+        public DbSet<MyEntity> MyEntities { get; set; }
+        public DbSet<OneEntity> OneEntities { get; set; }
         public DbSet<NotifyEntity> Notify { get; set; }
         public DbSet<GuidKeyEntity> GuidKeyEntities { get; set; }
 
@@ -19,7 +20,7 @@ namespace Test.Chapter09Listings.EfCode
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<NotifyEntity>().Configure();
-            modelBuilder.Entity<TrackedEntity>().Configure();
+            modelBuilder.Entity<MyEntity>().Configure();
         }
     }
 }
