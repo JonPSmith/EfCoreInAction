@@ -12,11 +12,11 @@ using Xunit.Extensions.AssertExtensions;
 
 namespace test.UnitTests.DataLayer
 {
-    public class Ch09_AttachOneToOne
+    public class Ch09_AttachCommand
     {
         private readonly ITestOutputHelper _output;
 
-        public Ch09_AttachOneToOne(ITestOutputHelper output)
+        public Ch09_AttachCommand(ITestOutputHelper output)
         {
             _output = output;
         }

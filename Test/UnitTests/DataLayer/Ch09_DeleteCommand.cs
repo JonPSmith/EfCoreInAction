@@ -12,11 +12,11 @@ using Xunit.Extensions.AssertExtensions;
 
 namespace test.UnitTests.DataLayer
 {
-    public class Ch09_DeleteOneToOne
+    public class Ch09_DeleteCommand
     {
         private readonly ITestOutputHelper _output;
 
-        public Ch09_DeleteOneToOne(ITestOutputHelper output)
+        public Ch09_DeleteCommand(ITestOutputHelper output)
         {
             _output = output;
         }
@@ -41,6 +41,59 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 context.MyEntities.Count().ShouldEqual(1);
                 context.Notify.Count().ShouldEqual(1);
+            }
+        }
+
+        [Fact]
+        public void TestDeleteNoRelationshipOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                var track = new MyEntity ();
+                context.Add(track);
+                context.SaveChanges();
+            }
+
+            //ATTEMPT
+            using (var context = new Chapter09DbContext(options))
+            {
+                var entity = context.MyEntities.Single();
+                context.Remove(entity);
+                context.SaveChanges();
+
+                //VERIFY
+                context.MyEntities.Count().ShouldEqual(0);
+            }
+        }
+
+        [Fact]
+        public void TestChangeTrackingDeleteNoRelationshipOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                var track = new MyEntity();
+                context.Add(track);
+                context.SaveChanges();
+            }
+
+            //ATTEMPT
+            using (var context = new Chapter09DbContext(options))
+            {
+                var entity = context.MyEntities.First();
+                context.Remove(entity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(1);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Deleted);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
             }
         }
 
@@ -184,6 +237,43 @@ namespace test.UnitTests.DataLayer
                 context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Added);
                 context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
                 context.GetAllPropsNavsIsModified(entity.OneToOne).ShouldEqual("");
+            }
+        }
+
+
+        [Fact]
+        public void TestChangeTrackerDeleteTrackedOneRequiredOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.Add(new MyEntity());
+                context.Add(new OneEntity());
+                context.SaveChanges();
+            }
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                //ATTEMPT
+                var entity = 
+                    context.MyEntities
+                    .First();
+                var oneToOne =
+                    context.OneEntities
+                    .First();
+                entity.OneToOne = oneToOne;
+                context.Remove(entity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(2);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Deleted);
+                context.GetEntityState(oneToOne).ShouldEqual(EntityState.Modified);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("OneToOne");
+                context.GetAllPropsNavsIsModified(oneToOne).ShouldEqual("MyEntityId");
             }
         }
     }

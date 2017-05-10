@@ -150,8 +150,8 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 //ATTEMPT
-                var entity = context.MyEntities.Single();
-                entity.OneToOne = context.OneEntities.Single();
+                var entity = context.MyEntities.First();
+                entity.OneToOne = context.OneEntities.First();
                 context.Update(entity);
 
                 //VERIFY
