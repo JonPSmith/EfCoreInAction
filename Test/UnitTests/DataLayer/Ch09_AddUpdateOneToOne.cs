@@ -12,11 +12,11 @@ using Xunit.Extensions.AssertExtensions;
 
 namespace test.UnitTests.DataLayer
 {
-    public class Ch09_UpdateOneToOne
+    public class Ch09_AddUpdateOneToOne
     {
         private readonly ITestOutputHelper _output;
 
-        public Ch09_UpdateOneToOne(ITestOutputHelper output)
+        public Ch09_AddUpdateOneToOne(ITestOutputHelper output)
         {
             _output = output;
         }
@@ -225,6 +225,66 @@ namespace test.UnitTests.DataLayer
                 context.GetEntityState(oldOneToOne).ShouldEqual(EntityState.Modified);
                 context.GetAllPropsNavsIsModified(oldOneToOne).ShouldEqual("TrackedEntityId");
                 context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
+            }
+        }
+
+        [Fact]
+        public void TestChangeTrackerUpdateReplaceTrackedAfterSaveChangesOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                var track = new TrackedEntity();
+                track.OneToOne = new TrackedOne();
+                context.Add(track);
+                context.SaveChanges();
+            }
+
+            //ATTEMPT
+            using (var context = new Chapter09DbContext(options))
+            {
+                var entity = context.Tracked.Include(x => x.OneToOne).Single();
+                var oldOneToOne = entity.OneToOne;
+                entity.OneToOne = new TrackedOne();
+                context.SaveChanges();
+
+                //VERIFY
+                context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Unchanged);
+                context.GetEntityState(oldOneToOne).ShouldEqual(EntityState.Unchanged);
+                context.Set<TrackedOne>().Count().ShouldEqual(2);
+            }
+        }
+
+        [Fact]
+        public void TestChangeTrackerUpdateReplaceExistingTrackedOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.Add(new TrackedEntity());
+                context.Add(new TrackedOne());
+                context.SaveChanges();
+            }
+
+            //ATTEMPT
+            using (var context = new Chapter09DbContext(options))
+            {
+                var entity = context.Tracked.Include(x => x.OneToOne).Single();
+                var existing = context.Set<TrackedOne>().First();
+                entity.OneToOne = existing;
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(2);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
+                context.GetEntityState(existing).ShouldEqual(EntityState.Modified);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("OneToOne");
+                context.GetAllPropsNavsIsModified(existing).ShouldEqual("TrackedEntityId");
             }
         }
     }
