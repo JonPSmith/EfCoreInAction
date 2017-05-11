@@ -95,10 +95,14 @@ namespace test.UnitTests.DataLayer
                 entity.OneToOne = new OneEntity();
                 context.Attach(entity);
                 context.SaveChanges();
-
+            }
+            using (var context = new Chapter09DbContext(options))
+            {
                 //VERIFY
                 context.MyEntities.Count().ShouldEqual(1);
+                context.MyEntities.Include(x => x.OneToOne).Single(x => x.Id == entity.Id).OneToOne.ShouldNotBeNull();
                 context.OneEntities.Count().ShouldEqual(1);
+
             }
         }
 
@@ -123,7 +127,9 @@ namespace test.UnitTests.DataLayer
                 entity.OneToOne = new NotifyOne();
                 context.Attach(entity);
                 context.SaveChanges();
-
+            }
+            using (var context = new Chapter09DbContext(options))
+            {
                 //VERIFY
                 context.Notify.Count().ShouldEqual(1);
                 context.Set<NotifyOne>().Count().ShouldEqual(1);
@@ -212,10 +218,13 @@ namespace test.UnitTests.DataLayer
                 entity.OneToOne = oneToOne;
                 context.Attach(entity);
                 context.SaveChanges();
-
+                //Nothing happens, because the state is unchanged
+            }
+            using (var context = new Chapter09DbContext(options))
+            {
                 //VERIFY
-                oneToOne.MyEntityId.ShouldNotBeNull();
-                context.MyEntities.Include(p => p.OneToOne).First().OneToOne.ShouldNotBeNull();
+                context.OneEntities.First().MyEntityId.ShouldBeNull();
+                context.MyEntities.Include(p => p.OneToOne).First().OneToOne.ShouldBeNull();
             }
         }
 
