@@ -30,7 +30,7 @@ namespace ServiceLayer.AdminServices.Concrete
 
         public Book UpdateBook(ChangePubDateDto dto)   //#D
         {
-            var book = _context.Books.Find(dto.BookId);//#E
+            var book = _context.Find<Book>(dto.BookId);//#E
             book.PublishedOn = dto.PublishedOn;        //#F
             _context.SaveChanges();                    //#G
             return book;                               //#H

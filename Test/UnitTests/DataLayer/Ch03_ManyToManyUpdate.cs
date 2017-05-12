@@ -146,7 +146,7 @@ namespace test.UnitTests.DataLayer
                 var book = context.Books
                     .Include(p => p.AuthorsLink)
                     .Single(p => p.BookId == dto.BookId);
-                var newAuthor = context.Authors.Find(dto.NewAuthorId);
+                var newAuthor = context.Find<Author>(dto.NewAuthorId);
 
                 book.AuthorsLink.Add(new BookAuthor
                 {
@@ -196,8 +196,8 @@ namespace test.UnitTests.DataLayer
             using (var context = new EfCoreContext(options))
             {
                 //ATTEMPT
-                var orgBookAuthor = context.Set<BookAuthor>()    //#A
-                    .Find(dto.BookId, dto.AuthorId);             //#A
+                var orgBookAuthor = context    //#A
+                    .Find<BookAuthor>(dto.BookId, dto.AuthorId); //#A
                 context.Set<BookAuthor>().Remove(orgBookAuthor); //#B
                 context.Set<BookAuthor>().Add(new BookAuthor     //#C
                 {                                                //#C
