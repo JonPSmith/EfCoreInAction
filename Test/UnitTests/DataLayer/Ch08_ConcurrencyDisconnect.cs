@@ -108,11 +108,11 @@ namespace test.UnitTests.DataLayer
             using (var context = new ConcurrencyDbContext(_options))
             {
                 //ATTEMPT
-                var jdBoss = context.Employees.Find(johnDoeId);
+                var entity = context.Employees.Find(johnDoeId);
                 context.Database.ExecuteSqlCommand(
                     "DELETE dbo.Employees WHERE EmployeeId = @p0",
                     johnDoeId);
-                jdBoss.UpdateSalary(context, 1000, 1100);
+                entity.UpdateSalary(context, 1000, 1100);
 
                 var ex = Assert.Throws<DbUpdateConcurrencyException>(() => context.SaveChanges());
 
@@ -163,20 +163,21 @@ namespace test.UnitTests.DataLayer
         public void TestDisconnectedDeleteDiagnoseOk()
         {
             //SETUP
-            int johnDoeId;
+            int employeeId;
             using (var context = new ConcurrencyDbContext(_options))
             {
-                johnDoeId = GetJohnDoeRecord(context).EmployeeId;
+                employeeId = GetJohnDoeRecord(context).EmployeeId;
             }
 
             using (var context = new ConcurrencyDbContext(_options))
             {
                 //ATTEMPT
-                var jdBoss = context.Employees.Find(johnDoeId);
+                var entity = context //#A
+                    .Find<Employee>(employeeId); //#A
                 context.Database.ExecuteSqlCommand(
                     "DELETE dbo.Employees WHERE EmployeeId = @p0",
-                    johnDoeId);
-                jdBoss.UpdateSalary(context, 1000, 1100);
+                    employeeId);
+                entity.UpdateSalary(context, 1000, 1100);
 
                 string message = null;
                 try
@@ -189,39 +190,52 @@ namespace test.UnitTests.DataLayer
                     message = DiagnoseSalaryConflict(
                         context, entry);
                 }
+                /***********************************************************************
+                #A The 
+                 * ********************************************************************/
 
                 //VERIFY
                 message.ShouldEqual("The Employee John Doe was deleted by another user. Click Add button to add back with salary of 1100 or Cancel to leave deleted.");
             }
         }
 
-        private string DiagnoseSalaryConflict(
+        private string DiagnoseSalaryConflict( //#A
             ConcurrencyDbContext context, 
             EntityEntry entry)
         {
             var employee = entry.Entity
                 as Employee;
-            if (employee == null)
+            if (employee == null) //#B
                 throw new NotSupportedException(
-                    "Don't know how to handle concurrency conflicts for " +
+        "Don't know how to handle concurrency conflicts for " +
                     entry.Metadata.Name);
 
-            var databaseEntity =                   //#C
-                context.Employees.AsNoTracking()       //#D
+            var databaseEntity = //#C
+                context.Employees.AsNoTracking() //#D
                     .SingleOrDefault(p => 
                         p.EmployeeId == employee.EmployeeId);
-            if (databaseEntity == null) //#E
-                return 
-$"The Employee {employee.Name} was deleted by another user. " +
-$"Click Add button to add back with salary of {employee.Salary}" +
-" or Cancel to leave deleted.";
 
-            return 
-$"The Employee {employee.Name}'s salary was set to " +
-$"{databaseEntity.Salary} by another user. " +
-$"Click Update to use your new salary of {employee.Salary}" +
-$" or Cancel to leave the salary at {databaseEntity.Salary}.";
+            if (databaseEntity == null) //#E
+                return //#F
+        $"The Employee {employee.Name} was deleted by another user. " +
+        $"Click Add button to add back with salary of {employee.Salary}" +
+        " or Cancel to leave deleted.";
+
+            return //#G
+        $"The Employee {employee.Name}'s salary was set to " +
+        $"{databaseEntity.Salary} by another user. " +
+        $"Click Update to use your new salary of {employee.Salary}" +
+        $" or Cancel to leave the salary at {databaseEntity.Salary}.";
         }
+        /*********************************************************************
+        #A This is called if there is a DbUpdateConcurrencyException. Its job is not to fix the problem, but form a useful message to show the user
+        #B If the enity that failed wasn't an Employee then I throw an exception, as this code cannot handle that.
+        #C I want to get the data that someone else wrote into the database after my read. 
+        #D This entity MUST be read as NoTracking otherwise it will interfere with the same entity we are trying to write
+        #E I check whether this was a delete conflict, that is, the employee was deleted since the user attempted to update it
+        #F This is the error message to display to the user, with their two choices on how to carry on
+        #G Else it must be an update conflict, so I return a different error message with the two choices for this case.
+         * ******************************************************************/
 
         [Fact]
         public void TestDisconnectedUpdateFixUpdateOk()
