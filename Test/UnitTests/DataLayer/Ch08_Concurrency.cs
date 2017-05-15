@@ -259,7 +259,7 @@ namespace test.UnitTests.DataLayer
                 firstBook.Title = Guid.NewGuid().ToString();
                 try
                 {
-                    context.SaveChanges(); //#D
+                    context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException ex) 
                 {
