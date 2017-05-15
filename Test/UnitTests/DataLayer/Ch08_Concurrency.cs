@@ -201,6 +201,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new ConcurrencyDbContext(_options))
             {
                 //ATTEMPT
+                string error = null;
                 var firstBook = context.Books.First(); //#A
 
                 context.Database.ExecuteSqlCommand(
@@ -214,16 +215,11 @@ namespace test.UnitTests.DataLayer
                 }
                 catch (DbUpdateConcurrencyException ex) //#E
                 {
-                    foreach (var entry in ex.Entries) //#F
-                    {
-                        if (!HandleBookConcurrency(context, entry)) //#G
-                        {
-                            throw new NotSupportedException(  //#H
-                                "Don't know how to handle concurrency conflicts for " +
-                                entry.Metadata.Name);
-                        }
-                    }
-                    context.SaveChanges(); //#I;
+                    var entry = ex.Entries.Single(); //#F
+                    error = HandleBookConcurrency( //#G
+                        context, entry); //G
+                    if (error == null) //#H
+                        context.SaveChanges();
                 }
                 /***********************************************************
                 #A I load the first book in the database as a tracked entity
@@ -231,14 +227,15 @@ namespace test.UnitTests.DataLayer
                 #C I change the title in the book to cause EF Core to do an update to the book
                 #D This SaveChanges will throw an DbUpdateConcurrencyException
                 #E I catch the DbUpdateConcurrencyException and put in my code to handle it
-                #F There may be multiple entities that have concurrency issues, so we need to look at each in turn
-                #G I call my HandleBookConcurrency method, which returns true if it could handle the concurrency on this entity
-                #H If my method couldn't handle it then I have to throw an exception
-                #I If I got to here then the concurrecy issue has been handled, so we try the SaveChanges again
+                #F We only expect one concurrency confict entry - if there are more it will throw and exception
+                #G I call my HandleBookConcurrency method, which returns null if the error was handled, or an error message if it wasn't handled
+                #H If the conflict was handled then I need to call SaveChanges to update the Book
                  * **********************************************************/
-            }
 
-            //VERIFY
+                //VERIFY
+                error.ShouldBeNull();
+            }
+            
             using (var context = new ConcurrencyDbContext(_options))
             {
                 var rereadBook = context.Books.First();
@@ -246,57 +243,93 @@ namespace test.UnitTests.DataLayer
             }
         }
 
-        private static bool HandleBookConcurrency( //#A
+        [Fact]
+        public void ProduceErrorOnBookDeletedOk()
+        {
+            //SETUP
+            using (var context = new ConcurrencyDbContext(_options))
+            {
+                //ATTEMPT
+                string error = null;
+                var firstBook = context.Books.First();
+
+                context.Database.ExecuteSqlCommand(
+                    "DELETE dbo.Books WHERE ConcurrecyBookId = @p0",
+                    firstBook.ConcurrecyBookId);
+                firstBook.Title = Guid.NewGuid().ToString();
+                try
+                {
+                    context.SaveChanges(); //#D
+                }
+                catch (DbUpdateConcurrencyException ex) 
+                {
+                    var entry = ex.Entries.Single(); 
+                    error = HandleBookConcurrency(
+                        context, entry);
+                }
+                //VERIFY
+                error.ShouldEqual("Unable to save changes.The book was deleted by another user.");
+            }
+        }
+
+
+        private static string HandleBookConcurrency( //#A
             ConcurrencyDbContext context, 
             EntityEntry entry)
         {
             var book = entry.Entity 
-                as ConcurrecyBook; //#B
-            if (book == null)      //#B
-                return false;      //#B
+                as ConcurrecyBook;
+            if (book == null) //#B
+                throw new NotSupportedException(
+         "Don't know how to handle concurrency conflicts for " +
+                    entry.Metadata.Name);
 
             var databaseEntity =                   //#C
                 context.Books.AsNoTracking()       //#D
-                    .Single(p => p.ConcurrecyBookId
+                    .SingleOrDefault(p => p.ConcurrecyBookId
                         == book.ConcurrecyBookId);
-            var version2Entity = context.Entry(databaseEntity); //#E
+            if (databaseEntity == null) //#E
+                return "Unable to save changes.The book was deleted by another user.";
 
-            foreach (var property in entry.Metadata.GetProperties()) //#F
+            var version2Entity = context.Entry(databaseEntity); //#F
+
+            foreach (var property in entry.Metadata.GetProperties()) //#G
             {
-                var version1_original = entry               //#G
-                    .Property(property.Name).OriginalValue; //#G
-                var version2_someoneElse = version2Entity  //#H
-                    .Property(property.Name).CurrentValue; //#H
-                var version3_whatIWanted = entry          //#I
-                    .Property(property.Name).CurrentValue;//#I
+                var version1_original = entry               //#H
+                    .Property(property.Name).OriginalValue; //#H
+                var version2_someoneElse = version2Entity  //#I
+                    .Property(property.Name).CurrentValue; //#I
+                var version3_whatIWanted = entry          //#J
+                    .Property(property.Name).CurrentValue;//#J
 
                 // TODO: Logic to decide which value should be written to database
-                if (property.Name ==                           //#J
-                    nameof(ConcurrecyBook.PublishedOn))        //#J
-                {                                              //#J
-                    entry.Property(property.Name).CurrentValue //#J
-                        = new DateTime(2050, 5, 5);            //#J
-                }                                              //#J
+                if (property.Name ==                           //#K
+                    nameof(ConcurrecyBook.PublishedOn))        //#K
+                {                                              //#K
+                    entry.Property(property.Name).CurrentValue //#K
+                        = new DateTime(2050, 5, 5);            //#K
+                }                                              //#K
 
                 // Update original values so that the concurrecy 
-                entry.Property(property.Name).OriginalValue =            //#K
-                    version2Entity.Property(property.Name).CurrentValue; //#K
+                entry.Property(property.Name).OriginalValue =            //#L
+                    version2Entity.Property(property.Name).CurrentValue; //#L
             }
-            return true; //#L
+            return null; //#M
         }
         /***********************************************************
         #A My method takes in the application DbContext and the ChangeTracking entry from the exception's Entities property
-        #B This method only handles a ConcurrecyBook, so it returns false if the entity isn't of that type
+        #B This method only handles a ConcurrecyBook, so throws an expection if the entry isn't of type Book
         #C I want to get the data that someone else wrote into the database after my read. 
         #D This entity MUST be read as NoTracking otherwise it will interfere with the same entity we are trying to write
-        #E I get the TEntity version of the entity, which has all the tracking information
-        #F In this case I show going through all of the properties in the book entity. I need to do this to reset the Original values so that the exception does not happen again
-        #G This holds the version of the property at the time when I did the tracked read of the book
-        #H This holds the version of the property as written to the database by someone else
-        #I This holds the version of the property that I wanted to set it to in my update
-        #J This is where you should put your code to fix the concurrency issue. I set the PublishedOn property to a specific value so I can check it in my unit test
-        #K Here I set the OriginalValue to the value that someone else set it to. This handles both the case where you use concurrency tokens or a timestamp
-        #L I return true to say I handled this concurrency issue
+        #E This concurrency conflict method does not handle the case where the book was deleted, so it returns a user-friendly errro message
+        #F I get the TEntity version of the entity, which has all the tracking information
+        #G In this case I show going through all of the properties in the book entity. I need to do this to reset the Original values so that the exception does not happen again
+        #H This holds the version of the property at the time when I did the tracked read of the book
+        #I This holds the version of the property as written to the database by someone else
+        #J This holds the version of the property that I wanted to set it to in my update
+        #K This is where you should put your code to fix the concurrency issue. I set the PublishedOn property to a specific value so I can check it in my unit test
+        #L Here I set the OriginalValue to the value that someone else set it to. This handles both the case where you use concurrency tokens or a timestamp
+        #M I return null to say I handled this concurrency issue
          * ********************************************************/
     }
 }
