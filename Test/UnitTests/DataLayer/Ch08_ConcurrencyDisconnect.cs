@@ -1,8 +1,10 @@
 ﻿// Copyright (c) 2017 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
+using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using test.Helpers;
 using Test.Chapter08Listings.EfClasses;
 using Test.Chapter08Listings.EfCode;
@@ -57,7 +59,7 @@ namespace test.UnitTests.DataLayer
             {
                 //ATTEMPT
                 context.Update(entity);
-                entity.UpdateSalaryDisconnected(context, 1000, 1100);
+                entity.UpdateSalary(context, 1000, 1100);
                 context.SaveChanges();
 
                 //VERIFY
@@ -81,9 +83,9 @@ namespace test.UnitTests.DataLayer
                 //ATTEMPT
                 var jdBoss = contextBoss.Employees.Find(johnDoeId);
                 var jdHr = contextHr.Employees.Find(johnDoeId);
-                jdBoss.UpdateSalaryDisconnected(contextBoss, 1000, 1100);
+                jdBoss.UpdateSalary(contextBoss, 1000, 1100);
                 contextBoss.SaveChanges();
-                jdHr.UpdateSalaryDisconnected(contextHr,1000,1025);
+                jdHr.UpdateSalary(contextHr,1000,1025);
 
                 var ex = Assert.Throws<DbUpdateConcurrencyException>(() => contextHr.SaveChanges());
 
@@ -93,110 +95,237 @@ namespace test.UnitTests.DataLayer
             }
         }
 
+        [Fact]
+        public void TestDisconnectedDeleteThrowExceptionOk()
+        {
+            //SETUP
+            int johnDoeId;
+            using (var context = new ConcurrencyDbContext(_options))
+            {
+                johnDoeId = GetJohnDoeRecord(context).EmployeeId;
+            }
 
-        //    [Fact]
-        //    public void HandleExceptionOnPublishedDateChangedOk()
-        //    {
-        //        //SETUP
-        //        using (var context = new ConcurrencyDbContext(_options))
-        //        {
-        //            //ATTEMPT
-        //            var firstBook = context.Books.First(); //#A
+            using (var context = new ConcurrencyDbContext(_options))
+            {
+                //ATTEMPT
+                var entity = context.Employees.Find(johnDoeId);
+                context.Database.ExecuteSqlCommand(
+                    "DELETE dbo.Employees WHERE EmployeeId = @p0",
+                    johnDoeId);
+                entity.UpdateSalary(context, 1000, 1100);
 
-        //            context.Database.ExecuteSqlCommand(
-        //                "UPDATE dbo.Books SET PublishedOn = GETDATE()" +  //#B
-        //                " WHERE ConcurrecyBookId = @p0",                  //#B
-        //                firstBook.ConcurrecyBookId);                      //#B
-        //            firstBook.Title = Guid.NewGuid().ToString(); //#C
-        //            try
-        //            {
-        //                context.SaveChanges(); //#D
-        //            }
-        //            catch (DbUpdateConcurrencyException ex) //#E
-        //            {
-        //                foreach (var entry in ex.Entries) //#F
-        //                {
-        //                    if (!HandleBookConcurrency(context, entry)) //#G
-        //                    {
-        //                        throw new NotSupportedException(  //#H
-        //                            "Don't know how to handle concurrency conflicts for " +
-        //                            entry.Metadata.Name);
-        //                    }
-        //                }
-        //                context.SaveChanges(); //#I;
-        //            }
-        //            /***********************************************************
-        //            #A I load the first book in the database as a tracked entity
-        //            #B I simulate another thread/application changing the PublishedOn column of the same book
-        //            #C I change the title in the book to cause EF Core to do an update to the book
-        //            #D This SaveChanges will throw an DbUpdateConcurrencyException
-        //            #E I catch the DbUpdateConcurrencyException and put in my code to handle it
-        //            #F There may be multiple entities that have concurrency issues, so we need to look at each in turn
-        //            #G I call my HandleBookConcurrency method, which returns true if it could handle the concurrency on this entity
-        //            #H If my method couldn't handle it then I have to throw an exception
-        //            #I If I got to here then the concurrecy issue has been handled, so we try the SaveChanges again
-        //             * **********************************************************/
-        //        }
+                var ex = Assert.Throws<DbUpdateConcurrencyException>(() => context.SaveChanges());
 
-        //        //VERIFY
-        //        using (var context = new ConcurrencyDbContext(_options))
-        //        {
-        //            var rereadBook = context.Books.First();
-        //            rereadBook.PublishedOn.ShouldEqual(new DateTime(2050, 5, 5));
-        //        }
-        //    }
+                //VERIFY
+                ex.Message.StartsWith("Database operation expected to affect 1 row(s) but actually affected 0 row(s). Data may have been modified or deleted since entities were loaded. ")
+                    .ShouldBeTrue();
+            }
+        }
 
-        //    private static bool HandleBookConcurrency( //#A
-        //        ConcurrencyDbContext context, 
-        //        EntityEntry entry)
-        //    {
-        //        var book = entry.Entity 
-        //            as ConcurrecyBook; //#B
-        //        if (book == null)      //#B
-        //            return false;      //#B
+        [Fact]
+        public void TestDisconnectedUpdateDiagnoseOk()
+        {
+            //SETUP
+            int johnDoeId;
+            using (var context = new ConcurrencyDbContext(_options))
+            {
+                johnDoeId = GetJohnDoeRecord(context).EmployeeId;
+            }
 
-        //        var databaseEntity =                   //#C
-        //            context.Books.AsNoTracking()       //#D
-        //                .Single(p => p.ConcurrecyBookId
-        //                    == book.ConcurrecyBookId);
-        //        var version2Entity = context.Entry(databaseEntity); //#E
+            using (var contextBoss = new ConcurrencyDbContext(_options))
+            using (var contextHr = new ConcurrencyDbContext(_options))
+            {
+                //ATTEMPT
+                var jdBoss = contextBoss.Employees.Find(johnDoeId);
+                var jdHr = contextHr.Employees.Find(johnDoeId);
+                jdBoss.UpdateSalary(contextBoss, 1000, 1100);
+                contextBoss.SaveChanges();
+                jdHr.UpdateSalary(contextHr, 1000, 1025);
 
-        //        foreach (var property in entry.Metadata.GetProperties()) //#F
-        //        {
-        //            var version1_original = entry               //#G
-        //                .Property(property.Name).OriginalValue; //#G
-        //            var version2_someoneElse = version2Entity  //#H
-        //                .Property(property.Name).CurrentValue; //#H
-        //            var version3_whatIWanted = entry          //#I
-        //                .Property(property.Name).CurrentValue;//#I
+                string message = null;
+                try
+                {
+                    contextHr.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    var entry = ex.Entries.Single();
+                    message = DiagnoseSalaryConflict(
+                        contextHr, entry);
+                }
 
-        //            // TODO: Logic to decide which value should be written to database
-        //            if (property.Name ==                           //#J
-        //                nameof(ConcurrecyBook.PublishedOn))        //#J
-        //            {                                              //#J
-        //                entry.Property(property.Name).CurrentValue //#J
-        //                    = new DateTime(2050, 5, 5);            //#J
-        //            }                                              //#J
+                //VERIFY
+                message.ShouldEqual("The Employee John Doe's salary was set to 1100 by another user. Click Update to use your new salary of 1025 or Cancel to leave the salary at 1100.");
+            }
+        }
 
-        //            // Update original values so that the concurrecy 
-        //            entry.Property(property.Name).OriginalValue =            //#K
-        //                version2Entity.Property(property.Name).CurrentValue; //#K
-        //        }
-        //        return true; //#L
-        //    }
-        //    /***********************************************************
-        //    #A My method takes in the application DbContext and the ChangeTracking entry from the exception's Entities property
-        //    #B This method only handles a ConcurrecyBook, so it returns false if the entity isn't of that type
-        //    #C I want to get the data that someone else wrote into the database after my read. 
-        //    #D This entity MUST be read as NoTracking otherwise it will interfere with the same entity we are trying to write
-        //    #E I get the TEntity version of the entity, which has all the tracking information
-        //    #F In this case I show going through all of the properties in the book entity. I need to do this to reset the Original values so that the exception does not happen again
-        //    #G This holds the version of the property at the time when I did the tracked read of the book
-        //    #H This holds the version of the property as written to the database by someone else
-        //    #I This holds the version of the property that I wanted to set it to in my update
-        //    #J This is where you should put your code to fix the concurrency issue. I set the PublishedOn property to a specific value so I can check it in my unit test
-        //    #K Here I set the OriginalValue to the value that someone else set it to. This handles both the case where you use concurrency tokens or a timestamp
-        //    #L I return true to say I handled this concurrency issue
-        //     * ********************************************************/
+        [Fact]
+        public void TestDisconnectedDeleteDiagnoseOk()
+        {
+            //SETUP
+            int employeeId;
+            using (var context = new ConcurrencyDbContext(_options))
+            {
+                employeeId = GetJohnDoeRecord(context).EmployeeId;
+            }
+
+            using (var context = new ConcurrencyDbContext(_options))
+            {
+                //ATTEMPT
+                var entity = context //#A
+                    .Find<Employee>(employeeId); //#A
+                context.Database.ExecuteSqlCommand(
+                    "DELETE dbo.Employees WHERE EmployeeId = @p0",
+                    employeeId);
+                entity.UpdateSalary(context, 1000, 1100);
+
+                string message = null;
+                try
+                {
+                    context.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    var entry = ex.Entries.Single();
+                    message = DiagnoseSalaryConflict(
+                        context, entry);
+                }
+                /***********************************************************************
+                #A The 
+                 * ********************************************************************/
+
+                //VERIFY
+                message.ShouldEqual("The Employee John Doe was deleted by another user. Click Add button to add back with salary of 1100 or Cancel to leave deleted.");
+            }
+        }
+
+        private string DiagnoseSalaryConflict( //#A
+            ConcurrencyDbContext context, 
+            EntityEntry entry)
+        {
+            var employee = entry.Entity
+                as Employee;
+            if (employee == null) //#B
+                throw new NotSupportedException(
+        "Don't know how to handle concurrency conflicts for " +
+                    entry.Metadata.Name);
+
+            var databaseEntity = //#C
+                context.Employees.AsNoTracking() //#D
+                    .SingleOrDefault(p => 
+                        p.EmployeeId == employee.EmployeeId);
+
+            if (databaseEntity == null) //#E
+                return //#F
+        $"The Employee {employee.Name} was deleted by another user. " +
+        $"Click Add button to add back with salary of {employee.Salary}" +
+        " or Cancel to leave deleted.";
+
+            return //#G
+        $"The Employee {employee.Name}'s salary was set to " +
+        $"{databaseEntity.Salary} by another user. " +
+        $"Click Update to use your new salary of {employee.Salary}" +
+        $" or Cancel to leave the salary at {databaseEntity.Salary}.";
+        }
+        /*********************************************************************
+        #A This is called if there is a DbUpdateConcurrencyException. Its job is not to fix the problem, but form a useful message to show the user
+        #B If the enity that failed wasn't an Employee then I throw an exception, as this code cannot handle that.
+        #C I want to get the data that someone else wrote into the database after my read. 
+        #D This entity MUST be read as NoTracking otherwise it will interfere with the same entity we are trying to write
+        #E I check whether this was a delete conflict, that is, the employee was deleted since the user attempted to update it
+        #F This is the error message to display to the user, with their two choices on how to carry on
+        #G Else it must be an update conflict, so I return a different error message with the two choices for this case.
+         * ******************************************************************/
+
+        [Fact]
+        public void TestDisconnectedUpdateFixUpdateOk()
+        {
+            //SETUP
+            int johnDoeId;
+            using (var context = new ConcurrencyDbContext(_options))
+            {
+                johnDoeId = GetJohnDoeRecord(context).EmployeeId;
+            }
+
+            int orgSalary = 0;
+            using (var contextBoss = new ConcurrencyDbContext(_options))
+            using (var contextHr = new ConcurrencyDbContext(_options))
+            {
+                //ATTEMPT
+                var jdBoss = contextBoss.Employees.Find(johnDoeId);
+                var jdHr = contextHr.Employees.Find(johnDoeId);
+                jdBoss.UpdateSalary(contextBoss, 1000, 1100);
+                contextBoss.SaveChanges();
+                jdHr.UpdateSalary(contextHr, 1000, 1025);
+
+                try
+                {
+                    contextHr.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    orgSalary = contextHr.Employees.AsNoTracking().Single(x => x.EmployeeId == johnDoeId).Salary;
+                }
+            }
+
+            using (var context = new ConcurrencyDbContext(_options))
+            {
+                //VERIFY
+                var johnDoe = context.Employees.Find(johnDoeId);
+                johnDoe.UpdateSalary(context, orgSalary, 1025);
+                context.SaveChanges();
+            }
+
+            using (var context = new ConcurrencyDbContext(_options))
+            {
+                //VERIFY
+                var johnDoe = context.Employees.Find(johnDoeId);
+                johnDoe.Salary.ShouldEqual(1025);
+            }
+        }
+
+        [Fact]
+        public void TestDisconnectedFixDeleteOk()
+        {
+            //SETUP
+            int johnDoeId;
+            using (var context = new ConcurrencyDbContext(_options))
+            {
+                johnDoeId = GetJohnDoeRecord(context).EmployeeId;
+            }
+
+            Employee disconnected = null;
+            using (var context = new ConcurrencyDbContext(_options))
+            {
+                //ATTEMPT
+                var johnDoe = context.Employees.Find(johnDoeId);
+                context.Database.ExecuteSqlCommand(
+                    "DELETE dbo.Employees WHERE EmployeeId = @p0",
+                    johnDoeId);
+                johnDoe.UpdateSalary(context, 1000, 1100);
+
+                try
+                {
+                    context.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    disconnected = johnDoe;
+                }
+            }
+
+            using (var context = new ConcurrencyDbContext(_options))
+            {
+                Employee.FixDeletedSalary(context, disconnected);
+                context.SaveChanges();
+            }
+
+            using (var context = new ConcurrencyDbContext(_options))
+            {
+                //VERIFY
+                var johnDoe = GetJohnDoeRecord(context);
+                johnDoe.Salary.ShouldEqual(1100);
+            }
+        }
     }
 }

@@ -6,9 +6,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Test.Chapter08Listings.EfClasses
 {
-    public class ConcurrecyBook
+    public class ConcurrencyBook
     {
-        public int ConcurrecyBookId { get; set; }
+        public int ConcurrencyBookId { get; set; }
         public string Title { get; set; }
         [ConcurrencyCheck] //#A
         public DateTime PublishedOn { get; set; }
