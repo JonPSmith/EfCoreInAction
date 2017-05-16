@@ -11,7 +11,7 @@ namespace Test.Chapter08Listings.EfClasses
 
         public int PersonId { get; set; }
         public string Name { get; set; }
-        public int YearOfBirth { get; set; }  //#A
+        public int YearOfBirth { get; private set; }  //#A
 
 
 
