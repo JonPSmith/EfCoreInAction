@@ -8,7 +8,7 @@ namespace Test.Chapter08Listings.EfCode
 {
     public class ConcurrencyDbContext : DbContext
     {
-        public DbSet<ConcurrecyBook> Books { get; set; }
+        public DbSet<ConcurrencyBook> Books { get; set; }
         public DbSet<ConcurrencyAuthor> Authors { get; set; }
         public DbSet<Employee> Employees { get; set; }
 
@@ -19,7 +19,7 @@ namespace Test.Chapter08Listings.EfCode
         protected override void
             OnModelCreating(ModelBuilder modelBuilder) //#A
         {
-            modelBuilder.Entity<ConcurrecyBook>()//#B
+            modelBuilder.Entity<ConcurrencyBook>()//#B
                 .Property(p => p.PublishedOn)    //#B
                 .IsConcurrencyToken();           //#B
 

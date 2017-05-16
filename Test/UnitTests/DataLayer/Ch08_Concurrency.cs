@@ -36,7 +36,7 @@ namespace test.UnitTests.DataLayer
                 context.Database.EnsureCreated();
                 if (!context.Books.Any())
                 {
-                    context.Books.Add(new ConcurrecyBook
+                    context.Books.Add(new ConcurrencyBook
                     {
                         Title = "Default Book",
                         PublishedOn = new DateTime(2015,1,1),
@@ -56,7 +56,7 @@ namespace test.UnitTests.DataLayer
                 var numBooks = context.Books.Count();
 
                 //ATTEMPT
-                context.Books.Add(new ConcurrecyBook
+                context.Books.Add(new ConcurrencyBook
                 {
                     Title = "Unit Test",
                     PublishedOn = new DateTime(2014, 1, 1),
@@ -76,14 +76,14 @@ namespace test.UnitTests.DataLayer
             using (var context = new ConcurrencyDbContext(_options))
             {
                 var logIt = new LogDbContext(context);
-                var firstBookId = context.Books.First().ConcurrecyBookId;
+                var firstBookId = context.Books.First().ConcurrencyBookId;
 
                 //ATTEMPT
-                var firstBook = context.Books.First(k => k.ConcurrecyBookId == firstBookId);
+                var firstBook = context.Books.First(k => k.ConcurrencyBookId == firstBookId);
                 var sqlTitle = Guid.NewGuid().ToString();
                 var newDate = DateTime.Now.AddDays(100);
                 context.Database.ExecuteSqlCommand(
-                    "UPDATE dbo.Books SET Title = @p0 WHERE ConcurrecyBookId = @p1", 
+                    "UPDATE dbo.Books SET Title = @p0 WHERE ConcurrencyBookId = @p1", 
                     sqlTitle, firstBookId);
                 firstBook.PublishedOn = newDate;
                 context.SaveChanges();
@@ -113,8 +113,8 @@ namespace test.UnitTests.DataLayer
                 var firstBook = context.Books.First();
 
                 context.Database.ExecuteSqlCommand(
-                    "DELETE dbo.Books WHERE ConcurrecyBookId = @p0", 
-                    firstBook.ConcurrecyBookId);
+                    "DELETE dbo.Books WHERE ConcurrencyBookId = @p0", 
+                    firstBook.ConcurrencyBookId);
                 firstBook.Title = Guid.NewGuid().ToString();
 
                 var ex = Assert.Throws<DbUpdateConcurrencyException>(() => context.SaveChanges());
@@ -137,8 +137,8 @@ namespace test.UnitTests.DataLayer
 
                 context.Database.ExecuteSqlCommand(
                     "UPDATE dbo.Books SET PublishedOn = GETDATE()" + //#B
-                    " WHERE ConcurrecyBookId = @p0",                //#B
-                    firstBook.ConcurrecyBookId);                    //#B
+                    " WHERE ConcurrencyBookId = @p0",                //#B
+                    firstBook.ConcurrencyBookId);                    //#B
                 firstBook.Title = Guid.NewGuid().ToString(); //#C
                 //context.SaveChanges(); //#D
                 /******************************************
@@ -205,8 +205,8 @@ namespace test.UnitTests.DataLayer
 
                 context.Database.ExecuteSqlCommand(
                     "UPDATE dbo.Books SET PublishedOn = GETDATE()" +  //#B
-                    " WHERE ConcurrecyBookId = @p0",                  //#B
-                    firstBook.ConcurrecyBookId);                      //#B
+                    " WHERE ConcurrencyBookId = @p0",                  //#B
+                    firstBook.ConcurrencyBookId);                      //#B
                 firstBook.Title = Guid.NewGuid().ToString(); //#C
                 var error = BookSaveChangesWithChecks(context);
 
@@ -231,8 +231,8 @@ namespace test.UnitTests.DataLayer
                 var firstBook = context.Books.First();
 
                 context.Database.ExecuteSqlCommand(
-                    "DELETE dbo.Books WHERE ConcurrecyBookId = @p0",
-                    firstBook.ConcurrecyBookId);
+                    "DELETE dbo.Books WHERE ConcurrencyBookId = @p0",
+                    firstBook.ConcurrencyBookId);
                 firstBook.Title = Guid.NewGuid().ToString();
                 var error = BookSaveChangesWithChecks(context);
                 //VERIFY
@@ -273,7 +273,7 @@ namespace test.UnitTests.DataLayer
             EntityEntry entry)
         {
             var book = entry.Entity 
-                as ConcurrecyBook;
+                as ConcurrencyBook;
             if (book == null) //#B
                 throw new NotSupportedException(
         "Don't know how to handle concurrency conflicts for " +
@@ -281,8 +281,8 @@ namespace test.UnitTests.DataLayer
 
             var databaseEntity =                   //#C
                 context.Books.AsNoTracking()       //#D
-                    .SingleOrDefault(p => p.ConcurrecyBookId
-                        == book.ConcurrecyBookId);
+                    .SingleOrDefault(p => p.ConcurrencyBookId
+                        == book.ConcurrencyBookId);
             if (databaseEntity == null) //#E
                 return "Unable to save changes.The book was deleted by another user.";
 
@@ -299,7 +299,7 @@ namespace test.UnitTests.DataLayer
 
                 // TODO: Logic to decide which value should be written to database
                 if (property.Name ==                           //#K
-                    nameof(ConcurrecyBook.PublishedOn))        //#K
+                    nameof(ConcurrencyBook.PublishedOn))        //#K
                 {                                              //#K
                     entry.Property(property.Name).CurrentValue //#K
                         = new DateTime(2050, 5, 5);            //#K
