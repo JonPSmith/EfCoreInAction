@@ -8,13 +8,19 @@ namespace Test.Chapter09Listings.EfCode
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void SetWithNotify<T>(T value, ref T field, [CallerMemberName] string propertyName = "")
+        protected void SetWithNotify<T>(T value, ref T field, 
+            [CallerMemberName] string propertyName = "") //#A
         {
-            if (!Object.Equals(field, value))
+            if (!Object.Equals(field, value)) //#B
             {
-                field = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                field = value; //#C
+                PropertyChanged?.Invoke(this, //#D
+                    new PropertyChangedEventArgs(propertyName)); //#E
             }
         }
     }
+    /*****************************************************
+    #A This automatically gets the propertyName using the System.Runtime.CompilerServices
+    #B Only if the field and the value are different do we set the field and raise the 
+     * ******************************************************/
 }

@@ -9,29 +9,36 @@ namespace Test.Chapter09Listings.EfClasses
 {
     public class NotifyEntity : NotificationEntity
     {
-        private int _id;
-        private string _myString;
-        private NotifyOne _oneToOne;
+        private int _id;             //#A
+        private string _myString;    //#A
+        private NotifyOne _oneToOne; //#A
 
         public int Id
         {
             get => _id;
-            set => SetWithNotify(value, ref _id);
+            set => SetWithNotify(value, ref _id); //#B
         }
 
         public string MyString
         {
             get => _myString;
-            set => SetWithNotify(value, ref _myString);
+            set => SetWithNotify(value, ref _myString); //#B
         }
 
         public NotifyOne OneToOne
         {
             get => _oneToOne;
-            set => SetWithNotify(value, ref _oneToOne);
+            set => SetWithNotify(value, ref _oneToOne); //#B
         }
 
-        public ICollection<NotifyMany> Collection { get; } = new ObservableHashSet<NotifyMany>();
-
+        public ICollection<NotifyMany> 
+            Collection { get; } //#C
+            = new ObservableHashSet<NotifyMany>(); //#D
     }
+    /**************************************************************
+    #A Each non-collection property must have a backing field
+    #B If a non-collection property is changed we need to raise a PropertyChanged event, which we do via the inherited method SetWithNotify
+    #C Any collection navigational property has to be a Obvervable collection, so we need to predefine that Obvervable collection
+    #D We can use any Obvervable collection, but for performance reasons EF Core prefers ObservableHashSet<T>
+     * **************************************************************/
 }

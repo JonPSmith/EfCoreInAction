@@ -7,7 +7,7 @@ namespace Test.Chapter09Listings.EfClasses
     {
         public int Id { get; set; }
 
-        public string One { get; set; }
+        public int MyInt { get; set; }
 
         public int NotifyEntityId { get; set; }
     }
