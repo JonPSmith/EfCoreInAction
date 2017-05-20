@@ -114,5 +114,31 @@ namespace test.UnitTests.DataLayer
                 context.GetAllPropsNavsIsModified(oneToOne).ShouldEqual("MyEntityId");
             }
         }
+
+        [Fact]
+        public void TestNotifyHasOriginalValuesOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                var entity = new NotifyEntity() { MyString = "Test" };
+                context.Add(entity);
+                context.SaveChanges();
+            }
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var entity =
+                    context.Notify.First();
+                entity.MyString = "Changed";
+
+                //VERIFY
+                context.Entry(entity).Property(nameof(NotifyEntity.MyString)).OriginalValue.ShouldEqual("Test");
+            }
+        }
     }
 }
