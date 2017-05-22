@@ -110,7 +110,7 @@ namespace test.UnitTests.DataLayer
                 //context.SaveChanges(); //#F
                 /**********************************************
                 #A I expect an untracked book with its relationships
-                #B I call ChangeTracker.TrackGraph, which takes an entity instance and an Action method. This begins tracking of all 
+                #B I call ChangeTracker.TrackGraph, which takes an entity instance and an Func method. This begins tracking of all 
                 #C If the method sets the state to any value other than Disconnected the the entity will become tarcked by EF Core
                 #D In this example I only want to make the Name property of the Author entity set as modified, so I check if the entity if of type Author
                 #E I set the IsModified flag on the Name property. This will also set the State of the the entity to Modified
