@@ -164,6 +164,63 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void TestChangeTrackerUpdateAsNoTrackingOptionalNotTrackedOneOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.Add(new MyEntity());
+                context.Add(new OneEntity());
+                context.SaveChanges();
+            }
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var entity = context.MyEntities.AsNoTracking().First();
+                entity.OneToOne = context.OneEntities.AsNoTracking().First();
+                context.Update(entity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(2);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Modified);
+                context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Modified);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("MyString,OneToOne");
+                context.GetAllPropsNavsIsModified(entity.OneToOne).ShouldEqual("MyEntityId,MyInt");
+            }
+        }
+
+        [Fact]
+        public void TestChangeTrackerUpdateAsNoTrackingOptionalNewOneOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.Add(new MyEntity());
+                context.SaveChanges();
+            }
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var entity = context.MyEntities.AsNoTracking().First();
+                entity.OneToOne = new OneEntity();
+                context.Update(entity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(2);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Modified);
+                context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Added);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("MyString");
+                context.GetAllPropsNavsIsModified(entity.OneToOne).ShouldEqual("");
+            }
+        }
+
+        [Fact]
         public void TestChangeTrackerUpdateCollectionOk()
         {
             //SETUP
