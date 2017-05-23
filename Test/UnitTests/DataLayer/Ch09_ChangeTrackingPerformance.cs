@@ -54,8 +54,8 @@ namespace test.UnitTests.DataLayer
                 timer.Stop();
 
                 //VERIFY
-                _output.WriteLine("#{0:####0} books: total time = {1} ms ", numBooks,
-                    timer.ElapsedMilliseconds);
+                _output.WriteLine("#{0:####0} books: total time = {1:F2} ms ", numBooks,
+                    1000.0 * timer.ElapsedTicks / Stopwatch.Frequency);
             }
         }
 
@@ -93,8 +93,8 @@ namespace test.UnitTests.DataLayer
                 timer.Stop();
 
                 //VERIFY
-                _output.WriteLine("#{0:####0} entities: total time = {1} ms ", numEntities,
-                    timer.ElapsedMilliseconds);
+                _output.WriteLine("#{0:####0} entities: total time = {1:F2} ms ", numEntities,
+                    1000.0 * timer.ElapsedTicks / Stopwatch.Frequency);
             }
         }
 
@@ -132,8 +132,8 @@ namespace test.UnitTests.DataLayer
                 timer.Stop();
 
                 //VERIFY
-                _output.WriteLine("#{0:####0} entities: total time = {1} ms ", numEntities,
-                    timer.ElapsedMilliseconds);
+                _output.WriteLine("#{0:####0} entities: total time = {1:2} ms ", numEntities,
+                    1000.0 * timer.ElapsedTicks / Stopwatch.Frequency);
             }
         }
     }
