@@ -14,10 +14,10 @@ namespace Test.Chapter09Listings.EfCode
         {
             context.Database.ExecuteSqlCommand(
                 $"IF OBJECT_ID('dbo.{FilterOnReviewRank}') IS NOT NULL "+
-  $"DROP PROC dbo.{FilterOnReviewRank}");
+                $"DROP PROC dbo.{FilterOnReviewRank}");
 
             context.Database.ExecuteSqlCommand(
-$"CREATE PROC dbo.{FilterOnReviewRank}"+
+            $"CREATE PROC dbo.{FilterOnReviewRank}"+
 @"(
   @RankFilter int
 )
