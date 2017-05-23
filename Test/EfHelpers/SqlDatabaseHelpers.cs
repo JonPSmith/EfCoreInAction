@@ -50,6 +50,16 @@ namespace test.EfHelpers
             }
             return result;
         }
+        public static int ExecuteRowCount(this string connectionString, string tableName, string whereClause = "")
+        {
+            using (var myConn = new SqlConnection(connectionString))
+            {
+                var command = "SELECT COUNT(*) FROM " + tableName + " " + whereClause;
+                var myCommand = new SqlCommand(command, myConn);
+                myConn.Open();
+                return (int) myCommand.ExecuteScalar();
+            }
+        }
 
         //-------------------------------------------------------------------
         //private methods
@@ -72,16 +82,6 @@ namespace test.EfHelpers
             }
         }
 
-        private static int ExecuteRowCount(this string connectionString, string tableName, string whereClause = "")
-        {
-            using (var myConn = new SqlConnection(connectionString))
-            {
-                var command = "SELECT COUNT(*) FROM " + tableName + " " + whereClause;
-                var myCommand = new SqlCommand(command, myConn);
-                myConn.Open();
-                return (int) myCommand.ExecuteScalar();
-            }
-        }
 
     }
 }
