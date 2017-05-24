@@ -55,6 +55,7 @@ WHERE dbo.udf_AverageVotes(BookId) >= @RankFilter
                 }
                 catch (Exception ex)
                 {
+                    //I leaft this in because you noramlly would catch the expection and return an error.
                     throw;
 
                 }
