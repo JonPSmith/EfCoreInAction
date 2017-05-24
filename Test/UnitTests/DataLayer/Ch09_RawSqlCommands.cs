@@ -2,12 +2,15 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
 using test.EfHelpers;
 using test.Helpers;
 using Test.Chapter08Listings.EfClasses;
+using Test.Chapter09Listings.Dtos;
 using Test.Chapter09Listings.EfCode;
 using Xunit;
 using Xunit.Abstractions;
@@ -70,6 +73,53 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 books.Count.ShouldEqual(1);
                 books.First().Title.ShouldEqual("Quantum Networking");
+            }
+        }
+
+        [Fact]
+        public void TestSqlToNonEntityClassOk()
+        {
+            //SETUP
+            using (var context = new EfCoreContext(_options))
+            {
+                //ATTEMPT
+                var bookDtos = new List<RawSqlDto>();
+                var conn = context.Database.GetDbConnection();
+                try
+                {
+                    conn.Open();
+                    using (var command = conn.CreateCommand())
+                    {
+                        string query = "SELECT BookId, Title, "
+                                       + "dbo.udf_AverageVotes(BookId) AS AverageVotes "
+                                       + "FROM Books";
+                        command.CommandText = query;
+                        DbDataReader reader = command.ExecuteReader();
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                var row = new RawSqlDto
+                                {
+                                    BookId = reader.GetInt32(0), 
+                                    Title = reader.GetString(1),
+                                    AverageVotes = reader.GetDecimal(2)
+                                };
+                                bookDtos.Add(row);
+                            }
+                        }
+                        reader.Dispose();
+                    }
+                }
+                finally
+                {
+                    conn.Close();
+                }
+
+                //VERIFY
+                bookDtos.Count.ShouldEqual(4);
+                bookDtos.First().AverageVotes.ShouldEqual(-1);
+                bookDtos.Last().AverageVotes.ShouldEqual(5);
             }
         }
 
