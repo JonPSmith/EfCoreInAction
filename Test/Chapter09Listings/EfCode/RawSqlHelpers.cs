@@ -21,7 +21,7 @@ namespace Test.Chapter09Listings.EfCode
                 {
                     context.Database.ExecuteSqlCommand(
                         $"IF OBJECT_ID('dbo.{UdfAverageVotes}', N'FN') IS NOT NULL " +
-                        $"DROP PROC dbo.{UdfAverageVotes}");
+                        $"DROP FUNCTION dbo.{UdfAverageVotes}");
 
                     context.Database.ExecuteSqlCommand(
                         $"CREATE FUNCTION {UdfAverageVotes} (@bookId int)" +
@@ -34,8 +34,7 @@ namespace Test.Chapter09Listings.EfCode
   IF (@result IS NULL)
      SET @result = -1
   RETURN @result
-  END
-  GO");
+  END");
 
                     context.Database.ExecuteSqlCommand(
                         $"IF OBJECT_ID('dbo.{FilterOnReviewRank}') IS NOT NULL " +
@@ -47,16 +46,17 @@ namespace Test.Chapter09Listings.EfCode
 AS
 
 SELECT * FROM dbo.Books
-WHERE udf_AverageVotes(BookId) > @RankFilter
+WHERE dbo.udf_AverageVotes(BookId) >= @RankFilter
 ");
 
 
 
                     transaction.Commit();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    //Do nothing
+                    throw;
+
                 }
             }
         }

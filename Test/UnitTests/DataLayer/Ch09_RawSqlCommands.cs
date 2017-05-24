@@ -67,12 +67,31 @@ namespace test.UnitTests.DataLayer
             {
                 //ATTEMPT
                 var books = context.Books
-                    .FromSql($"EXECUTE dbo.{RawSqlHelpers.FilterOnReviewRank} @RankFilter = 1")
+                    .FromSql("EXECUTE dbo.FilterOnReviewRank @RankFilter = {0}", 5)
                     .ToList();
 
                 //VERIFY
                 books.Count.ShouldEqual(1);
                 books.First().Title.ShouldEqual("Quantum Networking");
+            }
+        }
+
+        [Fact]
+        public void TestFromSqlWithIncludeOk()
+        {
+            //SETUP
+            using (var context = new EfCoreContext(_options))
+            {
+                //ATTEMPT
+                var books = context.Books
+                    .FromSql("SELECT * FROM Books WHERE dbo.udf_AverageVotes(BookId) >= {0}", 5)
+                    .Include(r => r.Reviews)
+                    .ToList();
+
+                //VERIFY
+                books.Count.ShouldEqual(1);
+                books.First().Title.ShouldEqual("Quantum Networking");
+                books.First().Reviews.Count.ShouldEqual(2);
             }
         }
 
