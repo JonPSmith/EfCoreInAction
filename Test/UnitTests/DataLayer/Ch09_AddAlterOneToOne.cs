@@ -45,7 +45,7 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void TestUpdateTrackedOk()
+        public void TestModifyTrackedOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
@@ -70,7 +70,7 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void TestUpdateNotifyOk()
+        public void TestModifyNotifyOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
@@ -144,6 +144,59 @@ namespace test.UnitTests.DataLayer
                 context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Modified);
                 context.GetAllPropsNavsIsModified(entity).ShouldEqual("OneToOne");
                 context.GetAllPropsNavsIsModified(entity.OneToOne).ShouldEqual("MyEntityId");
+            }
+        }
+
+        [Fact]
+        public void TestAddNotTrackedOneTrackedOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.Add(new OneEntity());
+                context.SaveChanges();
+            }
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var entity = new MyEntity();
+                var oneToOne = context.OneEntities.AsNoTracking().First();
+                entity.OneToOne = oneToOne;
+                context.Add(entity);
+                var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
+
+                //VERIFY
+                ex.InnerException.Message.ShouldEqual("SQLite Error 19: 'UNIQUE constraint failed: OneEntities.Id'.");
+            }
+        }
+
+        [Fact]
+        public void TestChangeTrackerAddNotTrackedOneTrackedOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.Add(new OneEntity());
+                context.SaveChanges();
+            }
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var entity = new MyEntity();
+                var oneToOne = context.OneEntities.AsNoTracking().First();
+                entity.OneToOne = oneToOne;
+                context.Add(entity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(2);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Added);
+                context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Added);
             }
         }
 
