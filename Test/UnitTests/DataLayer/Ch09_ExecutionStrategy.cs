@@ -3,7 +3,10 @@
 
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using test.EfHelpers;
 using test.Helpers;
 using Test.Chapter09Listings.EfClasses;
@@ -112,6 +115,40 @@ namespace test.UnitTests.DataLayer
             #C The important thing is to make the whole transaction code into an Action method it can call
             #D The rest of the transaction setup and running your code is the same
              * *****************************************************************/
+        }
+
+        public class MyExecutionStrategy : IExecutionStrategy
+        {
+            public TResult Execute<TState, TResult>(Func<TState, TResult> operation, Func<TState, ExecutionResult<TResult>> verifySucceeded, TState state)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task<TResult> ExecuteAsync<TState, TResult>(Func<TState, CancellationToken, Task<TResult>> operation, Func<TState, CancellationToken, Task<ExecutionResult<TResult>>> verifySucceeded, TState state,
+                CancellationToken cancellationToken = new CancellationToken())
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool RetriesOnFailure { get; }
+        }
+
+        [Fact]
+        public void TestOwnExecutionStrategyConfigureOk()
+        {
+            //SETUP
+            var connection = this.GetUniqueDatabaseConnectionString();
+            var optionsBuilder =
+                new DbContextOptionsBuilder<Chapter09DbContext>();
+
+            optionsBuilder.UseSqlServer(connection,
+                options => options.ExecutionStrategy(
+                    p => new MyExecutionStrategy()));
+
+            using (var context = new Chapter09DbContext(optionsBuilder.Options))
+            {
+                //Cannot use context as MyExecutionStrategy is not implemented 
+            }
         }
     }
 }
