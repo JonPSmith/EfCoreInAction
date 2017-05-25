@@ -50,7 +50,7 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 ex.InnerException.ShouldBeType<SqlException>();
                 ex.InnerException.Message
-                    .StartsWith("Cannot insert duplicate key row in object 'dbo.MyUnique' with unique index 'UniqueError_UniqueString'. ")
+                    .StartsWith("Cannot insert duplicate key row in object 'dbo.MyUnique' with unique index 'UniqueError_MyUnique_UniqueString'. ")
                     .ShouldBeTrue();
             }
         }

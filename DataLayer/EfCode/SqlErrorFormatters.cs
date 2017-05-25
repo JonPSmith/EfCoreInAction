@@ -34,7 +34,7 @@ namespace DataLayer.EfCode
 
             var returnError = "Cannot have a duplicate "+
                 matches[0].Groups[2].Value + " in " +
-                matches[0].Groups[1].Value + "..";
+                matches[0].Groups[1].Value + ".";
 
             var openingBadValue = message.IndexOf("(", 
                 StringComparison.OrdinalIgnoreCase);
