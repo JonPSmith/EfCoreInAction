@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using test.EfHelpers;
 using test.Helpers;
 using Test.Chapter09Listings.EfClasses;
 using Test.Chapter09Listings.EfCode;
@@ -62,6 +61,7 @@ namespace test.UnitTests.DataLayer
             {
                 using (var transaction = context.Database.BeginTransaction())
                 {
+                    context.Database.EnsureCreated();
                     context.Add(new MyEntity());
 
                     //ATTEMPT
@@ -79,6 +79,7 @@ namespace test.UnitTests.DataLayer
             //SETUP
             using (var context = new Chapter09DbContext(_options))
             {
+                context.Database.EnsureCreated();
                 var numEnts = context.MyEntities.Count(); //!!!!!!!!!!!!!!!!!! REMOVE in book listing
 
                 var strategy = context.Database
