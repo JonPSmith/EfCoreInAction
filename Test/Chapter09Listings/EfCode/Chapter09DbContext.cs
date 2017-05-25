@@ -13,6 +13,7 @@ namespace Test.Chapter09Listings.EfCode
         public DbSet<MyEntity> MyEntities { get; set; }
         public DbSet<OneEntity> OneEntities { get; set; }
         public DbSet<NotifyEntity> Notify { get; set; }
+        public DbSet<Notify2Entity> Notify2 { get; set; }
         public DbSet<GuidKeyEntity> GuidKeyEntities { get; set; }
         public DbSet<LoggedEntity> LoggedEntities { get; set; }
 
@@ -26,8 +27,9 @@ namespace Test.Chapter09Listings.EfCode
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<NotifyEntity>().Configure();
             modelBuilder.Entity<MyEntity>().Configure();
+            modelBuilder.Entity<NotifyEntity>().Configure();
+            modelBuilder.Entity<Notify2Entity>().Configure();
             modelBuilder.Entity<MyUnique>().Configure();
         }
 
