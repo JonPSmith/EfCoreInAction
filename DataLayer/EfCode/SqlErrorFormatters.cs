@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DataLayer.EfCode
 {
-    public static class SqlExceptionErrorHandlers
+    public static class SqlErrorFormatters
     {
         private static readonly Regex UniqueConstraintRegex = new Regex("'UniqueError_([a-zA-Z0-9]*)_([a-zA-Z0-9]*)'",
             RegexOptions.Compiled);
@@ -22,20 +22,28 @@ namespace DataLayer.EfCode
         /// <param name="ex"></param>
         /// <param name="entitiesNotSaved"></param>
         /// <returns></returns>
-        public static ValidationResult UniqueConstraintExceptionHandler(SqlException ex, IEnumerable<EntityEntry> entitiesNotSaved)
+        public static ValidationResult UniqueErrorFormatter
+            (SqlException ex, IReadOnlyList<EntityEntry> entitiesNotSaved)
         {
             var message = ex.Errors[0].Message;
-            var matches = UniqueConstraintRegex.Matches(ex.Errors[0].Message);
+            var matches = UniqueConstraintRegex.Matches(
+                ex.Errors[0].Message);
 
             if (matches.Count == 0)
-                //fails to match our Unique Key format
                 return null;
 
-            var returnError = $"Cannot have a duplicate {matches[0].Groups[2].Value} in {matches[0].Groups[1].Value}.";
+            var returnError = "Cannot have a duplicate "+
+                matches[0].Groups[2].Value + " in " +
+                matches[0].Groups[1].Value + "..";
 
-            var openingBadValue = message.IndexOf("(", StringComparison.OrdinalIgnoreCase);
+            var openingBadValue = message.IndexOf("(", 
+                StringComparison.OrdinalIgnoreCase);
             if (openingBadValue > 0)
-                returnError += $" Duplicate value was '{message.Substring(openingBadValue + 1, message.Length - openingBadValue - 3)}'.";
+            {
+                var dupPart = message.Substring(openingBadValue + 1, 
+                    message.Length - openingBadValue - 3);
+                returnError += $" Duplicate value was '{dupPart}'.";
+            }
 
             return new ValidationResult(returnError, new[] { matches[0].Groups[2].Value });
         }

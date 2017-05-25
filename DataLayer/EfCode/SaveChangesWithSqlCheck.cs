@@ -81,6 +81,5 @@ namespace DataLayer.EfCode
     #K This only passes if the InnerException was an SqlException, and our dictionary contains a method to format the error message
     #L I call that formatting method, which has a predefined sigiture, and I return its result.
     #M Otherwise I return null to say I couldn't format the error
-
      * *************************************************************************/
 }

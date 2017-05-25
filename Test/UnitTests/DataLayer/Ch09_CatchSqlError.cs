@@ -62,17 +62,22 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(_options))
             {
                 context.Database.EnsureCreated();
-                var checker = new SaveChangesWithSqlCheck(
+                var checker = new SaveChangesWithSqlCheck( //#A
                     context, new Dictionary<int, FormatSqlException>
                 {
-                    [2601] = SqlExceptionErrorHandlers.UniqueConstraintExceptionHandler
+                    [2601] = SqlErrorFormatters.UniqueErrorFormatter //#B
                 });
                 var unique = Guid.NewGuid().ToString();
 
                 //ATTEMPT
                 context.Add(new MyUnique() { UniqueString = unique });
-                var error1 = checker.SaveChangesWithChecking();
-                error1.ShouldBeNull();
+                var error = checker.SaveChangesWithChecking(); //#C
+                /****************************************************************
+                #A I create the SaveChangesWithSqlCheck class with its two parameters
+                #B I provide a dictionary with a key of 2601, Attempt to insert duplicate key row, being paried with a method that can formate that execption into a user-friendly format
+                #C I call SaveChangesWithChecking, which returns null if there was no error, or a ValidationResult if there was an formatted error to show the user
+                 * ****************************************************************/
+                error.ShouldBeNull();
                 context.Add(new MyUnique() { UniqueString = unique });
                 var error2 = checker.SaveChangesWithChecking();
 
