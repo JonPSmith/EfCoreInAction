@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
 using test.EfHelpers;
@@ -21,7 +22,7 @@ namespace test.UnitTests.DataLayer
     {
         private readonly ITestOutputHelper _output;
 
-        private DbContextOptions<EfCoreContext> _options;
+        private readonly DbContextOptions<EfCoreContext> _options;
 
         public Ch09_RawSqlCommands(ITestOutputHelper output)
         {
@@ -194,6 +195,86 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 rowsAffected.ShouldEqual(1);
                 context.Books.AsNoTracking().Single(x => x.BookId == bookId).Description.ShouldEqual(uniqueString);
+            }
+        }
+
+        [Fact]
+        public void TestReloadOk()
+        {
+            //SETUP
+            using (var context = new EfCoreContext(_options))
+            {
+                var entity = context.Books.
+                    Single(x => x.Title == "Quantum Networking");
+                var uniqueString = Guid.NewGuid().ToString();
+
+                var rowsAffected = context.Database
+                    .ExecuteSqlCommand( 
+                        "UPDATE Books " + 
+                        "SET Description = {0} " +
+                        "WHERE BookId = {1}",
+                        uniqueString, entity.BookId); 
+
+                //ATTEMPT
+                context.Entry(entity).Reload();
+
+                //VERIFY
+                entity.Description.ShouldEqual(uniqueString);
+            }
+        }
+
+        [Fact]
+        public void TestReloadWithChangeOk()
+        {
+            //SETUP
+            using (var context = new EfCoreContext(_options))
+            {
+                var entity = context.Books.
+                    Single(x => x.Title == "Quantum Networking");
+                var uniqueString = Guid.NewGuid().ToString();
+
+                var rowsAffected = context.Database 
+                    .ExecuteSqlCommand( 
+                        "UPDATE Books " + 
+                        "SET Description = {0} " +
+                        "WHERE BookId = {1}",
+                        uniqueString, entity.BookId); 
+
+                //ATTEMPT
+                entity.Title = "Changed it";
+                context.Entry(entity).Reload();
+
+                //VERIFY
+                entity.Description.ShouldEqual(uniqueString);
+                entity.Title.ShouldEqual("Quantum Networking");
+            }
+        }
+
+        [Fact]
+        public void TestReloadWithNavigationalChangeOk()
+        {
+            //SETUP
+            using (var context = new EfCoreContext(_options))
+            {
+                var entity = context.Books
+                    .Include(p => p.Reviews)
+                    .Single(x => x.Title == "Quantum Networking");
+                var uniqueString = Guid.NewGuid().ToString();
+
+                var rowsAffected = context.Database
+                    .ExecuteSqlCommand(
+                        "UPDATE Books " +
+                        "SET Description = {0} " +
+                        "WHERE BookId = {1}",
+                        uniqueString, entity.BookId);
+
+                //ATTEMPT
+                entity.Reviews.Add(new Review{ NumStars = 99});
+                context.Entry(entity).Reload();
+
+                //VERIFY
+                entity.Description.ShouldEqual(uniqueString);
+                entity.Reviews.Count.ShouldEqual(3);
             }
         }
 
