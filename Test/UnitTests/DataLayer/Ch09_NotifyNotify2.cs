@@ -13,11 +13,11 @@ using Xunit.Extensions.AssertExtensions;
 
 namespace test.UnitTests.DataLayer
 {
-    public class Ch09_NotiyNotify2
+    public class Ch09_NotifyNotify2
     {
         private readonly ITestOutputHelper _output;
 
-        public Ch09_NotiyNotify2(ITestOutputHelper output)
+        public Ch09_NotifyNotify2(ITestOutputHelper output)
         {
             _output = output;
         }
