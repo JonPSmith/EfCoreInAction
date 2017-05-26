@@ -278,6 +278,30 @@ namespace test.UnitTests.DataLayer
             }
         }
 
+        [Fact]
+        public void TestGetDatabaseValuesOk()
+        {
+            //SETUP
+            using (var context = new EfCoreContext(_options))
+            {
+                var entity = context.Books.
+                    Single(x => x.Title == "Quantum Networking");
+                var uniqueString = Guid.NewGuid().ToString();
 
+                var rowsAffected = context.Database
+                    .ExecuteSqlCommand(
+                        "UPDATE Books " +
+                        "SET Description = {0} " +
+                        "WHERE BookId = {1}",
+                        uniqueString, entity.BookId);
+
+                //ATTEMPT
+                var values = context.Entry(entity).GetDatabaseValues();
+                var book = (Book)values.ToObject();
+
+                //VERIFY
+                book.Description.ShouldEqual(uniqueString);
+            }
+        }
     }
 }
