@@ -57,8 +57,7 @@ namespace test.UnitTests.DataLayer
             logger.LogDebug("Unit Test");
 
             //VERIFY
-            logs.Count.ShouldEqual(1);
-            logs.First().ShouldEqual("Debug: Unit Test");
+            logs.Count.ShouldEqual(0);
         }
 
         [Fact]
@@ -132,31 +131,7 @@ namespace test.UnitTests.DataLayer
 
 
         [Fact]
-        public void TestLogEFCoreApproach1Ok()
-        {
-            //SETUP
-            var logs = new List<string>();
-            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
-
-            using (var context = new Chapter09DbContext(options))
-            {
-                context.Database.EnsureCreated();
-
-                //ATTEMPT
-                var serviceProvider = context.GetInfrastructure();
-                var loggerFactory = (ILoggerFactory)serviceProvider.GetService(typeof(ILoggerFactory));
-                loggerFactory.AddProvider(new MyLoggerProvider(logs));
-
-                context.Add(new MyEntity());
-                context.SaveChanges();
-
-                //VERIFY
-                logs.Count.ShouldEqual(2);
-            }
-        }
-
-        [Fact]
-        public void TestLogEFCoreApproach2Ok()
+        public void TestLogEFCoreOk()
         {
             //SETUP
             var logs = new List<string>();
@@ -175,11 +150,12 @@ namespace test.UnitTests.DataLayer
 
                 //VERIFY
                 logs.Count.ShouldEqual(2);
+                logs.First().ShouldEqual("Information: Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']\r\nPRAGMA foreign_keys=ON;");
             }
         }
 
         [Fact]
-        public void TestLogEFCoreApproach2WithFilterOk()
+        public void TestLogEFCoreWithFilterOk()
         {
             //SETUP
             var logs = new List<string>();
