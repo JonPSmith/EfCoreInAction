@@ -43,7 +43,7 @@ namespace test.EfHelpers
                 Func<TState, Exception, string> formatter)
             {
                 //_logs.Add(formatter(state, exception)); //#H
-                _logs.Add($"{logLevel}: {state}" +        //#I
+                _logs.Add($"{logLevel}: {state.ToString()}" +        //#I
                     (exception == null                    //#I
                        ? ""                               //#I
                        : ", Exception = \n" + exception));//#I
