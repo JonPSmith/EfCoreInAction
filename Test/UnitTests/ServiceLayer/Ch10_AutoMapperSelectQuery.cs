@@ -5,6 +5,7 @@ using System.Linq;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DataLayer.EfClasses;
+using ServiceLayer.BookServices;
 using test.EfHelpers;
 using Test.Chapter10Listings.MappingClasses;
 using Xunit;
@@ -58,6 +59,50 @@ namespace test.UnitTests.ServiceLayer
         }
 
 
+        [Fact]
+        public void MapBookListDto()
+        {
+            //SETUP
+            var inMemDb = new SqliteInMemory();
 
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Book, BookListDto>()
+                    .ForMember(p => p.ActualPrice,
+                        m => m.MapFrom(s => s.Promotion == null ? s.Price : s.Promotion.NewPrice))
+                    .ForMember(p => p.AuthorsOrdered, m => m.MapFrom(s => string.Join(", ",
+                        s.AuthorsLink
+                            .OrderBy(q => q.Order)
+                            .Select(q => q.Author.Name))))
+                    .ForMember(p => p.ReviewsAverageVotes,
+                        m => m.MapFrom(s => s.Reviews.Count == 0
+                            ? null
+                            : (decimal?) s.Reviews
+                                .Select(q => q.NumStars).Average()));
+            });
+            using (var context = inMemDb.GetContextWithSetup())
+            {
+                context.SeedDatabaseFourBooks();  //REMOVE FROM BOOK
+                inMemDb.ClearLogs();
+
+                //ATTEMPT
+                var result = context.Books.
+                    ProjectTo<BookListDto>(config)
+                    .ToList();
+
+                //VERIFY
+                result.Count.ShouldEqual(4);
+                var qNetBook = result.Last();
+                qNetBook.Title.ShouldEqual("Quantum Networking");
+                qNetBook.ActualPrice.ShouldEqual(219);
+                qNetBook.PromotionPromotionalText.ShouldEqual("Save $1 if you order 40 years ahead!");
+                qNetBook.ReviewsCount.ShouldEqual(2);
+                qNetBook.ReviewsAverageVotes.ShouldEqual(5);
+                foreach (var log in inMemDb.Logs)
+                {
+                    _output.WriteLine(log);
+                }
+            }
+        }
     }
 }
