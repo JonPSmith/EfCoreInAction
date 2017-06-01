@@ -62,7 +62,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter10DbContext(_options))
             {
                 context.Database.EnsureCreated();
-                var checker = new SaveChangesWithSqlCheck( //#A
+                var checker = new SaveChangesSqlCheck( //#A
                     context, new Dictionary<int, FormatSqlException>
                 {
                     [2601] = SqlErrorFormatters.UniqueErrorFormatter, //#B
@@ -72,7 +72,7 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 context.Add(new MyUnique() { UniqueString = unique });
-                var error = checker.SaveChangesWithChecking(); //#C
+                var error = checker.SaveChangesWithSqlChecks(); //#C
                 /****************************************************************
                 #A I create the SaveChangesWithSqlCheck class with its two parameters
                 #B I provide a dictionary with a key of 2601 and 2627, violation of unique index, both paired with a method that can format that exception into a user-friendly format
@@ -80,7 +80,7 @@ namespace test.UnitTests.DataLayer
                  * ****************************************************************/
                 error.ShouldBeNull();
                 context.Add(new MyUnique() { UniqueString = unique });
-                var error2 = checker.SaveChangesWithChecking();
+                var error2 = checker.SaveChangesWithSqlChecks();
 
                 //VERIFY
                 error2.ShouldNotBeNull();
