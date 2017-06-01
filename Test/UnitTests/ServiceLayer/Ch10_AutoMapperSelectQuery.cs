@@ -24,6 +24,40 @@ namespace test.UnitTests.ServiceLayer
         }
 
         [Fact]
+        public void ByHandBookAndPriceOffer()
+        {
+            //SETUP
+            var inMemDb = new SqliteInMemory();
+
+            using (var context = inMemDb.GetContextWithSetup())
+            {
+                context.SeedDatabaseFourBooks();  //REMOVE FROM BOOK
+
+                //ATTEMPT
+                var result = context.Books.
+                    Select(p => new BookPriceOfferDto
+                    {
+                        BookId = p.BookId,
+                        Title = p.Title,
+                        Price = p.Price,
+                        PromotionNewPrice = p.Promotion == null
+                            ? (decimal?)null
+                            : p.Promotion.NewPrice
+                    })
+                    .ToList();
+
+                //VERIFY
+                result.Count.ShouldEqual(4);
+                result.Where(x => x.Title != "Quantum Networking").All(x => x.PromotionNewPrice == null).ShouldBeTrue();
+                result.Last().PromotionNewPrice.ShouldNotBeNull();
+                foreach (var log in inMemDb.Logs)
+                {
+                    _output.WriteLine(log);
+                }
+            }
+        }
+
+        [Fact]
         public void MapBookAndPriceOffer()
         {
             //SETUP
