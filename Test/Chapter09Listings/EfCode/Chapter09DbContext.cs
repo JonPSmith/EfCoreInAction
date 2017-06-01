@@ -30,7 +30,6 @@ namespace Test.Chapter09Listings.EfCode
             modelBuilder.Entity<MyEntity>().Configure();
             modelBuilder.Entity<NotifyEntity>().Configure();
             modelBuilder.Entity<Notify2Entity>().Configure();
-            modelBuilder.Entity<MyUnique>().Configure();
         }
 
         public override int SaveChanges() //#D
