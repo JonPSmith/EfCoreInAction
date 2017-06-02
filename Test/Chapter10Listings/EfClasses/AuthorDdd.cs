@@ -19,8 +19,10 @@ namespace Test.Chapter10Listings.EfClasses
         //------------------------------
         //Relationships
 
-        public ICollection<BookAuthor> 
+        public ICollection<BookAuthorDdd> 
             BooksLink { get; set; }
+
+        internal AuthorDdd() {}
     }
 
 }

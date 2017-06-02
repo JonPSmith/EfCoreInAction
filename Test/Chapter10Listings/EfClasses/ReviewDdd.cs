@@ -19,6 +19,10 @@ namespace Test.Chapter10Listings.EfClasses
         //Relationships
 
         public int BookId { get; set; }
+
+        internal ReviewDdd()
+        {
+        }
     }
 
 }

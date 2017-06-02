@@ -5,18 +5,18 @@ namespace Test.Chapter10Listings.EfClasses
 {
     public class BookAuthorDdd               
     {
-        public int BookId { get; set; }  //#A
-        public int AuthorId { get; set; }//#A
+        public int BookId { get; set; }  
+        public int AuthorId { get; set; }
         public byte Order { get; set; }   
 
         //-----------------------------
         //Relationships
 
         public BookDdd Book { get; set; }      
-        public AuthorDdd Author { get; set; }  
-    }
-    /************************************************************
-    A# The primary key is make up of the two foreign keys
-     * ********************************************************/
+        public AuthorDdd Author { get; set; }
 
+        internal BookAuthorDdd()
+        {
+        }
+    }
 }
