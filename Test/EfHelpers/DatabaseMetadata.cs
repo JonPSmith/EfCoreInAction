@@ -61,8 +61,8 @@ namespace test.EfHelpers
         #A This method looks at the relationships and returns the tables names so that the dependent entities come before the principal entities
         #B I use the IEntityType's GetForeignKeys method to find all the foreign keys in this entity
         #C I catch the Hierarchical case where an entity refers to itself - if the delete behavior of this foreign key is set to restrict then you cannot simply delete all the rows in one go
-        #D If itemA's foreign keys point to itemB, then I must delete itemA first to make sure I don't have an cascade delete problems
-        #E If itemB's foreign keys point to itemA, then I must delete itemB first to make sure I don't have an cascade delete problems
+        #D If itemA's foreign keys point to itemB, then I must delete itemA first to make sure I don't have a cascade delete problems
+        #E If itemB's foreign keys point to itemA, then I must delete itemB first to make sure I don't have a cascade delete problems
         #F It itemA has no foreign keys then it is likely to be a principal, so we put it later in the list
         #F It itemB has no foreign keys then it is likely to be a principal, so we put it later in the list
          * ***********************************************************************/
