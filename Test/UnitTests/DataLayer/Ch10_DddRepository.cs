@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using ServiceLayer.BookServices;
 using test.EfHelpers;
 using Test.Chapter10Listings.EfClasses;
 using Test.Chapter10Listings.EfCode;
@@ -33,11 +34,13 @@ namespace test.UnitTests.DataLayer
                 var logs = new List<string>();
                 SqliteInMemory.SetupLogging(context, logs);
                 context.Database.EnsureCreated();
+                
+                var dddRepro = new BookDddRepository(context);
 
                 //ATTEMPT
                 var book = new BookDdd("My Book", null, new DateTime(2000, 1, 1), "Publisher", 123, null,
                     new List<AuthorDdd> {new AuthorDdd {Name = "Person"}});
-                book.AddBook(context);
+                dddRepro.AddBook(book);
                 context.SaveChanges();
 
                 //VERIFY
@@ -64,6 +67,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter10DbContext(options))
             {
                 context.Database.EnsureCreated();
+                var dddRepro = new BookDddRepository(context);
                 var author = new AuthorDdd {Name = "Existing"};
                 context.Add(author);
                 context.SaveChanges();
@@ -71,7 +75,7 @@ namespace test.UnitTests.DataLayer
                 //ATTEMPT
                 var book = new BookDdd("My Book", null, new DateTime(2000, 1, 1), "Publisher", 123, null,
                     new List<AuthorDdd> { author });
-                book.AddBook(context);
+                dddRepro.AddBook(book);
                 context.SaveChanges();
 
                 //VERIFY
@@ -92,6 +96,41 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void BookDddUpdatePublishedOn()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter10DbContext>();
+            int bookId;
+            using (var context = new Chapter10DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                var dddRepro = new BookDddRepository(context);
+
+                var book = new BookDdd("My Book", null, new DateTime(2000, 1, 1), "Publisher", 123, null,
+                    new List<AuthorDdd> { new AuthorDdd { Name = "Person" } });
+                dddRepro.AddBook(book);
+                book.AddReview(context, 5, "Great book", "Person");
+                context.SaveChanges();
+                bookId = book.BookId;
+            }
+            using (var context = new Chapter10DbContext(options))
+            {
+                var newDate = new DateTime(2010,1,1);
+
+                //ATTEMPT
+                var dddRepro = new BookDddRepository(context);
+                var book = dddRepro.FindBook(bookId);
+                book.ChangePubDate(newDate);
+                context.SaveChanges();
+
+                //VERIFY
+                var rereadBook = context.Books.AsNoTracking().Single(x => x.BookId == bookId);
+                rereadBook.PublishedOn.ShouldEqual(new DateTime(2010, 1, 1));
+
+            }
+        }
+
+        [Fact]
         public void BookDddAddPromotion()
         {
             //SETUP
@@ -99,10 +138,11 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter10DbContext(options))
             {
                 context.Database.EnsureCreated();
+                var dddRepro = new BookDddRepository(context);
 
                 var book = new BookDdd("My Book", null, new DateTime(2000, 1, 1), "Publisher", 123, null,
                     new List<AuthorDdd> { new AuthorDdd { Name = "Person" } });
-                book.AddBook(context);
+                dddRepro.AddBook(book);
                 context.SaveChanges();
 
                 //ATTEMPT
@@ -128,10 +168,12 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter10DbContext(options))
             {
                 context.Database.EnsureCreated();
+                
+                var dddRepro = new BookDddRepository(context);
 
                 var book = new BookDdd("My Book", null, new DateTime(2000, 1, 1), "Publisher", 123, null,
                     new List<AuthorDdd> { new AuthorDdd { Name = "Person" } });
-                book.AddBook(context);
+                dddRepro.AddBook(book);
                 context.SaveChanges();
                 book.AddUpdatePromotion(context, 321, "Existing");
                 context.SaveChanges();
@@ -159,10 +201,11 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter10DbContext(options))
             {
                 context.Database.EnsureCreated();
+                var dddRepro = new BookDddRepository(context);
 
                 var book = new BookDdd("My Book", null, new DateTime(2000, 1, 1), "Publisher", 123, null,
                     new List<AuthorDdd> { new AuthorDdd { Name = "Person" } });
-                book.AddBook(context);
+                dddRepro.AddBook(book);
                 context.SaveChanges();
                 book.AddUpdatePromotion(context, 321, "Existing");
                 context.SaveChanges();
@@ -189,11 +232,12 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter10DbContext(options))
             {
                 context.Database.EnsureCreated();
+                var dddRepro = new BookDddRepository(context);
 
                 //ATTEMPT
                 var book = new BookDdd("My Book", null, new DateTime(2000, 1, 1), "Publisher", 123, null,
                     new List<AuthorDdd> { new AuthorDdd { Name = "Person" } });
-                book.AddBook(context);
+                dddRepro.AddBook(book);
                 book.AddReview(context, 5, "Great book", "Person");
                 context.SaveChanges();
             }
@@ -206,6 +250,41 @@ namespace test.UnitTests.DataLayer
                 book.Reviews.Count().ShouldEqual(1);
                 book.Reviews.First().NumStars.ShouldEqual(5);
             }
+        }
+
+        [Fact]
+        public void GetBookList()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter10DbContext>();
+            using (var context = new Chapter10DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                
+                var dddRepro = new BookDddRepository(context);
+
+                var book1 = new BookDdd("Book1", null, new DateTime(2001, 1, 1), "Publisher", 100, null,
+                    new List<AuthorDdd> { new AuthorDdd { Name = "Author1" } });
+                var book2 = new BookDdd("Book2", null, new DateTime(2002, 1, 1), "Publisher", 200, null,
+                    new List<AuthorDdd> { new AuthorDdd { Name = "Author2" } });
+                var book3 = new BookDdd("Book3", null, new DateTime(2002, 1, 1), "Publisher", 300, null,
+                    new List<AuthorDdd> { new AuthorDdd { Name = "Author3" } });
+                book3.AddReview(context, 5, "Great", "Reviewer");
+                dddRepro.AddBook(book1);
+                dddRepro.AddBook(book2);
+                dddRepro.AddBook(book3);
+                context.SaveChanges();
+
+                //ATTEMPT
+                var dtos = dddRepro.GetBookList(new SortFilterPageOptions()).ToList();
+
+                //VERIFY
+                dtos.Count.ShouldEqual(3);
+                dtos.All(x => x.Title.StartsWith("Book")).ShouldBeTrue();
+                dtos.OrderBy(x => x.Title).Select(x => x.Price).ShouldEqual(new List<decimal>{100, 200, 300});
+                dtos.Single(x => x.Title == "Book3").ReviewsCount.ShouldEqual(1);
+            }
+
         }
     }
 }

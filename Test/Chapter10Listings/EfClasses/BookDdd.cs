@@ -3,9 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Test.Chapter10Listings.EfCode;
 
 namespace Test.Chapter10Listings.EfClasses
 {
@@ -62,49 +62,43 @@ namespace Test.Chapter10Listings.EfClasses
                     Author = a                 //#G
                 }).ToList();                   //#G
         }
+        /*******************************************************
+        #A I use backing fields to hold the two collection navigational properties
+        #B All the properties now have private setters so that you can only set properties via the DDD repository methods
+        #C The collection navigational properties are now IEnumerable<T>, which does not have the Add and Remove methods, so you can only change them via the DDD repository methods
+        #D I create an internal, no parameter constructor for EF Core to use. This stops code in other assemblies from being able to create a BookDdd other than via the parameterised constructor
+        #E The developer uses this contructor to create the BookDdd. This takes all the parameters it needs to create a book, inlcuding the Author(s)
+        #F Using a constuctor to create the BookDdd allows me to add a few system checks
+        #G The called does have to worry about setting up the BookAuthorDdd linking table as I do it inside the constructor.
+        * ****************************************************/
 
-    /*******************************************************
-    #A I use backing fields to hold the two collection navigational properties
-    #B All the properties now have private setters so that you can only set properties via the DDD repository methods
-    #C The collection navigational properties are now IEnumerable<T>, which does not have the Add and Remove methods, so you can only change them via the DDD repository methods
-    #D I create an internal, no parameter constructor for EF Core to use. This stops code in other assemblies from being able to create a BookDdd other than via the parameterised constructor
-    #E The developer uses this contructor to create the BookDdd. This takes all the parameters it needs to create a book, inlcuding the Author(s)
-    #F Using a constuctor to create the BookDdd allows me to add a few system checks
-    #G The called does have to worry about setting up the BookAuthorDdd linking table as I do it inside the constructor.
-        * *****************************************************/
-
-        public void AddBook(DbContext context)
+        public void ChangePubDate(DateTime newDate) //#A
         {
-            context.Add(this);
+            PublishedOn = newDate;
         }
 
-        public void AddReview(DbContext context, int numStars, string comment, string voterName)
+        public void AddReview(DbContext context,        //#B
+            int numStars, string comment, string voterName) //#B
         {
-            if (numStars < 0 || numStars > 5)
-                throw new ArgumentException("NumStars must be between 0 and 5");
-            var review = new ReviewDdd
+            var review = new ReviewDdd //#C
             {
                 NumStars = numStars,
                 Comment = comment,
                 VoterName = voterName
             };
 
-            if (BookId != default(int))
-                context.Entry(this).Collection(c => c.Reviews).Load();
+            context.Entry(this) //#D
+                .Collection(c => c.Reviews).Load(); //#D
 
-            _reviews.Add(review);
+            _reviews.Add(review); //#E
         }
 
-        public void ChangePubDate(DateTime newDate)
+        public void AddUpdatePromotion(DbContext context, //#F
+            decimal newPrice, string promotionalText)
         {
-            PublishedOn = newDate;
-        }
-
-        public void AddUpdatePromotion(DbContext context, decimal newPrice, string promotionalText)
-        {
-            if (BookId != default(int))
-                context.Entry(this).Reference(r => r.Promotion).Load();
-            if (Promotion == null)
+            context.Entry(this) //#G
+                .Reference(r => r.Promotion).Load(); //#G
+            if (Promotion == null) //#H
             {
                 Promotion = new PriceOfferDdd
                 {
@@ -112,20 +106,33 @@ namespace Test.Chapter10Listings.EfClasses
                     PromotionalText = promotionalText
                 };
             }
-            else
+            else //#I
             {
-                Promotion.NewPrice = newPrice; 
+                Promotion.NewPrice = newPrice;
                 Promotion.PromotionalText = promotionalText;
             }
         }
 
-        public void RemovePromotion(DbContext context)
+        public void RemovePromotion(DbContext context) //#J
         {
-            if (BookId == default(int))
-                throw new InvalidOperationException("You cannot remove a Promotion from a new book.");
-            var promotion = context.Set<PriceOfferDdd>().FirstOrDefault(x => x.BookId == BookId);
-            if (promotion != null)
-                context.Remove(promotion);
+            var promotion = context.Set<PriceOfferDdd>() //#K
+                .SingleOrDefault(x => x.BookId == BookId); //#K
+            if (promotion != null) //#L
+                context.Remove(promotion); //#L
         }
     }
+    /***************************************************************
+    #A A simple method to update the book's PubishedOn date
+    #B This adds a ReviewDdd to the book, using the parameters passed in
+    #C I create a ReviewDdd using the parameters passed in. Note that the parameter-less constructor of the ReviewDdd has an access modifier of internal, so only code in this assembly can create the ReviewDdd entity
+    #D I explicitly load the Reviews collection so that I can add to it (see chapter 2 for more on explicit loading)
+    #E I now add the review to the backing field collection
+    #F This method will add or update the PriceOfferDdd entity to go with this book
+    #G I try to load the PriceOfferDdd entity. As this is an optional one-to-one relationship it can be null
+    #H There is no existing Promotion, so I add a new one
+    #I There was an existing Promotion, so I update it
+    #J This method remove any promotion from the current book.
+    #K I load the PriceOfferDdd linked to this book, which could be null
+    #L If there was a promotion then I delete it
+     * *************************************************************/
 }
