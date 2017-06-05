@@ -2,16 +2,12 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using test.EfHelpers;
 using Test.Chapter07Listings.EFCode;
-using Test.Chapter09Listings.EfClasses;
-using Test.Chapter09Listings.EfCode;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
