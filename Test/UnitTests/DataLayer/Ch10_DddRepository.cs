@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using ServiceLayer.BookServices;
 using test.EfHelpers;
 using Test.Chapter10Listings.EfClasses;
 using Test.Chapter10Listings.EfCode;
+using Test.Chapter10Listings.QueryObjects;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -276,13 +276,12 @@ namespace test.UnitTests.DataLayer
                 context.SaveChanges();
 
                 //ATTEMPT
-                var dtos = dddRepro.GetBookList(new SortFilterPageOptions()).ToList();
+                var dtos = dddRepro.GetBookList(new DddSortFilterPageOptions()).ToList();
 
                 //VERIFY
                 dtos.Count.ShouldEqual(3);
                 dtos.All(x => x.Title.StartsWith("Book")).ShouldBeTrue();
                 dtos.OrderBy(x => x.Title).Select(x => x.Price).ShouldEqual(new List<decimal>{100, 200, 300});
-                dtos.Single(x => x.Title == "Book3").ReviewsCount.ShouldEqual(1);
             }
 
         }

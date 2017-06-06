@@ -2,13 +2,12 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System.Linq;
-using DataLayer.EfClasses;
 using ServiceLayer.BookServices;
 using Test.Chapter10Listings.EfClasses;
 
 namespace Test.Chapter10Listings.QueryObjects
 {
-    public static class BookListDtoSelect
+    public static class BookDddListDtoSelect
     {
         public static IQueryable<BookListDto>   
             MapBookDddToDto(this IQueryable<BookDdd> books)
