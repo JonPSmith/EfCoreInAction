@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,50 @@ namespace test.EfHelpers
             var relational = efType.Relational();
             return relational.TableName;
         }
+
+        //NOTE: This will not handle a circular relationship: e.g. EntityA->EntityB->EntityA
+        public static  IEnumerable<string> 
+            GetTableNamesInOrderForDelete //#A
+                (this DbContext context)
+        {
+            var items = context.Model.GetEntityTypes()
+                .ToList();
+            items.Sort((itemA, itemB) =>
+                {
+                    var fKeysA = itemA.GetForeignKeys()
+                        .ToList(); //#B
+                    if (fKeysA.SingleOrDefault(x => 
+                        x.PrincipalEntityType == itemA)
+                        ?.DeleteBehavior == 
+                            DeleteBehavior.Restrict) //#C
+                        throw new InvalidOperationException(
+        $"You cannot delete all the {itemA} rows in one go.");
+
+                    if (fKeysA.Any(
+                        x => x.PrincipalEntityType == itemB))
+                        return -1; //#D
+                    var fKeysB = itemB.GetForeignKeys().ToList();
+                    if (fKeysB.Any(
+                        x => x.PrincipalEntityType == itemA))
+                        return 1; //#E
+                    if (!fKeysA.Any())
+                        return +1; //#F
+                    if (!fKeysB.Any())
+                        return -1; //#G
+                    return 0;
+                }
+            );
+            return items.Select(x => x.Relational().TableName);
+        }
+        /************************************************************************
+        #A This method looks at the relationships and returns the tables names so that the dependent entities come before the principal entities
+        #B I use the IEntityType's GetForeignKeys method to find all the foreign keys in this entity
+        #C I catch the Hierarchical case where an entity refers to itself - if the delete behavior of this foreign key is set to restrict then you cannot simply delete all the rows in one go
+        #D If itemA's foreign keys point to itemB, then I must delete itemA first to make sure I don't have a cascade delete problems
+        #E If itemB's foreign keys point to itemA, then I must delete itemB first to make sure I don't have a cascade delete problems
+        #F It itemA has no foreign keys then it is likely to be a principal, so we put it later in the list
+        #F It itemB has no foreign keys then it is likely to be a principal, so we put it later in the list
+         * ***********************************************************************/
 
         public static IEnumerable<IProperty> GetProperties<TEntity>(this DbContext context)
         {
