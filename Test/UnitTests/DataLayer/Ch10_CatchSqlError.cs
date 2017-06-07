@@ -74,9 +74,9 @@ namespace test.UnitTests.DataLayer
                 context.Add(new MyUnique() { UniqueString = unique });
                 var error = checker.SaveChangesWithSqlChecks(); //#C
                 /****************************************************************
-                #A I create the SaveChangesWithSqlCheck class with its two parameters
+                #A I create the SaveChangesSqlCheck class with its two parameters
                 #B I provide a dictionary with a key of 2601 and 2627, violation of unique index, both paired with a method that can format that exception into a user-friendly format
-                #C I call SaveChangesWithChecking, which returns null if there was no error, or a ValidationResult if there was a formatted error to show the user
+                #C I call SaveChangesWithSqlChecks, which returns null if there was no error, or a ValidationResult if there was a formatted error to show the user
                  * ****************************************************************/
                 error.ShouldBeNull();
                 context.Add(new MyUnique() { UniqueString = unique });

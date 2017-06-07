@@ -103,16 +103,19 @@ namespace test.UnitTests.ServiceLayer
             {
                 cfg.CreateMap<Book, BookListDto>()
                     .ForMember(p => p.ActualPrice,
-                        m => m.MapFrom(s => s.Promotion == null ? s.Price : s.Promotion.NewPrice))
-                    .ForMember(p => p.AuthorsOrdered, m => m.MapFrom(s => string.Join(", ",
-                        s.AuthorsLink
+                        m => m.MapFrom(s => s.Promotion == null 
+                        ? s.Price : s.Promotion.NewPrice))
+                    .ForMember(p => p.AuthorsOrdered, 
+                        m => m.MapFrom(s => string.Join(", ",
+                            s.AuthorsLink
                             .OrderBy(q => q.Order)
                             .Select(q => q.Author.Name))))
                     .ForMember(p => p.ReviewsAverageVotes,
-                        m => m.MapFrom(s => s.Reviews.Count == 0
+                        m => m.MapFrom(s => s.Reviews.Any()
                             ? null
                             : (decimal?) s.Reviews
-                                .Select(q => q.NumStars).Average()));
+                                .Select(q => q.NumStars)
+                                .Average()));
             });
             using (var context = inMemDb.GetContextWithSetup())
             {
