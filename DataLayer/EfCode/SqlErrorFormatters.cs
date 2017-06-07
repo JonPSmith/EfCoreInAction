@@ -38,8 +38,7 @@ namespace DataLayer.EfCode
                 matches[0].Groups[2].Value + " in " +     //#F
                 matches[0].Groups[1].Value + ".";         //#F
 
-            var openingBadValue = message.IndexOf("(", //#G
-                StringComparison.OrdinalIgnoreCase);   //#G
+            var openingBadValue = message.IndexOf("(");   //#G
             if (openingBadValue > 0)
             {
                 var dupPart = message.Substring(openingBadValue + 1, //#H
@@ -51,7 +50,7 @@ namespace DataLayer.EfCode
                 new[] { matches[0].Groups[2].Value }); //#J
         }
         /*****************************************************************
-        #A I have created a method yo handle the Unique SQL error 
+        #A I have created a method to handle the Unique SQL error 
         #B The SqlException is passed in, as this holds the information we need to decode the error
         #C The called provides the entities not saved by default. I don't use this in this case
         #D I use Regex to both check the constraint name matches what I expected, and to extract the entity class name and the property name from the constraint
