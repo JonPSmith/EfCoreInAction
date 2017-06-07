@@ -111,7 +111,7 @@ namespace test.UnitTests.ServiceLayer
                             .OrderBy(q => q.Order)
                             .Select(q => q.Author.Name))))
                     .ForMember(p => p.ReviewsAverageVotes,
-                        m => m.MapFrom(s => s.Reviews.Any()
+                        m => m.MapFrom(s => s.Reviews.Count == 0
                             ? null
                             : (decimal?) s.Reviews
                                 .Select(q => q.NumStars)
