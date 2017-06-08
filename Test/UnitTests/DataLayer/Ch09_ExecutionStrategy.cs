@@ -59,9 +59,9 @@ namespace test.UnitTests.DataLayer
             Exception ex;
             using (var context = new Chapter09DbContext(_options))
             {
+                context.Database.EnsureCreated();
                 using (var transaction = context.Database.BeginTransaction())
                 {
-                    context.Database.EnsureCreated();
                     context.Add(new MyEntity());
 
                     //ATTEMPT
