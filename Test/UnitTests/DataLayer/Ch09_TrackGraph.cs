@@ -110,12 +110,12 @@ namespace test.UnitTests.DataLayer
                 //context.SaveChanges(); //#F
                 /**********************************************
                 #A I expect an untracked book with its relationships
-                #B I call ChangeTracker.TrackGraph, which takes an entity instance and an Func method. This begins tracking of all 
-                #C If the method sets the state to any value other than Disconnected the the entity will become tarcked by EF Core
-                #D In this example I only want to make the Name property of the Author entity set as modified, so I check if the entity if of type Author
-                #E I set the IsModified flag on the Name property. This will also set the State of the the entity to Modified
-                #F I finally call SaveChanges. This then finds that only the Name property of the Author entity and therefore creates the optimal SQL to do that
-                 * *********************************************/
+                #B I call ChangeTracker.TrackGraph, which takes an entity instance and an Func method. The Func method is called once on each entity in the graph of entities.
+                #C If the method sets the state to any value other than Disconnected the the entity will become tracked by EF Core
+                #D In this example I only want to set the Name property of the Author entity as modified, so I check if the entity is of type Author
+                #E I set the IsModified flag on the Name property. This will also set the State of the entity to Modified
+                #F I finally call SaveChanges, which finds that only the Name property of the Author entity has been marked as changed, and therefore creates the optimal SQL to update the Name column in the Authors table
+                * *********************************************/
 
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(6);
