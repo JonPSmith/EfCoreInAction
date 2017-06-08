@@ -197,7 +197,7 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void TestAttachOptionalTrackedOneOk()
+        public void TestAttachOptionalNoRelationshipTrackedOneOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
@@ -229,7 +229,7 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void TestChangeTrackerAttachOptionalTrackedOneOk()
+        public void TestChangeTrackerAttachOptionalNoRelationshipTrackedOneOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
@@ -240,6 +240,67 @@ namespace test.UnitTests.DataLayer
                 entity = new MyEntity();
                 context.Add(entity);
                 context.Add(new OneEntity());
+                context.SaveChanges();
+            }
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var oneToOne = context.OneEntities.First();
+                entity.OneToOne = oneToOne;
+                context.Attach(entity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(2);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
+                context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Unchanged);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
+                context.GetAllPropsNavsIsModified(entity.OneToOne).ShouldEqual("");
+            }
+        }
+
+        [Fact]
+        public void TestAttachOptionalwithRelationshipTrackedOneOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+            MyEntity entity;
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                entity = new MyEntity {OneToOne = new OneEntity()};
+                context.Add(entity);
+                context.SaveChanges();
+            }
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var oneToOne = context.OneEntities.First();
+                entity.OneToOne = oneToOne;
+                context.Attach(entity);
+                context.SaveChanges();
+                //Nothing happens, because the state is unchanged
+            }
+            using (var context = new Chapter09DbContext(options))
+            {
+                //VERIFY
+                context.OneEntities.First().MyEntityId.ShouldNotBeNull();
+                context.MyEntities.Include(p => p.OneToOne).First().OneToOne.ShouldNotBeNull();
+            }
+        }
+
+        [Fact]
+        public void TestChangeTrackerAttachOptionalWithRelationshipTrackedOneOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+            MyEntity entity;
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                entity = new MyEntity { OneToOne = new OneEntity() };
+                context.Add(entity);
                 context.SaveChanges();
             }
 

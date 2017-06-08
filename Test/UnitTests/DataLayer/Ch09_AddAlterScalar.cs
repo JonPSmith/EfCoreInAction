@@ -43,6 +43,49 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void TestAddEntityTwiceOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                //ATTEMPT
+                var entity = new MyEntity {MyString = "Test"};
+                context.Add(entity);
+                context.Add(entity);
+                context.SaveChanges();
+
+                //VERIFY
+                context.MyEntities.Count().ShouldEqual(1);
+            }
+        }
+
+        [Fact]
+        public void TestAddTrackedEntityOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                //ATTEMPT
+                var entity = new MyEntity { MyString = "Test" };
+                context.Add(entity);
+                context.SaveChanges();
+                context.Add(entity);
+                var ex = Assert.Throws< DbUpdateException> (() =>  context.SaveChanges());
+
+                //VERIFY
+                ex.InnerException.Message.ShouldEqual("SQLite Error 19: 'UNIQUE constraint failed: MyEntities.Id'.");
+            }
+        }
+
+        [Fact]
         public void TestUpdateTrackedOk()
         {
             //SETUP
