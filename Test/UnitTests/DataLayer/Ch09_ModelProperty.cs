@@ -8,6 +8,8 @@ using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
 using test.EfHelpers;
 using Test.Chapter07Listings.EFCode;
+using Test.Chapter09Listings.EfClasses;
+using Test.Chapter09Listings.EfCode;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -53,7 +55,7 @@ namespace test.UnitTests.DataLayer
 
                 //VERIFY
                 tableNames
-                    .ShouldEqual( new []{"BookAuthor", "LineItem", "PriceOffers", "Review", "Authors", "Books", "Orders"});
+                    .ShouldEqual( new []{"BookAuthor", "Authors", "LineItem", "Books", "Orders", "PriceOffers", "Review" });
 
             }
         }
@@ -99,7 +101,36 @@ namespace test.UnitTests.DataLayer
                 context.Books.Count().ShouldEqual(0);
                 context.Authors.Count().ShouldEqual(0);
                 context.PriceOffers.Count().ShouldEqual(0);
+            }
+        }
 
+
+
+        [Fact]
+        public void ClearAllTablesChapter09DbContextWipeCheckOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                context.Add(new WipeDbCheck1 {Dependant = new WipeDbCheck2()});
+                context.SaveChanges();
+
+                //ATTEMPT
+                foreach (var tableName in
+                    context.GetTableNamesInOrderForDelete())
+                {
+                    context.Database
+                        .ExecuteSqlCommand(
+                            $"DELETE FROM {tableName}");
+                }
+            }
+            using (var context = new Chapter09DbContext(options))
+            {
+                //VERIFY
+                context.WipeCheck.Count().ShouldEqual(0);
             }
         }
     }

@@ -30,16 +30,17 @@ namespace test.EfHelpers
         {
             var items = context.Model.GetEntityTypes()
                 .ToList();
+
             items.Sort((itemA, itemB) =>
                 {
                     var fKeysA = itemA.GetForeignKeys()
                         .ToList(); //#B
-                    if (fKeysA.SingleOrDefault(x => 
-                        x.PrincipalEntityType == itemA)
-                        ?.DeleteBehavior == 
-                            DeleteBehavior.Restrict) //#C
+                    if (fKeysA.SingleOrDefault(x =>
+                                x.PrincipalEntityType == itemA)
+                            ?.DeleteBehavior ==
+                        DeleteBehavior.Restrict) //#C
                         throw new InvalidOperationException(
-        $"You cannot delete all the {itemA} rows in one go.");
+                            $"You cannot delete all the {itemA} rows in one go.");
 
                     if (fKeysA.Any(
                         x => x.PrincipalEntityType == itemB))
@@ -48,10 +49,6 @@ namespace test.EfHelpers
                     if (fKeysB.Any(
                         x => x.PrincipalEntityType == itemA))
                         return 1; //#E
-                    if (!fKeysA.Any())
-                        return +1; //#F
-                    if (!fKeysB.Any())
-                        return -1; //#G
                     return 0;
                 }
             );
