@@ -38,6 +38,7 @@ namespace test.EfHelpers
 
             var principals = context.Model.GetEntityTypes()    //#C
                 .SelectMany(x => x.GetForeignKeys()            //#C
+                .Where(y => y.PrincipalEntityType != x)        //#C
                 .Select(y => y.PrincipalEntityType)).Distinct()//#C
                 .ToList();                                     //#C
 

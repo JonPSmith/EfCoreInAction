@@ -3,12 +3,8 @@
 
 namespace Test.Chapter09Listings.EfClasses
 {
-    public class WipeDbCheck1
+    public class T1P4
     {
         public int Id { get; set; }
-
-        public WipeDbCheck2 Dependant { get; set; }
-
-        public int WipeDbCheck2Id { get; set; }
     }
 }

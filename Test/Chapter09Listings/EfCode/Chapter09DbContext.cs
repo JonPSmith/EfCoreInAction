@@ -16,7 +16,7 @@ namespace Test.Chapter09Listings.EfCode
         public DbSet<Notify2Entity> Notify2 { get; set; }
         public DbSet<GuidKeyEntity> GuidKeyEntities { get; set; }
         public DbSet<LoggedEntity> LoggedEntities { get; set; }
-        public DbSet<WipeDbCheck1> WipeCheck { get; set; }
+        public DbSet<T2P2> WipeCheck { get; set; }
 
         public Chapter09DbContext(
             DbContextOptions<Chapter09DbContext> options, 

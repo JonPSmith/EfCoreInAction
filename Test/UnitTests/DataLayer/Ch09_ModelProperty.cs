@@ -44,6 +44,36 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void OutputAllRelationshipsEfCoreContextOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                ListToEntitiesWithRelationships(context);
+            }
+        }
+
+        private void ListToEntitiesWithRelationships(DbContext context)
+        {
+            var allEntities = context.Model.GetEntityTypes().ToList();
+            foreach (var entity in allEntities)
+            {
+                _output.WriteLine($"{entity}");
+                var fKeys = entity.GetForeignKeys().ToList();
+                if (fKeys.Any())
+                {
+                    _output.WriteLine("      Principals are:");
+                    foreach (var fKey in fKeys)
+                    {
+                        _output.WriteLine($"           {fKey.PrincipalEntityType}");
+                    }
+                }
+
+            }
+        }
+
+        [Fact]
         public void GetTableNamesInOrderToDeleteOk()
         {
             //SETUP
@@ -55,7 +85,7 @@ namespace test.UnitTests.DataLayer
 
                 //VERIFY
                 tableNames
-                    .ShouldEqual( new []{"BookAuthor", "Authors", "LineItem", "Books", "Orders", "PriceOffers", "Review" });
+                    .ShouldEqual( new []{ "BookAuthor", "LineItem", "PriceOffers", "Review", "Authors", "Books", "Orders" });
 
             }
         }
@@ -71,7 +101,7 @@ namespace test.UnitTests.DataLayer
                 var ex = Assert.Throws<InvalidOperationException>(() => context.GetTableNamesInOrderForDelete());
 
                 //VERIFY
-                ex.InnerException.Message.ShouldEqual("You cannot delete all the EntityType: Employee rows in one go.");
+                ex.Message.ShouldEqual("You cannot delete all the EntityType: Employee rows in one go.");
             }
         }
 
@@ -104,18 +134,45 @@ namespace test.UnitTests.DataLayer
             }
         }
 
+        [Fact]
+        public void OutputAllRelationshipsWipeDbContextOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<WipeDbContext>();
+            using (var context = new WipeDbContext(options))
+            {
+                ListToEntitiesWithRelationships(context);
+            }
+        }
 
+        [Fact]
+        public void GetTableNamesInOrderToDeleteWipeDbContextOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<WipeDbContext>();
+            using (var context = new WipeDbContext(options))
+            {
+                //ATTEMPT
+                var tableNames = context.GetTableNamesInOrderForDelete();
+
+                //VERIFY
+                tableNames
+                    .ShouldEqual(new[] { "T1P1", "T2P4", "T1P2", "T1P3", "T1P4", "T2P3", "T2P2", "T2P1"});
+
+            }
+        }
 
         [Fact]
         public void ClearAllTablesChapter09DbContextWipeCheckOk()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
-            using (var context = new Chapter09DbContext(options))
+            var options = SqliteInMemory.CreateOptions<WipeDbContext>();
+            using (var context = new WipeDbContext(options))
             {
                 context.Database.EnsureCreated();
 
-                context.Add(new WipeDbCheck1 {Dependant = new WipeDbCheck2()});
+                context.Add(new T1P1 { T1P2 = new T1P2 { T1P3 = new T1P3 { T1P4 = new T1P4()}}});
+                context.Add(new T2P1 {T2P2 = new T2P2{ T2P3 = new T2P3{ T2P4 = new T2P4()}}});
                 context.SaveChanges();
 
                 //ATTEMPT
@@ -127,10 +184,10 @@ namespace test.UnitTests.DataLayer
                             $"DELETE FROM {tableName}");
                 }
             }
-            using (var context = new Chapter09DbContext(options))
+            using (var context = new WipeDbContext(options))
             {
                 //VERIFY
-                context.WipeCheck.Count().ShouldEqual(0);
+                context.T2P1.Count().ShouldEqual(0);
             }
         }
     }
