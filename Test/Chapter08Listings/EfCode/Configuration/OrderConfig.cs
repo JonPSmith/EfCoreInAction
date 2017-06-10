@@ -26,7 +26,7 @@ namespace Test.Chapter08Listings.EfCode.Configuration
         /**************************************************************
         #A This creates a sequence ‘OrderNumber’ in the schema ‘shared’. If no schema is provided it will use the default schema.
         #B These are optional, and allow you to control the squence start and increment. The default is start at 1 and increments by 1
-        #C A column can access the sequence number via a default constraint. Each time the ‘NEXT VALUE…’ command is called the sequence is incremented.
+        #C A column can access the sequence number via a default constraint. Each time the ‘NEXT VALUE…’ command is called the sequence is incremented. The SQL shown is for a SQL Server database and will be different for other database providers.
          * ***********************************************************/
     }
 }
