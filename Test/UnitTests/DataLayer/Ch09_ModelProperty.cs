@@ -26,7 +26,7 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void GetTableNameOk()
+        public void GetTableNameEfCoreContextOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
@@ -112,7 +112,7 @@ namespace test.UnitTests.DataLayer
 
 
         [Fact]
-        public void ClearAllTablesOk()
+        public void WipeAllTablesEfCoreContextOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
@@ -155,12 +155,12 @@ namespace test.UnitTests.DataLayer
                 var tableNames = string.Join(",", context.GetTableNamesInOrderForWipe());
 
                 //VERIFY
-                tableNames.ShouldEqual("SelfRef,T2P4,T2P3,T2P2,T2P1,Top,T1P1,T1P2,T1P3,T1P4");
+                tableNames.ShouldEqual("T2P4,T2P3,T2P2,T2P1,Top,T1P1,T1P2,T1P3,T1P4,SelfRef");
             }
         }
 
         [Fact]
-        public void ClearAllTablesChapter09DbContextWipeCheckOk()
+        public void WipeAllTablesChapter09DbContextWipeCheckOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<WipeDbContext>();

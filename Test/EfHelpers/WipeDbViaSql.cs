@@ -18,51 +18,62 @@ namespace test.EfHelpers
             GetTableNamesInOrderForWipe //#A
             (this DbContext context)
         {
-            var allEntities = context.Model.GetEntityTypes().ToList();
+            var allEntities = context.Model
+                .GetEntityTypes().ToList(); //#B
 
-            ThrowExceptionOnNotWipeableEntities(allEntities);
+            ThrowExceptionOnNotWipeableEntities(allEntities); //#C
 
-            var principalsDict = allEntities //#C
-                .SelectMany(x => x.GetForeignKeys() //#C
-                    .Where(y => y.PrincipalEntityType != x) //#C
-                    .Select(y => y.PrincipalEntityType)).Distinct() //#C
-                .ToDictionary(k => k,
-                    v => v.GetForeignKeys().Select(y => y.PrincipalEntityType).ToList());
+            var principalsDict = allEntities             //#D
+                .SelectMany(x => x.GetForeignKeys()
+                    .Select(y => y.PrincipalEntityType)).Distinct()
+                .ToDictionary(k => k, v => //#E
+                    v.GetForeignKeys()
+                      .Where(y => y.PrincipalEntityType != v)
+                      .Select(y => y.PrincipalEntityType).ToList());
 
-            var result = allEntities
-                .Where(x => !principalsDict.ContainsKey(x))
-                .ToList();
+            var result = allEntities //#F
+                .Where(x => !principalsDict.ContainsKey(x)) //#F
+                .ToList(); //#F
 
-            var reverseResult = new List<IEntityType>();
-
-            while (principalsDict.Keys.Any())
+            var reversePrincipals = new List<IEntityType>();
+            while (principalsDict.Keys.Any()) //#G
             {
-                foreach (var principalNoLinks in principalsDict.Where(x => !x.Value.Any()).ToList())
+                foreach (var principalNoLinks in 
+                    principalsDict
+                       .Where(x => !x.Value.Any()).ToList())//#H
                 {
-                    reverseResult.Add(principalNoLinks.Key);
-                    foreach (var removeLink in principalsDict.Where(x => x.Value.Contains(principalNoLinks.Key)))
+                    reversePrincipals.Add(principalNoLinks.Key);//#I
+                    principalsDict
+                        .Remove(principalNoLinks.Key);//#J
+                    foreach (var removeLink in 
+                        principalsDict.Where(x => 
+                           x.Value.Contains(principalNoLinks.Key)))//#K
                     {
-                        removeLink.Value.Remove(principalNoLinks.Key);
+                        removeLink.Value
+                            .Remove(principalNoLinks.Key);//#K
                     }
-                    principalsDict.Remove(principalNoLinks.Key);
                 }
             }
-            reverseResult.Reverse();
-
-            result.AddRange(reverseResult);
-
-            return result.Select(x => x.Relational().TableName);
+            reversePrincipals.Reverse();//#M
+            result.AddRange(reversePrincipals);//#N
+            return result
+                .Select(x => x.Relational().TableName);//#O
         }
         /************************************************************************
-        #A This method looks at the relationships and returns the tables names so that the dependent entities come before the principal entities
-        #B I catch the hierarchical case where an entity refers to itself - if the delete behavior of this foreign key is set to restrict then you cannot simply delete all the rows in one go
-        #C I extract all the principal entities to sort. The dependent entities don't take part in the sort, as we know they must come at the beginning
-        #D Now I sort the principal entities in case I have the case of EntityA -> EntityB -> EntityC. In that case EntityB must be deleted before EntityA
-        #E If itemA's foreign keys point to itemB, then I must delete itemA first to make sure I don't have a cascade delete problems
-        #F If itemB's foreign keys point to itemA, then I must delete itemB first to make sure I don't have a cascade delete problems
-        #G Otherwise the order doesn't matter
-        #H I now produce combined list with the dependants at the front and the principals at the back
-        #I Finally I extract the table names from the ordered list
+        #A This method looks at the relationships and returns the tables names in the right order to wipe all their rows without hitting a foreign key delete constraint
+        #B This gets me the IEntityType, which contains all the information on how the database is built, for all the entities in the DbContext
+        #C This contains a check for the hierarchical case where an entity refers to itself - if the delete behavior of this foreign key is set to restrict then you cannot simply delete all the rows in one go
+        #D I extract all the principal entities...
+        #E ... And put them in a dictionary, with the value being all the links to other principal entities
+        #F I start the lsit of entities to dleete by putting all the dependant entities first, as I must delete the rows in these first, and the order doesn't matter
+        #G While there are entities with links to other entities I need to keep going round
+        #H Now loop through all the relationships that don't have a link to another principal (or that link has already been marked as wiped)
+        #I I mark the entity for deletion - this list is in reverse order to what I must do
+        #J I remove it from the dictionary so that it isn't looked at again
+        #K ... and remove the reference to that entity from any existing dependants still in the dictionary
+        #M When I get to here I have the list of entities in the reverse order to how I should wipe them, so I reverse the list
+        #N I now produce combined list with the dependants at the front and the principals at the back in the right order
+        #O Finally I extract the table names from the ordered list
         * ***********************************************************************/
 
         public static void WipeAllDataFromDatabase(this DbContext context)
