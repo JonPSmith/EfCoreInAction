@@ -68,14 +68,7 @@ namespace test.UnitTests.DataLayer
                     {
                         _output.WriteLine($"           {fKey.PrincipalEntityType}");
                     }
-                    _output.WriteLine("      DependentToPrincipal are:");
-                    foreach (var fKey in fKeys)
-                    {
-                        _output.WriteLine($"           {fKey.DependentToPrincipal?.DeclaringEntityType}");
-                    }
-
                 }
-
             }
         }
 
