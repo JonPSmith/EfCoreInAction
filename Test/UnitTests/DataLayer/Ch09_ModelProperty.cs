@@ -68,6 +68,12 @@ namespace test.UnitTests.DataLayer
                     {
                         _output.WriteLine($"           {fKey.PrincipalEntityType}");
                     }
+                    _output.WriteLine("      DependentToPrincipal are:");
+                    foreach (var fKey in fKeys)
+                    {
+                        _output.WriteLine($"           {fKey.DependentToPrincipal?.DeclaringEntityType}");
+                    }
+
                 }
 
             }
@@ -81,11 +87,10 @@ namespace test.UnitTests.DataLayer
             using (var context = new EfCoreContext(options))
             {
                 //ATTEMPT
-                var tableNames = context.GetTableNamesInOrderForDelete();
+                var tableNames = string.Join(",", context.GetTableNamesInOrderForWipe());
 
                 //VERIFY
-                tableNames
-                    .ShouldEqual( new []{ "BookAuthor", "LineItem", "PriceOffers", "Review", "Authors", "Books", "Orders" });
+                tableNames.ShouldEqual("BookAuthor,LineItem,PriceOffers,Review,Orders,Books,Authors");
 
             }
         }
@@ -98,7 +103,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter07DbContext(options))
             {
                 //ATTEMPT
-                var ex = Assert.Throws<InvalidOperationException>(() => context.GetTableNamesInOrderForDelete());
+                var ex = Assert.Throws<InvalidOperationException>(() => context.GetTableNamesInOrderForWipe());
 
                 //VERIFY
                 ex.Message.ShouldEqual("You cannot delete all the EntityType: Employee rows in one go.");
@@ -117,13 +122,7 @@ namespace test.UnitTests.DataLayer
                 context.SeedDatabaseFourBooks();
 
                 //ATTEMPT
-                foreach (var tableName in 
-                    context.GetTableNamesInOrderForDelete())
-                {
-                    context.Database
-                        .ExecuteSqlCommand(
-                            $"DELETE FROM {tableName}");
-                }
+                context.WipeAllDataFromDatabase();
             }
             using (var context = new EfCoreContext(options))
             {
@@ -153,12 +152,10 @@ namespace test.UnitTests.DataLayer
             using (var context = new WipeDbContext(options))
             {
                 //ATTEMPT
-                var tableNames = context.GetTableNamesInOrderForDelete();
+                var tableNames = string.Join(",", context.GetTableNamesInOrderForWipe());
 
                 //VERIFY
-                tableNames
-                    .ShouldEqual(new[] { "T1P1", "T2P4", "T1P2", "T1P3", "T1P4", "T2P3", "T2P2", "T2P1"});
-
+                tableNames.ShouldEqual("T1P1,T2P4,T2P3,T1P2,T2P2,T1P3,T2P1,T1P4");
             }
         }
 
@@ -171,18 +168,12 @@ namespace test.UnitTests.DataLayer
             {
                 context.Database.EnsureCreated();
 
-                context.Add(new T1P1 { T1P2 = new T1P2 { T1P3 = new T1P3 { T1P4 = new T1P4()}}});
+                context.Add(new T1P1 {T1P2 = new T1P2 { T1P3 = new T1P3 { T1P4 = new T1P4()}}});
                 context.Add(new T2P1 {T2P2 = new T2P2{ T2P3 = new T2P3{ T2P4 = new T2P4()}}});
                 context.SaveChanges();
 
                 //ATTEMPT
-                foreach (var tableName in
-                    context.GetTableNamesInOrderForDelete())
-                {
-                    context.Database
-                        .ExecuteSqlCommand(
-                            $"DELETE FROM {tableName}");
-                }
+                context.WipeAllDataFromDatabase();
             }
             using (var context = new WipeDbContext(options))
             {

@@ -25,7 +25,7 @@ namespace test.EfHelpers
 
         //NOTE: This will not handle a circular relationship: e.g. EntityA->EntityB->EntityA
         public static  IEnumerable<string> 
-            GetTableNamesInOrderForDelete //#A
+            OldGetTableNamesInOrderForDelete //#A
                 (this DbContext context)
         {
             var cannotWipe = context.Model.GetEntityTypes() //#B
