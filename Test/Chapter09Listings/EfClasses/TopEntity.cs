@@ -3,11 +3,13 @@
 
 namespace Test.Chapter09Listings.EfClasses
 {
-    public class T2P1
+    public class TopEntity
     {
         public int Id { get; set; }
 
-        public T2P2 T2P2 { get; set; }
+        public T1P1 T1P1 { get; set; }
+
+        public T2P1 T2P1 { get; set; }
 
         public int FKey { get; set; }
     }

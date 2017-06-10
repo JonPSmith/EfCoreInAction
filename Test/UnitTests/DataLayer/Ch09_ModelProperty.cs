@@ -106,7 +106,7 @@ namespace test.UnitTests.DataLayer
                 var ex = Assert.Throws<InvalidOperationException>(() => context.GetTableNamesInOrderForWipe());
 
                 //VERIFY
-                ex.Message.ShouldEqual("You cannot delete all the EntityType: Employee rows in one go.");
+                ex.Message.ShouldEqual("You cannot delete all the rows in one go in entity(s): Test.Chapter07Listings.EfClasses.Employee");
             }
         }
 
@@ -155,7 +155,7 @@ namespace test.UnitTests.DataLayer
                 var tableNames = string.Join(",", context.GetTableNamesInOrderForWipe());
 
                 //VERIFY
-                tableNames.ShouldEqual("T1P1,T2P4,T2P3,T1P2,T2P2,T1P3,T2P1,T1P4");
+                tableNames.ShouldEqual("SelfRef,T2P4,T2P3,T2P2,T2P1,Top,T1P1,T1P2,T1P3,T1P4");
             }
         }
 
@@ -168,8 +168,12 @@ namespace test.UnitTests.DataLayer
             {
                 context.Database.EnsureCreated();
 
-                context.Add(new T1P1 {T1P2 = new T1P2 { T1P3 = new T1P3 { T1P4 = new T1P4()}}});
-                context.Add(new T2P1 {T2P2 = new T2P2{ T2P3 = new T2P3{ T2P4 = new T2P4()}}});
+                context.Add( new TopEntity
+                {
+                    T1P1 = new T1P1 { T1P2 = new T1P2 { T1P3 = new T1P3 { T1P4 = new T1P4() } } },
+                    T2P1 = new T2P1 { T2P2 = new T2P2 { T2P3 = new T2P3 { T2P4 = new T2P4() } } }
+                });
+                context.Add(new Hierarchical{ Name ="Staff", Manager = new Hierarchical{ Name = "Manager"}});
                 context.SaveChanges();
 
                 //ATTEMPT
@@ -178,7 +182,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new WipeDbContext(options))
             {
                 //VERIFY
-                context.T2P1.Count().ShouldEqual(0);
+                context.Top.Count().ShouldEqual(0);
             }
         }
     }
