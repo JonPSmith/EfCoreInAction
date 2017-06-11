@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Test.Chapter09Listings.EfClasses;
+using Test.Chapter09Listings.WipeDbClasses;
 
 namespace Test.Chapter09Listings.EfCode
 {
     public class WipeDbContext : DbContext
     {
         public DbSet<TopEntity> Top { get; set; }
-        public DbSet<Hierarchical> SelfRef { get; set; }
+        public DbSet<SelfRef> SelfRef { get; set; }
 
         public WipeDbContext(DbContextOptions<WipeDbContext> options)
             : base(options)
@@ -59,10 +60,10 @@ namespace Test.Chapter09Listings.EfCode
                 .HasForeignKey<T2P4>(p => p.FKey)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Hierarchical>()
+            modelBuilder.Entity<SelfRef>()
                 .HasOne(p => p.Manager)
                 .WithOne()
-                .HasForeignKey<Hierarchical>(p => p.HierarchicalEmployeeId)
+                .HasForeignKey<SelfRef>(p => p.SelfRefEmployeeId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
         

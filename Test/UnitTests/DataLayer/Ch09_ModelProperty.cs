@@ -10,6 +10,7 @@ using test.EfHelpers;
 using Test.Chapter07Listings.EFCode;
 using Test.Chapter09Listings.EfClasses;
 using Test.Chapter09Listings.EfCode;
+using Test.Chapter09Listings.WipeDbClasses;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -166,7 +167,7 @@ namespace test.UnitTests.DataLayer
                     T1P1 = new T1P1 { T1P2 = new T1P2 { T1P3 = new T1P3 { T1P4 = new T1P4() } } },
                     T2P1 = new T2P1 { T2P2 = new T2P2 { T2P3 = new T2P3 { T2P4 = new T2P4() } } }
                 });
-                context.Add(new Hierarchical{ Name ="Staff", Manager = new Hierarchical{ Name = "Manager"}});
+                context.Add(new SelfRef{ Name ="Staff", Manager = new SelfRef{ Name = "Manager"}});
                 context.SaveChanges();
 
                 //ATTEMPT

@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Test.Chapter09Listings.EfClasses;
 using Test.Chapter09Listings.EfCode.Configuration;
+using Test.Chapter09Listings.WipeDbClasses;
 
 namespace Test.Chapter09Listings.EfCode
 {
