@@ -56,7 +56,14 @@ namespace test.EfHelpers
             reversePrincipals.Reverse();//#M
             result.AddRange(reversePrincipals);//#N
             return result
-                .Select(x => x.Relational().TableName);//#O
+                .Select(x =>
+                {
+                    var relational = x.Relational();
+                    return (relational.Schema == null
+                        ? ""
+                        : relational.Schema + ".")
+                          + relational.TableName;
+                } );//#O
         }
         /************************************************************************
         #A This method looks at the relationships and returns the tables names in the right order to wipe all their rows without hitting a foreign key delete constraint
