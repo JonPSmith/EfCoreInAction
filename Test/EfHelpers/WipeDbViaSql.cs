@@ -68,10 +68,10 @@ namespace test.EfHelpers
         /************************************************************************
         #A This method looks at the relationships and returns the tables names in the right order to wipe all their rows without hitting a foreign key delete constraint
         #B This gets me the IEntityType, which contains all the information on how the database is built, for all the entities in the DbContext
-        #C This contains a check for the hierarchical case where an entity refers to itself - if the delete behavior of this foreign key is set to restrict then you cannot simply delete all the rows in one go
+        #C This contains a check for the hierarchical (entity that references itself) case where an entity refers to itself - if the delete behavior of this foreign key is set to restrict then you cannot simply delete all the rows in one go
         #D I extract all the principal entities...
-        #E ... And put them in a dictionary, with the value being all the links to other principal entities
-        #F I start the lsit of entities to dleete by putting all the dependant entities first, as I must delete the rows in these first, and the order doesn't matter
+        #E ... And put them in a dictionary, with the value being all the links to other principal entities. Note I remove any self reference links as these are automatically handled
+        #F I start the list of entities to delete by putting all the dependant entities first, as I must delete the rows in these first, and the order doesn't matter
         #G While there are entities with links to other entities I need to keep going round
         #H Now loop through all the relationships that don't have a link to another principal (or that link has already been marked as wiped)
         #I I mark the entity for deletion - this list is in reverse order to what I must do
@@ -79,7 +79,7 @@ namespace test.EfHelpers
         #K ... and remove the reference to that entity from any existing dependants still in the dictionary
         #M When I get to here I have the list of entities in the reverse order to how I should wipe them, so I reverse the list
         #N I now produce combined list with the dependants at the front and the principals at the back in the right order
-        #O Finally I extract the table names from the ordered list
+        #O Finally I extract the optional Schema name and the table name and to form an ordered list with each table in the right order
         * ***********************************************************************/
 
         public static void WipeAllDataFromDatabase(this DbContext context)
