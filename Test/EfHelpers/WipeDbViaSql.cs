@@ -66,7 +66,7 @@ namespace test.EfHelpers
                 } );//#O
         }
         /************************************************************************
-        #A This method looks at the relationships and returns the tables names in the right order to wipe all their rows without hitting a foreign key delete constraint
+        #A This method looks at the relationships and returns the tables names in the right order to wipe all their rows without incurring a foreign key delete constraint
         #B This gets me the IEntityType, which contains all the information on how the database is built, for all the entities in the DbContext
         #C This contains a check for the hierarchical (entity that references itself) case where an entity refers to itself - if the delete behavior of this foreign key is set to restrict then you cannot simply delete all the rows in one go
         #D I extract all the principal entities...
