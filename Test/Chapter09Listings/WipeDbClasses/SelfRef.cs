@@ -1,6 +1,9 @@
 ﻿// Copyright (c) 2016 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
+using System.Collections;
+using System.Collections.Generic;
+
 namespace Test.Chapter09Listings.WipeDbClasses
 {
     public class SelfRef
@@ -14,5 +17,7 @@ namespace Test.Chapter09Listings.WipeDbClasses
 
         public int? SelfRefEmployeeId { get; set; }
         public SelfRef Manager { get; set; }
+
+        public ICollection<Many> Collection { get; set; }
     }
 }

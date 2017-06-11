@@ -2,9 +2,11 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using test.EfHelpers;
 using Test.Chapter07Listings.EFCode;
@@ -149,12 +151,12 @@ namespace test.UnitTests.DataLayer
                 var tableNames = string.Join(",", context.GetTableNamesInOrderForWipe());
 
                 //VERIFY
-                tableNames.ShouldEqual("T2P4,T2P3,T2P2,T2P1,Top,T1P1,T1P2,T1P3,T1P4,SelfRef");
+                tableNames.ShouldEqual("Many,T2P4,T2P3,T2P2,T2P1,Top,T1P1,T1P2,T1P3,T1P4,SelfRef");
             }
         }
 
         [Fact]
-        public void WipeAllTablesChapter09DbContextWipeCheckOk()
+        public void WipeAllTablesWipeDbContextWipeCheckOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<WipeDbContext>();
@@ -167,7 +169,12 @@ namespace test.UnitTests.DataLayer
                     T1P1 = new T1P1 { T1P2 = new T1P2 { T1P3 = new T1P3 { T1P4 = new T1P4() } } },
                     T2P1 = new T2P1 { T2P2 = new T2P2 { T2P3 = new T2P3 { T2P4 = new T2P4() } } }
                 });
-                context.Add(new SelfRef{ Name ="Staff", Manager = new SelfRef{ Name = "Manager"}});
+                context.Add(new SelfRef
+                {
+                    Name ="Staff",
+                    Collection = new List<Many> {  new Many()},
+                    Manager = new SelfRef{ Name = "Manager"}
+                });
                 context.SaveChanges();
 
                 //ATTEMPT
@@ -177,6 +184,34 @@ namespace test.UnitTests.DataLayer
             {
                 //VERIFY
                 context.Top.Count().ShouldEqual(0);
+            }
+        }
+
+        [Fact]
+        public void WipeAllTablesWipeDbContextWipeShowWillFail()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<WipeDbContext>();
+            using (var context = new WipeDbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                context.Add(new TopEntity
+                {
+                    T1P1 = new T1P1 {T1P2 = new T1P2 {T1P3 = new T1P3 {T1P4 = new T1P4()}}},
+                    T2P1 = new T2P1 {T2P2 = new T2P2 {T2P3 = new T2P3 {T2P4 = new T2P4()}}}
+                });
+                context.Add(new SelfRef
+                {
+                    Name = "Staff",
+                    Collection = new List<Many> {new Many()},
+                    Manager = new SelfRef {Name = "Manager"}
+                });
+                context.SaveChanges();
+
+                //ATTEMPT
+                Assert.Throws<SqliteException>( () => context.Database.ExecuteSqlCommand("DELETE FROM Top"));
+                Assert.Throws<SqliteException>(() => context.Database.ExecuteSqlCommand("DELETE FROM SelfRef"));
             }
         }
     }

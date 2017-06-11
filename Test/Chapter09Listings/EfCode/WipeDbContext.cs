@@ -65,6 +65,12 @@ namespace Test.Chapter09Listings.EfCode
                 .WithOne()
                 .HasForeignKey<SelfRef>(p => p.SelfRefEmployeeId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SelfRef>()
+                .HasMany(p => p.Collection)
+                .WithOne(p => p.SelfRef)
+                .HasForeignKey(k => k.SelfRefId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
         
     }
