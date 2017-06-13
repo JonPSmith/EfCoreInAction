@@ -216,16 +216,16 @@ namespace test.UnitTests.DataLayer
                         p.EmployeeId == employee.EmployeeId);
 
             if (databaseEntity == null) //#E
-                return //#F
+                return
         $"The Employee {employee.Name} was deleted by another user. " +
         $"Click Add button to add back with salary of {employee.Salary}" +
-        " or Cancel to leave deleted.";
+        " or Cancel to leave deleted."; //#F
 
             return //#G
         $"The Employee {employee.Name}'s salary was set to " +
         $"{databaseEntity.Salary} by another user. " +
         $"Click Update to use your new salary of {employee.Salary}" +
-        $" or Cancel to leave the salary at {databaseEntity.Salary}.";
+        $" or Cancel to leave the salary at {databaseEntity.Salary}."; //#G
         }
         /*********************************************************************
         #A This is called if there is a DbUpdateConcurrencyException. Its job is not to fix the problem, but form a useful message to show the user
