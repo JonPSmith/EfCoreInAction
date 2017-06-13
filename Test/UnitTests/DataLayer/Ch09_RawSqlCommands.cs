@@ -154,10 +154,10 @@ namespace test.UnitTests.DataLayer
                 #B I need to open the connection before I use it
                 #C I create a DbCommand on that connection
                 #D This library transfers SQL directly to the database server, hence all the database accesses have to be defined in SQL
-                #E I assume my command to the DbCommand instance
-                #F I then execute the command and then creates a reader to read the data that the server will return
+                #E I assign my command to the DbCommand instance
+                #F The ExecuteReader method sends the SQL command to the database server and then creates a reader to read the data that the server will return
                 #G This tries to reaad the next row and returns true if it was successful
-                #H I have to hand-code the convertion and copying of the data from the reader into my class
+                #H I have to hand-code the conversion and copying of the data from the reader into my class
                 #I When the read has finished I need to close the connection to the database server
                  * ******************************************************************/
 

@@ -2,7 +2,9 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using test.EfHelpers;
 using test.Helpers;
 using Test.Chapter08Listings.EfClasses;
 using Test.Chapter08Listings.EfCode;
@@ -50,6 +52,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter08DbContext(optionsBuilder.Options))
             {
                 context.Database.EnsureCreated();
+                var logger = new LogDbContext(context);
 
                 var entity = new Person { Name = "Unit Test" };
                 entity.SetDateOfBirth(new DateTime(2020, 1, 1));

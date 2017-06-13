@@ -240,6 +240,23 @@ namespace test.UnitTests.DataLayer
             }
         }
 
+        [Fact]
+        public void ShowGetDatabaseValuesOk()
+        {
+            //SETUP
+            using (var context = new ConcurrencyDbContext(_options))
+            {
+                //ATTEMPT
+                var firstBook = context.Books.First();
+                firstBook.Title = "New Title";
+
+                var databaseValues = (ConcurrencyBook) context.Entry(firstBook).GetDatabaseValues().ToObject();
+
+                //VERIFY
+                databaseValues.Title.ShouldNotEqual(firstBook.Title);
+            }
+        }
+
         private static string BookSaveChangesWithChecks //#A
             (ConcurrencyDbContext context)
         {
@@ -305,7 +322,6 @@ namespace test.UnitTests.DataLayer
                         = new DateTime(2050, 5, 5);            //#K
                 }                                              //#K
 
-                // Update original values so that the concurrecy 
                 entry.Property(property.Name).OriginalValue = //#L
                     version2Entity.Property(property.Name) //#L
                         .CurrentValue; //#L
@@ -324,7 +340,7 @@ namespace test.UnitTests.DataLayer
         #I This holds the version of the property as written to the database by someone else
         #J This holds the version of the property that I wanted to set it to in my update
         #K This is where you should put your code to fix the concurrency issue. I set the PublishedOn property to a specific value so I can check it in my unit test
-        #L Here I set the OriginalValue to the value that someone else set it to. This handles both the case where you use concurrency tokens or a timestamp
+        #L Here I set the OriginalValue to the value that someone else set it to. This handles both the case where you use concurrency tokens or a timestamp.
         #M I return null to say I handled this concurrency issue
          * ********************************************************/
     }

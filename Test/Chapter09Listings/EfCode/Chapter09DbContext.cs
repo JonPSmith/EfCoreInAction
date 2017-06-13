@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Test.Chapter09Listings.EfClasses;
 using Test.Chapter09Listings.EfCode.Configuration;
+using Test.Chapter09Listings.WipeDbClasses;
 
 namespace Test.Chapter09Listings.EfCode
 {
@@ -16,6 +17,7 @@ namespace Test.Chapter09Listings.EfCode
         public DbSet<Notify2Entity> Notify2 { get; set; }
         public DbSet<GuidKeyEntity> GuidKeyEntities { get; set; }
         public DbSet<LoggedEntity> LoggedEntities { get; set; }
+        public DbSet<T2P2> WipeCheck { get; set; }
 
         public Chapter09DbContext(
             DbContextOptions<Chapter09DbContext> options, 

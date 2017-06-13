@@ -24,7 +24,7 @@ namespace Test.Chapter08Listings.EfCode
                 .IsConcurrencyToken();           //#B
 
             modelBuilder.Entity<ConcurrencyAuthor>()//#C
-                .Property(p => p.RowVersion)         //#C
+                .Property(p => p.ChangeCheck)         //#C
                 .ValueGeneratedOnAddOrUpdate()      //#C
                 .IsConcurrencyToken();              //#C
         }
