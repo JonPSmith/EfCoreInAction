@@ -35,14 +35,23 @@ namespace test.UnitTests.ServiceLayer
 
                 //ATTEMPT
                 var result = context.Books.
-                    Select(p => new BookPriceOfferDto
+                    Select(p => new BookDto
                     {
                         BookId = p.BookId,
                         Title = p.Title,
                         Price = p.Price,
                         PromotionNewPrice = p.Promotion == null
                             ? (decimal?)null
-                            : p.Promotion.NewPrice
+                            : p.Promotion.NewPrice,
+                        PromotionPromotionalText = p.Promotion == null
+                            ? null
+                            : p.Promotion.PromotionalText,
+                        Reviews = p.Reviews
+                            .Select(x => new ReviewDto
+                            {
+                                NumStars = x.NumStars
+                            })
+                            .ToList()
                     })
                     .ToList();
 
@@ -50,6 +59,7 @@ namespace test.UnitTests.ServiceLayer
                 result.Count.ShouldEqual(4);
                 result.Where(x => x.Title != "Quantum Networking").All(x => x.PromotionNewPrice == null).ShouldBeTrue();
                 result.Last().PromotionNewPrice.ShouldNotBeNull();
+                result.Last().PromotionPromotionalText.ShouldNotBeNull();
                 foreach (var log in inMemDb.Logs)
                 {
                     _output.WriteLine(log);
@@ -63,28 +73,32 @@ namespace test.UnitTests.ServiceLayer
             //SETUP
             var inMemDb = new SqliteInMemory();  //REMOVE FROM BOOK
 
-            var config = new MapperConfiguration(cfg => { //#A
-                cfg.CreateMap<Book, BookPriceOfferDto>(); //#A
+            var config = new MapperConfiguration(cfg => {
+                cfg.CreateMap<Book, BookDto>(); //#A
+                cfg.CreateMap<Review, ReviewDto>(); //#B
             });
             using (var context = inMemDb.GetContextWithSetup())
             {
                 context.SeedDatabaseFourBooks();  //REMOVE FROM BOOK
 
                 //ATTEMPT
-                var result = context.Books. //#B
-                    ProjectTo<BookPriceOfferDto>(config) //#C
-                    .ToList(); //#D
+                var result = context.Books. //#C
+                    ProjectTo<BookDto>(config) //#D
+                    .ToList(); //#E
             /*************************************************************
             #A I have to tell AutoMapper to create a map between the Book entity class and the BookPriceOfferDto class. It does this by matching the names in both classes
-            #B I use the normal access to the books via the application's DbContext DbSet<T> propery, Books
-            #C I use AutoMapper's ProjectTo<T> method to create the LINQ needed to map the Book, and its navigational properties to the DTO
-            #D Finally I use ToList to get EF Core to build and execute the database access
+            #B I also add a mapping from the Review entity class and the ReviewDto class. This is a nested DTO as it is used in the BookPriceOfferDto class
+            #C I use the normal access to the books via the application's DbContext DbSet<T> propery, Books
+            #D I use AutoMapper's ProjectTo<T> method to create the LINQ needed to map the Book, and its navigational properties to the DTO
+            #E Finally I use ToList to get EF Core to build and execute the database access
              * *************************************************************/
              
                 //VERIFY
                 result.Count.ShouldEqual(4);
                 result.Where(x => x.Title != "Quantum Networking").All(x => x.PromotionNewPrice == null).ShouldBeTrue();
                 result.Last().PromotionNewPrice.ShouldNotBeNull();
+                result.Last().PromotionPromotionalText.ShouldNotBeNull();
+                result.Last().Reviews.Count.ShouldEqual(2);
                 foreach (var log in inMemDb.Logs)
                 {
                     _output.WriteLine(log);

@@ -67,7 +67,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new BookContext(options))
             {
                 //ATTEMPT
-                var tableNames = context.GetTableNamesInOrderForDelete();
+                var tableNames = context.GetTableNamesInOrderForWipe();
 
                 //VERIFY
                 tableNames
@@ -83,7 +83,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new OrderContext(options))
             {
                 //ATTEMPT
-                var tableNames = context.GetTableNamesInOrderForDelete();
+                var tableNames = context.GetTableNamesInOrderForWipe();
 
                 //VERIFY
                 tableNames
