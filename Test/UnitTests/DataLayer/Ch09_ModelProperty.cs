@@ -86,7 +86,7 @@ namespace test.UnitTests.DataLayer
                 var tableNames = string.Join(",", context.GetTableNamesInOrderForWipe());
 
                 //VERIFY
-                tableNames.ShouldEqual("BookAuthor,LineItem,PriceOffers,Review,Orders,Books,Authors");
+                tableNames.ShouldEqual("[BookAuthor],[LineItem],[PriceOffers],[Review],[Orders],[Books],[Authors]");
 
             }
         }
@@ -151,7 +151,7 @@ namespace test.UnitTests.DataLayer
                 var tableNames = string.Join(",", context.GetTableNamesInOrderForWipe());
 
                 //VERIFY
-                tableNames.ShouldEqual("Many,T2P4,T2P3,T2P2,T2P1,Top,T1P1,T1P2,T1P3,T1P4,SelfRef");
+                tableNames.ShouldEqual("[Many],[T2P4],[T2P3],[T2P2],[T2P1],[Top],[T1P1],[T1P2],[T1P3],[T1P4],[SelfRef]");
             }
         }
 

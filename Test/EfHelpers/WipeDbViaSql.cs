@@ -27,8 +27,8 @@ namespace test.EfHelpers
                     .Select(y => y.PrincipalEntityType)).Distinct()
                 .ToDictionary(k => k, v => //#E
                     v.GetForeignKeys()
-                      .Where(y => y.PrincipalEntityType != v)
-                      .Select(y => y.PrincipalEntityType).ToList());
+                        .Where(y => y.PrincipalEntityType != v)
+                        .Select(y => y.PrincipalEntityType).ToList());
 
             var result = allEntities //#F
                 .Where(x => !principalsDict.ContainsKey(x)) //#F
@@ -37,16 +37,16 @@ namespace test.EfHelpers
             var reversePrincipals = new List<IEntityType>();
             while (principalsDict.Keys.Any()) //#G
             {
-                foreach (var principalNoLinks in 
+                foreach (var principalNoLinks in
                     principalsDict
-                       .Where(x => !x.Value.Any()).ToList())//#H
+                        .Where(x => !x.Value.Any()).ToList())//#H
                 {
                     reversePrincipals.Add(principalNoLinks.Key);//#I
                     principalsDict
                         .Remove(principalNoLinks.Key);//#J
-                    foreach (var removeLink in 
-                        principalsDict.Where(x => 
-                           x.Value.Contains(principalNoLinks.Key)))//#K
+                    foreach (var removeLink in
+                        principalsDict.Where(x =>
+                            x.Value.Contains(principalNoLinks.Key)))//#K
                     {
                         removeLink.Value
                             .Remove(principalNoLinks.Key);//#K
@@ -55,15 +55,7 @@ namespace test.EfHelpers
             }
             reversePrincipals.Reverse();//#M
             result.AddRange(reversePrincipals);//#N
-            return result
-                .Select(x =>
-                {
-                    var relational = x.Relational();
-                    return (relational.Schema == null
-                        ? ""
-                        : relational.Schema + ".")
-                          + relational.TableName;
-                } );//#O
+            return result.Select(FormTableNameWithSchema);//#O
         }
         /************************************************************************
         #A This method looks at the relationships and returns the tables names in the right order to wipe all their rows without incurring a foreign key delete constraint
@@ -79,7 +71,7 @@ namespace test.EfHelpers
         #K ... and remove the reference to that entity from any existing dependants still in the dictionary
         #M When I get to here I have the list of entities in the reverse order to how I should wipe them, so I reverse the list
         #N I now produce combined list with the dependants at the front and the principals at the back in the right order
-        #O Finally I extract the optional Schema name and the table name and to form an ordered list with each table in the right order
+        #O Finally I return a collection of table names, with a optional schema, in the right order
         * ***********************************************************************/
 
         public static void WipeAllDataFromDatabase(this DbContext context)
@@ -96,19 +88,27 @@ namespace test.EfHelpers
         //------------------------------------------------
         //private methods
 
+
+        private static string FormTableNameWithSchema(IEntityType entityType)
+        {
+            var relational = entityType.Relational();
+            return "[" + (relational.Schema == null
+                       ? ""
+                       : relational.Schema + "].[")
+                   + relational.TableName + "]";
+        }
+
         private static void ThrowExceptionOnNotWipeableEntities(List<IEntityType> allEntities)
         {
             var cannotWipes = allEntities //#B
                 .SelectMany(x => x.GetForeignKeys()         //#B
-                .Where(y => y.PrincipalEntityType == x      //#B
-                   && y.DeleteBehavior == DeleteBehavior.Restrict))
-                   .ToList(); //#B
+                    .Where(y => y.PrincipalEntityType == x      //#B
+                                && y.DeleteBehavior == DeleteBehavior.Restrict))
+                .ToList(); //#B
             if (cannotWipes.Any())
                 throw new InvalidOperationException(
                     "You cannot delete all the rows in one go in entity(s): " +
                     string.Join(", ", cannotWipes.Select(x => x.DeclaringEntityType.Name)));
         }
-
-
     }
 }
