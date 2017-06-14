@@ -39,7 +39,11 @@ master    Ch1    Ch2 --> Ch3 --> Ch4 --> Ch5 -->
 ```
 ### Part 2 - Entity Framework in depth
 ```
-(ch5) --> Ch6 --> Ch7
+(ch5) --> Ch6 --> Ch7 --> Ch8 --> Ch9
+```
+### Part 3 - Using Entity Framework in real-world applications
+```
+(ch9) --> Ch10 --> Ch11 --> Ch12
 ```
 
 ## NOTE: Now updated to Visual Studio 2017 format
