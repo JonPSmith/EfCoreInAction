@@ -66,10 +66,10 @@ namespace test.EfHelpers
         }
         /************************************************************************
         #A This method looks at the relationships and returns the tables names in the right order to wipe all their rows without incurring a foreign key delete constraint
-        #B You can exclude entity classes that you need to handle yourself
+        #B You can exclude entity classes that you need to handle yourself, for instance - any references that only contain circular references
         #C This gets the IEntityType for all the entities, other than those that were excluded. This contains the information on how each table is built, with its relationships
         #D This contains a check for the hierarchical (entity that references itself) case where an entity refers to itself - if the delete behavior of this foreign key is set to restrict then you cannot simply delete all the rows in one go
-        #E I extract all the principal entities...
+        #E I extract all the principal entities from the entities we are considering ...
         #F ... And put them in a dictionary, with the value being all the links to other principal entities. Note I remove any self reference links as these are automatically handled
         #G I start the list of entities to delete by putting all the dependant entities first, as I must delete the rows in these first, and the order doesn't matter
         #H I keep a count of the times I have been round the loop trying to resolve the the relationships
