@@ -15,10 +15,13 @@ namespace test.EfHelpers
         //NOTE: This will not handle a circular relationship: e.g. EntityA->EntityB->EntityA
         public static IEnumerable<string>
             GetTableNamesInOrderForWipe //#A
-            (this DbContext context)
+            (this DbContext context, 
+             int maxDepth = 10, params Type[] excludeTypes)
         {
             var allEntities = context.Model
-                .GetEntityTypes().ToList(); //#B
+                .GetEntityTypes()
+                .Where(x => !excludeTypes.Contains(x.ClrType))
+                .ToList(); //#B
 
             ThrowExceptionOnNotWipeableEntities(allEntities); //#C
 
@@ -35,6 +38,7 @@ namespace test.EfHelpers
                 .ToList(); //#F
 
             var reversePrincipals = new List<IEntityType>();
+            int depth = 0;
             while (principalsDict.Keys.Any()) //#G
             {
                 foreach (var principalNoLinks in
@@ -52,6 +56,8 @@ namespace test.EfHelpers
                             .Remove(principalNoLinks.Key);//#K
                     }
                 }
+                if (depth++ > maxDepth)
+                    ThrowExceptionMaxDepthReached(principalsDict.Keys.ToList(), depth);
             }
             reversePrincipals.Reverse();//#M
             result.AddRange(reversePrincipals);//#N
@@ -74,10 +80,10 @@ namespace test.EfHelpers
         #O Finally I return a collection of table names, with a optional schema, in the right order
         * ***********************************************************************/
 
-        public static void WipeAllDataFromDatabase(this DbContext context)
+        public static void WipeAllDataFromDatabase(this DbContext context, int maxDepth = 10, params Type[] excludeTypes)
         {
             foreach (var tableName in
-                context.GetTableNamesInOrderForWipe())
+                context.GetTableNamesInOrderForWipe(maxDepth, excludeTypes))
             {
                 context.Database
                     .ExecuteSqlCommand(
@@ -87,7 +93,6 @@ namespace test.EfHelpers
 
         //------------------------------------------------
         //private methods
-
 
         private static string FormTableNameWithSchema(IEntityType entityType)
         {
@@ -110,5 +115,14 @@ namespace test.EfHelpers
                     "You cannot delete all the rows in one go in entity(s): " +
                     string.Join(", ", cannotWipes.Select(x => x.DeclaringEntityType.Name)));
         }
+
+        private static void ThrowExceptionMaxDepthReached(List<IEntityType> principalsDictKeys, int maxDepth)
+        {
+            throw new InvalidOperationException(
+                $"It looked to a depth of {maxDepth} and didn't finish. Possible circular reference?\nentity(s) left: " +
+                string.Join(", ", principalsDictKeys.Select(x => x.ClrType.Name)));
+        }
+
+
     }
 }

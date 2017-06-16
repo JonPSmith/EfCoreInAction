@@ -141,6 +141,22 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void GetTableNamesInOrderToDeleteWipeDbContextCircularRefBad()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<WipeDbContext>();
+            using (var context = new WipeDbContext(options))
+            {
+                //ATTEMPT
+                var ex = Assert.Throws<InvalidOperationException>(() => context.GetTableNamesInOrderForWipe());
+
+                //VERIFY
+                ex.Message.ShouldEqual("It looked to a depth of 12 and didn't finish. Possible circular reference?\n"+
+                "entity(s) left: CircularRef2, CircularRef1");
+            }
+        }
+
+        [Fact]
         public void GetTableNamesInOrderToDeleteWipeDbContextOk()
         {
             //SETUP
@@ -148,7 +164,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new WipeDbContext(options))
             {
                 //ATTEMPT
-                var tableNames = string.Join(",", context.GetTableNamesInOrderForWipe());
+                var tableNames = string.Join(",", context.GetTableNamesInOrderForWipe(10, typeof(CircularRef1), typeof(CircularRef2)));
 
                 //VERIFY
                 tableNames.ShouldEqual("[Many],[T2P4],[T2P3],[T2P2],[T2P1],[Top],[T1P1],[T1P2],[T1P3],[T1P4],[SelfRef]");
@@ -178,7 +194,7 @@ namespace test.UnitTests.DataLayer
                 context.SaveChanges();
 
                 //ATTEMPT
-                context.WipeAllDataFromDatabase();
+                context.WipeAllDataFromDatabase(10, typeof(CircularRef1), typeof(CircularRef2));
             }
             using (var context = new WipeDbContext(options))
             {
