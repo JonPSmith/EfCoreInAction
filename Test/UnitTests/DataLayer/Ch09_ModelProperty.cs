@@ -151,7 +151,7 @@ namespace test.UnitTests.DataLayer
                 var ex = Assert.Throws<InvalidOperationException>(() => context.GetTableNamesInOrderForWipe());
 
                 //VERIFY
-                ex.Message.ShouldEqual("It looked to a depth of 12 and didn't finish. Possible circular reference?\n"+
+                ex.Message.ShouldEqual("It looked to a depth of 10 and didn't finish. Possible circular reference?\n"+
                 "entity(s) left: CircularRef2, CircularRef1");
             }
         }
