@@ -238,7 +238,7 @@ namespace test.UnitTests.DataLayer
                 //ATTEMPT
                 var entity = context.MyEntities.Single();
                 var many = new ManyEntity();
-                entity.Collection.Add(many);
+                entity.Many.Add(many);
                 context.Update(entity);
 
                 //VERIFY

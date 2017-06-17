@@ -15,6 +15,6 @@ namespace Test.Chapter09Listings.EfClasses
         public OneEntity OneToOne { get; set; }
 
         //Note: I don't normally use the form of collection, but I used it so that this entity is set up the same as the NotifyOne entity
-        public ICollection<ManyEntity> Collection { get; } = new HashSet<ManyEntity>();
+        public ICollection<ManyEntity> Many { get; } = new HashSet<ManyEntity>();
     }
 }

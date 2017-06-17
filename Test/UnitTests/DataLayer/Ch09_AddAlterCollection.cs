@@ -33,10 +33,10 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 var track = new MyEntity();
-                track.Collection.Add(new ManyEntity());
+                track.Many.Add(new ManyEntity());
                 context.Add(track);
                 var notify = new NotifyEntity();
-                notify.Collection.Add(new NotifyMany());
+                notify.Many.Add(new NotifyMany());
                 context.Add(notify);
                 context.SaveChanges();
 
@@ -63,11 +63,11 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 var entity = context.MyEntities.Single();
-                entity.Collection.Add(new ManyEntity());
+                entity.Many.Add(new ManyEntity());
                 context.SaveChanges();
 
                 //VERIFY
-                context.MyEntities.Single().Collection.Count.ShouldEqual(1);
+                context.MyEntities.Single().Many.Count.ShouldEqual(1);
             }
         }
 
@@ -88,11 +88,11 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 var entity = context.Notify.Single();
-                entity.Collection.Add(new NotifyMany());
+                entity.Many.Add(new NotifyMany());
                 context.SaveChanges();
 
                 //VERIFY
-                context.Notify.Single().Collection.Count.ShouldEqual(1);
+                context.Notify.Single().Many.Count.ShouldEqual(1);
             }
         }
 
@@ -108,13 +108,13 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 var entity = new MyEntity();
-                entity.Collection.Add(new ManyEntity());
+                entity.Many.Add(new ManyEntity());
                 context.Add(entity);
 
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(2);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Added);
-                context.GetEntityState(entity.Collection.First()).ShouldEqual(EntityState.Added);
+                context.GetEntityState(entity.Many.First()).ShouldEqual(EntityState.Added);
             }
         }
 
@@ -130,13 +130,13 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 var entity = new NotifyEntity();
-                entity.Collection.Add(new NotifyMany());
+                entity.Many.Add(new NotifyMany());
                 context.Add(entity);
 
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(2);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Added);
-                context.GetEntityState(entity.Collection.First()).ShouldEqual(EntityState.Added);
+                context.GetEntityState(entity.Many.First()).ShouldEqual(EntityState.Added);
             }
         }
 
@@ -156,14 +156,14 @@ namespace test.UnitTests.DataLayer
             //ATTEMPT
             using (var context = new Chapter09DbContext(options))
             {
-                var entity = context.MyEntities.Include(x => x.Collection).Single();
-                entity.Collection.Add(new ManyEntity());
+                var entity = context.MyEntities.Include(x => x.Many).Single();
+                entity.Many.Add(new ManyEntity());
 
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(2);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
-                context.GetNavigationalIsModified(entity, x => x.Collection).ShouldBeFalse();
-                context.GetEntityState(entity.Collection.First()).ShouldEqual(EntityState.Added);
+                context.GetNavigationalIsModified(entity, x => x.Many).ShouldBeFalse();
+                context.GetEntityState(entity.Many.First()).ShouldEqual(EntityState.Added);
            }
         }
 
@@ -184,13 +184,13 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 var entity = context.Notify.Single();
-                entity.Collection.Add(new NotifyMany());
+                entity.Many.Add(new NotifyMany());
 
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(2);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
-                context.GetNavigationalIsModified(entity, x => x.Collection).ShouldBeFalse();
-                context.GetEntityState(entity.Collection.First()).ShouldEqual(EntityState.Added);
+                context.GetNavigationalIsModified(entity, x => x.Many).ShouldBeFalse();
+                context.GetEntityState(entity.Many.First()).ShouldEqual(EntityState.Added);
             }
         }
     }

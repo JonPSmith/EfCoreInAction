@@ -2,6 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using test.EfHelpers;
@@ -93,6 +94,141 @@ namespace test.UnitTests.DataLayer
                 context.SaveChanges();
 
                 context.MyEntities.Count().ShouldEqual(2);
+            }
+        }
+
+
+        [Fact]
+        public void TestAddDiagramCodeOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                var entity = new OneEntity();
+                context.Add(entity);
+                context.SaveChanges();
+            }
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var myEntity = new MyEntity();
+                var oneEntity = context.OneEntities.First();
+                var manyEntity = new ManyEntity();
+                myEntity.OneToOne = oneEntity;
+                myEntity.Many.Add(manyEntity);
+                context.Add(myEntity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(3);
+                context.GetEntityState(myEntity).ShouldEqual(EntityState.Added);
+                context.GetEntityState(oneEntity).ShouldEqual(EntityState.Modified);
+                context.GetEntityState(myEntity.Many.First()).ShouldEqual(EntityState.Added);
+            }
+        }
+
+        [Fact]
+        public void TestUpdateDiagramCodeOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                var myEntity = new MyEntity();
+                context.Add(myEntity);
+                var entity = new OneEntity();
+                context.Add(entity);
+                context.SaveChanges();
+            }
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var myEntity = context.MyEntities.First();
+                var oneEntity = context.OneEntities.First();
+                var manyEntity = new ManyEntity();
+                myEntity.OneToOne = oneEntity;
+                myEntity.Many.Add(manyEntity);
+                context.Update(myEntity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(3);
+                context.GetEntityState(myEntity).ShouldEqual(EntityState.Modified);
+                context.GetEntityState(myEntity.OneToOne).ShouldEqual(EntityState.Modified);
+                context.GetEntityState(myEntity.Many.First()).ShouldEqual(EntityState.Added);
+            }
+        }
+
+        [Fact]
+        public void TestUpdateDiagramCodeNoteAtBottomOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                var myEntity = new MyEntity();
+                var oneEntity = new OneEntity();
+                var manyEntity = new ManyEntity();
+                myEntity.OneToOne = oneEntity;
+                myEntity.Many.Add(manyEntity);
+                context.Add(myEntity);
+                context.SaveChanges();
+            }
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var myEntity = context.MyEntities.
+                    Include(r => r.OneToOne)
+                    .Include(r => r.Many).First();
+                context.Update(myEntity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(3);
+                context.GetEntityState(myEntity).ShouldEqual(EntityState.Modified);
+                context.GetEntityState(myEntity.OneToOne).ShouldEqual(EntityState.Unchanged);
+                context.GetEntityState(myEntity.Many.First()).ShouldEqual(EntityState.Unchanged);
+            }
+        }
+
+        [Fact]
+        public void TestAttachDiagramCodeOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                var myEntity = new MyEntity();
+                context.Add(myEntity);
+                var entity = new OneEntity();
+                context.Add(entity);
+                context.SaveChanges();
+            }
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var myEntity = context.MyEntities.AsNoTracking().First();
+                var oneEntity = context.OneEntities.First();
+                var manyEntity = new ManyEntity();
+                myEntity.OneToOne = oneEntity;
+                myEntity.Many.Add(manyEntity);
+                context.Attach(myEntity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(3);
+                context.GetEntityState(myEntity).ShouldEqual(EntityState.Unchanged);
+                context.GetEntityState(myEntity.OneToOne).ShouldEqual(EntityState.Unchanged);
+                context.GetEntityState(myEntity.Many.First()).ShouldEqual(EntityState.Added);
             }
         }
 
