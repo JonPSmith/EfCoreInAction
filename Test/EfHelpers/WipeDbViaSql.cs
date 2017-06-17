@@ -78,7 +78,7 @@ namespace test.EfHelpers
         #K I mark the entity for deletion - this list is in reverse order to what I must do
         #M I remove it from the dictionary so that it isn't looked at again
         #N ... and remove the reference to that entity from any existing dependants still in the dictionary
-        #O If I have overstepped the depth limit I throw an exception, with information on what entities had still to be processed
+        #O If I have overstepped the depth limit I throw an exception, with information on what entities had still to be processed. This can happen for certain circular references.
         #P When I get to here I have the list of entities in the reverse order to how I should wipe them, so I reverse the list
         #Q I now produce combined list with the dependants at the front and the principals at the back in the right order
         #R Finally I return a collection of table names, with a optional schema, in the right order
