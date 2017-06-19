@@ -204,20 +204,24 @@ namespace test.UnitTests.DataLayer
             //SETUP
             using (var context = new EfCoreContext(_options))
             {
-                var entity = context.Books.
+                var entity = context.Books. //#A
                     Single(x => x.Title == "Quantum Networking");
                 var uniqueString = Guid.NewGuid().ToString();
 
-                var rowsAffected = context.Database
-                    .ExecuteSqlCommand( 
+                context.Database.ExecuteSqlCommand( //#B
                         "UPDATE Books " + 
                         "SET Description = {0} " +
                         "WHERE BookId = {1}",
                         uniqueString, entity.BookId); 
 
                 //ATTEMPT
-                context.Entry(entity).Reload();
+                context.Entry(entity).Reload(); //#C
 
+                /*************************************************
+                #A I load a Book entity in the normal way
+                #B I now use ExecuteSqlCommand to change the Descrinptionb column of that same Book entity. After this command has finished the Book entity EF Core load is out of date
+                #C By callin the Reload method EF Core will reread that entity to make sure the local copy is up to date.
+                 * **************************************************/
                 //VERIFY
                 entity.Description.ShouldEqual(uniqueString);
             }

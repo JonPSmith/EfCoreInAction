@@ -131,6 +131,75 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void TestRemoveDiagramCodeOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                var myEntity = new MyEntity();
+                context.Add(myEntity);
+                var entity = new OneEntity();
+                context.Add(entity);
+                context.SaveChanges();
+            }
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var myEntity = context.MyEntities.First();
+                var oneEntity = context.OneEntities.First();
+                var manyEntity = new ManyEntity();
+                myEntity.OneToOne = oneEntity;
+                myEntity.Many.Add(manyEntity);
+                context.Remove(myEntity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(3);
+                context.GetEntityState(myEntity).ShouldEqual(EntityState.Deleted);
+                context.GetEntityState(myEntity.OneToOne).ShouldEqual(EntityState.Modified);
+                context.GetAllPropsNavsIsModified(myEntity.OneToOne).ShouldEqual("MyEntityId");
+                context.GetEntityState(myEntity.Many.First()).ShouldEqual(EntityState.Added);
+            }
+        }
+
+        [Fact]
+        public void TestRemoveDiagramCodeSaveChangesOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                var myEntity = new MyEntity();
+                context.Add(myEntity);
+                var entity = new OneEntity();
+                context.Add(entity);
+                context.SaveChanges();
+            }
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var myEntity = context.MyEntities.First();
+                var oneEntity = context.OneEntities.First();
+                var manyEntity = new ManyEntity();
+                myEntity.OneToOne = oneEntity;
+                myEntity.Many.Add(manyEntity);
+                context.Remove(myEntity);
+                context.SaveChanges();
+
+                //VERIFY
+                context.MyEntities.Count().ShouldEqual(0);
+                context.OneEntities.Count().ShouldEqual(1);
+                context.ManyEntities.Count().ShouldEqual(0);
+            }
+        }
+
+        [Fact]
         public void TestUpdateDiagramCodeOk()
         {
             //SETUP
