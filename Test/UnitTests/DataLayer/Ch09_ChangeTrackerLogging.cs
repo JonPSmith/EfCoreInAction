@@ -23,101 +23,92 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void TestSetWhenWhereNotCalledOk()
+        public void TestSetWhenNotCalledOk()
         {
             //SETUP
-            var entity = new LoggedEntity();
+            var entity = new AutoWhenEntity();
  
             //ATTEMPT
 
             //VERIFY
-            entity.CreatedBy.ShouldBeNull();
             entity.CreatedOn.ShouldEqual(new DateTime());
-            entity.UpdatedBy.ShouldBeNull();
             entity.UpdatedOn.ShouldEqual(new DateTime());
         }
 
         [Fact]
-        public void TestSetWhenWhereAddOk()
+        public void TestSetWhenAddOk()
         {
             //SETUP
-            var entity = new LoggedEntity();
+            var entity = new AutoWhenEntity();
 
             //ATTEMPT
-            entity.SetWhenWhere(() => "Test User", true);
+            entity.SetWhen(true);
 
             //VERIFY
-            entity.CreatedBy.ShouldEqual("Test User");
             entity.CreatedOn.Subtract(DateTime.UtcNow).TotalSeconds.ShouldBeInRange(-0.5,0);
-            entity.UpdatedBy.ShouldEqual("Test User");
             entity.UpdatedOn.Subtract(DateTime.UtcNow).TotalSeconds.ShouldBeInRange(-0.5, 0);
         }
 
         [Fact]
-        public void TestSetWhenWhereUpdateOk()
+        public void TestSetWhenUpdateOk()
         {
             //SETUP
-            var entity = new LoggedEntity();
+            var entity = new AutoWhenEntity();
 
             //ATTEMPT
-            entity.SetWhenWhere(() => "Test User", false);
+            entity.SetWhen(false);
 
             //VERIFY
-            entity.CreatedBy.ShouldBeNull();
             entity.CreatedOn.ShouldEqual(new DateTime());
-            entity.UpdatedBy.ShouldEqual("Test User");
             entity.UpdatedOn.Subtract(DateTime.UtcNow).TotalSeconds.ShouldBeInRange(-0.5, 0);
         }
 
         [Fact]
-        public void TestLoggedEntityAddOk()
+        public void TestAutoWhenEntityAddOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
 
-            using (var context = new Chapter09DbContext(options, () => "Test User"))
+            using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
 
                 //ATTEMPT
-                var entity = new LoggedEntity();
+                var entity = new AutoWhenEntity();
                 context.Add(entity);
                 context.SaveChanges();
 
                 //VERIFY
-                entity.CreatedBy.ShouldEqual("Test User");
                 entity.CreatedOn.Subtract(DateTime.UtcNow).TotalSeconds.ShouldBeInRange(-0.5, 0);
-                entity.UpdatedBy.ShouldEqual("Test User");
                 entity.UpdatedOn.Subtract(DateTime.UtcNow).TotalSeconds.ShouldBeInRange(-0.5, 0);
             }
         }
 
         [Fact]
-        public void TestLoggedEntityUpdateOk()
+        public void TestAutoWhenEntityUpdateOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
 
-            using (var context = new Chapter09DbContext(options, () => "Test User1"))
+            using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
 
-                var entity = new LoggedEntity();
+                var entity = new AutoWhenEntity();
                 context.Add(entity);
                 context.SaveChanges();
                 Thread.Sleep(1000);
             }
-            using (var context = new Chapter09DbContext(options, () => "Test User2"))
+            using (var context = new Chapter09DbContext(options))
             {
-                    //ATTEMPT
+                //ATTEMPT
                 var entity = context.LoggedEntities.First();
                 entity.MyString = "New Value";
                 context.SaveChanges();
 
                 //VERIFY
-                entity.CreatedBy.ShouldEqual("Test User1");
+
                 entity.CreatedOn.Subtract(DateTime.UtcNow).TotalSeconds.ShouldBeInRange(-1.5, -0.5);
-                entity.UpdatedBy.ShouldEqual("Test User2");
                 entity.UpdatedOn.Subtract(DateTime.UtcNow).TotalSeconds.ShouldBeInRange(-0.5, 0);
             }
         }

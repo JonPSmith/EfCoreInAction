@@ -71,6 +71,17 @@ namespace Test.Chapter09Listings.EfCode
                 .WithOne(p => p.SelfRef)
                 .HasForeignKey(k => k.SelfRefId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CircularRef1>()
+                .HasOne(p => p.Ref)
+                .WithOne()
+                .HasForeignKey<CircularRef2>(p => p.FKey)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<CircularRef2>()
+                .HasOne(p => p.Ref)
+                .WithOne()
+                .HasForeignKey<CircularRef1>(p => p.FKey)
+                .OnDelete(DeleteBehavior.Restrict);
         }
         
     }

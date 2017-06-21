@@ -9,23 +9,18 @@ namespace Test.Chapter09Listings.EfCode
 {
     public class Chapter09DbContext : DbContext
     {
-        private readonly Func<string> _getUserName; //#A
-
         public DbSet<MyEntity> MyEntities { get; set; }
         public DbSet<OneEntity> OneEntities { get; set; }
+        public DbSet<ManyEntity> ManyEntities { get; set; }
         public DbSet<NotifyEntity> Notify { get; set; }
         public DbSet<Notify2Entity> Notify2 { get; set; }
         public DbSet<GuidKeyEntity> GuidKeyEntities { get; set; }
-        public DbSet<LoggedEntity> LoggedEntities { get; set; }
-        public DbSet<T2P2> WipeCheck { get; set; }
+        public DbSet<AutoWhenEntity> LoggedEntities { get; set; }
 
         public Chapter09DbContext(
-            DbContextOptions<Chapter09DbContext> options, 
-            Func<string> getUserName = null) //#B
+            DbContextOptions<Chapter09DbContext> options)
             : base(options)
-        {
-            _getUserName = getUserName; //#C
-        }
+        { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,38 +29,33 @@ namespace Test.Chapter09Listings.EfCode
             modelBuilder.Entity<Notify2Entity>().Configure();
         }
 
-        public override int SaveChanges() //#D
+        public override int SaveChanges() //#A
         {
-            HandleWhenWho(); //#E
+            HandleWhen(); //#B
             return base.SaveChanges();
         }
 
-        private void HandleWhenWho() //#F
+        private void HandleWhen() //#C
         {
-            foreach (var entity in ChangeTracker.Entries() //#G
+            foreach (var entity in ChangeTracker.Entries() //#D
                 .Where(e =>
-                        e.State == EntityState.Added ||  //#H
-                        e.State == EntityState.Modified))//#H
+                        e.State == EntityState.Added ||  //#E
+                        e.State == EntityState.Modified))//#E
             {
-                var tracked = entity.Entity as IWhenWho; //#I
-                tracked?.SetWhenWhere( //#J
-                    _getUserName, //#K
-                    entity.State == EntityState.Added); //#L
+                var tracked = entity.Entity as IWhen; //#F
+                tracked?.SetWhen( //#G
+                    entity.State == EntityState.Added); //#H
             }
         }
     }
     /*******************************************************
-    #A This hold a method that can get the current username
-    #B I provide a method to get the current username via the constructor. How you do this will depend on your application. In ASP.NET Core you would use dependency injection with something derived from IHttpContextAccessor.HttpContext.User.Identity.Name
-    #C I store this method so it can be called later by my method
-    #D I override SaveChanges so that I can add my method before calling the base.SaveChanges method. Note: In this example I only override one of the four versions of SaveChanges
-    #E I call my method, HandleWhenWho, before I call the base.SaveChanges to do the save
-    #F This is my method for finding and handling entity classes that inherited the IWhenWho interface
-    #G I look at each entity that the ChangeTracker says has changed in some way
-    #H I am only interested in entities that have been added or Modified
-    #I I cast this entity to the IWhenWho interface. The result will be null if it does not inherit from the IWhenWho interface
-    #J I now call the method that the IWhenWho interface provides for setting the four properties
-    #K I pass in the method for getting the the current username, which was provided via the constructor
-    #L This tells the method whether it was an Add or Update
+    #A I override SaveChanges so that I can add my method before calling the base.SaveChanges method. Note: In this example I only override one of the four versions of SaveChanges
+    #B I call my method, HandleWhen, before I call the base.SaveChanges to do the save
+    #C This is my method for finding and handling entity classes that inherited the IWhen interface
+    #D I look at each entity that the ChangeTracker says has changed in some way
+    #E I am only interested in entities that have been added or Modified
+    #F I cast this entity to the IWhen interface. The result will be null if it does not inherit from the IWhen interface
+    #G I now call the method that the IWhen interface provides for setting the IWhen properties
+    #H This tells the method whether it was an Add or Update
         * * *****************************************************/
 }

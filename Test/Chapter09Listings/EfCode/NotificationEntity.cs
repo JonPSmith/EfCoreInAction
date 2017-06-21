@@ -23,7 +23,7 @@ namespace Test.Chapter09Listings.EfCode
     #A This automatically gets the propertyName using the System.Runtime.CompilerServices
     #B Only if the field and the value are different do we set the field and raise the event
     #C I set the field to the new value
-    #D Then I invoke the PropertyChanged event
+    #D Then I invoke the PropertyChanged event, but using ?. to stops the method from failing when the new entity is created and the PropertyChangedEventHandler has not been filled in by EF Core yet
     #E ... with the name of the property
      * ******************************************************/
 }

@@ -77,6 +77,32 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void TestChangeTrackerUpdateOneEntityOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                var entity = new MyEntity { OneToOne = new OneEntity() };
+                context.Add(entity);
+                context.SaveChanges();
+            }
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var entity = context.OneEntities.First();
+                context.Update(entity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(1);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Modified);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("MyEntityId,MyInt");
+            }
+        }
+
+        [Fact]
         public void TestChangeTrackerUpdateOptionalWithNewRelationshipOk()
         {
             //SETUP
@@ -238,7 +264,7 @@ namespace test.UnitTests.DataLayer
                 //ATTEMPT
                 var entity = context.MyEntities.Single();
                 var many = new ManyEntity();
-                entity.Collection.Add(many);
+                entity.Many.Add(many);
                 context.Update(entity);
 
                 //VERIFY

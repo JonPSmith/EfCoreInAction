@@ -32,7 +32,7 @@ namespace Test.Chapter09Listings.EfClasses
         }
 
         public ICollection<NotifyMany> 
-            Collection { get; } //#C
+            Many { get; } //#C
             = new ObservableHashSet<NotifyMany>(); //#D
     }
     /**************************************************************
