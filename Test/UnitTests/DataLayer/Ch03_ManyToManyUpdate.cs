@@ -119,12 +119,13 @@ namespace test.UnitTests.DataLayer
         public void TestAddAuthorDisconnectedOk()
         {
             //SETUP
-            var options =
-                this.NewMethodUniqueDatabaseSeeded4Books();
-
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             ChangeAuthorDto dto;
             using (var context = new EfCoreContext(options))
             {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
                 var book = context.Books
                     .Include(p => p.AuthorsLink)
                     .Single(p => p.Title == "Quantum Networking");
@@ -145,7 +146,7 @@ namespace test.UnitTests.DataLayer
                 var book = context.Books
                     .Include(p => p.AuthorsLink)
                     .Single(p => p.BookId == dto.BookId);
-                var newAuthor = context.Authors.Find(dto.NewAuthorId);
+                var newAuthor = context.Find<Author>(dto.NewAuthorId);
 
                 book.AuthorsLink.Add(new BookAuthor
                 {
@@ -171,12 +172,13 @@ namespace test.UnitTests.DataLayer
         public void TestChangeAllAuthorsViaForeignKeyOk()
         {
             //SETUP
-            var options =
-                this.NewMethodUniqueDatabaseSeeded4Books();
-
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             ChangeAuthorDto dto;
             using (var context = new EfCoreContext(options))
             {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
                 var book = context.Books
                     .Include(p => p.AuthorsLink)
                     .Single(p => p.Title == "Quantum Networking");
@@ -194,8 +196,8 @@ namespace test.UnitTests.DataLayer
             using (var context = new EfCoreContext(options))
             {
                 //ATTEMPT
-                var orgBookAuthor = context.Set<BookAuthor>()    //#A
-                    .Find(dto.BookId, dto.AuthorId);             //#A
+                var orgBookAuthor = context    //#A
+                    .Find<BookAuthor>(dto.BookId, dto.AuthorId); //#A
                 context.Set<BookAuthor>().Remove(orgBookAuthor); //#B
                 context.Set<BookAuthor>().Add(new BookAuthor     //#C
                 {                                                //#C
@@ -225,12 +227,13 @@ namespace test.UnitTests.DataLayer
         public void TestAddAuthorViaForeignKeyOk()
         {
             //SETUP
-            var options =
-                this.NewMethodUniqueDatabaseSeeded4Books();
-
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             ChangeAuthorDto dto;
             using (var context = new EfCoreContext(options))
             {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+
                 var book = context.Books
                     .Include(p => p.AuthorsLink)
                     .Single(p => p.Title == "Quantum Networking");

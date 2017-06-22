@@ -217,10 +217,10 @@ namespace test.UnitTests.DataLayer
             using (var context = new EfCoreContext(options))
             {
                 //ATTEMPT
-                var reviewToChange = context.Set<Review>()    //#A
-                    .Find(dto.ReviewId);                      //#A
-                reviewToChange.BookId = dto.NewBookId;        //#B
-                context.SaveChanges();                        //#C
+                var reviewToChange = context     //#A
+                    .Find<Review>(dto.ReviewId); //#A
+                reviewToChange.BookId = dto.NewBookId; //#B
+                context.SaveChanges();                 //#C
                 /*****************************************************
                 #A I find the review that I want to move using the primary key returned from the browser
                 #C I then change the foreign key in the review to point to the book it should be linked to
