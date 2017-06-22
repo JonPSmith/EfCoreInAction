@@ -32,9 +32,7 @@ namespace test.EfHelpers
 
         public static void SetupLogging(DbContext context, List<string> logs)
         {
-            var serviceProvider = context.GetInfrastructure();
-            serviceProvider.GetService(typeof(ILoggerFactory));
-            var loggerFactory = (ILoggerFactory)serviceProvider.GetService(typeof(ILoggerFactory));
+            var loggerFactory = context.GetService<ILoggerFactory>();
             loggerFactory.AddProvider(new MyLoggerProvider(logs));
         }
 
