@@ -13,7 +13,7 @@ using Xunit.Extensions.AssertExtensions;
 
 namespace test.UnitTests.DataLayer
 {
-    public class Ch04_SaveChangesWithChecking
+    public class Ch04_SaveChangesWithValidation
     {
 
         [Fact]
@@ -110,7 +110,7 @@ namespace test.UnitTests.DataLayer
                     }
                 };
                 context.Orders.Add(order);
-                var errors = context.SaveChangesWithChecking();
+                var errors = context.SaveChangesWithValidation();
 
                 //VERIFY
                 errors.Any().ShouldBeFalse();
@@ -144,7 +144,7 @@ namespace test.UnitTests.DataLayer
                     }
                 };
                 context.Orders.Add(order);
-                var errors = context.SaveChangesWithChecking();
+                var errors = context.SaveChangesWithValidation();
 
                 //VERIFY
                 errors.Count.ShouldEqual(1);
