@@ -7,7 +7,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DataLayer.EfCode
 {
@@ -16,7 +15,7 @@ namespace DataLayer.EfCode
         //see https://blogs.msdn.microsoft.com/dotnet/2016/09/29/implementing-seeding-custom-conventions-and-interceptors-in-ef-core-1-0/
         //for why I call DetectChanges before ChangeTracker, and why I then turn ChangeTracker.AutoDetectChangesEnabled off/on around SaveChanges
 
-        public static async Task<ImmutableList<ValidationResult>> SaveChangesWithCheckingAsync(this DbContext context)
+        public static async Task<ImmutableList<ValidationResult>> SaveChangesWithValidationAsync(this DbContext context)
         {
             var result = context.ExecuteValidation();
             if (result.Any()) return result;
@@ -37,7 +36,7 @@ namespace DataLayer.EfCode
         //for why I call DetectChanges before ChangeTracker, and why I then turn ChangeTracker.AutoDetectChangesEnabled off/on around SaveChanges
 
         public static ImmutableList<ValidationResult> //#A
-            SaveChangesWithChecking(this DbContext context)//#B
+            SaveChangesWithValidation(this DbContext context)//#B
         {
             var result = context.ExecuteValidation(); //#C
             if (result.Any()) return result;   //#D

@@ -49,6 +49,8 @@ namespace test.UnitTests.DataLayer
             //ATTEMPT
             using (var context = new EfCoreContext(options))
             {
+                context.Database.EnsureCreated();
+
                 var books = EfTestData.CreateFourBooks();
                 context.Books.AddRange(books);
                 context.SaveChanges();
