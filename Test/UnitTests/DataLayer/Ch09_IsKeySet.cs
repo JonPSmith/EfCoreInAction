@@ -26,7 +26,7 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 var storeKey = new OneEntity();
-                var clientKey = new GuidKeyEntity();
+                var clientKey = new MyEntityGuid();
 
                 //VERIFY
                 context.GetEntityIsKeySet(storeKey).ShouldBeFalse();
@@ -47,7 +47,7 @@ namespace test.UnitTests.DataLayer
                 //ATTEMPT
                 var storeKey = new OneEntity();
                 context.Attach(storeKey);
-                var clientKey = new GuidKeyEntity();
+                var clientKey = new MyEntityGuid();
                 context.Attach(clientKey);
 
                 //VERIFY
@@ -69,7 +69,7 @@ namespace test.UnitTests.DataLayer
                 //ATTEMPT
                 var storeKey = new OneEntity();
                 context.Add(storeKey);
-                var clientKey = new GuidKeyEntity();
+                var clientKey = new MyEntityGuid();
                 context.Add(clientKey);
 
                 //VERIFY

@@ -5,8 +5,12 @@ using System;
 
 namespace Test.Chapter09Listings.EfClasses
 {
-    public class GuidKeyEntity
+    public class MyEntityGuid
     {
         public Guid Id { get; set; }
+
+        public string MyString { get; set; }
+
+        public OneEntityGuid OneToOne { get; set; }
     }
 }
