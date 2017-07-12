@@ -11,11 +11,20 @@ namespace Test.Chapter11Listings.EfCode
         private const string ConnectionString = 
             @"Server=(localdb)\mssqllocaldb;Database=Chapter11MigrateDb;Trusted_Connection=True";
 
-        public DbSet<CustomerAndAddresses> CustomerAndAddresses { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Addresses> Addresses { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(ConnectionString);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Customer>()
+                .HasOne(p => p.AddressData)
+                .WithOne()
+                .HasForeignKey<Addresses>(p => p.CustFK);
         }
     }
 

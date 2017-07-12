@@ -8,9 +8,10 @@ using Test.Chapter11Listings.EfCode;
 namespace Test.Chapter11Listings.Migrations
 {
     [DbContext(typeof(Chapter11MigrateDb))]
-    partial class Chapter11MigrateDbModelSnapshot : ModelSnapshot
+    [Migration("20170712144551_SplitTable")]
+    partial class SplitTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
