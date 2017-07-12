@@ -9,6 +9,13 @@ namespace Test.Chapter11Listings.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+
+            //Would need to handle any foreign key contraints that pointed to the CustomerAndAddresses before and after that table is renamed
+
+            migrationBuilder.RenameTable(
+                name: "CustomerAndAddresses",
+                newName: "Customers");
+
             migrationBuilder.CreateTable(
                 name: "Addresses",
                 columns: table => new
@@ -37,18 +44,11 @@ namespace Test.Chapter11Listings.Migrations
 
             migrationBuilder.Sql(@"INSERT INTO [dbo].[Addresses] ([Address], [CustFK])
                 SELECT Address, Id
-                FROM [dbo].[CustomerAndAddresses]");
+                FROM [dbo].[Customers]");
 
             migrationBuilder.DropColumn(
                 name: "Address",
-                table: "CustomerAndAddresses");
-
-            //Would need to handle any foreign key contraints that pointed to the CustomerAndAddresses before and after that table is renamed
-
-            migrationBuilder.RenameTable(
-                name: "CustomerAndAddresses",
-                newName: "Customers");
-
+                table: "Customers");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
