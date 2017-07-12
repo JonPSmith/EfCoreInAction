@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Test.Chapter11Listings
 {
-    class Program
+    class ProgramXXX
     {
-        static void Main(string[] args)
+        static void MainXXX(string[] args)
         {
-            using (var db = new EfCoreContext(null)) //#A
+            using (var context = new EfCoreContext(null)) //#A
             {
-                db.Database.Migrate(); //#B
+                context.Database.Migrate(); //#B
             }
             //... then start the rest of your code
         }
