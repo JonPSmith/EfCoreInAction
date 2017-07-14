@@ -28,7 +28,7 @@ namespace test.UnitTests.DataLayer
             _output = output;
         }
 
-        //[Test]
+        //[Fact]
         //public void WriteToInitialDatabase()
         //{
         //    //SETUP
