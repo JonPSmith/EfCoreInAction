@@ -37,6 +37,9 @@ namespace test.UnitTests.DataLayer
             return builder.InitialCatalog;
         }
 
+        //NOTE: I thought I could run these on the same database, but I got a timeout.
+        //I *think* the problem is an open connection, but I couldn't find it.
+
         [Fact]
         public void Test01CreateInitialDatabase()
         {
