@@ -2,10 +2,14 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using test.EfHelpers;
 using test.Helpers;
+using Test.Chapter11Listings.EfCode;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -47,15 +51,83 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void Test02FirstMigrationCreateAddressesTable()
+        public void Test02FirstMigrationCreateTablesAndStoredProc()
         {
-            Test02FirstMigrationCreateAddressesTable(this.GetUniqueDatabaseConnectionString(nameof(Test02FirstMigrationCreateAddressesTable)));
+            Test02FirstMigrationCreateTablesAndStoredProc(this.GetUniqueDatabaseConnectionString(nameof(Test02FirstMigrationCreateTablesAndStoredProc)));
+        }
+
+        [Fact]
+        public void Test02AInterimCodeReadData()
+        {
+            //SETUP
+            var connection = this.GetUniqueDatabaseConnectionString(nameof(Test02AInterimCodeReadData));
+            Test02FirstMigrationCreateTablesAndStoredProc(connection);
+
+            var optionsBuilder =
+                new DbContextOptionsBuilder<Chapter11ContinuousInterimDb>();
+            optionsBuilder.UseSqlServer(connection);
+            using (var context = new Chapter11ContinuousInterimDb(optionsBuilder.Options))
+            {
+                //ATTEMPT
+                var orgData = context.CustomerAndAddresses.ToList();
+
+                //VERIFY         
+                orgData.Select(x => x.Name).ShouldEqual(new []{ "John", "Jane", "Mid-migrate name" });
+            }
+        }
+
+        [Fact]
+        public void Test02BInterimCodeWriteData()
+        {
+            //SETUP
+            var connection = this.GetUniqueDatabaseConnectionString(nameof(Test02BInterimCodeWriteData));
+            Test02FirstMigrationCreateTablesAndStoredProc(connection);
+
+            var optionsBuilder =
+                new DbContextOptionsBuilder<Chapter11ContinuousInterimDb>();
+            optionsBuilder.UseSqlServer(connection);
+            using (var context = new Chapter11ContinuousInterimDb(optionsBuilder.Options))
+            {
+                //ATTEMPT
+                context.Database.ExecuteSqlCommand("EXEC InterimCustomerAndAddressUpdate {0}, {1}",
+                        "EF mid-migate name", "EF mid-migrate address");
+
+                //VERIFY
+                var orgData = context.CustomerAndAddresses.ToList();
+                orgData.Select(x => x.Name).ShouldEqual(new[] { "John", "Jane", "Mid-migrate name", "EF mid-migate name" });
+            }
         }
 
         [Fact]
         public void Test03SecondMigrationCopyData()
         {
             Test03SecondMigrationCopyData(this.GetUniqueDatabaseConnectionString(nameof(Test03SecondMigrationCopyData)));
+        }
+
+        [Fact]
+        public void Test03AFinalCodeReadData()
+        {
+            //SETUP
+            var connection = this.GetUniqueDatabaseConnectionString(nameof(Test03AFinalCodeReadData));
+            Test03SecondMigrationCopyData(connection);
+
+            var optionsBuilder =
+                new DbContextOptionsBuilder<Chapter11ContinuousFinalDb>();
+            optionsBuilder.UseSqlServer(connection);
+            using (var context = new Chapter11ContinuousFinalDb(optionsBuilder.Options))
+            {
+                //ATTEMPT
+                var orgNames = context.Customers.Select(x => x.Name).ToList();
+
+                //VERIFY         
+                orgNames.ShouldEqual(new List<string> { "Mid-migrate name", "John", "Jane" });
+            }
+        }
+
+        [Fact]
+        public void Test04FinalMigrationTidyUp()
+        {
+            Test04FinalMigrationTidyUp(this.GetUniqueDatabaseConnectionString(nameof(Test04FinalMigrationTidyUp)));
         }
 
         private void Test01CreateInitialDatabase(string connectionString)
@@ -74,7 +146,7 @@ namespace test.UnitTests.DataLayer
         }
 
 
-        private void Test02FirstMigrationCreateAddressesTable(string connectionString)
+        private void Test02FirstMigrationCreateTablesAndStoredProc(string connectionString)
         {
             //SETUP
             Test01CreateInitialDatabase(connectionString);
@@ -85,15 +157,27 @@ namespace test.UnitTests.DataLayer
 
             //VERIFY
             connectionString.ExecuteRowCount("INFORMATION_SCHEMA.TABLES",
-                $"WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_CATALOG='{GetDatabaseName(connectionString)}'").ShouldEqual(2);
+                $"WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_CATALOG='{GetDatabaseName(connectionString)}'").ShouldEqual(3);
         }
-
 
         private void Test03SecondMigrationCopyData(string connectionString)
         {
             //SETUP
-            Test02FirstMigrationCreateAddressesTable(connectionString);
+            Test02FirstMigrationCreateTablesAndStoredProc(connectionString);
             var filePath = GetChapter11ScriptFilePath("Script03*.sql");
+
+            //ATTEMPT
+            connectionString.ExecuteScriptFileInTransaction(filePath);
+
+            //VERIFY
+            connectionString.ExecuteRowCount("[dbo].[Addresses]").ShouldEqual(3);
+        }
+
+        private void Test04FinalMigrationTidyUp(string connectionString)
+        {
+            //SETUP
+            Test03SecondMigrationCopyData(connectionString);
+            var filePath = GetChapter11ScriptFilePath("Script04*.sql");
 
             //ATTEMPT
             connectionString.ExecuteScriptFileInTransaction(filePath);

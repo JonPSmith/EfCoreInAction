@@ -1,9 +1,12 @@
-﻿ALTER TABLE [dbo].[CustomerAndAddresses]
-ALTER COLUMN [Address] nvarchar(30) NULL
-GO
-
-CREATE VIEW [dbo].[Customers]
-AS SELECT [Id], [Name] FROM [dbo].[CustomerAndAddresses]
+﻿CREATE TABLE [dbo].[Customers](
+	[Id] int IDENTITY(1,1) NOT NULL,
+	[Name] nvarchar(30) NOT NULL,
+	[CustAndAddress] int NULL,
+ CONSTRAINT [PK_Customers] PRIMARY KEY CLUSTERED 
+(
+	Id ASC
+)
+) ON [PRIMARY]
 GO
 
 CREATE TABLE [dbo].[Addresses](
@@ -18,5 +21,24 @@ CREATE TABLE [dbo].[Addresses](
 GO
 
 ALTER TABLE [dbo].[Addresses]  WITH CHECK ADD CONSTRAINT [FK_dbo.Addresses.CustFK] FOREIGN KEY([CustFK])
-REFERENCES [dbo].CustomerAndAddresses ([Id])
+REFERENCES [dbo].Customers ([Id])
 GO
+
+-- This is the interim update of the data, which updates both the old and new tables
+-- If you need to update or delete the CustomerAndAddresses table then you need to write other stored procs
+CREATE PROCEDURE InterimCustomerAndAddressUpdate   
+    @Name nvarchar(30),   
+    @Address nvarchar(30)   
+AS   
+    SET NOCOUNT ON; 
+	DECLARE @CustAndAddrId int 
+    DECLARE @CustId int 
+	INSERT [dbo].[CustomerAndAddresses](Name, Address) VALUES(@Name, @Address)
+	SELECT @CustAndAddrId = Scope_Identity()
+	INSERT [dbo].[Customers](Name, CustAndAddress) VALUES(@Name, @CustAndAddrId)
+	SELECT @CustId = Scope_Identity()
+  	INSERT [dbo].[Addresses](Address, CustFK) VALUES(@Address, @CustId) 
+GO 
+
+-- This is a test that the stored proc updates all three tables
+EXEC InterimCustomerAndAddressUpdate N'Mid-migrate name', N'Mid-migrate address'
