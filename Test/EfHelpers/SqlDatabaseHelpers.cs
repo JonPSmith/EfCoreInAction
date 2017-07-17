@@ -28,7 +28,7 @@ namespace test.EfHelpers
             var databaseNamesToDelete = GetAllMatchingDatabases($"{orgDbName}.{gitBranchName}");
             foreach (var databaseName in databaseNamesToDelete)
             {
-                DeleteDatabase(databaseName);
+                databaseName.DeleteDatabase();
             }
             return databaseNamesToDelete.Count;
         }
@@ -64,69 +64,10 @@ namespace test.EfHelpers
             }
         }
 
-        /// <summary>
-        /// Wipes out the existing database and creates a new, empty one
-        /// </summary>
-        /// <param name="databaseConnectionString">a actual connection string</param>
-        /// <param name="timeout">Defines a timeout for connection and the SQL DELETE/CREATE database commands</param>
-        public static void WipeCreateDatabase(this string databaseConnectionString, int timeout = 30)
-        {
-            var builder = new SqlConnectionStringBuilder(databaseConnectionString);
-            var databaseName = builder.InitialCatalog;
-            builder.InitialCatalog = "";          //remove database, as create database won't work with it
-            builder.ConnectTimeout = timeout;
-
-            var nonDbConnectionString = builder.ToString();
-            if (nonDbConnectionString.ExecuteRowCount("sys.databases", String.Format("WHERE [Name] = '{0}'", databaseName)) == 1)
-            {
-                DeleteDatabase(databaseName);
-            }
-            nonDbConnectionString.ExecuteNonQuery("CREATE DATABASE [" + databaseName + "]", timeout);
-        }
-
-        public static void ExecuteScriptFileInTransaction(this string connectionString, string filePath)
-        {
-            var scriptContent = File.ReadAllText(filePath);
-            Regex regex = new Regex("^GO", RegexOptions.IgnoreCase | RegexOptions.Multiline);
-            string[] lines = regex.Split(scriptContent);
-
-            using (var sqlConnection = new SqlConnection(connectionString))
-            {
-                sqlConnection.Open();
-                SqlTransaction transaction = sqlConnection.BeginTransaction();
-                using (SqlCommand cmd = sqlConnection.CreateCommand())
-                {
-                    cmd.Connection = sqlConnection;
-                    cmd.Transaction = transaction;
-
-                    foreach (string line in lines)
-                    {
-                        if (line.Length > 0)
-                        {
-                            cmd.CommandText = line;
-                            cmd.CommandType = CommandType.Text;
-
-                            try
-                            {
-                                cmd.ExecuteNonQuery();
-                            }
-                            catch (SqlException)
-                            {
-                                transaction.Rollback();
-                                throw;
-                            }
-                        }
-                    }
-                }
-                transaction.Commit();
-            }
-        }
-
-
         //-------------------------------------------------------------------
-        //private methods
+        //internal methods
 
-        private static void DeleteDatabase(string databaseName)
+        internal static void DeleteDatabase(this string databaseName)
         {
             if (LocalHostConnectionString.ExecuteRowCount("sys.databases", $"WHERE [Name] = '{databaseName}'") == 1)
                 LocalHostConnectionString.ExecuteNonQuery("DROP DATABASE [" + databaseName + "]");
@@ -135,7 +76,7 @@ namespace test.EfHelpers
                 throw new InvalidOperationException($"Failed to deleted {databaseName}. Did you have SSMS open or something?");         
         }
 
-        private static int ExecuteNonQuery(this string connection, string command, int commandTimeout = 10)
+        internal static int ExecuteNonQuery(this string connection, string command, int commandTimeout = 10)
         {
             using (var myConn = new SqlConnection(connection))
             {

@@ -2,19 +2,12 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
-using DataLayer.EfClasses;
-using DataLayer.EfCode;
-using Microsoft.EntityFrameworkCore;
+using System.Threading;
 using test.Attributes;
 using test.EfHelpers;
 using test.Helpers;
-using Test.Chapter10Listings.EfCode;
-using Test.Chapter11Listings.EfClasses;
-using Test.Chapter11Listings.EfCode;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -34,6 +27,8 @@ namespace test.UnitTests.DataLayer
             _connectionString = this.GetUniqueDatabaseConnectionString();
             var builder = new SqlConnectionStringBuilder(_connectionString);
             _databaseName = builder.InitialCatalog;
+
+            _connectionString.WipeCreateDatabase();
         }
 
         private string GetChapter11ScriptFilePath(string searchPattern)
@@ -53,13 +48,48 @@ namespace test.UnitTests.DataLayer
             var filePath = GetChapter11ScriptFilePath("Script01*.sql");
 
             //ATTEMPT
-            _connectionString.WipeCreateDatabase();
             _connectionString.ExecuteScriptFileInTransaction(filePath);
 
             //VERIFY
             _connectionString.ExecuteRowCount("sys.databases", $"WHERE [Name] = '{_databaseName}'").ShouldEqual(1);
+            _connectionString.ExecuteRowCount("INFORMATION_SCHEMA.TABLES",
+                $"WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_CATALOG='{_databaseName}'").ShouldEqual(1);
+
+            Thread.Sleep(100);      //
         }
 
+        [Fact]
+        public void Test02FirstMigrationCreateAddressesTable()
+        {
+            //SETUP
+            Test01CreateInitialDatabase(2);
+            var filePath = GetChapter11ScriptFilePath("Script02*.sql");
 
+            //ATTEMPT
+            _connectionString.ExecuteScriptFileInTransaction(filePath);
+
+            //VERIFY
+            _connectionString.ExecuteRowCount("INFORMATION_SCHEMA.TABLES",
+                $"WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_CATALOG='{_databaseName}'").ShouldEqual(2);
+
+            Thread.Sleep(100);      //
+        }
+
+        [Fact]
+        public void Test03SecondMigrationCopyData()
+        {
+            //SETUP
+            Test02FirstMigrationCreateAddressesTable();
+            var filePath = GetChapter11ScriptFilePath("Script03*.sql");
+
+            //ATTEMPT
+            _connectionString.ExecuteScriptFileInTransaction(filePath);
+
+            //VERIFY
+            _connectionString.ExecuteRowCount("INFORMATION_SCHEMA.TABLES",
+                $"WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_CATALOG='{_databaseName}'").ShouldEqual(2);
+
+            Thread.Sleep(100);      //
+        }
     }
 }
