@@ -22,12 +22,24 @@ namespace Test.Chapter11Listings.Migrations
                 {
                     table.PrimaryKey("PK_CustomerAndAddresses", x => x.Id);
                 });
+
+            if (ActiveProvider == "Microsoft.EntityFrameworkCore.SqlServer")
+            {
+                migrationBuilder.Sql(
+                    @"CREATE PROC dbo.MyStoredProc
+                    @Name nvarchar(1000)
+                    AS
+                    SELECT * FROM dbo.CustomerAndAddresses
+                    WHERE Name = @Name");
+            }
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "CustomerAndAddresses");
+
+            migrationBuilder.Sql("DROP PROC dbo.MyStoredProc");
         }
     }
 }

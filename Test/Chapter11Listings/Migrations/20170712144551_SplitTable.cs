@@ -5,18 +5,18 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Test.Chapter11Listings.Migrations
 {
-    public partial class SplitTable : Migration
+    public partial class SplitTable : Migration 
     {
-        protected override void Up(MigrationBuilder migrationBuilder)
+        protected override void Up
+            (MigrationBuilder migrationBuilder) //#A
         {
-
             //Would need to handle any foreign key contraints that pointed to the CustomerAndAddresses before and after that table is renamed
 
-            migrationBuilder.RenameTable(
+            migrationBuilder.RenameTable(     //#B
                 name: "CustomerAndAddresses",
                 newName: "Customers");
 
-            migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable( //#C
                 name: "Addresses",
                 columns: table => new
                 {
@@ -42,14 +42,22 @@ namespace Test.Chapter11Listings.Migrations
                 column: "CustFK",
                 unique: true);
 
-            migrationBuilder.Sql(@"INSERT INTO [dbo].[Addresses] ([Address], [CustFK])
+            migrationBuilder.Sql( //#D
+                @"INSERT INTO [dbo].[Addresses] ([Address], [CustFK])
                 SELECT Address, Id
                 FROM [dbo].[Customers]");
 
-            migrationBuilder.DropColumn(
+            migrationBuilder.DropColumn( //#E
                 name: "Address",
                 table: "Customers");
         }
+        /************************************************************
+        #A I change the code produced by EF Core's add-migration command to produce the changes I want
+        #B EF Core would drop the CustomerAndAddresses table and create a new Customers table, but to save data I rename the CustomerAndAddresses table to the Customers table
+        #C EF Core adds the new Addresses table
+        #D I now copy the Address part of the renamed CustomerAndAddresses table to the Addresses table
+        #E Fianlly I drop the Address column from the renamed CustomerAndAddresses so that it now acts like Customers table that EF Core expects
+         * **********************************************************/
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
