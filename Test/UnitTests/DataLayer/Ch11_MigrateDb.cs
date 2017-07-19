@@ -28,6 +28,7 @@ namespace test.UnitTests.DataLayer
             _output = output;
         }
 
+        //You can only run this test before the migration!!
         //[Fact]
         //public void WriteToInitialDatabase()
         //{
