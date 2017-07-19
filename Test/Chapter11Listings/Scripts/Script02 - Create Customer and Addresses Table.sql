@@ -20,8 +20,13 @@ CREATE TABLE [dbo].[Addresses](
 ) ON [PRIMARY]
 GO
 
+CREATE UNIQUE INDEX [IX_Addresses_CustFK] 
+   ON [Addresses] ([CustFK]);
+GO
+
+
 ALTER TABLE [dbo].[Addresses]  WITH CHECK ADD CONSTRAINT [FK_dbo.Addresses.CustFK] FOREIGN KEY([CustFK])
-REFERENCES [dbo].Customers ([Id])
+REFERENCES [dbo].Customers ([Id]) ON DELETE CASCADE
 GO
 
 -- This is the interim update of the data, which updates both the old and new tables
