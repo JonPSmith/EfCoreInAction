@@ -134,7 +134,7 @@ namespace test.UnitTests.DataLayer
         {
             //SETUP
             connectionString.WipeCreateDatabase();
-            var filePath = GetChapter11ScriptFilePath("Script01*.sql");
+            var filePath = GetChapter11ScriptFilePath("Script00*.sql");
 
             //ATTEMPT
             connectionString.ExecuteScriptFileInTransaction(filePath);
@@ -150,7 +150,7 @@ namespace test.UnitTests.DataLayer
         {
             //SETUP
             Test01CreateInitialDatabase(connectionString);
-            var filePath = GetChapter11ScriptFilePath("Script02*.sql");
+            var filePath = GetChapter11ScriptFilePath("Script01*.sql");
 
             //ATTEMPT
             connectionString.ExecuteScriptFileInTransaction(filePath);
@@ -164,7 +164,7 @@ namespace test.UnitTests.DataLayer
         {
             //SETUP
             Test02FirstMigrationCreateTablesAndStoredProc(connectionString);
-            var filePath = GetChapter11ScriptFilePath("Script03*.sql");
+            var filePath = GetChapter11ScriptFilePath("Script02*.sql");
 
             //ATTEMPT
             connectionString.ExecuteScriptFileInTransaction(filePath);
@@ -177,7 +177,7 @@ namespace test.UnitTests.DataLayer
         {
             //SETUP
             Test03SecondMigrationCopyData(connectionString);
-            var filePath = GetChapter11ScriptFilePath("Script04*.sql");
+            var filePath = GetChapter11ScriptFilePath("Script03*.sql");
 
             //ATTEMPT
             connectionString.ExecuteScriptFileInTransaction(filePath);

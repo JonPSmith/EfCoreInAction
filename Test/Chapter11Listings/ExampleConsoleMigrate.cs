@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Test.Chapter11Listings
 {
-    class ProgramXXX
+    class ProgramXXX //!!!!!!!!!!!!!!!!! Remove XXX - had to do that otherwise VS saw it as a entry point
     {
         static void MainXXX(string[] args)
         {
-            using (var context = new EfCoreContext(null)) //#A
+            using (var context = new EfCoreContext(null)) //#A !!!!!!!!!!!!!!!!!! remove null - needed so that code will compile
             {
                 context.Database.Migrate(); //#B
             }
