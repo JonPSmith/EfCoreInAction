@@ -43,6 +43,7 @@ AS
 	INSERT [dbo].[Customers](Name, CustAndAddress) VALUES(@Name, @CustAndAddrId)
 	SELECT @CustId = Scope_Identity()
   	INSERT [dbo].[Addresses](Address, CustFK) VALUES(@Address, @CustId) 
+	SELECT * FROM [dbo].[CustomerAndAddresses] WHERE Id = @CustAndAddrId 
 GO 
 
 -- This is a test that the stored proc updates all three tables

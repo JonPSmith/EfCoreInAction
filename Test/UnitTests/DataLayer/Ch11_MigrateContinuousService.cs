@@ -89,10 +89,12 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter11ContinuousInterimDb(optionsBuilder.Options))
             {
                 //ATTEMPT
-                context.Database.ExecuteSqlCommand("EXEC InterimCustomerAndAddressUpdate {0}, {1}",
-                        "EF mid-migate name", "EF mid-migrate address");
+                var entity = context.CustomerAndAddresses.FromSql(
+                    "EXECUTE InterimCustomerAndAddressUpdate {0}, {1}",
+                    "EF mid-migate name", "EF mid-migrate address").Single();
 
                 //VERIFY
+                entity.Id.ShouldNotEqual(0);
                 var orgData = context.CustomerAndAddresses.ToList();
                 orgData.Select(x => x.Name).ShouldEqual(new[] { "John", "Jane", "Mid-migrate name", "EF mid-migate name" });
             }
