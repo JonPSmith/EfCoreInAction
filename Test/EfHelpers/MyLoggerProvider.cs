@@ -10,32 +10,37 @@ namespace test.EfHelpers
     public class MyLoggerProvider : ILoggerProvider
     {
         private readonly List<string> _logs;
+        private LogLevel _logLevel;
 
-        public MyLoggerProvider(List<string> logs)
+        public MyLoggerProvider(List<string> logs, LogLevel logLevel = LogLevel.Information)
         {
             _logs = logs;
+            _logLevel = logLevel;
         }
 
         public ILogger CreateLogger(string categoryName)
         {
-            return new MyLogger(_logs);
+            return new MyLogger(_logs, _logLevel);
         }
 
         public void Dispose()
-        { }
+        {
+        }
 
         private class MyLogger : ILogger
         {
             private readonly List<string> _logs;
+            private readonly LogLevel _logLevel;
 
-            public MyLogger(List<string> logs)
+            public MyLogger(List<string> logs, LogLevel logLevel)
             {
                 _logs = logs;
+                _logLevel = logLevel;
             }
 
             public bool IsEnabled(LogLevel logLevel)
             {
-                return logLevel >= LogLevel.Information;
+                return logLevel >= _logLevel;
             }
 
             public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
