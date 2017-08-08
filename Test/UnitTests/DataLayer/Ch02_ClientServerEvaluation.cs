@@ -5,8 +5,11 @@ using System;
 using System.Globalization;
 using System.Linq;
 using DataLayer.EfCode;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
 using test.EfHelpers;
+using test.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -128,6 +131,39 @@ namespace test.UnitTests.DataLayer
                 {
                     _output.WriteLine(log);
                 }
+            }
+        }
+
+        [Fact]
+        public void TestClientServerSortOnEvaluatedPortionThorwError()
+        {
+            //SETUP
+            var connection = this.GetUniqueDatabaseConnectionString();
+            var optionsBuilder =
+                new DbContextOptionsBuilder<EfCoreContext>();
+
+            optionsBuilder.UseSqlServer(connection)
+                .ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryClientEvaluationWarning));
+
+            using (var context = new EfCoreContext(optionsBuilder.Options))
+            {
+                //ATTEMPT
+                var ex = Assert.Throws<InvalidOperationException>(() => context.Books
+                    .Select(p => new
+                        {
+                            p.BookId,
+                            p.Title,
+                            //… other properties left out 
+                            AuthorsString = string.Join(", ",
+                                p.AuthorsLink
+                                    .OrderBy(q => q.Order)
+                                    .Select(q => q.Author.Name)),
+                        }
+                    ).OrderBy(p => p.AuthorsString).ToList());
+
+
+                //VERIFY
+                Assert.StartsWith("Warning as error exception for warning 'RelationalEventId.QueryClientEvaluationWarning':", ex.Message);
             }
         }
     }
