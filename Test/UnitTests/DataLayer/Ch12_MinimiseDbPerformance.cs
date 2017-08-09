@@ -4,13 +4,11 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
 using test.Attributes;
 using test.EfHelpers;
 using test.Helpers;
-using Xunit;
 using Xunit.Abstractions;
 
 namespace test.UnitTests.DataLayer
