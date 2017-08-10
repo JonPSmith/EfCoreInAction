@@ -2,6 +2,8 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using DataLayer.EfClasses;
 
@@ -9,7 +11,7 @@ namespace Test.Chapter12Listings.EfClasses
 {
     public class Ch12Book
     {
-        public int BookId { get; set; }
+        public int Ch12BookId { get; set; }
 
         [Required]
         [MaxLength(256)]
@@ -17,13 +19,15 @@ namespace Test.Chapter12Listings.EfClasses
         public decimal Price { get; set; }
 
         //----------------------------------------------
-        //Computed column
+        //Computed columns
 
+        public decimal? AverageVotes { get; set; }
         public decimal ActualPrice { get; set; }
 
         //-----------------------------------------------
         //relationships
 
+        public ICollection<Ch12Review> Reviews { get; set; }
         public Ch12PriceOffer Promotion { get; set; }
     }
 }

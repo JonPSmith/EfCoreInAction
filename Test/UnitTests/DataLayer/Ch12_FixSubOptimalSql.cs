@@ -1,12 +1,10 @@
 ﻿// Copyright (c) 2016 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging.Console;
 using test.EfHelpers;
 using test.Helpers;
 using Test.Chapter12Listings.EfClasses;
@@ -44,25 +42,25 @@ namespace test.UnitTests.DataLayer
                     connection.ExecuteScriptFileInTransaction(scriptFilePath);
                 }
 
-                if (!context.FixSubOptimalSqls.Any())
+                if (!context.Books.Any())
                 {
-                    var entities = new List<FixSubOptimalSql>
+                    var entities = new List<Ch12Book>
                     {
-                        new FixSubOptimalSql
+                        new Ch12Book
                         {
-                            Name = "Book - no votes"
+                            Title = "Book - no votes"
                         },
-                        new FixSubOptimalSql
+                        new Ch12Book
                         {
-                            Name = "Book - one vote",
-                            Reviews = new List<Ch12Review>
+                            Title = "Book - one vote",
+                            Reviews= new List<Ch12Review>
                             {
                                 new Ch12Review { NumStars = 5}
                             }
                         },
-                        new FixSubOptimalSql
+                        new Ch12Book
                         {
-                            Name = "Book - two votes",
+                            Title = "Book - two votes",
                             Reviews = new List<Ch12Review>
                             {
                                 new Ch12Review { NumStars = 2},
@@ -85,7 +83,7 @@ namespace test.UnitTests.DataLayer
             {
                 var logIt = new LogDbContext(context);
                 //ATTEMPT
-                var entities = context.FixSubOptimalSqls.ToList();
+                var entities = context.Books.ToList();
 
                 //VERIFY
                 entities.Count.ShouldEqual(3);

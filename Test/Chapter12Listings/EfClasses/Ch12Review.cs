@@ -18,6 +18,6 @@ namespace Test.Chapter12Listings.EfClasses
         //-----------------------------------------
         //Relationships
 
-        public int FixSubOptimalSqlId { get; set; }
+        public int Ch12BookId { get; set; }
     }
 }

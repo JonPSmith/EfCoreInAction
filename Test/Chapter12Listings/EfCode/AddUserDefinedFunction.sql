@@ -3,7 +3,7 @@ RETURNS decimal  AS
 BEGIN
   DECLARE @result AS decimal
   SELECT @result = NewPrice FROM dbo.PriceOffers AS po
-  WHERE po.BookId = @Id
+  WHERE po.Ch12BookId = @Id
   IF (@result IS NULL)
      SET @result = @normalPrice
   RETURN @result
@@ -15,7 +15,7 @@ ALTER TABLE dbo.Books
 GO
 
 ALTER TABLE dbo.Books
-   ADD ActualPrice AS (dbo.udf_ActualPrice([BookId], [Price]))
+   ADD ActualPrice AS (dbo.udf_ActualPrice([Ch12BookId], [Price]))
 GO
 
 CREATE FUNCTION udf_AverageVotes (@id int)
@@ -23,16 +23,16 @@ RETURNS decimal  AS
 BEGIN
 DECLARE @result AS decimal
 SELECT @result = AVG(NumStars) FROM dbo.Ch12Review AS r
-     WHERE @id = r.FixSubOptimalSqlId
+     WHERE @id = r.Ch12BookId
 RETURN @result
 END
 GO
 
-ALTER TABLE dbo.FixSubOptimalSqls
+ALTER TABLE dbo.Books
    DROP COLUMN AverageVotes
 GO
 
-ALTER TABLE dbo.FixSubOptimalSqls
-   ADD AverageVotes AS (dbo.udf_AverageVotes([FixSubOptimalSqlId]))
+ALTER TABLE dbo.Books
+   ADD AverageVotes AS (dbo.udf_AverageVotes(Ch12BookId))
 GO
 

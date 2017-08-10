@@ -11,7 +11,6 @@ namespace Test.Chapter12Listings.EfCode
         public DbSet<IndexClass> IndexClasses { get; set; }
         public DbSet<Ch12Book> Books { get; set; }
         public DbSet<Ch12PriceOffer> PriceOffers { get; set; }
-        public DbSet<FixSubOptimalSql> FixSubOptimalSqls { get; set; }
 
         public Chapter12DbContext(
             DbContextOptions<Chapter12DbContext> options)      
@@ -22,23 +21,15 @@ namespace Test.Chapter12Listings.EfCode
             modelBuilder.Entity<IndexClass>()
                 .HasIndex(p => p.WithIndex);
 
-            modelBuilder.Entity<FixSubOptimalSql>()
+            modelBuilder.Entity<Ch12Book>()
                 .Property(p => p.AverageVotes)
                 //The computed column is set up by a script
                 .ValueGeneratedOnAddOrUpdate();
 
             modelBuilder.Entity<Ch12Book>()
-                .HasKey(p => p.BookId);
-
-            modelBuilder.Entity<Ch12Book>()
                 .Property(p => p.ActualPrice)
                 //The computed column is set up by a script
                 .ValueGeneratedOnAddOrUpdate();
-
-            modelBuilder.Entity<Ch12Book>()
-                .HasOne(r => r.Promotion)
-                .WithOne()
-                .HasForeignKey<Ch12PriceOffer>(k => k.BookId);
         }
     }
 }
