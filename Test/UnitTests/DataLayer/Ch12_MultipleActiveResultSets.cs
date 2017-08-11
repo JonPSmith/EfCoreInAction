@@ -100,6 +100,27 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void SqlServerRemoveMultipleActiveResultSetsSingleRead()
+        {
+            //SETUP
+            var connection = this.GetUniqueDatabaseConnectionString()
+                .Replace(";MultipleActiveResultSets=True", "");
+
+            var optionsBuilder =
+                new DbContextOptionsBuilder<Chapter12DbContext>();
+            optionsBuilder.UseSqlServer(connection);
+
+            using (var context = new Chapter12DbContext(optionsBuilder.Options))
+            {
+                //ATTEMPT
+                foreach (var book in context.Books.ToList())
+                {
+                    var reviews = context.Set<Ch12Review>().Where(x => x.Ch12BookId == book.Ch12BookId).ToList();
+                }
+            }
+        }
+
+        [Fact]
         public void SqliteDualReadOk()
         {
             //SETUP
