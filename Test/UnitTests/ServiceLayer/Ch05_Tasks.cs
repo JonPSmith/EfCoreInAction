@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
+using test.Attributes;
 using test.Chapter05Listings;
 using test.EfHelpers;
 using test.Helpers;
@@ -48,7 +49,7 @@ namespace test.UnitTests.ServiceLayer
         }
 
 
-        [Fact]
+        [RunnableInDebugOnly]
         public async Task TwoTasksDifferentDbContextOk()
         {
             //SETUP
