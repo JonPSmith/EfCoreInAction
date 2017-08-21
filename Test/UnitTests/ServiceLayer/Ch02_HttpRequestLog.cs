@@ -24,14 +24,61 @@ namespace test.UnitTests.ServiceLayer
             const string traceIdent = "t";
 
             //ATTEMPT
-            HttpRequestLog.AddLog(traceIdent, LogLevel.Information, 1, "Unit Test", "state");
+            HttpRequestLog.AddLog(traceIdent, LogLevel.Information, 1, "Unit Test");
 
             //VERIFY
             var log = HttpRequestLog.GetHttpRequestLog(traceIdent);
             log.TraceIdentifier.ShouldEqual(traceIdent);
             log.LastAccessed.ShouldBeInRange(DateTime.UtcNow.AddSeconds(-1), DateTime.UtcNow);
             log.RequestLogs.Count.ShouldEqual(1);
-            log.RequestLogs.First().LogHeader.ShouldEqual("Unit Test");
+        }
+
+        [Fact]
+        public void CreateLogNoEventName()
+        {
+            //SETUP
+            const string traceIdent = "t";
+
+            //ATTEMPT
+            HttpRequestLog.AddLog(traceIdent, LogLevel.Information, 1, "Unit Test");
+
+            //VERIFY
+            var log = HttpRequestLog.GetHttpRequestLog(traceIdent);
+            log.RequestLogs.Count.ShouldEqual(1);
+            log.RequestLogs.First().EventString.ShouldEqual("Unit Test");
+            log.RequestLogs.First().IsDb.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void CreateNormalLog()
+        {
+            //SETUP
+            const string traceIdent = "t";
+
+            //ATTEMPT
+            HttpRequestLog.AddLog(traceIdent, LogLevel.Information, new EventId(1, "SomeOtherEvent"), "Unit Test");
+
+            //VERIFY
+            var log = HttpRequestLog.GetHttpRequestLog(traceIdent);
+            log.RequestLogs.Count.ShouldEqual(1);
+            log.RequestLogs.First().EventString.ShouldEqual("Unit Test");
+            log.RequestLogs.First().IsDb.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void CreateEfCoreLog()
+        {
+            //SETUP
+            const string traceIdent = "t";
+
+            //ATTEMPT
+            HttpRequestLog.AddLog(traceIdent, LogLevel.Information, new EventId(1, "Microsoft.EntityFrameworkCore.Something"), "Unit Test");
+
+            //VERIFY
+            var log = HttpRequestLog.GetHttpRequestLog(traceIdent);
+            log.RequestLogs.Count.ShouldEqual(1);
+            log.RequestLogs.First().EventString.ShouldEqual("Unit Test");
+            log.RequestLogs.First().IsDb.ShouldBeTrue();
         }
 
         [Fact]
@@ -39,18 +86,18 @@ namespace test.UnitTests.ServiceLayer
         {
             //SETUP
             const string traceIdent = "t";
-            HttpRequestLog.AddLog(traceIdent, LogLevel.Information, 1, "Unit Test1", "state");
+            HttpRequestLog.AddLog(traceIdent, LogLevel.Information, 1, "Unit Test1");
 
             //ATTEMPT
-            HttpRequestLog.AddLog(traceIdent, LogLevel.Information, 2, "Unit Test2", "state");
+            HttpRequestLog.AddLog(traceIdent, LogLevel.Information, 2, "Unit Test2");
 
             //VERIFY
             var log = HttpRequestLog.GetHttpRequestLog(traceIdent);
             log.TraceIdentifier.ShouldEqual(traceIdent);
             log.LastAccessed.ShouldBeInRange(DateTime.UtcNow.AddSeconds(-1), DateTime.UtcNow);
             
-            log.RequestLogs.First().LogHeader.ShouldEqual("Unit Test1");
-            log.RequestLogs.Last().LogHeader.ShouldEqual("Unit Test2");
+            log.RequestLogs.First().EventString.ShouldEqual("Unit Test1");
+            log.RequestLogs.Last().EventString.ShouldEqual("Unit Test2");
         }
 
         [Fact]
@@ -59,10 +106,10 @@ namespace test.UnitTests.ServiceLayer
             //SETUP
             const string traceIdent1 = "t1";
             const string traceIdent2 = "t2";
-            HttpRequestLog.AddLog(traceIdent1, LogLevel.Information, 1, "Unit Test1", "state");
+            HttpRequestLog.AddLog(traceIdent1, LogLevel.Information, 1, "Unit Test1");
 
             //ATTEMPT
-            HttpRequestLog.AddLog(traceIdent2, LogLevel.Information, 2, "Unit Test2", "state");
+            HttpRequestLog.AddLog(traceIdent2, LogLevel.Information, 2, "Unit Test2");
 
             //VERIFY
             var log1 = HttpRequestLog.GetHttpRequestLog(traceIdent1);
@@ -85,7 +132,7 @@ namespace test.UnitTests.ServiceLayer
             //VERIFY
             log.TraceIdentifier.ShouldEqual(traceIdent);
             log.RequestLogs.Count.ShouldEqual(1);
-            log.RequestLogs.First().LogHeader.ShouldContain("Could not find the log you asked for.");
+            log.RequestLogs.First().EventString.ShouldContain("Could not find the log you asked for.");
         }
 
     }
