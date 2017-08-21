@@ -12,25 +12,20 @@ namespace DataLayer.EfCode
     /// This class is needed to allow Add-Migrations command to be run. 
     /// It is not a good implmentation as it has to have a constant connection sting in it
     /// but it is Ok on a local machine, which is where you want to run the command
-    /// see https://docs.microsoft.com/en-us/ef/core/miscellaneous/configuring-dbcontext#using-idbcontextfactorytcontext
+    /// see https://docs.microsoft.com/en-us/ef/core/miscellaneous/configuring-dbcontext#using-idesigntimedbcontextfactorytcontext
     /// </summary>
     public class ContextFactoryNeededForMigrations : IDesignTimeDbContextFactory<EfCoreContext>
     {
         private const string ConnectionString =
             "Server=(localdb)\\mssqllocaldb;Database=EfCoreInActionDb;Trusted_Connection=True;MultipleActiveResultSets=true";
 
-        public EfCoreContext Create(DbContextFactoryOptions options)
+        public EfCoreContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<EfCoreContext>();
             optionsBuilder.UseSqlServer(ConnectionString,
                 b => b.MigrationsAssembly("DataLayer"));
 
             return new EfCoreContext(optionsBuilder.Options);
-        }
-
-        public EfCoreContext CreateDbContext(string[] args)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
