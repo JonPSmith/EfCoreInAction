@@ -2,6 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace DataLayer.EfCode
@@ -13,7 +14,7 @@ namespace DataLayer.EfCode
     /// but it is Ok on a local machine, which is where you want to run the command
     /// see https://docs.microsoft.com/en-us/ef/core/miscellaneous/configuring-dbcontext#using-idbcontextfactorytcontext
     /// </summary>
-    public class ContextFactoryNeededForMigrations : IDbContextFactory<EfCoreContext>
+    public class ContextFactoryNeededForMigrations : IDesignTimeDbContextFactory<EfCoreContext>
     {
         private const string ConnectionString =
             "Server=(localdb)\\mssqllocaldb;Database=EfCoreInActionDb;Trusted_Connection=True;MultipleActiveResultSets=true";
@@ -25,6 +26,11 @@ namespace DataLayer.EfCode
                 b => b.MigrationsAssembly("DataLayer"));
 
             return new EfCoreContext(optionsBuilder.Options);
+        }
+
+        public EfCoreContext CreateDbContext(string[] args)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
