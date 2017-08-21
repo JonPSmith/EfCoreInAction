@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
 using test.EfHelpers;
