@@ -30,7 +30,7 @@ namespace EfCoreInAction
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var gitBranchName = Directory.GetCurrentDirectory().GetBranchName();
+            var gitBranchName = DatabaseStartupHelpers.GetWwwRootPath().GetBranchName();
 
             // Add framework services.
             services.AddMvc();
@@ -74,19 +74,6 @@ namespace EfCoreInAction
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            //see https://blogs.msdn.microsoft.com/dotnet/2016/09/29/implementing-seeding-custom-conventions-and-interceptors-in-ef-core-1-0/
-
-
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetService<EfCoreContext>();
-                if (env.IsDevelopment())
-                {
-                    context.DevelopmentEnsureCreated();
-                }
-                //if not develoment mode it assumes the database exists (
-                context.SeedDatabase(env.WebRootPath);
-            }
         }
     }
 }
