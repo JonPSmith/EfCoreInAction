@@ -68,12 +68,12 @@ var LoggingDisplay = (function($) {
       '<h4 class ="panel-title text-overflow-dots">'+
         '<a role="button" data-toggle="collapse" data-parent="#log-accordion" href="#collapse' + i + '" aria-expanded="true" aria-controls="collapse' + i + '">' +
           '<span class="' + setContextualColors(logs.requestLogs[i].logLevel) + '">' + logs.requestLogs[i].logLevel + ':&nbsp;</span>'+
-          logs.requestLogs[i].logHeader + 
+            logs.requestLogs[i].eventString + 
         '</a>'+
       '</h4>'+
     '</div>'+
     '<div id="collapse'+i+'" class ="panel-collapse collapse" role="tabpanel" aria-labelledby="heading'+i+'">'+
-       '<div class ="panel-body white-space-pre">'+logs.requestLogs[i].logMain+''+
+            '<div class ="panel-body white-space-pre">' + logs.requestLogs[i].eventString+''+
        '</div>'+
   '</div>'+
 '</div>';
