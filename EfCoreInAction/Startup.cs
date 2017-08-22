@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DataLayer.EfCode;
@@ -18,35 +19,27 @@ namespace EfCoreInAction
 {
     public class Startup
     {
-        private IHostingEnvironment _env;
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            _env = env;
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var gitBranchName = _env.WebRootPath.GetBranchName();
+            var gitBranchName = Directory.GetCurrentDirectory().GetBranchName();
 
             // Add framework services.
             services.AddMvc();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton(_env);
             //This makes the Git branch name available via injection
             services.AddSingleton(new AppInformation(gitBranchName));
 
             var connection = Configuration.GetConnectionString("DefaultConnection");
-            if (_env.IsDevelopment())
+            if (Configuration["ENVIRONMENT"]== "Development")
             {
                 //if running in development mode then we alter the connection to have the branch name in it
                 connection = connection.FormDatabaseConnection(gitBranchName);
@@ -87,13 +80,12 @@ namespace EfCoreInAction
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetService<EfCoreContext>();
-                if (_env.IsDevelopment())
+                if (env.IsDevelopment())
                 {
                     context.DevelopmentEnsureCreated();
                 }
                 //if not develoment mode it assumes the database exists (
-                context.SeedDatabase(_env.WebRootPath);
-
+                context.SeedDatabase(env.WebRootPath);
             }
         }
     }
