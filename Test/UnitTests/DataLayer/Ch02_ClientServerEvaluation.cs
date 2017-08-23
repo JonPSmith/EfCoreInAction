@@ -26,7 +26,6 @@ namespace test.UnitTests.DataLayer
             _output = output;
         }
 
-        //Fails - see https://github.com/aspnet/EntityFramework/issues/7714
         [Fact]
         public void TestClientServerSimpleBookOk()
         {
