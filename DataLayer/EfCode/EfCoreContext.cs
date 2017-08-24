@@ -35,6 +35,9 @@ namespace DataLayer.EfCode
                 .HasOne(p => p.ChosenBook)         //#B
                 .WithMany()                        //#B
                 .OnDelete(DeleteBehavior.Restrict);//#B
+
+            modelBuilder.Entity<Book>()
+                .HasQueryFilter(p => !p.SoftDeleted);
         }                                                 
     }
     /*********************************************************
