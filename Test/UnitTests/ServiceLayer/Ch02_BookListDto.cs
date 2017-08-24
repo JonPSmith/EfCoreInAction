@@ -249,7 +249,9 @@ namespace test.UnitTests.ServiceLayer
 
                 //ATTEMPT
                 var books =
-                    context.Books.FromSql(
+                    context.Books
+                        .IgnoreQueryFilters() //Have to add this otherwise SQL fails because the SQL becomes a sub-query
+                        .FromSql(
                             "SELECT * FROM dbo.books AS a ORDER BY (SELECT AVG(b.NumStars) FROM dbo.Review AS b WHERE b.BookId = a.BookId) DESC")
                         .ToList();
 
