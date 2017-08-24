@@ -29,7 +29,7 @@ namespace test.UnitTests.DataLayer
 
             using (var context = sqlite.GetContextWithSetup())
             {
-                context.SeedDatabaseDummyBooksBooks(40);
+                context.SeedDatabaseDummyBooks(40);
                 sqlite.ClearLogs();
 
                 //ATTEMPT
@@ -54,7 +54,7 @@ namespace test.UnitTests.DataLayer
 
             using (var context = sqlite.GetContextWithSetup())
             {
-                context.SeedDatabaseDummyBooksBooks(40);
+                context.SeedDatabaseDummyBooks(40);
                 sqlite.ClearLogs();
 
                 //ATTEMPT
@@ -79,7 +79,7 @@ namespace test.UnitTests.DataLayer
 
             using (var context = sqlite.GetContextWithSetup())
             {
-                context.SeedDatabaseDummyBooksBooks(40);
+                context.SeedDatabaseDummyBooks(40);
                 sqlite.ClearLogs();
 
                 //ATTEMPT
@@ -104,7 +104,7 @@ namespace test.UnitTests.DataLayer
 
             using (var context = sqlite.GetContextWithSetup())
             {
-                context.SeedDatabaseDummyBooksBooks(40);
+                context.SeedDatabaseDummyBooks(40);
                 sqlite.ClearLogs();
 
                 //ATTEMPT
@@ -183,7 +183,7 @@ namespace test.UnitTests.DataLayer
 
             using (var context = sqlite.GetContextWithSetup())
             {
-                context.SeedDatabaseDummyBooksBooks(40);
+                context.SeedDatabaseDummyBooks(40);
                 sqlite.ClearLogs();
 
                 //ATTEMPT
@@ -208,7 +208,7 @@ namespace test.UnitTests.DataLayer
 
             using (var context = sqlite.GetContextWithSetup())
             {
-                context.SeedDatabaseDummyBooksBooks(40);
+                context.SeedDatabaseDummyBooks(40);
                 sqlite.ClearLogs();
 
                 //ATTEMPT

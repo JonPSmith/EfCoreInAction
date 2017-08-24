@@ -12,7 +12,7 @@ namespace test.EfHelpers
     {
         public static readonly DateTime DummyBookStartDate = new DateTime(2010, 1, 1);
 
-        public static void SeedDatabaseDummyBooksBooks(this EfCoreContext context, int numBooks = 10)
+        public static void SeedDatabaseDummyBooks(this EfCoreContext context, int numBooks = 10)
         {
             context.Books.AddRange(CreateDummyBooks(numBooks));
             context.SaveChanges();

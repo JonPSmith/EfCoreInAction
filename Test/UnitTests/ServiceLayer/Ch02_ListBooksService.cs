@@ -24,7 +24,7 @@ namespace test.UnitTests.ServiceLayer
             const int numBooks = 5;
             using (var db = inMemDb.GetContextWithSetup())
             {
-                db.SeedDatabaseDummyBooksBooks(numBooks);
+                db.SeedDatabaseDummyBooks(numBooks);
 
                 //ATTEMPT
                 var service = new ListBooksService(db);
@@ -46,7 +46,7 @@ namespace test.UnitTests.ServiceLayer
             const int numBooks = 12;
             using (var db = inMemDb.GetContextWithSetup())
             {
-                db.SeedDatabaseDummyBooksBooks(numBooks);
+                db.SeedDatabaseDummyBooks(numBooks);
 
                 //ATTEMPT
                 var service = new ListBooksService(db);
