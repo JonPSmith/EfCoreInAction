@@ -55,9 +55,12 @@ namespace test.UnitTests.ServiceLayer
                         .OrderBy(l => l.Order)             //#B
                         .Select(a => a.Author.Name)),      //#B
                     ReviewsCount = firstBook.Reviews.Count,//#C
+                    //The test on there being any reviews is needed because of bug in EF Core V2.0.0, issue #9516
                     ReviewsAverageVotes =                  //#D
-                        firstBook.Reviews                  //#D
-                              .Average(p => p.NumStars)    //#D
+                        firstBook.Reviews.Count == 0       //#D
+                            ? null                             //#D
+                            : (double?)firstBook.Reviews       //#D
+                                .Average(q => q.NumStars)          //#D
                 };
 
                 //VERIFY
@@ -99,9 +102,11 @@ namespace test.UnitTests.ServiceLayer
                             .OrderBy(q => q.Order)
                             .Select(q => q.Author.Name)));
                 var reviewsCount = context.Books.Select(p => p.Reviews.Count);
-                var reviewsAverageVotes = 
-                    context.Books.Select(p => 
-                       p.Reviews.Average(q => q.NumStars));
+                //The test on there being any reviews is needed because of bug in EF Core V2.0.0, issue #9516
+                var reviewsAverageVotes = context.Books.Select(p => 
+                        p.Reviews.Count == 0
+                        ? null
+                        : (double?) p.Reviews.Average(q => q.NumStars));
 
                 //VERIFY
                 titles.ToList();
