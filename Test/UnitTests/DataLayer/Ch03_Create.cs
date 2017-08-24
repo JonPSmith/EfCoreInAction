@@ -16,7 +16,7 @@ namespace test.UnitTests.DataLayer
     public class Ch03_Create
     {
         [Fact]
-        public void TestCreateBookWithNewAuthor()
+        public void TestCreateBookWithReview()
         {
             //SETUP
             var inMemDb = new SqliteInMemory();
@@ -26,33 +26,32 @@ namespace test.UnitTests.DataLayer
                 var book = new Book                     //#A
                 {                                       //#A
                     Title = "Test Book",                //#A
-                    PublishedOn = DateTime.Today        //#A
-                };                                      //#A
-                book.AuthorsLink = new List<BookAuthor> //#B
-                {                                       //#B
-                    new BookAuthor                      //#B
-                    {                                   //#B
-                        Book = book,                    //#B
-                        Author = new Author             //#B
-                        {                               //#B
-                            Name = "Test Author"        //#B
-                        }                               //#B
-                    }                                   //#B
-                };                                      //#B
+                    PublishedOn = DateTime.Today,       //#A
+                    Reviews = new List<Review>()        //#B
+                    {
+                        new Review                       //#C
+                        {                                //#C
+                            NumStars = 5,                //#C
+                            Comment = "Great test book!",//#C
+                            VoterName = "Mr U Test"      //#C
+                        }
+                    }
+                };
 
                 //ATTEMPT
-                context.Add(book);                      //#C
-                context.SaveChanges();                  //#D
+                context.Add(book);                      //#D
+                context.SaveChanges();                  //#E
                 /******************************************************
                 #A This creates the book with the title "Test Book"
-                #B This adds a single author called "Test Author" using the linking table, BookAuthor
-                #C It uses the .Add method to add the book to the application's DbContext property, Books
-                #D It calls the SaveChanges() method from the application's DbContext to update the database
+                #B I create a new collection of Reviews
+                #C I add one review, with its content
+                #D It uses the .Add method to add the book to the application's DbContext property, Books
+                #E It calls the SaveChanges() method from the application's DbContext to update the database. It finds a new Book, which has a collection containing a new Review, so it adds both of these to the database
                  * *****************************************************/
 
                 //VERIFY
-                context.Books.Count().ShouldEqual(1);   //#E
-                context.Authors.Count().ShouldEqual(1); //#F
+                context.Books.Count().ShouldEqual(1);
+                context.Set<Review>().Count().ShouldEqual(1); 
             }
         }
 
@@ -89,8 +88,8 @@ namespace test.UnitTests.DataLayer
                 context.SaveChanges();                  //#D
                 /************************************************************
                 #A This method creates dummy books for testing. I create one dummy book with one Author and add it to the empty database
-                #B This creates a book in the same way as the previous exmaple
-                #C This adds a AuthorBook linking entry, but it now uses the Author from the first book
+                #B This creates a book in the same way as the previous example, but sets up its Author
+                #C This adds a AuthorBook linking entry, but it reads in an existing the Author from the first book
                 #D This is the same process: add the new book to the DbContext Books property and call SaveChanges
                  * *********************************************************/
 

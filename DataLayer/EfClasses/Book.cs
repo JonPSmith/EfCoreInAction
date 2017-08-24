@@ -18,6 +18,7 @@ namespace DataLayer.EfClasses
         /// Holds the url to get the image of the book
         /// </summary>
         public string ImageUrl { get; set; }
+        public bool SoftDeleted { get; set; }
 
         //-----------------------------------------------
         //relationships
