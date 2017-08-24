@@ -21,13 +21,19 @@ namespace DataLayer.EfCode
         {                                                 //#C
             modelBuilder.Entity<BookAuthor>()             //#C
                 .HasKey(x => new {x.BookId, x.AuthorId}); //#C
-        }                                                 //#C
+
+            modelBuilder.Entity<Book>()             //#A
+                .HasQueryFilter(p => !p.SoftDeleted);//#A
+        }                                                 
     }
     /*********************************************************
     #A The three properties link to the database tables with the same name
     #B This constructor is how the ASP.NET creates an instance of EfCoreContext 
     #C I need to tell EF Core about the Many-to-Many table keys. I explain this in detail in chapters 5 and 6
     * ******************************************************/
+    /**** Model query filter *************************************
+    #A This adds a filter to all accesses to the Book entities. You can bypass this filter by using the IgnoreQueryFilters() operator
+     * **********************************************************/
 }
 
 /******************************************************************************
