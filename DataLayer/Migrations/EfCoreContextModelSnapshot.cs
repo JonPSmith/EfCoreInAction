@@ -65,44 +65,6 @@ namespace DataLayer.Migrations
                     b.ToTable("BookAuthor");
                 });
 
-            modelBuilder.Entity("DataLayer.EfClasses.LineItem", b =>
-                {
-                    b.Property<int>("LineItemId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("BookId");
-
-                    b.Property<decimal>("BookPrice");
-
-                    b.Property<byte>("LineNum");
-
-                    b.Property<short>("NumBooks");
-
-                    b.Property<int>("OrderId");
-
-                    b.HasKey("LineItemId");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("LineItem");
-                });
-
-            modelBuilder.Entity("DataLayer.EfClasses.Order", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<Guid>("CustomerName");
-
-                    b.Property<DateTime>("DateOrderedUtc");
-
-                    b.HasKey("OrderId");
-
-                    b.ToTable("Orders");
-                });
-
             modelBuilder.Entity("DataLayer.EfClasses.PriceOffer", b =>
                 {
                     b.Property<int>("PriceOfferId")
@@ -152,18 +114,6 @@ namespace DataLayer.Migrations
                     b.HasOne("DataLayer.EfClasses.Book", "Book")
                         .WithMany("AuthorsLink")
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DataLayer.EfClasses.LineItem", b =>
-                {
-                    b.HasOne("DataLayer.EfClasses.Book", "ChosenBook")
-                        .WithMany()
-                        .HasForeignKey("BookId");
-
-                    b.HasOne("DataLayer.EfClasses.Order")
-                        .WithMany("LineItems")
-                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
