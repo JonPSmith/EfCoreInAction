@@ -50,8 +50,8 @@ namespace test.UnitTests.DataLayer
                  * *****************************************************/
 
                 //VERIFY
-                context.Books.Count().ShouldEqual(1);   //#E
-                context.Authors.Count().ShouldEqual(1); //#F
+                context.Books.Count().ShouldEqual(1);
+                context.Set<Review>().Count().ShouldEqual(1); 
             }
         }
 
