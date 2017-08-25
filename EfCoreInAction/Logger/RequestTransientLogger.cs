@@ -55,7 +55,7 @@ namespace EfCoreInAction.Logger
                     return; //we ignore any logs that happen outside a HttpRequest
 
                 HttpRequestLog.AddLog(currHttpContext.TraceIdentifier,
-                    logLevel, eventId, formatter(state, exception), state);
+                    logLevel, eventId, formatter(state, exception));
             }
 
             public IDisposable BeginScope<TState>(TState state)

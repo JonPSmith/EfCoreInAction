@@ -1,6 +1,8 @@
 ﻿using System;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using DataLayer.EfCode;
 using EfCoreInAction.Logger;
 using EfCoreInAction.Services;
@@ -17,60 +19,44 @@ namespace EfCoreInAction
 {
     public class Startup
     {
-        private readonly IHostingEnvironment _env;
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            _env = env;
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables()
-                .AddInMemoryCollection();
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
-            var gitBranchName = _env.WebRootPath.GetBranchName();
+            var gitBranchName = DatabaseStartupHelpers.GetWwwRootPath().GetBranchName();
 
             // Add framework services.
             services.AddMvc();
-
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton(_env);
             //This makes the Git branch name available via injection
             services.AddSingleton(new AppInformation(gitBranchName));
 
             var connection = Configuration.GetConnectionString("DefaultConnection");
-            if (_env.IsDevelopment())
+            if (Configuration["ENVIRONMENT"]== "Development")
             {
                 //if running in development mode then we alter the connection to have the branch name in it
                 connection = connection.FormDatabaseConnection(gitBranchName);
             }
             services.AddDbContext<EfCoreContext>(options => options.UseSqlServer(connection,
                 b => b.MigrationsAssembly("DataLayer")));
-
-            var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterModule<ServiceLayer.Utils.MyAutoFacModule>();
-            containerBuilder.Populate(services);
-            var container = containerBuilder.Build();
-            return new AutofacServiceProvider(container);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app,
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, 
             ILoggerFactory loggerFactory, IHttpContextAccessor httpContextAccessor)
         {
-            //loggerFactory.AddConsole(Configuration.GetSection("Logging"));   //removed because it slows things down! 
-            //loggerFactory.AddDebug();  //removed because it slows things down! 
+            //Remove the standard loggers because they slow the applictaion down
+            //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            //loggerFactory.AddDebug();
             loggerFactory.AddProvider(new RequestTransientLogger(() => httpContextAccessor));
-
-            if (_env.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
@@ -88,22 +74,6 @@ namespace EfCoreInAction
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            //see https://blogs.msdn.microsoft.com/dotnet/2016/09/29/implementing-seeding-custom-conventions-and-interceptors-in-ef-core-1-0/
-            using (var serviceScope = app                    //#A
-                 .ApplicationServices                        //#A
-                 .GetRequiredService<IServiceScopeFactory>() //#A
-                 .CreateScope())                             //#A
-            {
-                var context = serviceScope.ServiceProvider
-                    .GetService<EfCoreContext>(); //#B
-                if (_env.IsDevelopment())
-                {
-                    //In development mode I ensure the database is created. This means it will work "out of the box" for anyone running this application
-                    context.Database.EnsureCreated(); //#C
-                }
-                //if not develoment mode it assumes the database exists
-                context.SeedDatabase(_env.WebRootPath);
-            }
         }
     }
 }

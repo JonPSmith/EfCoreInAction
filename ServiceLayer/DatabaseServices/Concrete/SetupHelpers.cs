@@ -22,9 +22,9 @@ namespace ServiceLayer.DatabaseServices.Concrete
         private const string SeedDataSearchName = "Apress books*.json";
         public const string SeedFileSubDirectory = "seedData";
 
-        public static string GetBranchName(this string dataDirectory)
+        public static string GetBranchName(this string workingDirectory)
         {
-            var gitBranchFilePath = Path.Combine(dataDirectory, BranchNameFilename);
+            var gitBranchFilePath = Path.Combine(workingDirectory, BranchNameFilename);
             return File.ReadAllText(gitBranchFilePath);
         }
 
