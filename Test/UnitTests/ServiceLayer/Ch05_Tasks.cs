@@ -17,7 +17,8 @@ namespace test.UnitTests.ServiceLayer
 {
     public class Ch05_Tasks
     {
-        [Fact]
+        //Must be run on it own to check things
+        [RunnableInDebugOnly]
         public async Task TwoTasksSameDbContextBad()
         {
             //SETUP
@@ -48,7 +49,7 @@ namespace test.UnitTests.ServiceLayer
             }
         }
 
-
+        //Must be run on it own to check things
         [RunnableInDebugOnly]
         public async Task TwoTasksDifferentDbContextOk()
         {
