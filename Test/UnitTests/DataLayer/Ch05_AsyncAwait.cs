@@ -10,6 +10,8 @@ using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer.BookServices;
 using ServiceLayer.BookServices.Concrete;
+using ServiceLayer.BookServices.QueryObjects;
+using test.Attributes;
 using test.EfHelpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -18,6 +20,74 @@ namespace test.UnitTests.DataLayer
 {
     public class Ch05_AsyncAwait
     {
+        [Fact]
+        public async Task RunClientServerSimpleAsync()
+        {
+            //SETUP
+            var inMemDb = new SqliteInMemory();
+
+            using (var context = inMemDb.GetContextWithSetup())
+            {
+                context.SeedDatabaseFourBooks();
+
+                //ATTEMPT
+                var dtos = await context.Books
+                    .Select(p => p.BookId.ToString() + "Hello").ToListAsync();
+
+                //VERIFY
+                dtos.Count.ShouldEqual(4);
+            }
+        }
+
+        //This fails see https://github.com/aspnet/EntityFrameworkCore/issues/9570
+        [Fact]
+        public async Task RunClientServerCollectionAsync()
+        {
+            //SETUP
+            var inMemDb = new SqliteInMemory();
+
+            using (var context = inMemDb.GetContextWithSetup())
+            {
+                context.SeedDatabaseFourBooks();
+
+                //ATTEMPT
+                var dtos = await context.Books
+                    .Select(p => 
+                        string.Join(", ",
+                            p.AuthorsLink
+                                .Select(q => q.Author.Name))).ToListAsync();
+
+                //VERIFY
+                dtos.Count.ShouldEqual(4);
+            }
+        }
+
+        //THIS HANGS. see https://github.com/aspnet/EntityFrameworkCore/issues/9570
+        [RunnableInDebugOnly]
+        public async Task RunSelectAverageAsync()
+        {
+            //SETUP
+            var inMemDb = new SqliteInMemory();
+
+            using (var context = inMemDb.GetContextWithSetup())
+            {
+                context.SeedDatabaseFourBooks();
+
+                //ATTEMPT
+                var dtos = await context.Books
+                    .Select(p =>
+                    p.Reviews.Count == 0
+                                ? null
+                                : (double?)p.Reviews
+                                    .Average(q => q.NumStars)
+                        ).ToListAsync();
+
+                //VERIFY
+                dtos.Count.ShouldEqual(4);
+            }
+        }
+
+        //This fails - see https://github.com/aspnet/EntityFrameworkCore/issues/9570
         [Fact]
         public async Task RunBookListAsync()
         {
@@ -30,10 +100,10 @@ namespace test.UnitTests.DataLayer
                 var service = new ListBooksService(context);
 
                 //ATTEMPT
-                var numBooks = await service.SortFilterPage(new SortFilterPageOptions()).ToListAsync();
+                var books = await service.SortFilterPage(new SortFilterPageOptions()).ToListAsync();
 
                 //VERIFY
-                numBooks.Count.ShouldEqual(4);
+                books.Count.ShouldEqual(4);
             }
         }
 
