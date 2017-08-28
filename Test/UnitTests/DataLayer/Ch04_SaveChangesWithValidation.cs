@@ -13,7 +13,7 @@ using Xunit.Extensions.AssertExtensions;
 
 namespace test.UnitTests.DataLayer
 {
-    public class Ch04_SaveChangesWithChecking
+    public class Ch04_SaveChangesWithValidation
     {
 
         [Fact]
@@ -58,7 +58,7 @@ namespace test.UnitTests.DataLayer
             //VERIFY
             isOk.ShouldBeFalse();
             errors.Any().ShouldBeTrue();
-            errors.First().ErrorMessage.ShouldEqual("This book is over the limit of 5 books.");
+            errors.First().ErrorMessage.ShouldEqual("This order is over the limit of 5 books.");
         }
 
         [Fact]
@@ -110,7 +110,7 @@ namespace test.UnitTests.DataLayer
                     }
                 };
                 context.Orders.Add(order);
-                var errors = context.SaveChangesWithChecking();
+                var errors = context.SaveChangesWithValidation();
 
                 //VERIFY
                 errors.Any().ShouldBeFalse();
@@ -144,11 +144,11 @@ namespace test.UnitTests.DataLayer
                     }
                 };
                 context.Orders.Add(order);
-                var errors = context.SaveChangesWithChecking();
+                var errors = context.SaveChangesWithValidation();
 
                 //VERIFY
                 errors.Count.ShouldEqual(1);
-                errors.First().ErrorMessage.ShouldEqual("This book is over the limit of 5 books.");
+                errors.First().ErrorMessage.ShouldEqual("This order is over the limit of 5 books.");
                 context.Orders.Count().ShouldEqual(0);
             }
         }

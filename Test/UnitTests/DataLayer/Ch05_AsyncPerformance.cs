@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
+using test.Attributes;
 using test.EfHelpers;
 using test.Helpers;
 using Xunit;
@@ -44,7 +45,7 @@ namespace test.UnitTests.DataLayer
             }
         }
 
-        [Fact]
+        [RunnableInDebugOnly]
         public async Task SimpleAssessesOk()
         {
             //SETUP
@@ -54,53 +55,54 @@ namespace test.UnitTests.DataLayer
                 RunTest(context, 1, "First access, synch:", (c, id) => c.Books.Single(x => x.BookId == id));
                 await Task.WhenAll(RunTestAsync(context, 1, "First access, async:", (c, id) => c.Books.SingleAsync(x => x.BookId == id)));
 
-                await Task.WhenAll(RunTestAsync(context, 1, "First access, async:", (c, id) => c.Books.SingleAsync(x => x.BookId == id)));
-                await Task.WhenAll(RunTestAsync(context, 100, "Second access, async:", (c, id) => c.Books.SingleAsync(x => x.BookId == id)));
-                RunTest(context, 1, "First access, synch:", (c, id) => c.Books.Single(x => x.BookId == id));
-                RunTest(context, 100, "Second access, synch:", (c, id) => c.Books.Single(x => x.BookId == id));
+                await Task.WhenAll(RunTestAsync(context, 1, "1 access, async:", (c, id) => c.Books.SingleAsync(x => x.BookId == id)));
+                await Task.WhenAll(RunTestAsync(context, 100, "100 access, async:", (c, id) => c.Books.SingleAsync(x => x.BookId == id)));
+                RunTest(context, 1, "1 access, synch:", (c, id) => c.Books.Single(x => x.BookId == id));
+                RunTest(context, 100, "100 access, synch:", (c, id) => c.Books.Single(x => x.BookId == id));
+                await Task.WhenAll(RunTestAsync(context, 100, "100 access, async:", (c, id) => c.Books.SingleAsync(x => x.BookId == id)));
+                RunTest(context, 100, "100 access, synch:", (c, id) => c.Books.Single(x => x.BookId == id));
             }
             //VERIFY
         }
 
-        [Fact]
+        [RunnableInDebugOnly]
         public async Task MediumAssessesOk()
         {
             //SETUP
             using (var context = new EfCoreContext(_options))
             {
                 //ATTEMPT
-                RunTest(context, 1, "First access, synch:", (c, id) => c.Books
+                RunTest(context, 1, "1 access, synch:", (c, id) => c.Books
                     .Include(x => x.AuthorsLink)
                     .ThenInclude(x => x.Author)
                     .Include(x => x.Reviews)
                     .Include(x => x.Promotion)
                     .Single(x => x.BookId == id));
-                await Task.WhenAll(RunTestAsync(context, 1, "First access, async:", (c, id) => c.Books
+                await Task.WhenAll(RunTestAsync(context, 1, "1 access, async:", (c, id) => c.Books
                     .Include(x => x.AuthorsLink)
                     .ThenInclude(x => x.Author)
                     .Include(x => x.Reviews)
                     .Include(x => x.Promotion)
                     .SingleAsync(x => x.BookId == id)));
-
-                await Task.WhenAll(RunTestAsync(context, 1, "First access, async:", (c, id) => c.Books
+                await Task.WhenAll(RunTestAsync(context, 100, "100 access, async:", (c, id) => c.Books
                     .Include(x => x.AuthorsLink)
                     .ThenInclude(x => x.Author)
                     .Include(x => x.Reviews)
                     .Include(x => x.Promotion)
                     .SingleAsync(x => x.BookId == id)));
-                await Task.WhenAll(RunTestAsync(context, 100, "Second access, async:", (c, id) => c.Books
-                    .Include(x => x.AuthorsLink)
-                    .ThenInclude(x => x.Author)
-                    .Include(x => x.Reviews)
-                    .Include(x => x.Promotion)
-                    .SingleAsync(x => x.BookId == id)));
-                RunTest(context, 1, "First access, synch:", (c, id) => c.Books
+                RunTest(context, 100, "100 acces, synch:", (c, id) => c.Books
                     .Include(x => x.AuthorsLink)
                     .ThenInclude(x => x.Author)
                     .Include(x => x.Reviews)
                     .Include(x => x.Promotion)
                     .Single(x => x.BookId == id));
-                RunTest(context, 100, "Second access, synch:", (c, id) => c.Books
+                await Task.WhenAll(RunTestAsync(context, 100, "100 access, async:", (c, id) => c.Books
+                    .Include(x => x.AuthorsLink)
+                    .ThenInclude(x => x.Author)
+                    .Include(x => x.Reviews)
+                    .Include(x => x.Promotion)
+                    .SingleAsync(x => x.BookId == id)));
+                RunTest(context, 100, "100 access, synch:", (c, id) => c.Books
                     .Include(x => x.AuthorsLink)
                     .ThenInclude(x => x.Author)
                     .Include(x => x.Reviews)
@@ -110,7 +112,7 @@ namespace test.UnitTests.DataLayer
             //VERIFY
         }
 
-        [Fact]
+        [RunnableInDebugOnly]
         public async Task ManySimpleAssessesOk()
         {
             //SETUP
@@ -121,16 +123,19 @@ namespace test.UnitTests.DataLayer
                 await Task.WhenAll(RunTestAsync(context, 1, "First access, async:", MultipleSmallAsync));
 
                 //NOTE: This takes so long that I have reduced the number of times from 100 to 10 - BUT that affects the perfomance figures!!
-                await Task.WhenAll(RunTestAsync(context, 1, "First access, async:", MultipleSmallAsync));
-                await Task.WhenAll(RunTestAsync(context, 10, "Second access, async:", MultipleSmallAsync));
-                RunTest(context, 1, "First access, synch:", MultipleSmall);
-                RunTest(context, 10, "Second access, synch:", MultipleSmall);
+                await RunTestAsync(context, 1, "1 access, async:", MultipleSmallAsync);
+                await RunTestAsync(context, 10, "10 access, async:", MultipleSmallAsync);
+                RunTest(context, 10, "10 access, synch:", MultipleSmall);
+                await RunTestAsync(context, 10, "10 access, async:", MultipleSmallAsync);
+                RunTest(context, 10, "10 access, synch:", MultipleSmall);
+                await RunTestAsync(context, 10, "10 access, async:", MultipleSmallAsync);
+                RunTest(context, 10, "10 access, synch:", MultipleSmall);
             }
             //VERIFY
         }
 
 
-        [Fact]
+        [RunnableInDebugOnly]
         public async Task ComplexAssessesOk()
         {
             //SETUP
@@ -140,11 +145,13 @@ namespace test.UnitTests.DataLayer
                 RunTest(context, 1, "First access, synch:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.Price).Take(10).ToList());
                 await Task.WhenAll(RunTestAsync(context, 1, "First access, async:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.Price).Take(10).ToListAsync()));
 
-                await Task.WhenAll(RunTestAsync(context, 1, "First access, async:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.Price).Take(10).ToListAsync()));
-                await Task.WhenAll(RunTestAsync(context, 100, "Second access, async:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.Price).Take(10).ToListAsync()));
-                RunTest(context, 1, "First access, synch:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.Price).Take(10).ToList());
-                RunTest(context, 100, "Second access, synch:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.Price).Take(10).ToList());
-            }
+                await Task.WhenAll(RunTestAsync(context, 1, "1 access, async:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.Price).Take(10).ToListAsync()));
+                await Task.WhenAll(RunTestAsync(context, 100, "100 access, async:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.Price).Take(10).ToListAsync()));
+                RunTest(context, 1, "1 access, synch:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.Price).Take(10).ToList());
+                RunTest(context, 100, "100 access, synch:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.Price).Take(10).ToList());
+                await Task.WhenAll(RunTestAsync(context, 100, "100 access, async:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.Price).Take(10).ToListAsync()));
+                RunTest(context, 100, "100 access, synch:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.Price).Take(10).ToList());
+           }
             //VERIFY
         }
         
@@ -159,7 +166,7 @@ namespace test.UnitTests.DataLayer
                 actionToRun(context, i + _firstBookId);
             }
             timer.Stop();
-            _output.WriteLine("Ran {0}: total time = {1} ms ({2:f1} ms per action)", testType,
+            _output.WriteLine("Ran {0}: total time = {1} ms ({2:f2} ms per action)", testType,
                 timer.ElapsedMilliseconds,
                 timer.ElapsedMilliseconds / ((double) numCyclesToRun));
         }
@@ -173,7 +180,7 @@ namespace test.UnitTests.DataLayer
                 await actionToRun(context, i + _firstBookId);//.ConfigureAwait(false);
             }
             timer.Stop();
-            _output.WriteLine("Ran {0}: total time = {1} ms ({2:f1} ms per action)", testType,
+            _output.WriteLine("Ran {0}: total time = {1} ms ({2:f2} ms per action)", testType,
                 timer.ElapsedMilliseconds,
                 timer.ElapsedMilliseconds / ((double)numCyclesToRun));
         }

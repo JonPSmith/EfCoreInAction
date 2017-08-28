@@ -33,7 +33,7 @@ namespace ServiceLayer.BizRunners
             if (!HasErrors) //#F
             {
                 Errors =                              //#G
-                    _context.SaveChangesWithChecking()//#G
+                    _context.SaveChangesWithValidation()//#G
                         .ToImmutableList();           //#G
             }
             return result; //#H

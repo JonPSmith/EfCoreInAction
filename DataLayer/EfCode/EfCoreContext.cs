@@ -35,12 +35,18 @@ namespace DataLayer.EfCode
                 .HasOne(p => p.ChosenBook)         //#B
                 .WithMany()                        //#B
                 .OnDelete(DeleteBehavior.Restrict);//#B
+
+            modelBuilder.Entity<Book>()
+                .HasQueryFilter(p => !p.SoftDeleted);
         }                                                 
     }
     /*********************************************************
     #A I have added the Orders property to allow book orders to be added
     #B This stops a book which is included in a LineItem from being deleted. 
     * ******************************************************/
+    /**** Model query filter *************************************
+    #A This adds a filter to all accesses to the Book entities. You can bypass this filter by using the IgnoreQueryFilters() operator
+     * **********************************************************/
 }
 
 /******************************************************************************
