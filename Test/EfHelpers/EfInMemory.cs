@@ -24,7 +24,7 @@ namespace test.EfHelpers
                 .BuildServiceProvider();
 
             // Create a new options instance telling the context to use an in-memory database
-            var builder = new DbContextOptionsBuilder<EfCoreContext>();
+            var builder = new DbContextOptionsBuilder<TContext>();
             builder.UseInMemoryDatabase(Guid.NewGuid().ToString()) //the database name is set to a unique Guid
                    .UseInternalServiceProvider(serviceProvider);
 
