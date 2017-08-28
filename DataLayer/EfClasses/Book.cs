@@ -22,6 +22,7 @@ namespace DataLayer.EfClasses
 
         [MaxLength(512)] //#B
         public string ImageUrl { get; set; }
+        public bool SoftDeleted { get; set; }
 
         //-----------------------------------------------
         //relationships
