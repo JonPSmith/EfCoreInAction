@@ -21,7 +21,12 @@ namespace DataLayer.EfCode.Configurations
                 .HasColumnType("decimal(9,2)");
 
             entity.Property(x => x.ImageUrl)
-                .IsUnicode(false);          
+                .IsUnicode(false);
+
+            //Model-level query filter
+
+            entity
+                .HasQueryFilter(p => !p.SoftDeleted);
 
             //----------------------------
             //relationships
