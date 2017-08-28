@@ -58,7 +58,7 @@ namespace test.UnitTests.DataLayer
             //VERIFY
             isOk.ShouldBeFalse();
             errors.Any().ShouldBeTrue();
-            errors.First().ErrorMessage.ShouldEqual("This book is over the limit of 5 books.");
+            errors.First().ErrorMessage.ShouldEqual("This order is over the limit of 5 books.");
         }
 
         [Fact]
@@ -148,7 +148,7 @@ namespace test.UnitTests.DataLayer
 
                 //VERIFY
                 errors.Count.ShouldEqual(1);
-                errors.First().ErrorMessage.ShouldEqual("This book is over the limit of 5 books.");
+                errors.First().ErrorMessage.ShouldEqual("This order is over the limit of 5 books.");
                 context.Orders.Count().ShouldEqual(0);
             }
         }

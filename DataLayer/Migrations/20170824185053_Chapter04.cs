@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Metadata;
+using System;
+using System.Collections.Generic;
 
 namespace DataLayer.Migrations
 {
@@ -13,10 +13,10 @@ namespace DataLayer.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    OrderId = table.Column<int>(nullable: false)
+                    OrderId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CustomerName = table.Column<Guid>(nullable: false),
-                    DateOrderedUtc = table.Column<DateTime>(nullable: false)
+                    CustomerName = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DateOrderedUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -27,13 +27,13 @@ namespace DataLayer.Migrations
                 name: "LineItem",
                 columns: table => new
                 {
-                    LineItemId = table.Column<int>(nullable: false)
+                    LineItemId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    BookId = table.Column<int>(nullable: false),
-                    BookPrice = table.Column<decimal>(nullable: false),
-                    LineNum = table.Column<byte>(nullable: false),
-                    NumBooks = table.Column<short>(nullable: false),
-                    OrderId = table.Column<int>(nullable: false)
+                    BookId = table.Column<int>(type: "int", nullable: false),
+                    BookPrice = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
+                    LineNum = table.Column<byte>(type: "tinyint", nullable: false),
+                    NumBooks = table.Column<short>(type: "smallint", nullable: false),
+                    OrderId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

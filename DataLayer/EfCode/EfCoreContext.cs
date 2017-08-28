@@ -46,10 +46,13 @@ namespace DataLayer.EfCode
                 .Property(p => p.NewPrice)
                 .HasColumnType("decimal(9,2)");
 
-            modelBuilder.Entity<LineItem>()        
-                .HasOne(p => p.ChosenBook)         
-                .WithMany()                        
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<LineItem>()        //#B
+                .HasOne(p => p.ChosenBook)         //#B
+                .WithMany()                        //#B
+                .OnDelete(DeleteBehavior.Restrict);//#B
+
+            modelBuilder.Entity<Book>()
+                .HasQueryFilter(p => !p.SoftDeleted);
         }                                                 
     }
     /*Type/Size seeting**********************************************
@@ -61,6 +64,9 @@ namespace DataLayer.EfCode
     #A Here I define a single primary key
     #B Here I use an anonymous object to define two (or more) properties to form a composite key. The order in which the properties appear in the anonymous object defines their order
     * ******************************************************/
+    /**** Model query filter *************************************
+    #A This adds a filter to all accesses to the Book entities. You can bypass this filter by using the IgnoreQueryFilters() operator
+     * **********************************************************/
 }
 
 /******************************************************************************
