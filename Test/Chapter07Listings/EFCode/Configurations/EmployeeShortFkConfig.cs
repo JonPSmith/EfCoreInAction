@@ -17,6 +17,5 @@ namespace Test.Chapter07Listings.EFCode.Configurations
                 .HasForeignKey<EmployeeShortFk>(p => p.ManagerId)
                 .OnDelete(DeleteBehavior.SetNull);
         }
-
     }
 }
