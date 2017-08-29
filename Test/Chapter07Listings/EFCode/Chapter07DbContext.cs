@@ -38,12 +38,12 @@ namespace Test.Chapter07Listings.EFCode
         protected override void OnModelCreating
             (ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Attendee>().Configure();
-            modelBuilder.Entity<Person>().Configure();
-            modelBuilder.Entity<EmployeeShortFk>().Configure();
-            modelBuilder.Entity<Ch07Book>().Configure();
-            modelBuilder.Entity<DeletePrincipal>().Configure();
-            modelBuilder.Entity<Payment>().Configure(); //#C
+            modelBuilder.ApplyConfiguration(new AttendeeConfig());
+            modelBuilder.ApplyConfiguration(new PersonConfig());
+            modelBuilder.ApplyConfiguration(new EmployeeShortFkConfig());
+            modelBuilder.ApplyConfiguration(new Ch07BookConfig());
+            modelBuilder.ApplyConfiguration(new DeletePrincipalConfig());
+            modelBuilder.ApplyConfiguration(new PaymentConfig()); //#C
         }
     }
     /**TPH**************************************************

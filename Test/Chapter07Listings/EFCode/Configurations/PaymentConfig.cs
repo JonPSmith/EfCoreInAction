@@ -8,10 +8,10 @@ using Test.Chapter07Listings.EfClasses;
 
 namespace Test.Chapter07Listings.EFCode.Configurations
 {
-    public static class PaymentConfig
+    public class PaymentConfig : IEntityTypeConfiguration<Payment>
     {
-        public static void Configure
-            (this EntityTypeBuilder<Payment> entity)
+        public void Configure
+            (EntityTypeBuilder<Payment> entity)
         {
             entity.HasDiscriminator(b => b.PType) //#A
                 .HasValue<PaymentCash>(PTypes.Cash) //#B

@@ -7,10 +7,10 @@ using Test.Chapter07Listings.EfClasses;
 
 namespace Test.Chapter07Listings.EFCode.Configurations
 {
-    public static class DeletePrincipalConfig
+    public class DeletePrincipalConfig : IEntityTypeConfiguration<DeletePrincipal>
     {
-        public static void Configure
-            (this EntityTypeBuilder<DeletePrincipal> entity)
+        public void Configure
+            (EntityTypeBuilder<DeletePrincipal> entity)
         {
             entity.HasOne(p => p.DependentSetNull)
                 .WithOne()

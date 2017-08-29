@@ -7,10 +7,10 @@ using Test.Chapter07Listings.EfClasses;
 
 namespace Test.Chapter07Listings.EFCode.Configurations
 {
-    public static class EmployeeShortFkConfig
+    public class EmployeeShortFkConfig : IEntityTypeConfiguration<EmployeeShortFk>
     {
-        public static void Configure
-            (this EntityTypeBuilder<EmployeeShortFk> entity)
+        public void Configure
+            (EntityTypeBuilder<EmployeeShortFk> entity)
         {
             entity.HasOne(p => p.Manager)
                 .WithOne()
