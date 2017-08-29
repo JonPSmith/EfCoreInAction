@@ -14,8 +14,7 @@ namespace Test.Chapter07Listings.EFCode.Configurations
         {
             entity.HasOne(p => p.Manager)
                 .WithOne()
-                .HasForeignKey<EmployeeShortFk>(p => p.ManagerId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasForeignKey<EmployeeShortFk>(p => p.ManagerId);
         }
     }
 }

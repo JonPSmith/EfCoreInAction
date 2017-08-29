@@ -99,7 +99,7 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void TestDeleteManagerSetNullOnDeleteOk()
+        public void TestDeleteManagerClientSetNullOnDeleteOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<Chapter07DbContext>();
@@ -122,11 +122,11 @@ namespace test.UnitTests.DataLayer
             {
                 var manager = context.EmployeeShortFks.Find(managerId);
                 context.Remove(manager);
-                context.SaveChanges();
+                var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
 
                 //VERIFY
-                context.EmployeeShortFks.Count().ShouldEqual(1);
-                context.EmployeeShortFks.First().ManagerId.ShouldBeNull();
+                ex.InnerException.Message.ShouldEqual(
+                    "SQLite Error 19: 'FOREIGN KEY constraint failed'.");
             }
         }
 

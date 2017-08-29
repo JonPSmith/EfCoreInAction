@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using test.EfHelpers;
-using test.Helpers;
 using Test.Chapter07Listings.EfClasses;
 using Test.Chapter07Listings.EFCode;
 using Xunit;
@@ -57,6 +56,7 @@ namespace test.UnitTests.DataLayer
                 context.SaveChanges();
 
                 //VERIFY
+                entity.DependentDefault.DeletePrincipalId.ShouldBeNull();
                 context.DeletePrincipals.Count().ShouldEqual(0);
                 context.Set<DeleteDependentDefault>().Count().ShouldEqual(1);              
             }
@@ -78,6 +78,7 @@ namespace test.UnitTests.DataLayer
                 context.SaveChanges();
 
                 //VERIFY
+                entity.DependentSetNull.DeletePrincipalId.ShouldBeNull();
                 context.DeletePrincipals.Count().ShouldEqual(0);
                 context.Set<DeleteDependentSetNull>().Count().ShouldEqual(1);
             }
