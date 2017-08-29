@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DataLayer.EfCode.Configurations
 {
-    internal static class PriceOfferConfig
+    internal class PriceOfferConfig : IEntityTypeConfiguration<PriceOffer>
     {
-        public static void Configure
-            (this EntityTypeBuilder<PriceOffer> entity)
+        public void Configure
+            (EntityTypeBuilder<PriceOffer> entity)
         {
             entity.Property(p => p.NewPrice)
                 .HasColumnType("decimal(9,2)");

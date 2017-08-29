@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DataLayer.EfCode.Configurations
 {
-    public static class LineItemConfig
+    public class LineItemConfig : IEntityTypeConfiguration<LineItem>
     {
-        public static void Configure
-            (this EntityTypeBuilder<LineItem> entity)
+        public void Configure
+            (EntityTypeBuilder<LineItem> entity)
         {
             entity.HasOne(p => p.ChosenBook)
                 .WithMany()
