@@ -2,7 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using DataLayer.EfClasses;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DataLayer.EfCode.Configurations

@@ -2,6 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Test.Chapter07Listings.EfClasses;
 
@@ -18,7 +19,7 @@ namespace Test.Chapter07Listings.EFCode.Configurations
 
             //This is needed for TestChangePaymentTypeOk to work - see EF Core issue #7510
             entity.Property(p => p.PType)
-                .Metadata.IsReadOnlyAfterSave = false;
+                .Metadata.AfterSaveBehavior = PropertySaveBehavior.Save;
         }
     }
     /*******************************************
