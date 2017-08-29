@@ -9,10 +9,10 @@ namespace DataLayer.EfCode
 {
     public class EfCoreContext : DbContext
     {
-        public DbSet<Book> Books { get; set; }            
-        public DbSet<Author> Authors { get; set; }        
-        public DbSet<PriceOffer> PriceOffers { get; set; }
-        public DbSet<Order> Orders { get; set; } 
+        public DbSet<Book> Books { get; set; }              //#A
+        public DbSet<Author> Authors { get; set; }          //#A
+        public DbSet<PriceOffer> PriceOffers { get; set; }  //#A
+        public DbSet<Order> Orders { get; set; }            //#A
 
         public EfCoreContext(                             
             DbContextOptions<EfCoreContext> options)      
@@ -21,11 +21,15 @@ namespace DataLayer.EfCode
         protected override void
             OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new BookConfig());
-            modelBuilder.ApplyConfiguration(new BookAuthorConfig());
-            modelBuilder.ApplyConfiguration(new PriceOfferConfig());
-            modelBuilder.ApplyConfiguration(new LineItemConfig());
-        }                                                 
+            modelBuilder.ApplyConfiguration(new BookConfig());       //#B
+            modelBuilder.ApplyConfiguration(new BookAuthorConfig()); //#B
+            modelBuilder.ApplyConfiguration(new PriceOfferConfig()); //#B
+            modelBuilder.ApplyConfiguration(new LineItemConfig());   //#B
+        }
+        /*****************************************************************
+        #A We only define three of the five tables in the database: Books, Authors and PriceOffers. The other two tables, Review and BookAuthor are found via navigational links from the other tables
+        #B I have moved the Fluent API configuration of various entity classes to separate configration classes that implement the IEntityTypeConfiguration<T> interface
+         * ****************************************************************/
     }
 }
 
