@@ -104,12 +104,17 @@ namespace test.UnitTests.DataLayer
             }
             using (var context = new SplitOwnDbContext(options))
             {
+                var logIt = new LogDbContext(context);
                 //ATTEMPT
                 var entity = context.Orders.First();
 
                 //VERIFY
                 entity.DeliveryAddress.ShouldNotBeNull();
                 entity.BillingAddress.ShouldNotBeNull();
+                foreach (var log in logIt.Logs)
+                {
+                    _output.WriteLine(log);
+                }
             }
         }
 

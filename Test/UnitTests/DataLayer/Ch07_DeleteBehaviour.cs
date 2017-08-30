@@ -21,6 +21,8 @@ namespace test.UnitTests.DataLayer
             //SETUP
             using (var context = new Chapter07DbContext(SqliteInMemory.CreateOptions<Chapter07DbContext>()))
             {
+                var logs = new List<string>();
+                SqliteInMemory.SetupLogging(context, logs);
                 context.Database.EnsureCreated();
 
                 //ATTEMPT
@@ -40,8 +42,6 @@ namespace test.UnitTests.DataLayer
             var options = SqliteInMemory.CreateOptions<Chapter07DbContext>();
             using (var context = new Chapter07DbContext(options))
             {
-                var logs = new List<string>();
-                SqliteInMemory.SetupLogging(context, logs);
                 context.Database.EnsureCreated();
 
                 var entity = new DeletePrincipal {DependentDefault = new DeleteDependentDefault()};
