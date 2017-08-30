@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using test.Attributes;
 using test.EfHelpers;
 using test.Helpers;
 using Test.Chapter07Listings.EfClasses;
@@ -24,8 +25,8 @@ namespace test.UnitTests.DataLayer
             _output = output;
         }
 
-        [Fact]
-        public void TestCreateSqlServerDbOk()
+        [RunnableInDebugOnly]
+        public void TestCreateChapter07DbContextSqlServerOk()
         {
             var connection = this.GetUniqueDatabaseConnectionString();
             var optionsBuilder =
@@ -42,7 +43,30 @@ namespace test.UnitTests.DataLayer
             }
         }
 
-        [Fact]
+        [RunnableInDebugOnly]
+        public void TestCreateSplitOwnDbContextSqlServerDbOk()
+        {
+            var connection = this.GetUniqueDatabaseConnectionString(nameof(SplitOwnDbContext));
+            var optionsBuilder =
+                new DbContextOptionsBuilder<SplitOwnDbContext>();
+            optionsBuilder.UseSqlServer(connection);
+
+            //SETUP
+            using (var context = new SplitOwnDbContext(optionsBuilder.Options))
+            {
+                //ATTEMPT
+                var logIt = new LogDbContext(context);
+                context.Database.EnsureCreated();
+
+                //VERIFY
+                foreach (var log in logIt.Logs)
+                {
+                    _output.WriteLine(log);
+                }
+            }
+        }
+
+        [RunnableInDebugOnly]
         public void TestDeleteDependentDefaultOk()
         {
             var connection = this.GetUniqueDatabaseConnectionString();
