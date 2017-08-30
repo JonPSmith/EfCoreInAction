@@ -119,6 +119,35 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void TestReadOrderSelectOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<SplitOwnDbContext>();
+            using (var context = new SplitOwnDbContext(options))
+            {
+                context.Database.EnsureCreated();
+                AddOrderWithAddresses(context);
+            }
+            using (var context = new SplitOwnDbContext(options))
+            {
+                var logIt = new LogDbContext(context);
+                //ATTEMPT
+                var entity = context.Orders.Select(x => new
+                {
+                    x.OrderInfoId,
+                    x.BillingAddress.CountryCodeIso2
+                }).First();
+
+                //VERIFY
+                entity.CountryCodeIso2.ShouldEqual("US");
+                foreach (var log in logIt.Logs)
+                {
+                    _output.WriteLine(log);
+                }
+            }
+        }
+
+        [Fact]
         public void TestUpdateOrderOk()
         {
             //SETUP
