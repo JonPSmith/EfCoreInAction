@@ -24,7 +24,7 @@ namespace test.UnitTests.DataLayer
 
         //-----------------------------------------------
         //private helper method
-        private static void CreateBookSummaryWithDetails(SplitOwnDbContext context)
+        private static void AddBookSummaryWithDetails(SplitOwnDbContext context)
         {
             var entity = new BookSummary
             {
@@ -52,7 +52,7 @@ namespace test.UnitTests.DataLayer
                 context.Database.EnsureCreated();
 
                 //ATTEMPT
-                CreateBookSummaryWithDetails(context);
+                AddBookSummaryWithDetails(context);
 
                 //VERIFY
                 context.BookSummaries.Count().ShouldEqual(1);
@@ -60,48 +60,6 @@ namespace test.UnitTests.DataLayer
                 {
                     _output.WriteLine(log);
                 }
-            }
-        }
-
-
-
-        [Fact]
-        public void TestReadBookSummaryOnlyOk()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<SplitOwnDbContext>();
-            using (var context = new SplitOwnDbContext(options))
-            {
-                context.Database.EnsureCreated();
-                CreateBookSummaryWithDetails(context);
-            }
-            using (var context = new SplitOwnDbContext(options))
-            {
-                //ATTEMPT
-                var entity = context.BookSummaries.First();
-
-                //VERIFY
-                entity.Details.ShouldBeNull();
-            }
-        }
-
-        [Fact]
-        public void TestReadBookSummaryAndDetailOk()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<SplitOwnDbContext>();
-            using (var context = new SplitOwnDbContext(options))
-            {
-                context.Database.EnsureCreated();
-                CreateBookSummaryWithDetails(context);
-            }
-            using (var context = new SplitOwnDbContext(options))
-            {
-                //ATTEMPT
-                var entity = context.BookSummaries.Include(p => p.Details).First();
-
-                //VERIFY
-                entity.Details.ShouldNotBeNull();
             }
         }
 
@@ -126,6 +84,90 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 ex.Message.StartsWith("The entity of 'BookSummary' is sharing the table 'BookSummaryAndDetail' with 'BookDetail', but there is no entity of this type with the same key value ")
                     .ShouldBeTrue();
+            }
+        }
+
+        [Fact]
+        public void TestReadBookSummaryOnlyOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<SplitOwnDbContext>();
+            using (var context = new SplitOwnDbContext(options))
+            {
+                context.Database.EnsureCreated();
+                AddBookSummaryWithDetails(context);
+            }
+            using (var context = new SplitOwnDbContext(options))
+            {
+                //ATTEMPT
+                var entity = context.BookSummaries.First();
+
+                //VERIFY
+                entity.Details.ShouldBeNull();
+            }
+        }
+
+        [Fact]
+        public void TestReadBookSummaryAndDetailOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<SplitOwnDbContext>();
+            using (var context = new SplitOwnDbContext(options))
+            {
+                context.Database.EnsureCreated();
+                AddBookSummaryWithDetails(context);
+            }
+            using (var context = new SplitOwnDbContext(options))
+            {
+                //ATTEMPT
+                var entity = context.BookSummaries.Include(p => p.Details).First();
+
+                //VERIFY
+                entity.Details.ShouldNotBeNull();
+            }
+        }
+
+        [Fact]
+        public void TestUpdateBookSummaryOnlyOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<SplitOwnDbContext>();
+            using (var context = new SplitOwnDbContext(options))
+            {
+                context.Database.EnsureCreated();
+                AddBookSummaryWithDetails(context);
+            }
+            using (var context = new SplitOwnDbContext(options))
+            {
+                //ATTEMPT
+                var entity = context.BookSummaries.First();
+                entity.Title = "New Title";
+                context.SaveChanges();
+
+                //VERIFY
+                context.BookSummaries.First().Title.ShouldEqual("New Title");
+            }
+        }
+
+        [Fact]
+        public void TestUpdateDetailsOnlyOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<SplitOwnDbContext>();
+            using (var context = new SplitOwnDbContext(options))
+            {
+                context.Database.EnsureCreated();
+                AddBookSummaryWithDetails(context);
+            }
+            using (var context = new SplitOwnDbContext(options))
+            {
+                //ATTEMPT
+                var entity = context.Set<BookDetail>().First();
+                entity.Price = 1000;
+                context.SaveChanges();
+
+                //VERIFY
+                context.Set<BookDetail>().First().Price.ShouldEqual(1000);
             }
         }
     }
