@@ -55,7 +55,7 @@ namespace test.UnitTests.DataLayer
 
                 //VERIFY
                 context.BookSummaries.Count().ShouldEqual(1);
-                context.BookSummaries.Single().BookId.ShouldNotEqual(0);
+                context.BookSummaries.Single().BookSummaryId.ShouldNotEqual(0);
                 foreach (var log in logIt.Logs)
                 {
                     _output.WriteLine(log);
@@ -82,7 +82,7 @@ namespace test.UnitTests.DataLayer
                 var ex = Assert.Throws<InvalidOperationException>(() => context.SaveChanges());
 
                 //VERIFY
-                ex.Message.StartsWith("The entity of 'BookSummary' is sharing the table 'BookSummaryAndDetail' with 'BookDetail', but there is no entity of this type with the same key value ")
+                ex.Message.StartsWith("The entity of 'BookSummary' is sharing the table 'Books' with 'BookDetail', but there is no entity of this type with the same key value ")
                     .ShouldBeTrue();
             }
         }

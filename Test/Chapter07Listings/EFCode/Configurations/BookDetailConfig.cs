@@ -12,8 +12,6 @@ namespace Test.Chapter07Listings.EFCode.Configurations
         public void Configure
             (EntityTypeBuilder<BookDetail> entity)
         {
-            entity.HasKey(p => p.BookId);
-
             entity.ToTable("Books");
         }
     }

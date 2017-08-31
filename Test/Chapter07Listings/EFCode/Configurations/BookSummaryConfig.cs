@@ -12,11 +12,9 @@ namespace Test.Chapter07Listings.EFCode.Configurations
         public void Configure
             (EntityTypeBuilder<BookSummary> entity)
         {
-            entity.HasKey(p => p.BookId);
-
             entity
                 .HasOne(e => e.Details).WithOne()
-                .HasForeignKey<BookDetail>(e => e.BookId);
+                .HasForeignKey<BookDetail>(e => e.BookDetailId);
             entity.ToTable("Books");
         }
     }
