@@ -8,8 +8,6 @@ namespace Test.Chapter07Listings.SplitOwnClasses
     {
         public int BookId { get; set; }
 
-        [Required] //#A
-        [MaxLength(256)] //#B
         public string Title { get; set; }
 
         public string AuthorsString { get; set; }

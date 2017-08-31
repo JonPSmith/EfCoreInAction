@@ -33,8 +33,7 @@ namespace test.UnitTests.DataLayer
                 Details = new BookDetail
                 {
                     Description = "Description",
-                    Price = 10,
-                    PublishedOn = new DateTime(2000, 1, 1)
+                    Price = 10
                 }
             };
             context.Add(entity);
