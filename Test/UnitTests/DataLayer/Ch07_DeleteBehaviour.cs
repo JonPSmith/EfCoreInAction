@@ -54,8 +54,9 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter07DbContext(options))
             {
                 //ATTEMPT
-                var entity = context.DeletePrincipals.First();
-                context.Remove(entity);
+                var entity = context.DeletePrincipals 
+                    .Single(p => p.DeletePrincipalId == 1);
+                context.Remove(entity); 
                 var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
 
                 //VERIFY
@@ -84,9 +85,17 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter07DbContext(options))
             {
                 //ATTEMPT
-                var entity = context.DeletePrincipals.Include(p => p.DependentDefault).First();
-                context.Remove(entity);
-                context.SaveChanges();
+                var entity = context.DeletePrincipals //#A
+                    .Include(p => p.DependentDefault) //#B
+                    .Single(p => p.DeletePrincipalId == 1);
+                context.Remove(entity); //#C
+                context.SaveChanges(); //#D
+                /*******************************************
+                #A I read in the principal entity
+                #B I include the dependent entity that has the default delete behaviour of ClientSetNull
+                #C I make the principal entity for deletion
+                #C I then call SaveChanges, which, because the dependent entity is tracked, then sets its foreign key to null
+                 * *******************************************/
 
                 //VERIFY
                 entity.DependentDefault.DeletePrincipalId.ShouldBeNull();
