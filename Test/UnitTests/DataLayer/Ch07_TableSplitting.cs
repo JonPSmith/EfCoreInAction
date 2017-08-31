@@ -55,7 +55,7 @@ namespace test.UnitTests.DataLayer
 
                 //VERIFY
                 context.BookSummaries.Count().ShouldEqual(1);
-                context.BookSummaries.Single().BookId.ShouldNotEqual(0);
+                context.BookSummaries.Single().BookSummaryId.ShouldNotEqual(0);
                 foreach (var log in logIt.Logs)
                 {
                     _output.WriteLine(log);

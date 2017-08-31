@@ -6,7 +6,7 @@ namespace Test.Chapter07Listings.SplitOwnClasses
 {
     public class BookSummary
     {
-        public int BookId { get; set; }
+        public int BookSummaryId { get; set; }
 
         public string Title { get; set; }
 
