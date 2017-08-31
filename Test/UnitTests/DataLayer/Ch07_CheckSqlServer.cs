@@ -55,6 +55,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new SplitOwnDbContext(optionsBuilder.Options))
             {
                 //ATTEMPT
+                context.Database.EnsureDeleted();
                 var logIt = new LogDbContext(context);
                 context.Database.EnsureCreated();
 
