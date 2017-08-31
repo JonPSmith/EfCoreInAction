@@ -6,7 +6,6 @@ namespace Test.Chapter07Listings.SplitOwnClasses
     public class BookDetail
     {
         public int BookId { get; set; }
-
         public string Description { get; set; }
         public decimal Price { get; set; }
     }

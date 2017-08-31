@@ -3,7 +3,6 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Test.Chapter07Listings.EfClasses;
 using Test.Chapter07Listings.SplitOwnClasses;
 
 namespace Test.Chapter07Listings.EFCode.Configurations
@@ -15,10 +14,7 @@ namespace Test.Chapter07Listings.EFCode.Configurations
         {
             entity.HasKey(p => p.BookId);
 
-            entity.ToTable("BookSummaryAndDetail");
+            entity.ToTable("Books");
         }
-        /*******************************************************************
-
-         * ********************************************************************/
     }
 }
