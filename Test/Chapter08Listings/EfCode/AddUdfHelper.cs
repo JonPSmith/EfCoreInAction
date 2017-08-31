@@ -22,11 +22,11 @@ namespace Test.Chapter08Listings.EfCode
 
                     context.Database.ExecuteSqlCommand(
                         $"CREATE FUNCTION {UdfAverageVotes} (@bookId int)" +
-                        @"  RETURNS REAL
+                        @"  RETURNS float
   AS
   BEGIN
-  DECLARE @result AS REAL
-  SELECT @result = AVG(NumStars) FROM dbo.Review AS r
+  DECLARE @result AS float
+  SELECT @result = AVG(CAST([NumStars] AS float)) FROM dbo.Review AS r
        WHERE @bookId = r.BookId
   RETURN @result
   END");

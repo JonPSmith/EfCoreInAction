@@ -35,7 +35,10 @@ namespace Test.Chapter08Listings.EfCode
             modelBuilder.ApplyConfiguration(new PriceOfferConfig()); 
             modelBuilder.ApplyConfiguration(new LineItemConfig());
 
-            modelBuilder.HasDbFunction(() => AverageVotesUdf(default(int)));
+            modelBuilder.HasDbFunction(
+                () => AverageVotesUdf(default(int)));
+            //.HasSchema("dbo");
+
         }
 
     }

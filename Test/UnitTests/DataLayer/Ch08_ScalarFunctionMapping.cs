@@ -37,7 +37,9 @@ namespace test.UnitTests.DataLayer
                 {
                    //new database, so seed it with function and books
                     context.AddUdfToDatabase();
-                    context.AddRange(EfTestData.CreateFourBooks());
+
+                    context.AddRange(EfTestData.CreateDummyBooks(setBookId: false));
+                    context.SaveChanges();
                 }
             }
         }
@@ -70,6 +72,27 @@ namespace test.UnitTests.DataLayer
                 {
                     _output.WriteLine(log);
                 }
+            }
+        }
+
+        [Fact]
+        public void TestUdfAverageIsCorrectOk()
+        {
+            //SETUP
+            using (var context = new Chapter08EfCoreContext(_options))
+            {
+                //ATTEMPT
+                var bookAndVotes = context.Books.Select(x => new Dto
+                {
+                    BookId = x.BookId,
+                    Title = x.Title,
+                    AveVotes = Chapter08EfCoreContext.AverageVotesUdf(x.BookId)
+                }).ToList();
+
+                //VERIFY
+                var softAve = context.Books.Include(x => x.Reviews).OrderBy(p => p.BookId)
+                    .Select(x => x.Reviews.Any() ? (double?)x.Reviews.Average(y => y.NumStars) : null).ToList();
+                bookAndVotes.OrderBy(p => p.BookId).Select(x => x.AveVotes).ShouldEqual(softAve);
             }
         }
     }
