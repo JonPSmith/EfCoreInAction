@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DataLayer.EfCode.Configurations
 {
-    internal class PriceOfferConfig : IEntityTypeConfiguration<PriceOffer>
+    public class PriceOfferConfig : IEntityTypeConfiguration<PriceOffer>
     {
         public void Configure
             (EntityTypeBuilder<PriceOffer> entity)

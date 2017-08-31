@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DataLayer.EfCode.Configurations
 {
-    internal class BookConfig : IEntityTypeConfiguration<Book>
+    public class BookConfig : IEntityTypeConfiguration<Book>
     {
         public void Configure
             (EntityTypeBuilder<Book> entity)
