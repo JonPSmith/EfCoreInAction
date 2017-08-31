@@ -32,13 +32,13 @@ namespace ServiceLayer.Logger
 
         private static readonly ConcurrentDictionary<string, HttpRequestLog> AllHttpRequestLogs = new ConcurrentDictionary<string, HttpRequestLog>();
 
-        private readonly List<DbOrStringLog> _requestLogs;
+        private readonly List<LogParts> _requestLogs;
 
         public string TraceIdentifier { get; }
 
         public DateTime LastAccessed { get; private set; }
 
-        public ImmutableList<DbOrStringLog> RequestLogs => _requestLogs.ToImmutableList();
+        public ImmutableList<LogParts> RequestLogs => _requestLogs.ToImmutableList();
 
         public override string ToString()
         {
@@ -49,19 +49,18 @@ namespace ServiceLayer.Logger
         {
             TraceIdentifier = traceIdentifier;
             LastAccessed = DateTime.UtcNow;
-            _requestLogs = new List<DbOrStringLog>();
+            _requestLogs = new List<LogParts>();
 
             //now clear old request logs
             ClearOldLogs(MaxKeepLogMinutes);
         }
 
-        public static void AddLog<TState>(string traceIdentifier,
-            LogLevel logLevel, EventId eventId, string eventString, TState state)
+        public static void AddLog(string traceIdentifier, LogLevel logLevel, EventId eventId, string eventString)
         {
             var thisSessionLog = AllHttpRequestLogs.GetOrAdd(traceIdentifier,
                 x => new HttpRequestLog(traceIdentifier));
 
-            thisSessionLog._requestLogs.Add(new DbOrStringLog(logLevel, eventString, state));
+            thisSessionLog._requestLogs.Add(new LogParts(logLevel, eventId, eventString));
             thisSessionLog.LastAccessed = DateTime.UtcNow;
         }
 
@@ -78,10 +77,9 @@ namespace ServiceLayer.Logger
             //No log so make up one to say what has happened.
             result = new HttpRequestLog(traceIdentifier);
             var oldest = AllHttpRequestLogs.Values.OrderBy(x => x.LastAccessed).FirstOrDefault();
-            result._requestLogs.Add(new DbOrStringLog(LogLevel.Warning,
+            result._requestLogs.Add(new LogParts(LogLevel.Warning, new EventId(1, "EfCoreInAction"), 
                 $"Could not find the log you asked for. I have {AllHttpRequestLogs.Keys.Count} logs" +
-                (oldest == null ? "." : $" the oldest is {oldest.LastAccessed:s}"),
-                null));
+                (oldest == null ? "." : $" the oldest is {oldest.LastAccessed:s}")));
 
             return result;
         }

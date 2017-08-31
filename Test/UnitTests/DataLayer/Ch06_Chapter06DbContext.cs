@@ -2,7 +2,9 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using test.EfHelpers;
+using test.Helpers;
 using Test.Chapter06Listings;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -55,18 +57,18 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void TestColumnNameRelationalOk()
+        public void TestColumnNameInMemoryOk()
         {
             //SETUP
             using (var context = new Chapter06DbContext(
-                SqliteInMemory.CreateOptions<Chapter06DbContext>()))
+                EfInMemory.CreateNewContextOptions<Chapter06DbContext>()))
             {
                 {
                     //ATTEMPT
                     var tableName = context.GetColumnName(new MyEntityClass(), p => p.NormalProp);
 
                     //VERIFY
-                    tableName.ShouldEqual("GenericInDatabaseCol");
+                    tableName.ShouldEqual("GenericDatabaseCol");
                 }
             }
         }
@@ -80,10 +82,10 @@ namespace test.UnitTests.DataLayer
             {
                 {
                     //ATTEMPT
-                    var tableName = context.GetColumnNameSqlite(new MyEntityClass(), p => p.NormalProp);
+                    var tableName = context.GetColumnName(new MyEntityClass(), p => p.NormalProp);
 
                     //VERIFY
-                    tableName.ShouldEqual("SqliteInDatabaseCol");
+                    tableName.ShouldEqual("SqliteDatabaseCol");
                 }
             }
         }
@@ -105,24 +107,24 @@ namespace test.UnitTests.DataLayer
             }
         }
 
-        //[Fact]
-        //public void TestGetColumnRelationalTypeSqlDatabase()
-        //{
-        //    //SETUP
-        //    var connection = this.GetUniqueDatabaseConnectionString();
-        //    var optionsBuilder =
-        //        new DbContextOptionsBuilder<Chapter06DbContext>();
+        [Fact]
+        public void TestGetColumnTypeSqlServerOk()
+        {
+            //SETUP
+            var connection = this.GetUniqueDatabaseConnectionString();
+            var optionsBuilder =
+                new DbContextOptionsBuilder<Chapter06DbContext>();
 
-        //    optionsBuilder.UseSqlServer(connection);
-        //    using (var context = new Chapter06DbContext(optionsBuilder.Options))
-        //    {
-        //        //ATTEMPT
-        //        var colType = context.GetColumnRelationalType(new MyEntityClass(), p => p.InDatabaseProp);
+            optionsBuilder.UseSqlServer(connection);
+            using (var context = new Chapter06DbContext(optionsBuilder.Options))
+            {
+                //ATTEMPT
+                var colType = context.GetColumnStoreType(new MyEntityClass(), p => p.NormalProp);
 
-        //        //VERIFY
-        //        colType.ShouldEqual("nvarchar(max)");
-        //    }
-        //}
+                //VERIFY
+                colType.ShouldEqual("nvarchar(max)");
+            }
+        }
 
 
     }

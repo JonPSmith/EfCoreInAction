@@ -42,42 +42,22 @@ namespace test.EfHelpers
             return efType.FindProperty(propertyName).Relational().ColumnName;
         }
 
-        public static string GetColumnNameSqlite<TEntity, TProperty>(this DbContext context, TEntity source,
-            Expression<Func<TEntity, TProperty>> model) where TEntity : class
-        {
-            var efType = context.Model.FindEntityType(typeof(TEntity).FullName);
-            var propInfo = GetPropertyInfoFromLambda(model);
-            return efType.FindProperty(propInfo.Name).Sqlite().ColumnName;
-        }
-
         public static string GetColumnStoreType<TEntity, TProperty>(this DbContext context, 
             TEntity source, Expression<Func<TEntity, TProperty>> model) where TEntity : class
         {
             var efType = context.Model.FindEntityType(typeof(TEntity).FullName);
             var propInfo = GetPropertyInfoFromLambda(model);
-            var efProperty = efType.FindProperty(propInfo.Name);
-
-            return GetStoreType(context, efProperty);
+            return efType.FindProperty(propInfo.Name).Relational().ColumnType;
         }
 
         public static string GetColumnStoreType<TEntity>(this DbContext context, string propertyName) where TEntity : class
         {
             var efType = context.Model.FindEntityType(typeof(TEntity).FullName);
-            var efProperty = efType.FindProperty(propertyName);
-
-            return GetStoreType(context, efProperty);
+            return efType.FindProperty(propertyName).Relational().ColumnType;
         }
 
         //---------------------------------------------------
         //private methods
-
-        private static string GetStoreType(DbContext context, Microsoft.EntityFrameworkCore.Metadata.IProperty efProperty)
-        {
-            var typeMapper = context.GetService<IRelationalTypeMapper>();
-            var mappings = typeMapper.FindMapping(efProperty);
-
-            return mappings.StoreType;
-        }
 
         private static PropertyInfo GetPropertyInfoFromLambda<TEntity, TProperty>(Expression<Func<TEntity, TProperty>> model) where TEntity : class
         {

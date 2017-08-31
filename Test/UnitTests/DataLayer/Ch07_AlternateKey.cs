@@ -60,7 +60,7 @@ namespace test.UnitTests.DataLayer
                     var ex = Assert.Throws<InvalidOperationException>(() => context.Add(person));
 
                     //VERIFY
-                    ex.Message.ShouldEqual("Unable to create or track an entity of type 'Person' because it has a null primary or alternate key value.");
+                    ex.Message.ShouldEqual("Unable to track an entity of type 'Person' because alternate key property 'UserId' is null. If the alternate key is not used in a relationship, then consider using a unique index instead. Unique indexes may contain nulls, while alternate keys must not.");
                 }
             }
         }

@@ -69,9 +69,8 @@ namespace test.UnitTests.DataLayer
             }
         }
 
-        //Fails because of https://github.com/aspnet/EntityFramework/issues/8137
         [Fact]
-        public void TestLibraryBookNoLibrarianBad()
+        public void TestLibraryBookNoLibrarianOk()
         {
             //SETUP
             using (var context = new Chapter07DbContext(
@@ -87,12 +86,10 @@ namespace test.UnitTests.DataLayer
                     Title = "Entity Framework in Action"
                 };
                 context.Add(book);
-                //context.SaveChanges();
-                var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
+                context.SaveChanges();
 
                 //VERIFY
-                //context.LibraryBooks.Count().ShouldEqual(1);
-                ex.InnerException.Message.ShouldEqual("xx");
+                context.LibraryBooks.Count().ShouldEqual(1);
             }
         }
     }

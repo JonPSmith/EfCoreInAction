@@ -13,7 +13,7 @@ namespace DataLayer.EfClasses
         public int LineItemId { get; set; }
 
         [Range(1,5, ErrorMessage =                      //#B
-            "This book is over the limit of 5 books.")] //#B
+            "This order is over the limit of 5 books.")] //#B
         public byte LineNum { get; set; }
 
         public short NumBooks { get; set; }
