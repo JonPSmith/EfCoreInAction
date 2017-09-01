@@ -26,10 +26,10 @@ namespace Test.Chapter08Listings.EfCode
         {
             modelBuilder.Entity<DefaultTest>()
                 .Configure(new OrderIdValueGenerator());
-            modelBuilder.Entity<Person>().Configure();
             modelBuilder.ConfigureOrder();
+            modelBuilder.ApplyConfiguration(new PersonConfig());
             //standard localdb is 2014, not 2016, so in-memory is not supported
-            //modelBuilder.Entity<InMemoryTest>().Configure();
+            //modelBuilder.ApplyConfiguration(new InMemoryConfig());
 
         }
     }
