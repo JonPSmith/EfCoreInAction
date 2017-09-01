@@ -8,7 +8,8 @@ namespace Test.Chapter08Listings.EfCode
 {
     public static class AddUdfHelper
     {
-        public const string UdfAverageVotes = nameof(Chapter08EfCoreContext.AverageVotesUdf);
+        public const string UdfAverageVotes =
+            nameof(MyUdfMethods.AverageVotes); //#A
 
         public static void AddUdfToDatabase(this DbContext context)
         {
@@ -20,16 +21,22 @@ namespace Test.Chapter08Listings.EfCode
                         $"IF OBJECT_ID('dbo.{UdfAverageVotes}', N'FN') IS NOT NULL " +
                         $"DROP FUNCTION dbo.{UdfAverageVotes}");
 
-                    context.Database.ExecuteSqlCommand(
-                        $"CREATE FUNCTION {UdfAverageVotes} (@bookId int)" +
+                    context.Database.ExecuteSqlCommand( //#B
+                        $"CREATE FUNCTION {UdfAverageVotes} (@bookId int)" + //#C
                         @"  RETURNS float
-  AS
-  BEGIN
-  DECLARE @result AS float
-  SELECT @result = AVG(CAST([NumStars] AS float)) FROM dbo.Review AS r
-       WHERE @bookId = r.BookId
-  RETURN @result
-  END");
+                          AS
+                          BEGIN
+                          DECLARE @result AS float
+                          SELECT @result = AVG(CAST([NumStars] AS float)) 
+                               FROM dbo.Review AS r
+                               WHERE @bookId = r.BookId
+                          RETURN @result
+                          END");
+                    /*****************************************************
+                    #A I capture the name of the static method that represents my UDF and use it as the name of my UDF I add to the database
+                    #B I use EF Core's ExecuteSqlCommand method to add the UDF into the database
+                    #C The SQL code that follows adds a UDF to a SQL server database
+                     * **************************************************/
                     transaction.Commit();
                 }
                 catch (Exception ex)

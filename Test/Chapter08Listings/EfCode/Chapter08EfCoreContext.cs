@@ -20,7 +20,8 @@ namespace Test.Chapter08Listings.EfCode
             DbContextOptions<Chapter08EfCoreContext> options)      
             : base(options) {}
 
-        public static double? AverageVotesUdf(int bookId)
+        [DbFunction(Schema = "dbo")]
+        public static double? AverageVotes(int id)
         {
             throw new Exception();
         }
@@ -35,9 +36,8 @@ namespace Test.Chapter08Listings.EfCode
 
             //needed this to add .HasSchema - see bug https://github.com/aspnet/EntityFrameworkCore/issues/9663
             modelBuilder.HasDbFunction(
-                () => AverageVotesUdf(default(int)))
+                () => MyUdfMethods.AverageVotes(default(int)))
                 .HasSchema("dbo");
-
         }
 
     }

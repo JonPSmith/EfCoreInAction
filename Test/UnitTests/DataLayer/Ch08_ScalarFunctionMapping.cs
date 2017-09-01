@@ -61,7 +61,7 @@ namespace test.UnitTests.DataLayer
                 {
                     BookId = x.BookId,
                     Title = x.Title,
-                    AveVotes = Chapter08EfCoreContext.AverageVotesUdf(x.BookId)
+                    AveVotes = MyUdfMethods.AverageVotes(x.BookId)
                 }).ToList();
 
                 //VERIFY
@@ -83,13 +83,36 @@ namespace test.UnitTests.DataLayer
                 {
                     BookId = x.BookId,
                     Title = x.Title,
-                    AveVotes = Chapter08EfCoreContext.AverageVotesUdf(x.BookId)
+                    AveVotes = MyUdfMethods.AverageVotes(x.BookId)
                 }).ToList();
 
                 //VERIFY
                 var softAve = context.Books.Include(x => x.Reviews).OrderBy(p => p.BookId)
                     .Select(x => x.Reviews.Any() ? (double?)x.Reviews.Average(y => y.NumStars) : null).ToList();
                 bookAndVotes.OrderBy(p => p.BookId).Select(x => x.AveVotes).ShouldEqual(softAve);
+            }
+        }
+
+        [Fact]
+        public void TestFilterUsingUdfOk()
+        {
+            //SETUP
+            using (var context = new Chapter08EfCoreContext(_options))
+            {
+                var logIt = new LogDbContext(context);
+
+                //ATTEMPT
+                var books = context.Books
+                    .Where(x => 
+                        MyUdfMethods.AverageVotes(x.BookId) >= 2.5)
+                .ToList();
+
+                //VERIFY
+                books.Count.ShouldEqual(6);
+                foreach (var log in logIt.Logs)
+                {
+                    _output.WriteLine(log);
+                }
             }
         }
     }
