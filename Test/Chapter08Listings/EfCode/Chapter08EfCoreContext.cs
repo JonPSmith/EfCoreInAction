@@ -20,12 +20,6 @@ namespace Test.Chapter08Listings.EfCode
             DbContextOptions<Chapter08EfCoreContext> options)      
             : base(options) {}
 
-        [DbFunction(Schema = "dbo")]
-        public static double? AverageVotes(int id)
-        {
-            throw new Exception();
-        }
-
         protected override void
             OnModelCreating(ModelBuilder modelBuilder)
         {
