@@ -71,15 +71,5 @@ namespace test.EfHelpers
                 throw new ArgumentNullException("model", "The member you gave is not a property.");
             return propInfo;
         }
-
-        //-----------------------------------------------------
-        //private methods
-
-        private static PropertyInfo GetPropertyInfoFromLambda<TEntity, TProperty>(Expression<Func<TEntity, TProperty>> model) where TEntity : class
-        {
-            var memberEx = (MemberExpression)model.Body;
-            if (memberEx == null)
-                throw new ArgumentNullException("model", "You must supply a LINQ expression that is a property.");
-
     }
 }
