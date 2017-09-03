@@ -104,33 +104,6 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void TestMyLoggerProviderWithFilterOk()
-        {
-            //SETUP
-            var logs = new List<string>();
-            ILoggerFactory loggerFactory = new LoggerFactory();
-
-            //ATTEMPT
-            loggerFactory
-                .WithFilter(new FilterLoggerSettings
-                {
-                    { "UnitTest1", LogLevel.Warning },
-                    { "UnitTest2", LogLevel.Error }
-                })
-                .AddProvider(new MyLoggerProvider(logs));
-
-            ILogger logger1 = loggerFactory.CreateLogger("UnitTest1");
-            logger1.LogWarning("Unit Test1");
-            ILogger logger2 = loggerFactory.CreateLogger("UnitTest2");
-            logger2.LogWarning("Unit Test2");
-
-            //VERIFY
-            logs.Count.ShouldEqual(1);
-            logs.First().ShouldEqual("Warning: Unit Test1");
-        }
-
-
-        [Fact]
         public void TestLogEFCoreOk()
         {
             //SETUP
@@ -149,39 +122,7 @@ namespace test.UnitTests.DataLayer
                 context.SaveChanges();
 
                 //VERIFY
-                logs.First().ShouldEqual("Information: Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']\r\nPRAGMA foreign_keys=ON;");
-            }
-        }
-
-        [Fact]
-        public void TestLogEFCoreWithFilterOk()
-        {
-            //SETUP
-            var logs = new List<string>();
-            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
-
-            using (var context = new Chapter09DbContext(options))
-            {
-                context.Database.EnsureCreated();
-
-                //ATTEMPT
-                var loggerFactory = context.GetService<ILoggerFactory>();
-                loggerFactory
-                    .WithFilter(new FilterLoggerSettings
-                    {
-                        { "Microsoft", LogLevel.Error }
-                    })
-                    .AddProvider(new MyLoggerProvider(logs));
-
-                context.Add(new MyEntity());
-                context.SaveChanges();
-
-                //VERIFY
-                foreach (var log in logs)
-                {
-                    _output.WriteLine(log);
-                }
-                logs.Count.ShouldEqual(0);
+                logs.First().ShouldEqual("Warning: Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data, this mode should only be enabled during development.");
             }
         }
     }
