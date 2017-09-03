@@ -66,17 +66,18 @@ namespace test.UnitTests.DataLayer
             using (var context = new EfCoreContext(_options))
             {
                 //ATTEMPT
+                const int rankFilterBy = 5;
                 var books = context.Books //#A
                     .FromSql( //#B
                         "EXECUTE dbo.FilterOnReviewRank " + //#C
-                        " @RankFilter = {0}", 5) //#D
+                        $"@RankFilter = {rankFilterBy}") //#D
                     .ToList();
 
                 /***********************************************************
                 #A I start the query in the normal way, with the DbSet<T> I want to read
                 #B The FromSql method then allows me to insert a SQL command. This MUST return all the columns of the entity type T, that the DbSet<T> property has - in this case the Book entity class
                 #C Here I execute a stored procedure that I added to the database outside of the normal EF Core database creation system
-                #D I provide a parameter to be used in the stored procedure call
+                #D I use C#7's string interpolation feature to provide the parameter. EF Core intercepts the string interpolation and turns it into a SQL parameter with checks against common SQL injection mistakes/security issues
                  * ********************************************************/
 
                 //VERIFY
@@ -92,15 +93,19 @@ namespace test.UnitTests.DataLayer
             using (var context = new EfCoreContext(_options))
             {
                 //ATTEMPT
+                const int rankFilterBy = 5;
                 var books = context.Books
                     .FromSql(
-                       "SELECT * FROM Books WHERE " +
-                       "dbo.udf_AverageVotes(BookId) >= {0}", 5) //#A
+                       @"SELECT * FROM Books b WHERE 
+                        (SELECT AVG(CAST([NumStars] AS float)) 
+                           FROM dbo.Review AS r " + //#A
+                           $"WHERE b.BookId = r.BookId) >= {rankFilterBy}") //#B
                     .Include(r => r.Reviews) //#B
                     .ToList();
 
                 /**************************************************************
-                #A In this case I use a user defined function to calculate the average votes 
+                #A In this case I write some SQL to calculate the average votes and I then use that result in a outer WHERE test
+                #B I make the last line of the command into a string interpolation and add the parameter by name
                 #B The Include method works with the FromSql because I am not executing a store procedure
                  * ****************************************************************/
 
