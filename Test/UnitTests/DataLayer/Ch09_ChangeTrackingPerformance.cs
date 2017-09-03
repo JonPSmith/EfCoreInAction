@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
+using test.Attributes;
 using test.EfHelpers;
 using Test.Chapter09Listings.EfClasses;
 using Test.Chapter09Listings.EfCode;
@@ -24,13 +25,31 @@ namespace test.UnitTests.DataLayer
             _output = output;
         }
 
+        [RunnableInDebugOnly]
+        public void TestSaveChangesPerformance1()
+        {
+            TestSaveChangesPerformanceBooksOk(1);
+        }
 
-        [Theory]
-        [InlineData(1)]
-        [InlineData(10)]
-        [InlineData(100)]
-        [InlineData(1000)]
-        public void TestSaveChangesPerformanceBooksOk(int numBooks)
+        [RunnableInDebugOnly]
+        public void TestSaveChangesPerformance10()
+        {
+            TestSaveChangesPerformanceBooksOk(10);
+        }
+
+        [RunnableInDebugOnly]
+        public void TestSaveChangesPerformance100()
+        {
+            TestSaveChangesPerformanceBooksOk(100);
+        }
+
+        [RunnableInDebugOnly]
+        public void TestSaveChangesPerformance1000()
+        {
+            TestSaveChangesPerformanceBooksOk(1000);
+        }
+
+        private void TestSaveChangesPerformanceBooksOk(int numBooks)
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
@@ -59,11 +78,25 @@ namespace test.UnitTests.DataLayer
             }
         }
 
-        [Theory]
-        [InlineData(1)]
-        [InlineData(1000)]
-        [InlineData(10000)]
-        public void TestSaveChangesPerformanceMyEntityOk(int numEntities)
+        [RunnableInDebugOnly]
+        public void TestSaveChangesPerformanceMyEntity1()
+        {
+            TestSaveChangesPerformanceMyEntityOk(1);
+        }
+
+        [RunnableInDebugOnly]
+        public void TestSaveChangesPerformanceMyEntity1000()
+        {
+            TestSaveChangesPerformanceMyEntityOk(1000);
+        }
+
+        [RunnableInDebugOnly]
+        public void TestSaveChangesPerformanceMyEntity10000()
+        {
+            TestSaveChangesPerformanceMyEntityOk(10000);
+        }
+
+        private void TestSaveChangesPerformanceMyEntityOk(int numEntities)
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
