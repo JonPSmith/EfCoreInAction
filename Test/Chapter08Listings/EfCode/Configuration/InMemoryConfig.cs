@@ -8,10 +8,10 @@ using Test.Chapter08Listings.EfClasses;
 
 namespace Test.Chapter08Listings.EfCode.Configuration
 {
-    public static class InMemoryConfig
+    public class InMemoryConfig : IEntityTypeConfiguration<InMemoryTest>
     {
-        public static void Configure
-            (this EntityTypeBuilder<InMemoryTest> entity)
+        public void Configure
+            (EntityTypeBuilder<InMemoryTest> entity)
         {
             entity
                 .ForSqlServerIsMemoryOptimized();

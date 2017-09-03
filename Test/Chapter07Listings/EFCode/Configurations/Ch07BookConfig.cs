@@ -2,16 +2,15 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Test.Chapter07Listings.EfClasses;
 
 namespace Test.Chapter07Listings.EFCode.Configurations
 {
-    public static class Ch07BookConfig
+    public class Ch07BookConfig : IEntityTypeConfiguration<Ch07Book>
     {
-        public static void Configure
-            (this EntityTypeBuilder<Ch07Book> entity)
+        public void Configure
+            (EntityTypeBuilder<Ch07Book> entity)
         {
             entity.HasKey(p => p.BookId);
 

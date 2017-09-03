@@ -100,7 +100,6 @@ namespace test.UnitTests.DataLayer
             }
         }
 
-        //this fails because of issue #8137 https://github.com/aspnet/EntityFramework/issues/8137
         [Fact]
         public void TestOption1OneToOneDuplicateTicketBad()
         {
@@ -120,13 +119,10 @@ namespace test.UnitTests.DataLayer
                     new Attendee {Name = "Person2", Ticket = dupTicket, Required = new RequiredTrack()},
                 };
                 context.AddRange(attendees);
-                //context.SaveChanges();
-                var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
+                context.SaveChanges();
 
                 //VERIFY
-                ex.InnerException.Message.ShouldEqual(
-                    "SQLite Error 19: 'UNIQUE constraint failed: Attendees.TicketId'.");
-                //context.Tickets.Count().ShouldEqual(1);
+                context.Tickets.Count().ShouldEqual(1);
             }
         }
 

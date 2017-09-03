@@ -2,16 +2,18 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using DataLayer.EfClasses;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DataLayer.EfCode.Configurations
 {
-    internal static class BookAuthorConfig
+    public class BookAuthorConfig : IEntityTypeConfiguration<BookAuthor>
     {
-        public static void Configure
-            (this EntityTypeBuilder<BookAuthor> entity)
+        public void Configure
+            (EntityTypeBuilder<BookAuthor> entity)
         {
-            entity.HasKey(p => new { p.BookId, p.AuthorId }); //#A
+            entity.HasKey(p => 
+                new { p.BookId, p.AuthorId }); //#A
 
             //-----------------------------
             //Relationships
@@ -24,6 +26,9 @@ namespace DataLayer.EfCode.Configurations
                 .WithMany(t => t.BooksLink)       //#C
                 .HasForeignKey(pt => pt.AuthorId);//#C
         }
+        /*Primary key settings**********************************************
+        #A Here I use an anonymous object to define two (or more) properties to form a composite key. The order in which the properties appear in the anonymous object defines their order
+        * ******************************************************/
         /*******************************************************
         #A This uses the names of the Book and Author primary keys to form its own, composite key
         #B I configure the one-to-many relationship from the Book to BookAuthor entity class

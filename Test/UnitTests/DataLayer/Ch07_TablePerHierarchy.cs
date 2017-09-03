@@ -100,7 +100,7 @@ namespace test.UnitTests.DataLayer
                     Amount = untracked.Amount,
                     //You MUST explictly set the discriminator
                     //NOTE: this only works because the PaymentConfig code contains the following Fluent API command below - see EF Core issue #7510
-                    //entity.Property(p => p.PType).Metadata.IsReadOnlyAfterSave = false;
+                    //entity.Property(p => p.PType).Metadata.AfterSaveBehavior = PropertySaveBehavior.Save;
                     PType = PTypes.Cash //You MUST explictly set the discriminator
                 };
                 context.Update(changed);

@@ -47,7 +47,8 @@ namespace test.EfHelpers
 
             // create in-memory context
             var builder = new DbContextOptionsBuilder<T>();
-            builder.UseSqlite(connection);
+            builder.UseSqlite(connection)
+                .EnableSensitiveDataLogging();
 
             return builder.Options;
         }
