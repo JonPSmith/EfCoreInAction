@@ -149,7 +149,6 @@ namespace test.UnitTests.DataLayer
                 context.SaveChanges();
 
                 //VERIFY
-                logs.Count.ShouldEqual(2);
                 logs.First().ShouldEqual("Information: Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']\r\nPRAGMA foreign_keys=ON;");
             }
         }
