@@ -59,7 +59,7 @@ namespace test.UnitTests.DataLayer
                 context.Entry(entity).Property(nameof(MyEntity.MyString)).IsModified = false;
 
                 //VERIFY
-                context.NumTrackedEntities().ShouldEqual(1);
+                context.NumTrackedEntities().ShouldEqual(0);
                 context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
                 context.GetEntityState(entity).ShouldEqual(EntityState.Detached);
             }
