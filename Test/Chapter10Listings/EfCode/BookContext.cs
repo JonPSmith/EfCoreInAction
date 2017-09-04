@@ -23,7 +23,6 @@ namespace Test.Chapter10Listings.EfCode
             modelBuilder.ApplyConfiguration(new BookConfig());       //#B
             modelBuilder.ApplyConfiguration(new BookAuthorConfig()); //#B
             modelBuilder.ApplyConfiguration(new PriceOfferConfig()); //#B
-            modelBuilder.ApplyConfiguration(new LineItemConfig());   //#B
         }
         /*****************************************************************
         #A We only define three of the five tables in the database: Books, Authors and PriceOffers. The other two tables, Review and BookAuthor are found via navigational links from the other tables
