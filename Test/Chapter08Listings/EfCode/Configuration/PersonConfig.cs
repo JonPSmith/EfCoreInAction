@@ -8,10 +8,10 @@ using Test.Chapter08Listings.EfClasses;
 
 namespace Test.Chapter08Listings.EfCode.Configuration
 {
-    public static class PersonConfig
+    public class PersonConfig : IEntityTypeConfiguration<Person>
     {
-        public static void Configure
-            (this EntityTypeBuilder<Person> entity)
+        public void Configure
+            (EntityTypeBuilder<Person> entity)
         {
             entity.Property<DateTime>("DateOfBirth")
                 .HasField("_dateOfBirth");

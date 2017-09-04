@@ -48,6 +48,24 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void TestChangeTrackerUpdateNewOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var entity = new MyEntity();
+                context.Update(entity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(1);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Added);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
+            }
+        }
+
+        [Fact]
         public void TestChangeTrackerUpdateOptionalOk()
         {
             //SETUP
@@ -186,6 +204,32 @@ namespace test.UnitTests.DataLayer
                 context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Modified);
                 context.GetAllPropsNavsIsModified(entity).ShouldEqual("MyString,OneToOne");
                 context.GetAllPropsNavsIsModified(entity.OneToOne).ShouldEqual("MyEntityId");
+            }
+        }
+
+        [Fact]
+        public void TestChangeTrackerUpdateAsNoTrackingOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.Add(new MyEntity());
+                context.Add(new OneEntity());
+                context.SaveChanges();
+            }
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var entity = context.MyEntities.AsNoTracking().First();
+                context.Update(entity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(1);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Modified);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("MyString");
             }
         }
 

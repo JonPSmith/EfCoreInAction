@@ -27,6 +27,9 @@ namespace Test.Chapter07Listings.EFCode
         public DbSet<Ch07Book> Books { get; set; }
         public DbSet<PriceOffer> PriceOffers { get; set; }
 
+        //delete behavior
+        public DbSet<DeletePrincipal> DeletePrincipals { get; set; }
+
         public Chapter07DbContext(
             DbContextOptions<Chapter07DbContext> options)
             : base(options)
@@ -35,11 +38,12 @@ namespace Test.Chapter07Listings.EFCode
         protected override void OnModelCreating
             (ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Attendee>().Configure();
-            modelBuilder.Entity<Person>().Configure();
-            modelBuilder.Entity<EmployeeShortFk>().Configure();
-            modelBuilder.Entity<Ch07Book>().Configure();
-            modelBuilder.Entity<Payment>().Configure(); //#C
+            modelBuilder.ApplyConfiguration(new AttendeeConfig());
+            modelBuilder.ApplyConfiguration(new PersonConfig());
+            modelBuilder.ApplyConfiguration(new EmployeeShortFkConfig());
+            modelBuilder.ApplyConfiguration(new Ch07BookConfig());
+            modelBuilder.ApplyConfiguration(new DeletePrincipalConfig());
+            modelBuilder.ApplyConfiguration(new PaymentConfig()); //#C
         }
     }
     /**TPH**************************************************

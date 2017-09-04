@@ -24,11 +24,16 @@ namespace EfCoreInAction.Controllers
             (SortFilterPageOptions options)         
         {
             var listService =                       
-                new ListBooksService(_context);     
+                new ListBooksService(_context);
 
-            var bookList = await listService //#B       
-                .SortFilterPage(options)            
-                .ToListAsync(); //#C                   
+            var bookList = listService //#B       
+                .SortFilterPage(options)
+                .ToList(); //#C   
+
+            //Because of EF Core 2.0.0 bug https://github.com/aspnet/EntityFrameworkCore/issues/9570 I have dropped this back to sync
+            //var bookList = await listService //#B       
+            //    .SortFilterPage(options)
+            //    .ToListAsync(); //#C                   
 
             SetupTraceInfo();           //REMOVE THIS FOR BOOK as it could be confusing
 

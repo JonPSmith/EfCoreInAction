@@ -20,23 +20,6 @@ namespace Test.Chapter09Listings.EfCode
                 try
                 {
                     context.Database.ExecuteSqlCommand(
-                        $"IF OBJECT_ID('dbo.{UdfAverageVotes}', N'FN') IS NOT NULL " +
-                        $"DROP FUNCTION dbo.{UdfAverageVotes}");
-
-                    context.Database.ExecuteSqlCommand(
-                        $"CREATE FUNCTION {UdfAverageVotes} (@bookId int)" +
-                        @"  RETURNS decimal
-  AS
-  BEGIN
-  DECLARE @result AS decimal
-  SELECT @result = AVG(NumStars) FROM dbo.Review AS r
-       WHERE @bookId = r.BookId
-  IF (@result IS NULL)
-     SET @result = -1
-  RETURN @result
-  END");
-
-                    context.Database.ExecuteSqlCommand(
                         $"IF OBJECT_ID('dbo.{FilterOnReviewRank}') IS NOT NULL " +
                         $"DROP PROC dbo.{FilterOnReviewRank}");
 
@@ -45,8 +28,8 @@ namespace Test.Chapter09Listings.EfCode
                         @"(  @RankFilter int )
 AS
 
-SELECT * FROM dbo.Books
-WHERE dbo.udf_AverageVotes(BookId) >= @RankFilter
+SELECT * FROM dbo.Books b 
+WHERE (SELECT AVG(CAST([NumStars] AS float)) FROM dbo.Review AS r WHERE b.BookId = r.BookId) >= @RankFilter
 ");
 
 

@@ -14,7 +14,8 @@ namespace Test.Chapter09Listings.EfCode
         public DbSet<ManyEntity> ManyEntities { get; set; }
         public DbSet<NotifyEntity> Notify { get; set; }
         public DbSet<Notify2Entity> Notify2 { get; set; }
-        public DbSet<GuidKeyEntity> GuidKeyEntities { get; set; }
+        public DbSet<MyEntityGuid> MyEntityGuids { get; set; }
+        public DbSet<OneEntityGuid> OneEntityGuids { get; set; }
         public DbSet<AutoWhenEntity> LoggedEntities { get; set; }
 
         public Chapter09DbContext(

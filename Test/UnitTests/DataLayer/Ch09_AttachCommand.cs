@@ -22,16 +22,50 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void TestAttachNewNoRelationshipOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+            //ATTEMPT
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                var entity = new MyEntity();
+                context.Attach(entity);
+                context.SaveChanges();
+
+                //VERIFY
+                context.MyEntities.Count().ShouldEqual(1);
+            }
+        }
+
+        [Fact]
+        public void TestChangeTrackerAttachNewNoRelationshipOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+            //ATTEMPT
+            using (var context = new Chapter09DbContext(options))
+            {
+                var entity = new MyEntity();
+                context.Attach(entity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(1);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Added);
+            }
+        }
+
+        [Fact]
         public void TestAttachNoRelationshipOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
-
-            MyEntity entity;
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                entity = new MyEntity();
+                var entity = new MyEntity();
                 context.Add(entity);
                 context.SaveChanges();
             }
@@ -39,6 +73,7 @@ namespace test.UnitTests.DataLayer
             //ATTEMPT
             using (var context = new Chapter09DbContext(options))
             {
+                var entity = context.MyEntities.AsNoTracking().First();
                 context.Attach(entity);
                 context.SaveChanges();
 
@@ -51,13 +86,11 @@ namespace test.UnitTests.DataLayer
         public void TestChangeTrackerAttachNoRelationshipOk()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
-
-            MyEntity entity;
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();       
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                entity = new MyEntity();
+                var entity = new MyEntity();
                 context.Add(entity);
                 context.SaveChanges();
             }
@@ -65,6 +98,7 @@ namespace test.UnitTests.DataLayer
             //ATTEMPT
             using (var context = new Chapter09DbContext(options))
             {
+                var entity = context.MyEntities.AsNoTracking().First();
                 context.Attach(entity);
 
                 //VERIFY
@@ -78,13 +112,11 @@ namespace test.UnitTests.DataLayer
         public void TestAttachOptionalOk()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
-
-            MyEntity entity;
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();         
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                entity = new MyEntity();
+                var entity = new MyEntity();
                 context.Add(entity);
                 context.SaveChanges();
             }
@@ -92,6 +124,7 @@ namespace test.UnitTests.DataLayer
             //ATTEMPT
             using (var context = new Chapter09DbContext(options))
             {
+                var entity = context.MyEntities.AsNoTracking().First();
                 entity.OneToOne = new OneEntity();
                 context.Attach(entity);
                 context.SaveChanges();
@@ -100,9 +133,39 @@ namespace test.UnitTests.DataLayer
             {
                 //VERIFY
                 context.MyEntities.Count().ShouldEqual(1);
-                context.MyEntities.Include(x => x.OneToOne).Single(x => x.Id == entity.Id).OneToOne.ShouldNotBeNull();
+                context.MyEntities.Include(x => x.OneToOne).First().OneToOne.ShouldNotBeNull();
                 context.OneEntities.Count().ShouldEqual(1);
 
+            }
+        }
+
+        [Fact]
+        public void TestChangeTrackerAttachOptionalOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                var entity = new MyEntity();
+                context.Add(entity);
+                context.SaveChanges();
+            }
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                //ATTEMPT
+                var entity = context.MyEntities.AsNoTracking().First();
+                entity.OneToOne = new OneEntity();
+                context.Attach(entity);
+
+                //VERIFY
+                context.NumTrackedEntities().ShouldEqual(2);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
+                context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Added);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
+                context.GetAllPropsNavsIsModified(entity.OneToOne).ShouldEqual("");
             }
         }
 
@@ -133,35 +196,6 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 context.Notify.Count().ShouldEqual(1);
                 context.Set<NotifyOne>().Count().ShouldEqual(1);
-            }
-        }
-
-        [Fact]
-        public void TestChangeTrackerAttachOptionalOk()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
-            MyEntity entity;
-            using (var context = new Chapter09DbContext(options))
-            {
-                context.Database.EnsureCreated();
-                entity = new MyEntity();
-                context.Add(entity);
-                context.SaveChanges();
-            }
-
-            using (var context = new Chapter09DbContext(options))
-            {
-                //ATTEMPT
-                entity.OneToOne = new OneEntity();
-                context.Attach(entity);
-
-                //VERIFY
-                context.NumTrackedEntities().ShouldEqual(2);
-                context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
-                context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Added);
-                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
-                context.GetAllPropsNavsIsModified(entity.OneToOne).ShouldEqual("");
             }
         }
 
@@ -201,11 +235,11 @@ namespace test.UnitTests.DataLayer
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
-            MyEntity entity;
+            
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                entity = new MyEntity();
+                var entity = new MyEntity();
                 context.Add(entity);
                 context.Add(new OneEntity());
                 context.SaveChanges();
@@ -214,6 +248,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 //ATTEMPT
+                var entity = context.MyEntities.AsNoTracking().First();
                 var oneToOne = context.OneEntities.First();
                 entity.OneToOne = oneToOne;
                 context.Attach(entity);
@@ -233,11 +268,11 @@ namespace test.UnitTests.DataLayer
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
-            MyEntity entity;
+            
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                entity = new MyEntity();
+                var entity = new MyEntity();
                 context.Add(entity);
                 context.Add(new OneEntity());
                 context.SaveChanges();
@@ -246,6 +281,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 //ATTEMPT
+                var entity = context.MyEntities.AsNoTracking().First();
                 var oneToOne = context.OneEntities.First();
                 entity.OneToOne = oneToOne;
                 context.Attach(entity);
@@ -264,11 +300,11 @@ namespace test.UnitTests.DataLayer
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
-            MyEntity entity;
+            
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                entity = new MyEntity {OneToOne = new OneEntity()};
+                var entity = new MyEntity {OneToOne = new OneEntity()};
                 context.Add(entity);
                 context.SaveChanges();
             }
@@ -276,6 +312,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 //ATTEMPT
+                var entity = context.MyEntities.AsNoTracking().First();
                 var oneToOne = context.OneEntities.First();
                 entity.OneToOne = oneToOne;
                 context.Attach(entity);
@@ -295,11 +332,11 @@ namespace test.UnitTests.DataLayer
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
-            MyEntity entity;
+            
             using (var context = new Chapter09DbContext(options))
             {
                 context.Database.EnsureCreated();
-                entity = new MyEntity { OneToOne = new OneEntity() };
+                var entity = new MyEntity { OneToOne = new OneEntity() };
                 context.Add(entity);
                 context.SaveChanges();
             }
@@ -307,6 +344,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter09DbContext(options))
             {
                 //ATTEMPT
+                var entity = context.MyEntities.AsNoTracking().First();
                 var oneToOne = context.OneEntities.First();
                 entity.OneToOne = oneToOne;
                 context.Attach(entity);
