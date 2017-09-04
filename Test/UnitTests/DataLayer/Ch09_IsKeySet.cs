@@ -35,28 +35,6 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void TestIsKeySetAttachOk()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
-
-            using (var context = new Chapter09DbContext(options))
-            {
-                //context.Database.EnsureCreated();
-
-                //ATTEMPT
-                var storeKey = new OneEntity();
-                context.Attach(storeKey);
-                var clientKey = new MyEntityGuid();
-                context.Attach(clientKey);
-
-                //VERIFY
-                context.GetEntityIsKeySet(storeKey).ShouldBeFalse();
-                context.GetEntityIsKeySet(clientKey).ShouldBeFalse();
-            }
-        }
-
-        [Fact]
         public void TestIsKeySetAfterAddOk()
         {
             //SETUP
