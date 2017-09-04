@@ -20,9 +20,14 @@ namespace Test.Chapter10Listings.EfCode
         protected override void
             OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Book>().Configure();
-            modelBuilder.Entity<BookAuthor>().Configure();
-            modelBuilder.Entity<PriceOffer>().Configure();
+            modelBuilder.ApplyConfiguration(new BookConfig());       //#B
+            modelBuilder.ApplyConfiguration(new BookAuthorConfig()); //#B
+            modelBuilder.ApplyConfiguration(new PriceOfferConfig()); //#B
+            modelBuilder.ApplyConfiguration(new LineItemConfig());   //#B
         }
+        /*****************************************************************
+        #A We only define three of the five tables in the database: Books, Authors and PriceOffers. The other two tables, Review and BookAuthor are found via navigational links from the other tables
+        #B I have moved the Fluent API configuration of various entity classes to separate configration classes that implement the IEntityTypeConfiguration<T> interface
+         * ****************************************************************/
     }
 }

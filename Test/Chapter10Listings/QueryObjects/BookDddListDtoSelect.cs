@@ -33,7 +33,7 @@ namespace Test.Chapter10Listings.QueryObjects
                 ReviewsAverageVotes =                   
                         !p.Reviews.Any()                
                         ? null                          
-                        : (decimal?)p.Reviews           
+                        : (double?)p.Reviews           
                             .Select(q => q.NumStars).Average()
             });
         }
@@ -44,7 +44,7 @@ namespace Test.Chapter10Listings.QueryObjects
         #D The PromotionalText depends on whether a PriceOffer exists for this book
         #E This obtains an array of Authors' names, in the right order. We are using a Client vs. Server evaluation as we want the author's names combined into one string
         #F We need to calculate how many reviews there are
-        #G We cannot calculate the average of zero reviews, so we need to check the count first
+        #G There is a bug in EF Core 2.0.0 that means I need to check for empty collection. 
         * *******************************************************/
 
     }
