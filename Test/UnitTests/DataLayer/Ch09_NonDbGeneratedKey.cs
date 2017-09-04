@@ -234,7 +234,7 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 entity.OneToOne.Id.ShouldNotEqual(Guid.Empty);
                 context.NumTrackedEntities().ShouldEqual(2);
-                context.GetEntityState(entity).ShouldEqual(EntityState.Modified);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Added);
                 context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Added);
             }
         }
@@ -255,7 +255,7 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 entity.OneToOne.Id.ShouldNotEqual(Guid.Empty);
                 context.NumTrackedEntities().ShouldEqual(2);
-                context.GetEntityState(entity).ShouldEqual(EntityState.Modified);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Added);
                 context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Modified);
             }
         }
@@ -280,10 +280,10 @@ namespace test.UnitTests.DataLayer
                 context.Update(entity);
 
                 //VERIFY
-                entity.Id.ShouldEqual(Guid.Empty);
+                entity.Id.ShouldNotEqual(Guid.Empty);
                 context.NumTrackedEntities().ShouldEqual(2);
-                context.GetEntityState(entity).ShouldEqual(EntityState.Modified);
-                context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Unchanged);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Added);
+                context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Modified);
             }
         }
 
@@ -303,9 +303,9 @@ namespace test.UnitTests.DataLayer
                 context.Attach(entity);
 
                 //VERIFY
-                entity.Id.ShouldEqual(Guid.Empty);
+                entity.Id.ShouldNotEqual(Guid.Empty);
                 context.NumTrackedEntities().ShouldEqual(1);
-                context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Added);
             }
         }
 
@@ -345,7 +345,7 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 entity.OneToOne.Id.ShouldNotEqual(Guid.Empty);
                 context.NumTrackedEntities().ShouldEqual(2);
-                context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Added);
                 context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Added);
             }
         }
@@ -366,7 +366,7 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 entity.OneToOne.Id.ShouldNotEqual(Guid.Empty);
                 context.NumTrackedEntities().ShouldEqual(2);
-                context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Added);
                 context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Unchanged);
             }
         }
@@ -392,8 +392,8 @@ namespace test.UnitTests.DataLayer
 
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(2);
-                context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
-                context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Unchanged);
+                context.GetEntityState(entity).ShouldEqual(EntityState.Added);
+                context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Modified);
             }
         }
     }
