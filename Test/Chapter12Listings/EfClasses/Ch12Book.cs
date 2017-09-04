@@ -21,7 +21,7 @@ namespace Test.Chapter12Listings.EfClasses
         //----------------------------------------------
         //Computed columns
 
-        public decimal? AverageVotes { get; set; }
+        public double? AverageVotes { get; set; }
         public decimal ActualPrice { get; set; }
 
         //-----------------------------------------------

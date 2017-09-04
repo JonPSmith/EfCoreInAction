@@ -18,12 +18,14 @@ ALTER TABLE dbo.Books
    ADD ActualPrice AS (dbo.udf_ActualPrice([Ch12BookId], [Price]))
 GO
 
-CREATE FUNCTION udf_AverageVotes (@id int)
-RETURNS decimal  AS
+CREATE FUNCTION udf_AverageVotes (@bookId int)
+RETURNS float
+AS
 BEGIN
-DECLARE @result AS decimal
-SELECT @result = AVG(NumStars) FROM dbo.Ch12Review AS r
-     WHERE @id = r.Ch12BookId
+DECLARE @result AS float
+SELECT @result = AVG(CAST([NumStars] AS float)) 
+    FROM dbo.Ch12Review AS r
+    WHERE @bookId = r.Ch12BookId
 RETURN @result
 END
 GO

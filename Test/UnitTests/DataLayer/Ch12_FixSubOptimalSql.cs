@@ -87,7 +87,7 @@ namespace test.UnitTests.DataLayer
 
                 //VERIFY
                 entities.Count.ShouldEqual(3);
-                entities.Select(x => x.AverageVotes).ShouldEqual(new []{null, (decimal?)5, (decimal?)3 });
+                entities.Select(x => x.AverageVotes).ShouldEqual(new []{null, (double?)5, (double?)3 });
                 foreach (var log in logIt.Logs)
                 {
                     _output.WriteLine(log);
