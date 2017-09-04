@@ -127,7 +127,7 @@ namespace test.UnitTests.ServiceLayer
                     .ForMember(p => p.ReviewsAverageVotes,
                         m => m.MapFrom(s => s.Reviews.Count == 0
                             ? null
-                            : (decimal?) s.Reviews
+                            : (double?) s.Reviews
                                 .Select(q => q.NumStars)
                                 .Average()));
             });

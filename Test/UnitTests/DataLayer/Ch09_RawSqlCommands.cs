@@ -66,17 +66,18 @@ namespace test.UnitTests.DataLayer
             using (var context = new EfCoreContext(_options))
             {
                 //ATTEMPT
+                const int rankFilterBy = 5;
                 var books = context.Books //#A
                     .FromSql( //#B
                         "EXECUTE dbo.FilterOnReviewRank " + //#C
-                        " @RankFilter = {0}", 5) //#D
+                        $"@RankFilter = {rankFilterBy}") //#D
                     .ToList();
 
                 /***********************************************************
                 #A I start the query in the normal way, with the DbSet<T> I want to read
                 #B The FromSql method then allows me to insert a SQL command. This MUST return all the columns of the entity type T, that the DbSet<T> property has - in this case the Book entity class
                 #C Here I execute a stored procedure that I added to the database outside of the normal EF Core database creation system
-                #D I provide a parameter to be used in the stored procedure call
+                #D I use C#6's string interpolation feature to provide the parameter. EF Core intercepts the string interpolation and turns it into a SQL parameter with checks against common SQL injection mistakes/security issues
                  * ********************************************************/
 
                 //VERIFY
@@ -91,23 +92,89 @@ namespace test.UnitTests.DataLayer
             //SETUP
             using (var context = new EfCoreContext(_options))
             {
+                var logIt = new LogDbContext(context);
                 //ATTEMPT
                 var books = context.Books
                     .FromSql(
-                       "SELECT * FROM Books WHERE " +
-                       "dbo.udf_AverageVotes(BookId) >= {0}", 5) //#A
-                    .Include(r => r.Reviews) //#B
+                       "SELECT * FROM Books b WHERE " +              //#A
+                         "(SELECT AVG(CAST([NumStars] AS float)) " + //#A
+                         "FROM dbo.Review AS r " +                   //#A
+                         "WHERE b.BookId = r.BookId) >= {0}", 5) //#B
+                    .Include(r => r.Reviews) //#C
                     .ToList();
 
                 /**************************************************************
-                #A In this case I use a user defined function to calculate the average votes 
-                #B The Include method works with the FromSql because I am not executing a store procedure
+                #A In this case I write some SQL to calculate the average votes and I then use that result in a outer WHERE test
+                #B In this case I use the normal sql parameter check and substitution method of {0}, {2}, {3} etc. in the string and then providing extra parameters to the FromSql call
+                #C The Include method works with the FromSql because I am not executing a store procedure
                  * ****************************************************************/
 
                 //VERIFY
                 books.Count.ShouldEqual(1);
                 books.First().Title.ShouldEqual("Quantum Networking");
                 books.First().Reviews.Count.ShouldEqual(2);
+                foreach (var log in logIt.Logs)
+                {
+                    _output.WriteLine(log);
+                }
+            }
+        }
+
+        [Fact]
+        public void TestFromSqlWithOrderBad()
+        {
+            //SETUP
+            var options =
+                this.ClassUniqueDatabaseSeeded4Books();
+
+            using (var context = new EfCoreContext(options))
+            {
+                var logIt = new LogDbContext(context);
+
+                //ATTEMPT
+                var ex = Assert.Throws<System.Data.SqlClient.SqlException>(
+                    () => context.Books
+                        .FromSql(
+                            "SELECT * FROM Books AS a ORDER BY PublishedOn DESC")
+                        .ToList());
+
+                //VERIFY
+                ex.Message.ShouldEqual("The ORDER BY clause is invalid in views, inline functions, derived tables, subqueries, and common table expressions, unless TOP, OFFSET or FOR XML is also specified.");
+            }
+        }
+
+        [Fact]
+        public void TestFromSqlWithOrderAndIgnoreQueryFiltersOk()
+        {
+            //SETUP
+            var options =
+                this.ClassUniqueDatabaseSeeded4Books();
+
+            using (var context = new EfCoreContext(options))
+            {
+                var logIt = new LogDbContext(context);
+
+                //ATTEMPT
+                var books =
+                    context.Books
+                        .IgnoreQueryFilters() //#A
+                        .FromSql(
+                            "SELECT * FROM Books " +
+                            "WHERE SoftDeleted = 0 " + //#B
+                            "ORDER BY PublishedOn DESC") //#C
+                        .ToList();
+
+                /************************************************************
+                #A You have to remove the effect of a model-level query filter in certain SQL commands such as ORDER BY as they won't work
+                #B I add the model-query filter code back in by hand
+                #C It is the ORDER BY in this case that cannot be run with a model-level query filter 
+                 * ********************************************************/
+                //VERIFY
+                books.First().Title.ShouldEqual("Quantum Networking");
+                foreach (var log in logIt.Logs)
+                {
+                    _output.WriteLine(log);
+                }
             }
         }
 
@@ -125,9 +192,11 @@ namespace test.UnitTests.DataLayer
                     conn.Open(); //#B
                     using (var command = conn.CreateCommand())//#C
                     {
-                        string query = "SELECT BookId, Title, " + //#D
-                            "dbo.udf_AverageVotes(BookId) AS AverageVotes " //#D
-                            + "FROM Books"; //#D
+                        string query = "SELECT b.BookId, b.Title, " + //#D
+                        "(SELECT AVG(CAST([NumStars] AS float)) " + //#D
+                        "FROM dbo.Review AS r " +                   //#D
+                            "WHERE b.BookId = r.BookId) AS AverageVotes " + //#D
+                            "FROM Books b"; //#D
                         command.CommandText = query; //#E
 
                         using (DbDataReader reader = command.ExecuteReader()) //F
@@ -138,7 +207,8 @@ namespace test.UnitTests.DataLayer
                                 {
                                     BookId = reader.GetInt32(0), //#H
                                     Title = reader.GetString(1), //#H
-                                    AverageVotes = reader.GetDecimal(2) //#H
+                                    AverageVotes = reader.IsDBNull(2) 
+                                        ? null : (double?) reader.GetDouble(2) //#H
                                 };
                                 bookDtos.Add(row);
                             }
@@ -164,7 +234,7 @@ namespace test.UnitTests.DataLayer
 
                 //VERIFY
                 bookDtos.Count.ShouldEqual(4);
-                bookDtos.First().AverageVotes.ShouldEqual(-1);
+                bookDtos.First().AverageVotes.ShouldBeNull();
                 bookDtos.Last().AverageVotes.ShouldEqual(5);
             }
         }

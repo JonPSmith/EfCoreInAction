@@ -100,7 +100,7 @@ namespace test.UnitTests.DataLayer
                             transaction.Commit();        
                         }
                     }
-                    catch (Exception e)
+                    catch
                     {
                         //Error handling to go here
                         throw;
@@ -120,12 +120,13 @@ namespace test.UnitTests.DataLayer
 
         public class MyExecutionStrategy : IExecutionStrategy
         {
-            public TResult Execute<TState, TResult>(Func<TState, TResult> operation, Func<TState, ExecutionResult<TResult>> verifySucceeded, TState state)
+
+            public TResult Execute<TState, TResult>(TState state, Func<DbContext, TState, TResult> operation, Func<DbContext, TState, ExecutionResult<TResult>> verifySucceeded)
             {
                 throw new NotImplementedException();
             }
 
-            public Task<TResult> ExecuteAsync<TState, TResult>(Func<TState, CancellationToken, Task<TResult>> operation, Func<TState, CancellationToken, Task<ExecutionResult<TResult>>> verifySucceeded, TState state,
+            public Task<TResult> ExecuteAsync<TState, TResult>(TState state, Func<DbContext, TState, CancellationToken, Task<TResult>> operation, Func<DbContext, TState, CancellationToken, Task<ExecutionResult<TResult>>> verifySucceeded,
                 CancellationToken cancellationToken = new CancellationToken())
             {
                 throw new NotImplementedException();

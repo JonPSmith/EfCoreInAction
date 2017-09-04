@@ -26,29 +26,7 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 var storeKey = new OneEntity();
-                var clientKey = new GuidKeyEntity();
-
-                //VERIFY
-                context.GetEntityIsKeySet(storeKey).ShouldBeFalse();
-                context.GetEntityIsKeySet(clientKey).ShouldBeFalse();
-            }
-        }
-
-        [Fact]
-        public void TestIsKeySetAttachOk()
-        {
-            //SETUP
-            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
-
-            using (var context = new Chapter09DbContext(options))
-            {
-                //context.Database.EnsureCreated();
-
-                //ATTEMPT
-                var storeKey = new OneEntity();
-                context.Attach(storeKey);
-                var clientKey = new GuidKeyEntity();
-                context.Attach(clientKey);
+                var clientKey = new MyEntityGuid();
 
                 //VERIFY
                 context.GetEntityIsKeySet(storeKey).ShouldBeFalse();
@@ -69,7 +47,7 @@ namespace test.UnitTests.DataLayer
                 //ATTEMPT
                 var storeKey = new OneEntity();
                 context.Add(storeKey);
-                var clientKey = new GuidKeyEntity();
+                var clientKey = new MyEntityGuid();
                 context.Add(clientKey);
 
                 //VERIFY

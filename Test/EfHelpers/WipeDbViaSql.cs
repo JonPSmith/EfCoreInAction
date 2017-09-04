@@ -97,9 +97,9 @@ namespace test.EfHelpers
             foreach (var tableName in
                 context.GetTableNamesInOrderForWipe(maxDepth, excludeTypes))
             {
+                var commandString = $"DELETE FROM {tableName}";
                 context.Database
-                    .ExecuteSqlCommand(
-                        $"DELETE FROM {tableName}");
+                    .ExecuteSqlCommand(commandString);
             }
         }
 
@@ -117,10 +117,11 @@ namespace test.EfHelpers
 
         private static void ThrowExceptionIfCannotWipeSelfRef(List<IEntityType> allEntities)
         {
-            var cannotWipes = allEntities //#B
-                .SelectMany(x => x.GetForeignKeys()         //#B
-                    .Where(y => y.PrincipalEntityType == x      //#B
-                                && y.DeleteBehavior == DeleteBehavior.Restrict))
+            var cannotWipes = allEntities
+                .SelectMany(x => x.GetForeignKeys()
+                    .Where(y => y.PrincipalEntityType == x
+                                && (y.DeleteBehavior == DeleteBehavior.Restrict 
+                                 || y.DeleteBehavior == DeleteBehavior.ClientSetNull)))
                 .ToList(); //#B
             if (cannotWipes.Any())
                 throw new InvalidOperationException(

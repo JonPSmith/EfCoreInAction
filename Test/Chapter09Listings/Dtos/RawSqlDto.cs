@@ -6,6 +6,6 @@ namespace Test.Chapter09Listings.Dtos
     {
         public int BookId { get; set; }
         public string Title { get; set; }
-        public decimal AverageVotes { get; set; }
+        public double? AverageVotes { get; set; }
     }
 }

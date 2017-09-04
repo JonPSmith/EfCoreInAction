@@ -28,13 +28,14 @@ namespace Test.Chapter06Listings
 
             modelBuilder.Entity<MyEntityClass>()
                 .Property(p => p.NormalProp)
-                .HasColumnName("GenericInDatabaseCol") //#A
-                .ForSqlServerHasColumnName("SqlServerInDatabaseCol") //#B
-                .ForSqliteHasColumnName("SqliteInDatabaseCol"); //#C
+                .HasColumnName( //#A
+                    Database.IsSqlite() //#B
+                        ? "SqliteDatabaseCol" //#C
+                        : "GenericDatabaseCol"); //#C
         /*Database provider specific command example **************************
-        #A This would be the column name if a For... command didn't override it
-        #B This defines the column name for the sql server database provider
-        #C This defines the column name for the sqlite database provider
+        #A In this case I am setting a column name, but the same would work for ToTable
+        #B Each database provider has an extension called Is<DatabaseName> that returns true if the database is of that type
+        #C Using the tests I pick a specific name for the column if its a Sqlite database, otherwise a generic name for any other database type
         * *******************************************************************/
 
             modelBuilder.Entity<MyEntityClass>()

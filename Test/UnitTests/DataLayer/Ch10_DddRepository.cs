@@ -265,14 +265,14 @@ namespace test.UnitTests.DataLayer
 
                 var book1 = new BookDdd("Book1", null, new DateTime(2001, 1, 1), "Publisher", 100, null,
                     new List<AuthorDdd> { new AuthorDdd { Name = "Author1" } });
+                dddRepro.AddBook(book1);
                 var book2 = new BookDdd("Book2", null, new DateTime(2002, 1, 1), "Publisher", 200, null,
                     new List<AuthorDdd> { new AuthorDdd { Name = "Author2" } });
+                dddRepro.AddBook(book2);
                 var book3 = new BookDdd("Book3", null, new DateTime(2002, 1, 1), "Publisher", 300, null,
                     new List<AuthorDdd> { new AuthorDdd { Name = "Author3" } });
-                book3.AddReview(context, 5, "Great", "Reviewer");
-                dddRepro.AddBook(book1);
-                dddRepro.AddBook(book2);
                 dddRepro.AddBook(book3);
+                book3.AddReview(context, 5, "Great", "Reviewer");
                 context.SaveChanges();
 
                 //ATTEMPT
