@@ -88,6 +88,7 @@ namespace test.UnitTests.DataLayer
 
             using (var context = new Chapter12DbContext(optionsBuilder.Options))
             {
+                var logIt = new LogDbContext(context);
                 //ATTEMPT
                 foreach (var book in context.Books)
                 {
@@ -95,6 +96,10 @@ namespace test.UnitTests.DataLayer
 
                     //VERIFY
                     ex.Message.ShouldEqual("There is already an open DataReader associated with this Command which must be closed first.");
+                }
+                foreach (var log in logIt.Logs)
+                {
+                    _output.WriteLine(log);
                 }
             }
         }
@@ -121,21 +126,28 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void SqliteDualReadOk()
+        public void SqlServerDualReadOk()
         {
             //SETUP
-            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            var connection = this.GetUniqueDatabaseConnectionString()
+                .Replace(";MultipleActiveResultSets=True", "");
 
-            //ATTEMPT
-            using (var context = new EfCoreContext(options))
+            var optionsBuilder =
+                new DbContextOptionsBuilder<Chapter12DbContext>();
+            optionsBuilder.UseSqlServer(connection);
+
+            using (var context = new Chapter12DbContext(optionsBuilder.Options))
             {
-                context.Database.EnsureCreated();
-                context.SeedDatabaseFourBooks();
+                var logIt = new LogDbContext(context);
 
                 //ATTEMPT
-                foreach (var book in context.Books)
+                foreach (var book in context.Books.IgnoreQueryFilters())
                 {
-                    var reviews = context.Set<Review>().Where(x => x.BookId == book.BookId).ToList();
+                    var reviews = context.Set<Ch12Review>().Where(x => x.Ch12BookId == book.Ch12BookId).ToList();
+                }
+                foreach (var log in logIt.Logs)
+                {
+                    _output.WriteLine(log);
                 }
             }
         }
