@@ -20,8 +20,8 @@ namespace Test.Chapter10Listings.EfCode
         protected override void
             OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Book>().Configure();
-            modelBuilder.Entity<LineItem>().Configure();
+            modelBuilder.ApplyConfiguration(new BookConfig());
+            modelBuilder.ApplyConfiguration( new LineItemConfig());
 
             modelBuilder.Ignore<Review>();    //#B
             modelBuilder.Ignore<PriceOffer>();//#B

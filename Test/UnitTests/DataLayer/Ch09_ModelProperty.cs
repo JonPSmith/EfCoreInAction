@@ -102,7 +102,7 @@ namespace test.UnitTests.DataLayer
                 var ex = Assert.Throws<InvalidOperationException>(() => context.GetTableNamesInOrderForWipe());
 
                 //VERIFY
-                ex.Message.ShouldEqual("You cannot delete all the rows in one go in entity(s): Test.Chapter07Listings.EfClasses.Employee");
+                ex.Message.ShouldEqual("You cannot delete all the rows in one go in entity(s): Test.Chapter07Listings.EfClasses.Employee, Test.Chapter07Listings.EfClasses.EmployeeShortFk");
             }
         }
 
