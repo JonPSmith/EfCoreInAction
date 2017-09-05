@@ -98,11 +98,16 @@ namespace test.UnitTests.DataLayer
             //SETUP
             using (var context = new Chapter12DbContext(_options))
             {
-
+                var logger = new LogDbContext(context);
                 //ATTEMPT
                 RunTest(context, 1, "First access, SearchNoIndex:", (c, i) => c.IndexClasses.First(x => x.NoIndex == _entities[i].NoIndex));
+                var oneLogs = logger.Logs;
                 RunTest(context, 1, "Second access, SearchNoIndex", (c, i) => c.IndexClasses.First(x => x.NoIndex == _entities[i].NoIndex));
                 RunTest(context, 100, "Multi access, SearchNoIndex", (c, i) => c.IndexClasses.First(x => x.NoIndex == _entities[i].NoIndex));
+                foreach (var log in oneLogs)
+                {
+                    _output.WriteLine(log);
+                }
             }
         }
 
