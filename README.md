@@ -3,8 +3,7 @@
 Welcome to the Git repo that is associated with the book 
 **[Entity Framework Core in Action](https://www.manning.com/books/entity-framework-core-in-action?a_aid=su4utaraxuTre8tuthup&a_bid=4cef27ce)**
 published by [Manning Publications](https://www.manning.com/).
-
-The **Entity Framework Core in Action** book details how to use 
+This book details how to use 
 [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/index) (EF Core)
 to develop database access code in [.NET Core](https://www.microsoft.com/net) applications. 
 
@@ -13,6 +12,16 @@ This Git repo contains all the code in the book, plus an
 that I develop, and improve, in the book.
 All the code uses Microsoft's, open-source 
 [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/index) library for database access.
+
+## NOTE: Now updated to .NET Core 2.0 release
+
+I have extensively updated the  Git repo https://github.com/JonPSmith/EfCoreInAction and each branch is now at the new .NET Core 2.0 release level. There are lots of changes to the code to match both changes in EF Core 2.0.0 and ASP.NET Core 2.0.0.
+To run the changed Git repo code you need to:
+1.	Install .NET Core 2.0 SDK – go to https://www.microsoft.com/net/download/core and select the correct SDK for your system
+2.	I recommend updating to Visual Studio 2017 15.3 as that has the new templates for ASP.NET Core 2.0.0. (I think my Git repo will work with Visual Studio 2017 15.2, but I haven’t tried it).
+
+### WARNING. 
+If you have already run any of the unit tests prior to the 2.0.0 update you do need to delete all the tests databases, as they are out of date and will throw errors. There is a unit test built specifically to do this called `DeleteAllTestDatabasesOk` in the class `Test.UnitCommands.DeleteAllUnitTestDatabases`, which you must run in debug mode.
 
 # Where's the code!
 
@@ -31,8 +40,6 @@ I did that because I built the normal code so you can run it locally without mig
 
 ### Part 1 - Getting started
 ```
-                                         Ch5MigrateMulti
-                                            /
                                         Ch5Migrate
                                           /
 master    Ch1    Ch2 --> Ch3 --> Ch4 --> Ch5 -->
@@ -45,12 +52,6 @@ master    Ch1    Ch2 --> Ch3 --> Ch4 --> Ch5 -->
 ```
 (ch9) --> Ch10 --> Ch11 --> Ch12
 ```
-
-## NOTE: Now updated to Visual Studio 2017 format
-
-Visual Studio 2017 (VS2017) is the recommended version of Visual Studio for developing .NET Core applications.
-The whole solution has been rebuild to use .csprog and to swap over to the recommended folder structure,
-which has the projects at the top level.
 
 ## Live example book selling site
 
