@@ -21,6 +21,7 @@ namespace ServiceLayer.DatabaseServices.Concrete
         private const string BranchNameFilename = "GitBranchName.txt";
 
         private const string SeedDataSearchName = "Apress books*.json";
+        public const string TemplateFileName = "Manning books.json";
         public const string SeedFileSubDirectory = "seedData";
 
         public static string GetBranchName(this string workingDirectory)
@@ -67,6 +68,13 @@ namespace ServiceLayer.DatabaseServices.Concrete
             db.ExecuteScriptFileInTransaction(filepath);
         }
 
+        public static void DevelopmentWipeCreated(this EfCoreContext db, string wwwrootDirectory)
+        {
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+            db.DevelopmentEnsureCreated(wwwrootDirectory);
+        }
+
         public static int SeedDatabase(this EfCoreContext context, string wwwrootDirectory)
         {
             if (!(context.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists())
@@ -87,6 +95,24 @@ namespace ServiceLayer.DatabaseServices.Concrete
             }
 
             return numBooks;
+        }
+
+        public static int GenerateBooks(this EfCoreContext context, int numBooksNeeded, string wwwrootDirectory)
+        {
+            if (!(context.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists())
+                throw new InvalidOperationException("The database does not exist. If you are using Migrations then run PMC command update-database to create it");
+
+            var numBooks = context.Books.Count();
+            if (numBooks < numBooksNeeded)
+            {
+                //add more generated books
+                var gen = new BookGenerator();
+                var books = gen.GenerateBooks(Path.Combine(wwwrootDirectory, SeedFileSubDirectory, TemplateFileName), numBooksNeeded - numBooks);
+                context.Books.AddRange(books);
+                context.SaveChanges();
+            }
+
+            return context.Books.Count();
         }
     }
 }

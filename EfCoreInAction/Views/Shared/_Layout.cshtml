@@ -50,6 +50,8 @@
                                 @if (Context.Request.IsLocal())
                                 {
                                     <li>@Html.ActionLink("Reset database", "ResetDatabase", "Admin")</li>
+                                    <li>@Html.ActionLink("Generate 100 books", "GenerateBooks", "Admin", routeValues: new { numBooksNeeded = 100})</li>
+                                    <li>@Html.ActionLink("Generate 1000 books", "GenerateBooks", "Admin", routeValues: new { numBooksNeeded = 1000 })</li>
                                     @*<li>@Html.ActionLink("Add Book", "AddBook", "Admin")</li>*@
                                 }
                             </ul>

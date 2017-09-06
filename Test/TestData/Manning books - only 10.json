@@ -1,0 +1,52 @@
+[
+  {
+    "PublishDate": "2003-09-01T00:00:00",
+    "Title": "SQR in PeopleSoft and Other Applications, Second Edition",
+    "Authors": "Galina Landres and Vlad Landres"
+  },
+  {
+    "PublishDate": "2011-11-01T00:00:00",
+    "Title": "Android in Action, Third Edition",
+    "Authors": "W. Frank Ableson, Robi Sen, Chris King and C. Enrique Ortiz"
+  },
+  {
+    "PublishDate": "2011-09-01T00:00:00",
+    "Title": "Android in Practice",
+    "Authors": "Charlie Collins, Michael D. Galpin, and Matthias Kaeppler"
+  },
+  {
+    "PublishDate": "2011-01-01T00:00:00",
+    "Title": "Android in Action, Second Edition",
+    "Authors": "W. Frank Ableson, Robi Sen, and Chris King"
+  },
+  {
+    "PublishDate": "2009-04-01T00:00:00",
+    "Title": "Unlocking Android",
+    "Authors": "W. Frank Ableson, Charlie Collins and Robi Sen"
+  },
+  {
+    "PublishDate": "2014-12-01T00:00:00",
+    "Title": "Programming for Musicians and Digital Artists",
+    "Authors": "Ajay Kapur, Perry Cook, Spencer Salazar, and Ge Wang"
+  },
+  {
+    "PublishDate": "2011-06-01T00:00:00",
+    "Title": "Generative Art",
+    "Authors": "Matt Pearson"
+  },
+  {
+    "PublishDate": "1997-08-01T00:00:00",
+    "Title": "Maximum MIDI",
+    "Authors": "Paul Messick"
+  },
+  {
+    "PublishDate": "2013-09-01T00:00:00",
+    "Title": "C# in Depth, Third Edition",
+    "Authors": "Jon Skeet"
+  },
+  {
+    "PublishDate": "2009-12-01T00:00:00",
+    "Title": "Real-World Functional Programming",
+    "Authors": "Tomas Petricek with Jon Skeet"
+  }
+]

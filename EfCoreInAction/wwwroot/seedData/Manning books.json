@@ -1,0 +1,1952 @@
+[
+  {
+    "PublishDate": "2013-06-01T00:00:00",
+    "Title": "50 Android Hacks",
+    "Authors": "Carlos M. Sessa"
+  },
+  {
+    "PublishDate": "2011-11-01T00:00:00",
+    "Title": "Android in Action, Third Edition",
+    "Authors": "W. Frank Ableson, Robi Sen, Chris King and C. Enrique Ortiz"
+  },
+  {
+    "PublishDate": "2011-09-01T00:00:00",
+    "Title": "Android in Practice",
+    "Authors": "Charlie Collins, Michael D. Galpin, and Matthias Kaeppler"
+  },
+  {
+    "PublishDate": "2011-01-01T00:00:00",
+    "Title": "Android in Action, Second Edition",
+    "Authors": "W. Frank Ableson, Robi Sen, and Chris King"
+  },
+  {
+    "PublishDate": "2009-04-01T00:00:00",
+    "Title": "Unlocking Android",
+    "Authors": "W. Frank Ableson, Charlie Collins and Robi Sen"
+  },
+  {
+    "PublishDate": "2014-12-01T00:00:00",
+    "Title": "Programming for Musicians and Digital Artists",
+    "Authors": "Ajay Kapur, Perry Cook, Spencer Salazar, and Ge Wang"
+  },
+  {
+    "PublishDate": "2011-06-01T00:00:00",
+    "Title": "Generative Art",
+    "Authors": "Matt Pearson"
+  },
+  {
+    "PublishDate": "1997-08-01T00:00:00",
+    "Title": "Maximum MIDI",
+    "Authors": "Paul Messick"
+  },
+  {
+    "PublishDate": "2013-09-01T00:00:00",
+    "Title": "C# in Depth, Third Edition",
+    "Authors": "Jon Skeet"
+  },
+  {
+    "PublishDate": "2009-12-01T00:00:00",
+    "Title": "Real-World Functional Programming",
+    "Authors": "Tomas Petricek with Jon Skeet"
+  },
+  {
+    "PublishDate": "2008-04-01T00:00:00",
+    "Title": "C# in Depth",
+    "Authors": "Jon Skeet"
+  },
+  {
+    "PublishDate": "2008-02-01T00:00:00",
+    "Title": "LINQ in Action",
+    "Authors": "Fabrice Marguerie, Steve Eichert and Jim Wooley"
+  },
+  {
+    "PublishDate": "2006-04-01T00:00:00",
+    "Title": "Windows Forms in Action",
+    "Authors": "Erik Brown"
+  },
+  {
+    "PublishDate": "2002-03-01T00:00:00",
+    "Title": "Windows Forms Programming with C#",
+    "Authors": "Erik Brown"
+  },
+  {
+    "PublishDate": "2017-02-01T00:00:00",
+    "Title": "Exploring Cloud Computing",
+    "Authors": "With chapters selected by Michael Wittig and Andreas Wittig"
+  },
+  {
+    "PublishDate": "2015-02-01T00:00:00",
+    "Title": "D3.js in Action",
+    "Authors": "Elijah Meeks"
+  },
+  {
+    "PublishDate": "2009-08-01T00:00:00",
+    "Title": "Gnuplot in Action",
+    "Authors": "Philipp K. Janert"
+  },
+  {
+    "PublishDate": "2002-05-01T00:00:00",
+    "Title": "Graphics Programming with Perl",
+    "Authors": "Martien Verbruggen"
+  },
+  {
+    "PublishDate": "2002-03-01T00:00:00",
+    "Title": "Java 3D Programming",
+    "Authors": "Daniel Selman"
+  },
+  {
+    "PublishDate": "2000-08-01T00:00:00",
+    "Title": "3D User Interfaces with Java 3D",
+    "Authors": "Jon Barrilleaux"
+  },
+  {
+    "PublishDate": "2017-07-01T00:00:00",
+    "Title": "Exploring the Data Jungle",
+    "Authors": "Brian Godsey"
+  },
+  {
+    "PublishDate": "2017-06-01T00:00:00",
+    "Title": "Keras in Motion",
+    "Authors": "Dan Van Boxel"
+  },
+  {
+    "PublishDate": "2017-05-01T00:00:00",
+    "Title": "SQL in Motion",
+    "Authors": "Ben Brumm"
+  },
+  {
+    "PublishDate": "2017-05-01T00:00:00",
+    "Title": "Streaming Data",
+    "Authors": "Andrew G. Psaltis"
+  },
+  {
+    "PublishDate": "2017-03-01T00:00:00",
+    "Title": "Think Like a Data Scientist",
+    "Authors": "Brian Godsey"
+  },
+  {
+    "PublishDate": "2016-11-01T00:00:00",
+    "Title": "Spark in Action",
+    "Authors": "Petar Zecevic and Marko Bonaci"
+  },
+  {
+    "PublishDate": "2016-11-01T00:00:00",
+    "Title": "Visualizing Graph Data",
+    "Authors": "Corey L. Lanum"
+  },
+  {
+    "PublishDate": "2011-05-01T00:00:00",
+    "Title": "Entity Framework 4 in Action",
+    "Authors": "Stefano Mostarda, Marco De Sanctis, and Daniele Bochicchio"
+  },
+  {
+    "PublishDate": "2016-09-01T00:00:00",
+    "Title": "Real-World Machine Learning",
+    "Authors": "Henrik Brink, Joseph W. Richards, and Mark Fetherolf"
+  },
+  {
+    "PublishDate": "2016-08-01T00:00:00",
+    "Title": "Algorithms of the Intelligent Web, Second Edition",
+    "Authors": "Douglas G. McIlwraith, Haralambos Marmanis, and Dmitry Babenko"
+  },
+  {
+    "PublishDate": "2016-06-01T00:00:00",
+    "Title": "Exploring Data Science",
+    "Authors": "With chapters selected by John Mount and Nina Zumel"
+  },
+  {
+    "PublishDate": "2016-06-01T00:00:00",
+    "Title": "Reactive Data Handling",
+    "Authors": "With chapters selected by Manuel Bernhardt"
+  },
+  {
+    "PublishDate": "2016-06-01T00:00:00",
+    "Title": "Relevant Search",
+    "Authors": "Doug Turnbull and John Berryman"
+  },
+  {
+    "PublishDate": "2016-06-01T00:00:00",
+    "Title": "Spark GraphX in Action",
+    "Authors": "Michael S. Malak and Robin East"
+  },
+  {
+    "PublishDate": "2016-05-01T00:00:00",
+    "Title": "Geoprocessing with Python",
+    "Authors": "Chris Garrard"
+  },
+  {
+    "PublishDate": "2016-05-01T00:00:00",
+    "Title": "Introducing Data Science",
+    "Authors": "Davy Cielen, Arno D. B. Meysman, and Mohamed Ali"
+  },
+  {
+    "PublishDate": "2016-03-01T00:00:00",
+    "Title": "Gnuplot in Action, Second Edition",
+    "Authors": "Philipp K. Janert"
+  },
+  {
+    "PublishDate": "2016-03-01T00:00:00",
+    "Title": "MongoDB in Action, Second Edition",
+    "Authors": "Kyle Banker, Peter Bakkum, Shaun Verch, Douglas Garrett, and Tim Hawkins"
+  },
+  {
+    "PublishDate": "2015-11-01T00:00:00",
+    "Title": "Elasticsearch in Action",
+    "Authors": "Radu Gheorghe, Matthew Lee Hinman, and Roy Russo"
+  },
+  {
+    "PublishDate": "2015-04-01T00:00:00",
+    "Title": "Big Data",
+    "Authors": "Nathan Marz and James Warren"
+  },
+  {
+    "PublishDate": "2015-04-01T00:00:00",
+    "Title": "PostGIS in Action, Second Edition",
+    "Authors": "Regina O. Obe and Leo S. Hsu"
+  },
+  {
+    "PublishDate": "2015-03-01T00:00:00",
+    "Title": "Storm Applied",
+    "Authors": "Sean T. Allen, Matthew Jankowski, and Peter Pathirana"
+  },
+  {
+    "PublishDate": "2014-12-01T00:00:00",
+    "Title": "Neo4j in Action",
+    "Authors": "Aleksa Vukotic and Nicki Watt with Tareq Abedrabbo, Dominic Fox, and Jonas Partner"
+  },
+  {
+    "PublishDate": "2014-09-01T00:00:00",
+    "Title": "Hadoop in Practice, Second Edition",
+    "Authors": "Alex Holmes"
+  },
+  {
+    "PublishDate": "2014-03-01T00:00:00",
+    "Title": "Practical Data Science with R",
+    "Authors": "Nina Zumel and John Mount"
+  },
+  {
+    "PublishDate": "2014-03-01T00:00:00",
+    "Title": "Solr in Action",
+    "Authors": "Trey Grainger and Timothy Potter"
+  },
+  {
+    "PublishDate": "2013-09-01T00:00:00",
+    "Title": "Mondrian in Action",
+    "Authors": "William Back, Nicholas Goodman, and Julian Hyde"
+  },
+  {
+    "PublishDate": "2012-12-01T00:00:00",
+    "Title": "Taming Text",
+    "Authors": "Grant S. Ingersoll, Thomas S. Morton, and Andrew L. Farris"
+  },
+  {
+    "PublishDate": "2012-11-01T00:00:00",
+    "Title": "HBase in Action",
+    "Authors": "Nicholas Dimiduk and Amandeep Khurana"
+  },
+  {
+    "PublishDate": "2012-10-01T00:00:00",
+    "Title": "Hadoop in Practice",
+    "Authors": "Alex Holmes"
+  },
+  {
+    "PublishDate": "2012-04-01T00:00:00",
+    "Title": "Machine Learning in Action",
+    "Authors": "Peter Harrington"
+  },
+  {
+    "PublishDate": "2011-12-01T00:00:00",
+    "Title": "MongoDB in Action",
+    "Authors": "Kyle Banker"
+  },
+  {
+    "PublishDate": "2011-04-01T00:00:00",
+    "Title": "PostGIS in Action",
+    "Authors": "Regina O. Obe and Leo S. Hsu"
+  },
+  {
+    "PublishDate": "2014-10-01T00:00:00",
+    "Title": "PowerShell in Depth, Second Edition",
+    "Authors": "Don Jones, Jeffery Hicks, Richard Siddaway"
+  },
+  {
+    "PublishDate": "2014-04-01T00:00:00",
+    "Title": "Learn SQL Server Administration in a Month of Lunches",
+    "Authors": "Don Jones"
+  },
+  {
+    "PublishDate": "2013-09-01T00:00:00",
+    "Title": "Making Sense of NoSQL",
+    "Authors": "Daniel G. McCreary and Ann M. Kelly"
+  },
+  {
+    "PublishDate": "2013-06-01T00:00:00",
+    "Title": "Redis in Action",
+    "Authors": "Josiah Carlson"
+  },
+  {
+    "PublishDate": "2011-10-01T00:00:00",
+    "Title": "SQL Server MVP Deep Dives, Volume 2",
+    "Authors": "Kalen Delaney, Louis Davidson, Greg Low, Brad McGehee, Paul Nielsen, Paul Randal, and Kimberly Tripp"
+  },
+  {
+    "PublishDate": "2011-05-01T00:00:00",
+    "Title": "SQL Server DMVs in Action",
+    "Authors": "Ian W. Stirk"
+  },
+  {
+    "PublishDate": "2009-11-01T00:00:00",
+    "Title": "SQL Server MVP Deep Dives",
+    "Authors": "Contributions from 53 SQL Server MVPs, Edited by Paul Nielsen, Kalen Delaney, Greg Low, Adam Machanic, Paul S. Randal, and Kimberly L. Tripp"
+  },
+  {
+    "PublishDate": "2009-08-01T00:00:00",
+    "Title": "SQL Server 2008 Administration in Action",
+    "Authors": "Rod Colledge"
+  },
+  {
+    "PublishDate": "2008-12-01T00:00:00",
+    "Title": "Team Foundation Server 2008 in Action",
+    "Authors": "Jamil Azher"
+  },
+  {
+    "PublishDate": "2017-08-01T00:00:00",
+    "Title": "Functional Programming in C#",
+    "Authors": "Enrico Buonanno"
+  },
+  {
+    "PublishDate": "2017-08-01T00:00:00",
+    "Title": "Nim in Action",
+    "Authors": "Dominik Picheta"
+  },
+  {
+    "PublishDate": "2017-03-01T00:00:00",
+    "Title": "Type-Driven Development with Idris",
+    "Authors": "Edwin Brady"
+  },
+  {
+    "PublishDate": "2017-02-01T00:00:00",
+    "Title": "Reactive Design Patterns",
+    "Authors": "Roland Kuhn with Brian Hanafee and Jamie Allen"
+  },
+  {
+    "PublishDate": "2017-01-01T00:00:00",
+    "Title": "Functional Programming in Java",
+    "Authors": "Pierre-Yves Saumont"
+  },
+  {
+    "PublishDate": "2013-02-01T00:00:00",
+    "Title": "PowerShell in Depth",
+    "Authors": "Don Jones, Richard Siddaway, and Jeffery Hicks"
+  },
+  {
+    "PublishDate": "2010-11-01T00:00:00",
+    "Title": "C# in Depth, Second Edition",
+    "Authors": "Jon Skeet"
+  },
+  {
+    "PublishDate": "2017-03-01T00:00:00",
+    "Title": "Anyone Can Create an App",
+    "Authors": "Wendy L. Wise"
+  },
+  {
+    "PublishDate": "2012-12-01T00:00:00",
+    "Title": "Learn PowerShell Toolmaking in a Month of Lunches",
+    "Authors": "Don Jones and Jeffery D. Hicks"
+  },
+  {
+    "PublishDate": "2012-11-01T00:00:00",
+    "Title": "Learn Windows PowerShell in a Month of Lunches, Second Edition",
+    "Authors": "Don Jones and Jeffery D. Hicks"
+  },
+  {
+    "PublishDate": "2014-04-01T00:00:00",
+    "Title": "EJB 3 in Action, Second Edition",
+    "Authors": "Debu Panda, Reza Rahman, Ryan Cuprak, and Michael Remijan"
+  },
+  {
+    "PublishDate": "2013-03-01T00:00:00",
+    "Title": "Enterprise OSGi In Action",
+    "Authors": "Holly Cummins and Timothy Ward"
+  },
+  {
+    "PublishDate": "2012-09-01T00:00:00",
+    "Title": "SOA Patterns",
+    "Authors": "Arnon Rotem-Gal-Oz"
+  },
+  {
+    "PublishDate": "2012-09-01T00:00:00",
+    "Title": "Spring Integration in Action",
+    "Authors": "Mark Fisher, Jonas Partner, Marius Bogoevici, and Iwein Fuld"
+  },
+  {
+    "PublishDate": "2012-07-01T00:00:00",
+    "Title": "SOA Governance in Action",
+    "Authors": "Jos Dirksen"
+  },
+  {
+    "PublishDate": "2012-04-01T00:00:00",
+    "Title": "Spring Roo in Action",
+    "Authors": "Ken Rimple and Srini Penchikala"
+  },
+  {
+    "PublishDate": "2011-12-01T00:00:00",
+    "Title": "OSGi in Depth",
+    "Authors": "Alexandre de Castro Alves"
+  },
+  {
+    "PublishDate": "2011-10-01T00:00:00",
+    "Title": "Spring Batch in Action",
+    "Authors": "Arnaud Cogoluegnes, Thierry Templier, Gary Gregory and Olivier Bazoud"
+  },
+  {
+    "PublishDate": "2011-06-01T00:00:00",
+    "Title": "Spring in Action, Third Edition",
+    "Authors": "Craig Walls"
+  },
+  {
+    "PublishDate": "2011-04-01T00:00:00",
+    "Title": "OSGi in Action",
+    "Authors": "Richard S. Hall, Karl Pauls, Stuart McCulloch, and David Savage"
+  },
+  {
+    "PublishDate": "2011-03-01T00:00:00",
+    "Title": "ActiveMQ in Action",
+    "Authors": "Bruce Snyder, Dejan Bosanac, and Rob Davies"
+  },
+  {
+    "PublishDate": "2011-02-01T00:00:00",
+    "Title": "Tuscany SCA in Action",
+    "Authors": "Simon Laws, Mark Combellack, Raymond Feng, Haleh Mahbod, Simon Nash"
+  },
+  {
+    "PublishDate": "2010-12-01T00:00:00",
+    "Title": "Camel in Action",
+    "Authors": "Claus Ibsen and Jonathan Anstey"
+  },
+  {
+    "PublishDate": "2010-09-01T00:00:00",
+    "Title": "Spring Dynamic Modules in Action",
+    "Authors": "Arnaud Cogoluegnes, Thierry Templier, and Andy Piper"
+  },
+  {
+    "PublishDate": "2009-08-01T00:00:00",
+    "Title": "AspectJ in Action, Second Edition",
+    "Authors": "Ramnivas Laddad"
+  },
+  {
+    "PublishDate": "2009-05-01T00:00:00",
+    "Title": "Open Source SOA",
+    "Authors": "Jeff Davis"
+  },
+  {
+    "PublishDate": "2009-02-01T00:00:00",
+    "Title": "NHibernate in Action",
+    "Authors": "Pierre Henri Kuat�, Tobin Harris, Christian Bauer, and Gavin King"
+  },
+  {
+    "PublishDate": "2008-12-01T00:00:00",
+    "Title": "Hibernate Search in Action",
+    "Authors": "Emmanuel Bernard and John Griffin"
+  },
+  {
+    "PublishDate": "2008-09-01T00:00:00",
+    "Title": "Open-Source ESBs in Action",
+    "Authors": "Tijs Rademakers and Jos Dirksen"
+  },
+  {
+    "PublishDate": "2008-09-01T00:00:00",
+    "Title": "Seam in Action",
+    "Authors": "Dan Allen"
+  },
+  {
+    "PublishDate": "2007-12-01T00:00:00",
+    "Title": "SOA Security",
+    "Authors": "Ramarao Kanneganti and Prasad A. Chodavarapu"
+  },
+  {
+    "PublishDate": "2007-08-01T00:00:00",
+    "Title": "Spring in Action, Second Edition",
+    "Authors": "Craig Walls with Ryan Breidenbach"
+  },
+  {
+    "PublishDate": "2007-03-01T00:00:00",
+    "Title": "EJB 3 in Action",
+    "Authors": "Debu Panda, Reza Rahman, Derek Lane"
+  },
+  {
+    "PublishDate": "2006-10-01T00:00:00",
+    "Title": "Java Persistence with Hibernate",
+    "Authors": "Christian Bauer and Gavin King"
+  },
+  {
+    "PublishDate": "2005-11-01T00:00:00",
+    "Title": "Understanding Enterprise SOA",
+    "Authors": "Eric Pulier and Hugh Taylor"
+  },
+  {
+    "PublishDate": "2005-08-01T00:00:00",
+    "Title": "Hibernate Quickly",
+    "Authors": "Patrick Peak and Nick Heudecker"
+  },
+  {
+    "PublishDate": "2005-02-01T00:00:00",
+    "Title": "Spring in Action",
+    "Authors": "Craig Walls and Ryan Breidenbach"
+  },
+  {
+    "PublishDate": "2004-08-01T00:00:00",
+    "Title": "Hibernate in Action",
+    "Authors": "Christian Bauer and Gavin King"
+  },
+  {
+    "PublishDate": "2003-06-01T00:00:00",
+    "Title": "AspectJ in Action",
+    "Authors": "Ramnivas Laddad"
+  },
+  {
+    "PublishDate": "2003-05-01T00:00:00",
+    "Title": "Bitter EJB",
+    "Authors": "Bruce Tate, Mike Clark, Bob Lee, Patrick Linskey"
+  },
+  {
+    "PublishDate": "2003-05-01T00:00:00",
+    "Title": "EJB Cookbook",
+    "Authors": "Benjamin G. Sullins and Mark B. Whipple"
+  },
+  {
+    "PublishDate": "2002-03-01T00:00:00",
+    "Title": "Bitter Java",
+    "Authors": "Bruce A. Tate"
+  },
+  {
+    "PublishDate": "2015-08-01T00:00:00",
+    "Title": "Oculus Rift in Action",
+    "Authors": "Bradley Austin Davis, Karen Bryla, and Phillips Alexander Benton"
+  },
+  {
+    "PublishDate": "2015-06-01T00:00:00",
+    "Title": "Unity in Action",
+    "Authors": "Joseph Hocking"
+  },
+  {
+    "PublishDate": "2015-06-01T00:00:00",
+    "Title": "Using the TI-84 Plus, Second Edition",
+    "Authors": "Christopher R. Mitchell"
+  },
+  {
+    "PublishDate": "2016-09-01T00:00:00",
+    "Title": "OCA Java SE 8 Programmer I Certification Guide",
+    "Authors": "Mala Gupta"
+  },
+  {
+    "PublishDate": "2016-03-01T00:00:00",
+    "Title": "Java Testing with Spock",
+    "Authors": "Konstantinos Kapelonis"
+  },
+  {
+    "PublishDate": "2015-12-01T00:00:00",
+    "Title": "Clojure in Action, Second Edition",
+    "Authors": "Amit Rathore and Francis Avila"
+  },
+  {
+    "PublishDate": "2015-12-01T00:00:00",
+    "Title": "Spring Boot in Action",
+    "Authors": "Craig Walls"
+  },
+  {
+    "PublishDate": "2015-10-01T00:00:00",
+    "Title": "Java Persistence with Hibernate, Second Edition",
+    "Authors": "Christian Bauer, Gavin King, and Gary Gregory"
+  },
+  {
+    "PublishDate": "2015-08-01T00:00:00",
+    "Title": "OCP Java SE 7 Programmer II Certification Guide",
+    "Authors": "Mala Gupta"
+  },
+  {
+    "PublishDate": "2015-06-01T00:00:00",
+    "Title": "Groovy in Action, Second Edition",
+    "Authors": "Dierk K�nig, Paul King, Guillaume Laforge, Hamlet D'Arcy, C�dric Champeau, Erik Pragt, and Jon Skeet"
+  },
+  {
+    "PublishDate": "2014-11-01T00:00:00",
+    "Title": "Spring in Action, Fourth Edition",
+    "Authors": "Craig Walls"
+  },
+  {
+    "PublishDate": "2014-08-01T00:00:00",
+    "Title": "Java 8 in Action",
+    "Authors": "Raoul-Gabriel Urma, Mario Fusco, and Alan Mycroft"
+  },
+  {
+    "PublishDate": "2014-06-01T00:00:00",
+    "Title": "Grails in Action, Second Edition",
+    "Authors": "Glen Smith and Peter Ledbrook"
+  },
+  {
+    "PublishDate": "2014-02-01T00:00:00",
+    "Title": "Gradle in Action",
+    "Authors": "Benjamin Muschko"
+  },
+  {
+    "PublishDate": "2014-02-01T00:00:00",
+    "Title": "Mule in Action, Second Edition",
+    "Authors": "David Dossot, John D'Emic, and Victor Romero"
+  },
+  {
+    "PublishDate": "2014-02-01T00:00:00",
+    "Title": "Play for Java",
+    "Authors": "Nicolas Leroux and Sietse de Kaper"
+  },
+  {
+    "PublishDate": "2013-10-01T00:00:00",
+    "Title": "Play for Scala",
+    "Authors": "Peter Hilton, Erik Bakker, and Francisco Canedo"
+  },
+  {
+    "PublishDate": "2013-09-01T00:00:00",
+    "Title": "Making Java Groovy",
+    "Authors": "Kenneth A. Kousen"
+  },
+  {
+    "PublishDate": "2013-05-01T00:00:00",
+    "Title": "Spring in Practice",
+    "Authors": "Willie Wheeler with Joshua White"
+  },
+  {
+    "PublishDate": "2013-04-01T00:00:00",
+    "Title": "OCA Java SE 7 Programmer I Certification Guide",
+    "Authors": "Mala Gupta"
+  },
+  {
+    "PublishDate": "2013-04-01T00:00:00",
+    "Title": "Scala in Action",
+    "Authors": "Nilanjan Raychaudhuri"
+  },
+  {
+    "PublishDate": "2013-02-01T00:00:00",
+    "Title": "Effective Unit Testing",
+    "Authors": "Lasse Koskela"
+  },
+  {
+    "PublishDate": "2013-01-01T00:00:00",
+    "Title": "GWT in Action, Second Edition",
+    "Authors": "Adam Tacy, Robert Hanson, Jason Essington, and Anna Tokke"
+  },
+  {
+    "PublishDate": "2012-09-01T00:00:00",
+    "Title": "Restlet in Action",
+    "Authors": "Jerome Louvel, Thierry Templier, and Thierry Boileau"
+  },
+  {
+    "PublishDate": "2012-07-01T00:00:00",
+    "Title": "The Well-Grounded Java Developer",
+    "Authors": "Benjamin J. Evans and Martijn Verburg"
+  },
+  {
+    "PublishDate": "2012-06-01T00:00:00",
+    "Title": "Griffon in Action",
+    "Authors": "Andres Almiray, Danno Ferrin, and James Shingler"
+  },
+  {
+    "PublishDate": "2012-05-01T00:00:00",
+    "Title": "Scala in Depth",
+    "Authors": "Joshua D. Suereth"
+  },
+  {
+    "PublishDate": "2011-11-01T00:00:00",
+    "Title": "Clojure in Action",
+    "Authors": "Amit Rathore"
+  },
+  {
+    "PublishDate": "2011-11-01T00:00:00",
+    "Title": "Lift in Action",
+    "Authors": "Timothy Perrett"
+  },
+  {
+    "PublishDate": "2011-12-01T00:00:00",
+    "Title": "Tika in Action",
+    "Authors": "Chris A. Mattmann and Jukka L. Zitting"
+  },
+  {
+    "PublishDate": "2011-10-01T00:00:00",
+    "Title": "Mahout in Action",
+    "Authors": "Sean Owen, Robin Anil, Ted Dunning, and Ellen Friedman"
+  },
+  {
+    "PublishDate": "2011-09-01T00:00:00",
+    "Title": "Portlets in Action",
+    "Authors": "Ashish Sarin"
+  },
+  {
+    "PublishDate": "2010-12-01T00:00:00",
+    "Title": "Hadoop in Action",
+    "Authors": "Chuck Lam"
+  },
+  {
+    "PublishDate": "2010-10-01T00:00:00",
+    "Title": "Flex on Java",
+    "Authors": "Bernerd Allmon and Jeremy Anderson"
+  },
+  {
+    "PublishDate": "2010-10-01T00:00:00",
+    "Title": "iText in Action, Second Edition",
+    "Authors": "Bruno Lowagie"
+  },
+  {
+    "PublishDate": "2010-07-01T00:00:00",
+    "Title": "Lucene in Action, Second Edition",
+    "Authors": "Michael McCandless, Erik Hatcher, and Otis Gospodnetic"
+  },
+  {
+    "PublishDate": "2010-06-01T00:00:00",
+    "Title": "JUnit in Action, Second Edition",
+    "Authors": "Petar Tahchiev, Felipe Leme, Vincent Massol, and Gary Gregory"
+  },
+  {
+    "PublishDate": "2010-05-01T00:00:00",
+    "Title": "jQuery in Action, Second Edition",
+    "Authors": "Bear Bibeault and Yehuda Katz"
+  },
+  {
+    "PublishDate": "2009-10-01T00:00:00",
+    "Title": "JavaFX in Action",
+    "Authors": "Simon Morris"
+  },
+  {
+    "PublishDate": "2009-08-01T00:00:00",
+    "Title": "Dependency Injection",
+    "Authors": "Dhanji R. Prasanna"
+  },
+  {
+    "PublishDate": "2009-06-01T00:00:00",
+    "Title": "Mule in Action",
+    "Authors": "David Dossot and John D'Emic"
+  },
+  {
+    "PublishDate": "2009-04-01T00:00:00",
+    "Title": "Grails in Action",
+    "Authors": "Glen Smith and Peter Ledbrook"
+  },
+  {
+    "PublishDate": "2009-01-01T00:00:00",
+    "Title": "JBoss in Action",
+    "Authors": "Javid Jamae and Peter Johnson"
+  },
+  {
+    "PublishDate": "2008-08-01T00:00:00",
+    "Title": "Wicket in Action",
+    "Authors": "Martijn Dashorst and Eelco Hillenius"
+  },
+  {
+    "PublishDate": "2008-05-01T00:00:00",
+    "Title": "Struts 2 in Action",
+    "Authors": "Donald Brown, Chad Michael Davis, and Scott Stanlick"
+  },
+  {
+    "PublishDate": "2008-04-01T00:00:00",
+    "Title": "GWT in Practice",
+    "Authors": "Robert Cooper and Charles Collins"
+  },
+  {
+    "PublishDate": "2007-07-01T00:00:00",
+    "Title": "Ant in Action",
+    "Authors": "Steve Loughran and Erik Hatcher"
+  },
+  {
+    "PublishDate": "2007-05-01T00:00:00",
+    "Title": "GWT in Action",
+    "Authors": "Robert Hanson and Adam Tacy"
+  },
+  {
+    "PublishDate": "2007-01-01T00:00:00",
+    "Title": "Groovy in Action",
+    "Authors": "Dierk K�nig and Paul King with Guillaume Laforge, Hamlet D'Arcy, C�dric Champeau, Erik Pragt, and Jon Skeet"
+  },
+  {
+    "PublishDate": "2006-03-01T00:00:00",
+    "Title": "IntelliJ IDEA in Action",
+    "Authors": "Duane K. Fields, Stephen Saunders, Eugene Belyaev"
+  },
+  {
+    "PublishDate": "2006-01-01T00:00:00",
+    "Title": "POJOs in Action",
+    "Authors": "Chris Richardson"
+  },
+  {
+    "PublishDate": "2005-04-01T00:00:00",
+    "Title": "SCWCD Exam Study Kit Second Edition",
+    "Authors": "Hanumant Deshmukh, Jignesh Malavia, and Matthew Scarpino"
+  },
+  {
+    "PublishDate": "2005-03-01T00:00:00",
+    "Title": "Jakarta Commons Online Bookshelf",
+    "Authors": "Vikram Goyal"
+  },
+  {
+    "PublishDate": "2004-12-01T00:00:00",
+    "Title": "Subversion in Action",
+    "Authors": "Jeffrey Machols"
+  },
+  {
+    "PublishDate": "2004-11-01T00:00:00",
+    "Title": "JavaServer Faces in Action",
+    "Authors": "Kito D. Mann"
+  },
+  {
+    "PublishDate": "2004-11-01T00:00:00",
+    "Title": "Lucene in Action",
+    "Authors": "Erik Hatcher and Otis Gospodnetic"
+  },
+  {
+    "PublishDate": "2004-10-01T00:00:00",
+    "Title": "Java Reflection in Action",
+    "Authors": "Ira R. Forman and Nate Forman"
+  },
+  {
+    "PublishDate": "2004-11-01T00:00:00",
+    "Title": "SWT/JFace in Action",
+    "Authors": "Matthew Scarpino, Stephen Holder, Stanford Ng, and Laurent Mihalkovic"
+  },
+  {
+    "PublishDate": "2004-07-01T00:00:00",
+    "Title": "JUnit Recipes",
+    "Authors": "J. B. Rainsberger with contributions by Scott Stirling"
+  },
+  {
+    "PublishDate": "2004-03-01T00:00:00",
+    "Title": "Tapestry in Action",
+    "Authors": "Howard M. Lewis Ship"
+  },
+  {
+    "PublishDate": "2003-11-01T00:00:00",
+    "Title": "Art of Java Web Development",
+    "Authors": "Neal Ford"
+  },
+  {
+    "PublishDate": "2003-09-01T00:00:00",
+    "Title": "JUnit in Action",
+    "Authors": "Vincent Massol with Ted Husted"
+  },
+  {
+    "PublishDate": "2003-06-01T00:00:00",
+    "Title": "Jess in Action",
+    "Authors": "Ernest Friedman-Hill"
+  },
+  {
+    "PublishDate": "2003-05-01T00:00:00",
+    "Title": "Eclipse in Action",
+    "Authors": "David Gallardo, Ed Burnette and Robert McGovern"
+  },
+  {
+    "PublishDate": "2003-02-01T00:00:00",
+    "Title": "Swing, Second Edition",
+    "Authors": "Matthew Robinson and Pavel Vorobiev"
+  },
+  {
+    "PublishDate": "2002-10-01T00:00:00",
+    "Title": "Struts in Action",
+    "Authors": "Ted N. Husted, Cedric Dumoulin, George Franciscus, David Winterfeldt"
+  },
+  {
+    "PublishDate": "2002-08-01T00:00:00",
+    "Title": "Java Development with Ant",
+    "Authors": "Erik Hatcher and Steve Loughran"
+  },
+  {
+    "PublishDate": "2002-07-01T00:00:00",
+    "Title": "JSTL in Action",
+    "Authors": "Shawn Bayern"
+  },
+  {
+    "PublishDate": "2002-03-01T00:00:00",
+    "Title": "Instant Messaging in Java",
+    "Authors": "Iain Shigeoka"
+  },
+  {
+    "PublishDate": "2002-03-01T00:00:00",
+    "Title": "Java 2 Micro Edition",
+    "Authors": "James P. White and David A. Hemphill"
+  },
+  {
+    "PublishDate": "2001-11-01T00:00:00",
+    "Title": "Web Development with JavaServer Pages, Second Edition",
+    "Authors": "Duane K. Fields, Mark A. Kolb, and Shawn Bayern"
+  },
+  {
+    "PublishDate": "2001-05-01T00:00:00",
+    "Title": "JSP Tag Libraries",
+    "Authors": "Gal Shachor, Adam Chace, Magnus Rydin"
+  },
+  {
+    "PublishDate": "2000-08-01T00:00:00",
+    "Title": "Domino Development with Java",
+    "Authors": "Anthony Patton"
+  },
+  {
+    "PublishDate": "2000-06-01T00:00:00",
+    "Title": "Server-Based Java Programming",
+    "Authors": "Ted Neward"
+  },
+  {
+    "PublishDate": "2017-06-01T00:00:00",
+    "Title": "Spring Microservices in Action",
+    "Authors": "John Carnell"
+  },
+  {
+    "PublishDate": "2017-02-01T00:00:00",
+    "Title": "Kotlin in Action",
+    "Authors": "Dmitry Jemerov and Svetlana Isakova"
+  },
+  {
+    "PublishDate": "2016-08-01T00:00:00",
+    "Title": "Get Programming with JavaScript",
+    "Authors": "John R. Larsen"
+  },
+  {
+    "PublishDate": "2016-08-01T00:00:00",
+    "Title": "Secrets of the JavaScript Ninja, Second Edition",
+    "Authors": "John Resig, Bear Bibeault, and Josip Maras"
+  },
+  {
+    "PublishDate": "2016-07-01T00:00:00",
+    "Title": "Designing Scalable JavaScript Applications",
+    "Authors": "With chapter selections by Emmit Scott"
+  },
+  {
+    "PublishDate": "2016-06-01T00:00:00",
+    "Title": "Functional Programming in JavaScript",
+    "Authors": "Luis Atencio"
+  },
+  {
+    "PublishDate": "2015-09-01T00:00:00",
+    "Title": "Meteor in Action",
+    "Authors": "Stephan Hochhaus and Manuel Christoph Schoebel"
+  },
+  {
+    "PublishDate": "2015-01-01T00:00:00",
+    "Title": "JavaScript Application Design",
+    "Authors": "Nicolas G. Bevacqua"
+  },
+  {
+    "PublishDate": "2013-03-01T00:00:00",
+    "Title": "Third-Party JavaScript",
+    "Authors": "Ben Vinegar and Anton Kovalyov"
+  },
+  {
+    "PublishDate": "2012-12-01T00:00:00",
+    "Title": "Secrets of the JavaScript Ninja",
+    "Authors": "John Resig and Bear Bibeault"
+  },
+  {
+    "PublishDate": "2010-12-01T00:00:00",
+    "Title": "Ext JS in Action",
+    "Authors": "Jesus Garcia"
+  },
+  {
+    "PublishDate": "2010-01-01T00:00:00",
+    "Title": "DSLs in Boo",
+    "Authors": "Oren Eini writing as Ayende Rahien"
+  },
+  {
+    "PublishDate": "2008-10-01T00:00:00",
+    "Title": "Collective Intelligence in Action",
+    "Authors": "Satnam Alag"
+  },
+  {
+    "PublishDate": "2017-08-01T00:00:00",
+    "Title": "Exploring Microservices",
+    "Authors": "With chapters selected by Christian Horsdal Gammelgaard"
+  },
+  {
+    "PublishDate": "2017-04-01T00:00:00",
+    "Title": "Rx.NET in Action",
+    "Authors": "Tamir Dresher"
+  },
+  {
+    "PublishDate": "2017-01-01T00:00:00",
+    "Title": "Microservices in .NET Core",
+    "Authors": "Christian Horsdal Gammelgaard"
+  },
+  {
+    "PublishDate": "2016-12-01T00:00:00",
+    "Title": "Learn Windows PowerShell in a Month of Lunches, Third Edition",
+    "Authors": "Don Jones and Jeffery Hicks"
+  },
+  {
+    "PublishDate": "2016-11-01T00:00:00",
+    "Title": "Exploring PowerShell Automation",
+    "Authors": "With chapters selected by Richard Siddaway"
+  },
+  {
+    "PublishDate": "2016-06-01T00:00:00",
+    "Title": "Learn System Center Configuration Manager in a Month of Lunches",
+    "Authors": "James C. Bannan"
+  },
+  {
+    "PublishDate": "2014-03-01T00:00:00",
+    "Title": "Learn Active Directory Management in a Month of Lunches",
+    "Authors": "Richard Siddaway"
+  },
+  {
+    "PublishDate": "2013-08-01T00:00:00",
+    "Title": "Fast ASP.NET Websites",
+    "Authors": "Dean Alan Hume"
+  },
+  {
+    "PublishDate": "2013-07-01T00:00:00",
+    "Title": "PowerShell Deep Dives",
+    "Authors": "Edited by Jeffery Hicks, Richard Siddaway, Oisin Grehan, and Aleksandar Nikolic"
+  },
+  {
+    "PublishDate": "2013-06-01T00:00:00",
+    "Title": "AOP in .NET",
+    "Authors": "Matthew D. Groves"
+  },
+  {
+    "PublishDate": "2012-05-01T00:00:00",
+    "Title": "ASP.NET MVC 4 in Action",
+    "Authors": "Jeffrey Palermo, Jimmy Bogard, Eric Hexter, Matthew Hinze, and Jeremy Skinner"
+  },
+  {
+    "PublishDate": "2012-05-01T00:00:00",
+    "Title": "Silverlight 5 in Action",
+    "Authors": "Pete Brown"
+  },
+  {
+    "PublishDate": "2012-04-01T00:00:00",
+    "Title": "PowerShell and WMI",
+    "Authors": "Richard Siddaway"
+  },
+  {
+    "PublishDate": "2012-02-01T00:00:00",
+    "Title": "SharePoint 2010 Site Owner's Manual",
+    "Authors": "Yvonne M. Harryman"
+  },
+  {
+    "PublishDate": "2011-10-01T00:00:00",
+    "Title": "Dependency Injection in .NET",
+    "Authors": "Mark Seemann"
+  },
+  {
+    "PublishDate": "2011-05-01T00:00:00",
+    "Title": "ASP.NET 4.0 in Practice",
+    "Authors": "Daniele Bochicchio, Stefano Mostarda, and Marco De Sanctis"
+  },
+  {
+    "PublishDate": "2011-05-01T00:00:00",
+    "Title": "Windows PowerShell in Action, Second Edition",
+    "Authors": "Bruce Payette"
+  },
+  {
+    "PublishDate": "2011-04-01T00:00:00",
+    "Title": "Learn Windows PowerShell in a Month of Lunches",
+    "Authors": "Don Jones"
+  },
+  {
+    "PublishDate": "2011-04-01T00:00:00",
+    "Title": "SharePoint 2010 Web Parts in Action",
+    "Authors": "Wictor Wil�n"
+  },
+  {
+    "PublishDate": "2011-03-01T00:00:00",
+    "Title": "Continuous Integration in .NET",
+    "Authors": "Marcin Kawalerowicz and Craig Berntson"
+  },
+  {
+    "PublishDate": "2011-02-01T00:00:00",
+    "Title": "SharePoint 2010 Workflows in Action",
+    "Authors": "Phil Wicklund"
+  },
+  {
+    "PublishDate": "2010-10-01T00:00:00",
+    "Title": "Azure in Action",
+    "Authors": "Chris Hay and Brian H. Prince"
+  },
+  {
+    "PublishDate": "2010-06-01T00:00:00",
+    "Title": "PowerShell in Practice",
+    "Authors": "Richard Siddaway"
+  },
+  {
+    "PublishDate": "2010-05-01T00:00:00",
+    "Title": "ASP.NET MVC 2 in Action",
+    "Authors": "Jeffrey Palermo, Ben Scheirman, Jimmy Bogard, Eric Hexter, and Matthew Hinze"
+  },
+  {
+    "PublishDate": "2009-09-01T00:00:00",
+    "Title": "SharePoint 2007 Developer's Guide to Business Data Catalog",
+    "Authors": "Brett Lonsdale, Nick Swan"
+  },
+  {
+    "PublishDate": "2009-08-01T00:00:00",
+    "Title": "ASP.NET MVC in Action",
+    "Authors": "Jeffrey Palermo, Ben Scheirman, and Jimmy Bogard"
+  },
+  {
+    "PublishDate": "2008-10-01T00:00:00",
+    "Title": "Silverlight 2 in Action",
+    "Authors": "Chad A. Campbell and John Stockton"
+  },
+  {
+    "PublishDate": "2008-11-01T00:00:00",
+    "Title": "WPF in Action with Visual Studio 2008",
+    "Authors": "Arlen Feldman and Maxx Daymon"
+  },
+  {
+    "PublishDate": "2007-09-01T00:00:00",
+    "Title": "ASP.NET AJAX in Action",
+    "Authors": "Alessandro Gallo, David Barkol, and Rama Krishna Vavilala"
+  },
+  {
+    "PublishDate": "2007-02-01T00:00:00",
+    "Title": "Windows PowerShell in Action",
+    "Authors": "Bruce Payette"
+  },
+  {
+    "PublishDate": "2006-09-01T00:00:00",
+    "Title": "ASP.NET 2.0 Web Parts in Action",
+    "Authors": "Darren Neimke"
+  },
+  {
+    "PublishDate": "2015-10-01T00:00:00",
+    "Title": "Apache Cordova in Action",
+    "Authors": "Raymond K. Camden"
+  },
+  {
+    "PublishDate": "2015-09-01T00:00:00",
+    "Title": "Ionic in Action",
+    "Authors": "Jeremy Wilken"
+  },
+  {
+    "PublishDate": "2015-01-01T00:00:00",
+    "Title": "Barcodes with iOS",
+    "Authors": "Oliver Drobnik"
+  },
+  {
+    "PublishDate": "2014-03-01T00:00:00",
+    "Title": "iOS 7 in Action",
+    "Authors": "Brendan G. Lim and Martin Conte Mac Donell"
+  },
+  {
+    "PublishDate": "2013-12-01T00:00:00",
+    "Title": "Windows Phone 8 in Action",
+    "Authors": "Timothy Binkley-Jones, Massimo Perga, Michael Sync, and Adam Benoit"
+  },
+  {
+    "PublishDate": "2013-07-01T00:00:00",
+    "Title": "Hello! iOS Development",
+    "Authors": "Lou Franco and Eitan Mendelowitz"
+  },
+  {
+    "PublishDate": "2013-07-01T00:00:00",
+    "Title": "Sencha Touch in Action",
+    "Authors": "Jesus Garcia, Anthony De Moss, and Mitchell Simoens"
+  },
+  {
+    "PublishDate": "2012-10-01T00:00:00",
+    "Title": "iOS in Practice",
+    "Authors": "Bear P. Cahill"
+  },
+  {
+    "PublishDate": "2012-08-01T00:00:00",
+    "Title": "Windows Phone 7 in Action",
+    "Authors": "Timothy Binkley-Jones, Massimo Perga, and Michael Sync"
+  },
+  {
+    "PublishDate": "2012-05-01T00:00:00",
+    "Title": "Flex Mobile in Action",
+    "Authors": "Jonathan Campos"
+  },
+  {
+    "PublishDate": "2011-09-01T00:00:00",
+    "Title": "Objective-C Fundamentals",
+    "Authors": "Christopher K. Fairbairn, Johannes Fahrenkrug, and Collin Ruffenach"
+  },
+  {
+    "PublishDate": "2011-07-01T00:00:00",
+    "Title": "Location-Aware Applications",
+    "Authors": "Richard Ferraro and Murat Aktihanoglu"
+  },
+  {
+    "PublishDate": "2011-06-01T00:00:00",
+    "Title": "iOS 4 in Action",
+    "Authors": "Jocelyn Harrington, Brandon Trebitowski, Christopher Allen, and Shannon Appelcline"
+  },
+  {
+    "PublishDate": "2010-07-01T00:00:00",
+    "Title": "iPhone and iPad in Action",
+    "Authors": "Brandon Trebitowski, Christopher Allen, and Shannon Appelcline"
+  },
+  {
+    "PublishDate": "2016-05-01T00:00:00",
+    "Title": "Cloud Native Applications",
+    "Authors": "With chapters selected by Michael Wittig and Andreas Wittig"
+  },
+  {
+    "PublishDate": "2015-09-01T00:00:00",
+    "Title": "Amazon Web Services in Action",
+    "Authors": "Michael Wittig and Andreas Wittig"
+  },
+  {
+    "PublishDate": "2010-11-01T00:00:00",
+    "Title": "The Cloud at Your Service",
+    "Authors": "Jothy Rosenberg and Arthur Mateos"
+  },
+  {
+    "PublishDate": "2004-06-01T00:00:00",
+    "Title": "Explorer's Guide to the Semantic Web",
+    "Authors": "Thomas B. Passin"
+  },
+  {
+    "PublishDate": "2017-08-01T00:00:00",
+    "Title": "Learn Amazon Web Services in a Month of Lunches",
+    "Authors": "David Clinton"
+  },
+  {
+    "PublishDate": "2017-06-01T00:00:00",
+    "Title": "AWS in Motion",
+    "Authors": "Andreas Wittig and Michael Wittig"
+  },
+  {
+    "PublishDate": "2017-05-01T00:00:00",
+    "Title": "CoreOS in Action",
+    "Authors": "Matt Bailey"
+  },
+  {
+    "PublishDate": "2017-05-01T00:00:00",
+    "Title": "Learn Cisco Network Administration in a Month of Lunches",
+    "Authors": "Ben Piper"
+  },
+  {
+    "PublishDate": "2017-04-01T00:00:00",
+    "Title": "Serverless Architectures on AWS",
+    "Authors": "Peter Sbarski"
+  },
+  {
+    "PublishDate": "2016-11-01T00:00:00",
+    "Title": "AWS Lambda in Action",
+    "Authors": "Danilo Poccia"
+  },
+  {
+    "PublishDate": "2016-11-01T00:00:00",
+    "Title": "Learn Linux in a Month of Lunches",
+    "Authors": "Steven Ovadia"
+  },
+  {
+    "PublishDate": "2006-10-01T00:00:00",
+    "Title": "Minimal Perl",
+    "Authors": "Tim Maher"
+  },
+  {
+    "PublishDate": "2002-08-01T00:00:00",
+    "Title": "Extending and Embedding Perl",
+    "Authors": "Tim Jenness and Simon Cozens"
+  },
+  {
+    "PublishDate": "2002-04-01T00:00:00",
+    "Title": "Web Development with Apache and Perl",
+    "Authors": "Theo Petersen"
+  },
+  {
+    "PublishDate": "1999-08-01T00:00:00",
+    "Title": "Object Oriented Perl",
+    "Authors": "Damian Conway"
+  },
+  {
+    "PublishDate": "2008-12-01T00:00:00",
+    "Title": "Zend Framework in Action",
+    "Authors": "Rob Allen, Nick Lo, Steven Brown"
+  },
+  {
+    "PublishDate": "2007-07-01T00:00:00",
+    "Title": "PHP in Action",
+    "Authors": "Dagfinn Reiersol with Marcus Baker and Chris Shiflett"
+  },
+  {
+    "PublishDate": "2016-09-01T00:00:00",
+    "Title": "Akka in Action",
+    "Authors": "Raymond Roestenburg, Rob Bakker, and Rob Williams"
+  },
+  {
+    "PublishDate": "2016-09-01T00:00:00",
+    "Title": "The Little Elixir & OTP Guidebook",
+    "Authors": "Benjamin Tan Wei Hao"
+  },
+  {
+    "PublishDate": "2016-08-01T00:00:00",
+    "Title": "Go in Practice",
+    "Authors": "Matt Butcher and Matt Farina"
+  },
+  {
+    "PublishDate": "2016-07-01T00:00:00",
+    "Title": "Functional Reactive Programming",
+    "Authors": "Stephen Blackheath and Anthony Jones"
+  },
+  {
+    "PublishDate": "2016-03-01T00:00:00",
+    "Title": "Practical Probabilistic Programming",
+    "Authors": "Avi Pfeffer"
+  },
+  {
+    "PublishDate": "2016-01-01T00:00:00",
+    "Title": "Hello Raspberry Pi!",
+    "Authors": "Ryan Heitz"
+  },
+  {
+    "PublishDate": "2015-12-01T00:00:00",
+    "Title": "Netty in Action",
+    "Authors": "Norman Maurer and Marvin Allen Wolfthal"
+  },
+  {
+    "PublishDate": "2015-11-01T00:00:00",
+    "Title": "Go in Action",
+    "Authors": "William Kennedy with Brian Ketelsen and Erik St. Martin"
+  },
+  {
+    "PublishDate": "2015-11-01T00:00:00",
+    "Title": "sbt in Action",
+    "Authors": "Joshua Suereth and Matthew Farwell"
+  },
+  {
+    "PublishDate": "2015-05-01T00:00:00",
+    "Title": "Elixir in Action",
+    "Authors": "Sa?a Juric"
+  },
+  {
+    "PublishDate": "2014-12-01T00:00:00",
+    "Title": "F# Deep Dives",
+    "Authors": "Edited by Tomas Petricek and Phillip Trelford"
+  },
+  {
+    "PublishDate": "2014-10-01T00:00:00",
+    "Title": "Hello App Inventor!",
+    "Authors": "Paula Beer and Carl Simmons"
+  },
+  {
+    "PublishDate": "2014-09-01T00:00:00",
+    "Title": "Functional Programming in Scala",
+    "Authors": "Paul Chiusano and Runar Bjarnason"
+  },
+  {
+    "PublishDate": "2014-06-01T00:00:00",
+    "Title": "The Well-Grounded Rubyist, Second Edition",
+    "Authors": "David A. Black"
+  },
+  {
+    "PublishDate": "2014-05-01T00:00:00",
+    "Title": "The Joy of Clojure, Second Edition",
+    "Authors": "Michael Fogus and Chris Houser"
+  },
+  {
+    "PublishDate": "2013-12-01T00:00:00",
+    "Title": "Hello World! Second Edition",
+    "Authors": "Warren Sande and Carter Sande"
+  },
+  {
+    "PublishDate": "2013-08-01T00:00:00",
+    "Title": "Using the TI-83 Plus/TI-84 Plus",
+    "Authors": "Christopher R. Mitchell"
+  },
+  {
+    "PublishDate": "2013-07-01T00:00:00",
+    "Title": "CMIS and Apache Chemistry in Action",
+    "Authors": "Florian Mueller, Jay Brown, Jeff Potts"
+  },
+  {
+    "PublishDate": "2013-06-01T00:00:00",
+    "Title": "Windows Store App Development: C# and XAML",
+    "Authors": "Pete Brown"
+  },
+  {
+    "PublishDate": "2013-05-01T00:00:00",
+    "Title": "Arduino in Action",
+    "Authors": "Martin Evans, Joshua Noble, and Jordan Hochenbaum"
+  },
+  {
+    "PublishDate": "2013-01-01T00:00:00",
+    "Title": "Dart in Action",
+    "Authors": "Chris Buckett"
+  },
+  {
+    "PublishDate": "2012-12-01T00:00:00",
+    "Title": "Metaprogramming in .NET",
+    "Authors": "Kevin Hazzard and Jason Bock"
+  },
+  {
+    "PublishDate": "2012-09-01T00:00:00",
+    "Title": "Programming the TI-83 Plus/TI-84 Plus",
+    "Authors": "Christopher R. Mitchell"
+  },
+  {
+    "PublishDate": "2012-04-01T00:00:00",
+    "Title": "MacRuby in Action",
+    "Authors": "Brendan G. Lim with Jerry Cheung and Jeremy McAnally"
+  },
+  {
+    "PublishDate": "2012-02-01T00:00:00",
+    "Title": "C++ Concurrency in Action",
+    "Authors": "Anthony Williams"
+  },
+  {
+    "PublishDate": "2011-11-01T00:00:00",
+    "Title": "OpenCL in Action",
+    "Authors": "Matthew Scarpino"
+  },
+  {
+    "PublishDate": "2011-03-01T00:00:00",
+    "Title": "The Joy of Clojure",
+    "Authors": "Michael Fogus and Chris Houser"
+  },
+  {
+    "PublishDate": "2010-12-01T00:00:00",
+    "Title": "DSLs in Action",
+    "Authors": "Debasish Ghosh"
+  },
+  {
+    "PublishDate": "2010-11-01T00:00:00",
+    "Title": "Erlang and OTP in Action",
+    "Authors": "Martin Logan, Eric Merritt, and Richard Carlsson"
+  },
+  {
+    "PublishDate": "2010-01-01T00:00:00",
+    "Title": "The Quick Python Book, Second Edition",
+    "Authors": "Naomi R. Ceder"
+  },
+  {
+    "PublishDate": "2009-05-01T00:00:00",
+    "Title": "The Well-Grounded Rubyist",
+    "Authors": "David A. Black"
+  },
+  {
+    "PublishDate": "2009-03-01T00:00:00",
+    "Title": "Hello World!",
+    "Authors": "Warren D. Sande and Carter Sande"
+  },
+  {
+    "PublishDate": "2009-03-01T00:00:00",
+    "Title": "Ruby in Practice",
+    "Authors": "Jeremy McAnally and Assaf Arkin"
+  },
+  {
+    "PublishDate": "2003-11-01T00:00:00",
+    "Title": "XDoclet in Action",
+    "Authors": "Craig Walls and Norman Richards"
+  },
+  {
+    "PublishDate": "2003-09-01T00:00:00",
+    "Title": "SQR in PeopleSoft and Other Applications, Second Edition",
+    "Authors": "Galina Landres and Vlad Landres"
+  },
+  {
+    "PublishDate": "2003-07-01T00:00:00",
+    "Title": "Code Generation in Action",
+    "Authors": "Jack Herrington"
+  },
+  {
+    "PublishDate": "2003-01-01T00:00:00",
+    "Title": "Programming Mac OS X",
+    "Authors": "Kevin O'Malley"
+  },
+  {
+    "PublishDate": "2002-11-01T00:00:00",
+    "Title": "LDAP Programming, Management and Integration",
+    "Authors": "Clayton Donley"
+  },
+  {
+    "PublishDate": "2001-05-01T00:00:00",
+    "Title": "XSLT Quickly",
+    "Authors": "Bob DuCharme"
+  },
+  {
+    "PublishDate": "2000-08-01T00:00:00",
+    "Title": "Essential Guide to Peoplesoft Development and Customization",
+    "Authors": "Tony DeLia, Galina Landres, Isidor Rivera, Prakash Sankaran"
+  },
+  {
+    "PublishDate": "2000-01-01T00:00:00",
+    "Title": "Python and Tkinter Programming",
+    "Authors": "John E. Grayson"
+  },
+  {
+    "PublishDate": "1999-10-01T00:00:00",
+    "Title": "The Quick Python Book",
+    "Authors": "Daryl Harms and Kenneth McDonald"
+  },
+  {
+    "PublishDate": "2012-02-01T00:00:00",
+    "Title": "Hello! Python",
+    "Authors": "Anthony Briggs"
+  },
+  {
+    "PublishDate": "2009-03-01T00:00:00",
+    "Title": "IronPython in Action",
+    "Authors": "Michael J. Foord and Christian Muirhead"
+  },
+  {
+    "PublishDate": "2006-03-01T00:00:00",
+    "Title": "wxPython in Action",
+    "Authors": "Noel Rappin and Robin Dunn"
+  },
+  {
+    "PublishDate": "2016-10-01T00:00:00",
+    "Title": "Elastic Leadership",
+    "Authors": "Roy Osherove"
+  },
+  {
+    "PublishDate": "2016-10-01T00:00:00",
+    "Title": "Functional and Reactive Domain Modeling",
+    "Authors": "Debasish Ghosh"
+  },
+  {
+    "PublishDate": "2016-05-01T00:00:00",
+    "Title": "Grokking Algorithms",
+    "Authors": "Aditya Y. Bhargava"
+  },
+  {
+    "PublishDate": "2016-05-01T00:00:00",
+    "Title": "Mesos in Action",
+    "Authors": "Roger Ignazio"
+  },
+  {
+    "PublishDate": "2016-05-01T00:00:00",
+    "Title": "Scalatra in Action",
+    "Authors": "Dave Hrycyszyn, Stefan Ollinger, and Ross A. Baker"
+  },
+  {
+    "PublishDate": "2016-04-01T00:00:00",
+    "Title": "Docker in Practice",
+    "Authors": "Ian Miell and Aidan Hobson Sayers"
+  },
+  {
+    "PublishDate": "2016-04-01T00:00:00",
+    "Title": "Re-Engineering Legacy Software",
+    "Authors": "Chris Birchall"
+  },
+  {
+    "PublishDate": "2016-03-01T00:00:00",
+    "Title": "Docker in Action",
+    "Authors": "Jeff Nickoloff"
+  },
+  {
+    "PublishDate": "2016-03-01T00:00:00",
+    "Title": "OpenStack in Action",
+    "Authors": "V. K. Cody Bumgardner"
+  },
+  {
+    "PublishDate": "2015-09-01T00:00:00",
+    "Title": "Learn Git in a Month of Lunches",
+    "Authors": "Rick Umali"
+  },
+  {
+    "PublishDate": "2015-07-01T00:00:00",
+    "Title": "Agile Metrics in Action",
+    "Authors": "Christopher W. H. Davis"
+  },
+  {
+    "PublishDate": "2015-07-01T00:00:00",
+    "Title": "Software Development Metrics",
+    "Authors": "David Nicolette"
+  },
+  {
+    "PublishDate": "2015-05-01T00:00:00",
+    "Title": "R in Action, Second Edition",
+    "Authors": "Robert I. Kabacoff"
+  },
+  {
+    "PublishDate": "2014-12-01T00:00:00",
+    "Title": "Soft Skills",
+    "Authors": "John Z. Sonmez"
+  },
+  {
+    "PublishDate": "2014-09-01T00:00:00",
+    "Title": "BDD in Action",
+    "Authors": "John Ferguson Smart"
+  },
+  {
+    "PublishDate": "2014-09-01T00:00:00",
+    "Title": "Git in Practice",
+    "Authors": "Mike McQuaid"
+  },
+  {
+    "PublishDate": "2014-03-01T00:00:00",
+    "Title": "The Mikado Method",
+    "Authors": "Ola Ellnestam and Daniel Brolund"
+  },
+  {
+    "PublishDate": "2014-02-01T00:00:00",
+    "Title": "Kanban in Action",
+    "Authors": "Marcus Hammarberg and Joakim Sund�n"
+  },
+  {
+    "PublishDate": "2013-12-01T00:00:00",
+    "Title": "Linked Data",
+    "Authors": "David Wood, Marsha Zaidman, Luke Ruth, and Michael Hausenblas"
+  },
+  {
+    "PublishDate": "2013-11-01T00:00:00",
+    "Title": "The Art of Unit Testing, Second Edition",
+    "Authors": "Roy Osherove"
+  },
+  {
+    "PublishDate": "2013-10-01T00:00:00",
+    "Title": "SonarQube in Action",
+    "Authors": "G. Ann Campbell and Patroklos P. Papapetrou"
+  },
+  {
+    "PublishDate": "2012-07-01T00:00:00",
+    "Title": "Activiti in Action",
+    "Authors": "Tijs Rademakers"
+  },
+  {
+    "PublishDate": "2012-04-01T00:00:00",
+    "Title": "RabbitMQ in Action",
+    "Authors": "Alvaro Videla and Jason J.W. Williams"
+  },
+  {
+    "PublishDate": "2011-08-01T00:00:00",
+    "Title": "Agile ALM",
+    "Authors": "Michael Huettermann"
+  },
+  {
+    "PublishDate": "2011-08-01T00:00:00",
+    "Title": "R in Action",
+    "Authors": "Robert I. Kabacoff"
+  },
+  {
+    "PublishDate": "2011-06-01T00:00:00",
+    "Title": "Specification by Example",
+    "Authors": "Gojko Adzic"
+  },
+  {
+    "PublishDate": "2010-08-01T00:00:00",
+    "Title": "Event Processing in Action",
+    "Authors": "Opher Etzion and Peter Niblett"
+  },
+  {
+    "PublishDate": "2009-05-01T00:00:00",
+    "Title": "Becoming Agile",
+    "Authors": "Greg Smith and Ahmed Sidky"
+  },
+  {
+    "PublishDate": "2007-09-01T00:00:00",
+    "Title": "Test Driven",
+    "Authors": "Lasse Koskela"
+  },
+  {
+    "PublishDate": "2001-08-01T00:00:00",
+    "Title": "Dynamic WAP Application Development",
+    "Authors": "Soo Mee Foo, Christopher Hoover, Wei Meng Lee"
+  },
+  {
+    "PublishDate": "2009-05-01T00:00:00",
+    "Title": "The Art of Unit Testing",
+    "Authors": "Roy Osherove"
+  },
+  {
+    "PublishDate": "2017-08-01T00:00:00",
+    "Title": "Node.js in Action, Second Edition",
+    "Authors": "Alex Young, Bradley Meck, and Mike Cantelon"
+  },
+  {
+    "PublishDate": "2017-08-01T00:00:00",
+    "Title": "React Quickly",
+    "Authors": "Azat Mardan"
+  },
+  {
+    "PublishDate": "2017-07-01T00:00:00",
+    "Title": "RxJS in Action",
+    "Authors": "Paul P. Daniels and Luis Atencio"
+  },
+  {
+    "PublishDate": "2017-05-01T00:00:00",
+    "Title": "Cross-Platform Desktop Applications",
+    "Authors": "Paul B. Jensen"
+  },
+  {
+    "PublishDate": "2017-05-01T00:00:00",
+    "Title": "ES6 in Motion",
+    "Authors": "Wes Higbee"
+  },
+  {
+    "PublishDate": "2017-04-01T00:00:00",
+    "Title": "Agile Development for Serverless Platforms",
+    "Authors": "With chapters selected by Danilo Poccia"
+  },
+  {
+    "PublishDate": "2017-03-01T00:00:00",
+    "Title": "OAuth 2 in Action",
+    "Authors": "Justin Richer and Antonio Sanso"
+  },
+  {
+    "PublishDate": "2017-02-01T00:00:00",
+    "Title": "Understanding API Security",
+    "Authors": "Justin Richer and Antonio Sanso"
+  },
+  {
+    "PublishDate": "2017-01-01T00:00:00",
+    "Title": "Sails.js in Action",
+    "Authors": "Mike McNeil and Irl Nathan"
+  },
+  {
+    "PublishDate": "2016-12-01T00:00:00",
+    "Title": "Angular 2 Development with TypeScript",
+    "Authors": "Yakov Fain and Anton Moiseev"
+  },
+  {
+    "PublishDate": "2016-12-01T00:00:00",
+    "Title": "hapi.js in Action",
+    "Authors": "Matt Harrison"
+  },
+  {
+    "PublishDate": "2016-12-01T00:00:00",
+    "Title": "Web Performance in Action",
+    "Authors": "Jeremy L. Wagner"
+  },
+  {
+    "PublishDate": "2016-11-01T00:00:00",
+    "Title": "Front-End Tooling with Gulp, Bower, and Yeoman",
+    "Authors": "Stefan Baumgartner"
+  },
+  {
+    "PublishDate": "2012-11-01T00:00:00",
+    "Title": "HTML5 for .NET Developers",
+    "Authors": "Jim Jackson II and Ian Gilman"
+  },
+  {
+    "PublishDate": "2010-10-01T00:00:00",
+    "Title": "Silverlight 4 in Action",
+    "Authors": "Pete Brown"
+  },
+  {
+    "PublishDate": "2016-09-01T00:00:00",
+    "Title": "Irresistible APIs",
+    "Authors": "Kirsten L. Hunter"
+  },
+  {
+    "PublishDate": "2016-07-01T00:00:00",
+    "Title": "Go Web Programming",
+    "Authors": "Sau Sheong Chang"
+  },
+  {
+    "PublishDate": "2016-06-01T00:00:00",
+    "Title": "Building the Web of Things",
+    "Authors": "Dominique D. Guinard and Vlad M. Trifa"
+  },
+  {
+    "PublishDate": "2016-06-01T00:00:00",
+    "Title": "Design for the Mind",
+    "Authors": "Victor S. Yocco"
+  },
+  {
+    "PublishDate": "2016-06-01T00:00:00",
+    "Title": "Reactive Web Applications",
+    "Authors": "Manuel Bernhardt"
+  },
+  {
+    "PublishDate": "2016-04-01T00:00:00",
+    "Title": "Express in Action",
+    "Authors": "Evan M. Hahn"
+  },
+  {
+    "PublishDate": "2016-04-01T00:00:00",
+    "Title": "Using the Web to Build the IoT",
+    "Authors": "Dominique D. Guinard and Vlad M. Trifa"
+  },
+  {
+    "PublishDate": "2015-11-01T00:00:00",
+    "Title": "Getting MEAN with Mongo, Express, Angular, and Node",
+    "Authors": "Simon Holmes"
+  },
+  {
+    "PublishDate": "2015-11-01T00:00:00",
+    "Title": "SPA Design and Architecture",
+    "Authors": "Emmit A. Scott, Jr."
+  },
+  {
+    "PublishDate": "2015-08-01T00:00:00",
+    "Title": "jQuery in Action, Third Edition",
+    "Authors": "Bear Bibeault, Yehuda Katz, and Aurelio De Rosa"
+  },
+  {
+    "PublishDate": "2015-08-01T00:00:00",
+    "Title": "Rails 4 in Action",
+    "Authors": "Ryan Bigg, Yehuda Katz, Steve Klabnik, and Rebecca Skinner"
+  },
+  {
+    "PublishDate": "2015-07-01T00:00:00",
+    "Title": "AngularJS in Action",
+    "Authors": "Lukas Ruebbelke"
+  },
+  {
+    "PublishDate": "2014-12-01T00:00:00",
+    "Title": "Node.js in Practice",
+    "Authors": "Alex Young and Marc Harter"
+  },
+  {
+    "PublishDate": "2014-11-01T00:00:00",
+    "Title": "ArcGIS Web Development",
+    "Authors": "Rene Rubalcava"
+  },
+  {
+    "PublishDate": "2014-10-01T00:00:00",
+    "Title": "CORS in Action",
+    "Authors": "Monsur Hossain"
+  },
+  {
+    "PublishDate": "2014-10-01T00:00:00",
+    "Title": "The Responsive Web",
+    "Authors": "Matthew Carver"
+  },
+  {
+    "PublishDate": "2014-09-01T00:00:00",
+    "Title": "jQuery UI in Action",
+    "Authors": "TJ VanToll"
+  },
+  {
+    "PublishDate": "2014-06-01T00:00:00",
+    "Title": "Ember.js in Action",
+    "Authors": "Joachim Haagen Skeie"
+  },
+  {
+    "PublishDate": "2014-05-01T00:00:00",
+    "Title": "CoffeeScript in Action",
+    "Authors": "Patrick Lee"
+  },
+  {
+    "PublishDate": "2014-02-01T00:00:00",
+    "Title": "HTML5 in Action",
+    "Authors": "Rob Crowther, Joe Lennon, Ash Blue, and Greg Wanish"
+  },
+  {
+    "PublishDate": "2014-01-01T00:00:00",
+    "Title": "Ext JS in Action, Second Edition",
+    "Authors": "Jesus Garcia, Grgur Grisogono, and Jacob K. Andresen"
+  },
+  {
+    "PublishDate": "2013-10-01T00:00:00",
+    "Title": "Node.js in Action",
+    "Authors": "Mike Cantelon, Marc Harter, T.J. Holowaychuk, and Nathan Rajlich"
+  },
+  {
+    "PublishDate": "2013-09-01T00:00:00",
+    "Title": "Single Page Web Applications",
+    "Authors": "Michael S. Mikowski and Josh C. Powell"
+  },
+  {
+    "PublishDate": "2013-08-01T00:00:00",
+    "Title": "Extending jQuery",
+    "Authors": "Keith B. Wood"
+  },
+  {
+    "PublishDate": "2013-07-01T00:00:00",
+    "Title": "Sass and Compass in Action",
+    "Authors": "Wynn Netherland, Nathan Weizenbaum, Chris Eppstein, and Brandon Mathis"
+  },
+  {
+    "PublishDate": "2012-10-01T00:00:00",
+    "Title": "Hello! HTML5 & CSS3",
+    "Authors": "Rob Crowther"
+  },
+  {
+    "PublishDate": "2011-09-01T00:00:00",
+    "Title": "Liferay in Action",
+    "Authors": "Richard Sezov, Jr"
+  },
+  {
+    "PublishDate": "2011-09-01T00:00:00",
+    "Title": "Rails 3 in Action",
+    "Authors": "Ryan Bigg and Yehuda Katz"
+  },
+  {
+    "PublishDate": "2010-11-01T00:00:00",
+    "Title": "Flex 4 in Action",
+    "Authors": "Tariq Ahmed, Dan Orlando, John C. Bland II and Joel Hooks"
+  },
+  {
+    "PublishDate": "2009-11-01T00:00:00",
+    "Title": "Hello! Flex 4",
+    "Authors": "Peter Armstrong"
+  },
+  {
+    "PublishDate": "2009-11-01T00:00:00",
+    "Title": "Website Owner's Manual",
+    "Authors": "Paul A. Boag"
+  },
+  {
+    "PublishDate": "2009-05-01T00:00:00",
+    "Title": "Algorithms of the Intelligent Web",
+    "Authors": "Haralambos Marmanis and Dmitry Babenko"
+  },
+  {
+    "PublishDate": "2009-02-01T00:00:00",
+    "Title": "Flex 3 in Action",
+    "Authors": "Tariq Ahmed with Jon Hirschi and Faisal Abid"
+  },
+  {
+    "PublishDate": "2008-12-01T00:00:00",
+    "Title": "iPhone in Action",
+    "Authors": "Christopher Allen and Shannon Appelcline"
+  },
+  {
+    "PublishDate": "2008-07-01T00:00:00",
+    "Title": "Adobe AIR in Action",
+    "Authors": "Joey Lott, Kathryn Rotondo, Sam Ahn and Ashley Atkins"
+  },
+  {
+    "PublishDate": "2008-01-01T00:00:00",
+    "Title": "jQuery in Action",
+    "Authors": "Bear Bibeault and Yehuda Katz"
+  },
+  {
+    "PublishDate": "2008-01-01T00:00:00",
+    "Title": "Laszlo in Action",
+    "Authors": "Norman Klein and Max Carlson with Glenn MacEwen"
+  },
+  {
+    "PublishDate": "2008-01-01T00:00:00",
+    "Title": "Flexible Rails",
+    "Authors": "Peter Armstrong"
+  },
+  {
+    "PublishDate": "2007-06-01T00:00:00",
+    "Title": "Ajax in Practice",
+    "Authors": "Dave Crane, Jord Sonneveld and Bear Bibeault"
+  },
+  {
+    "PublishDate": "2007-04-01T00:00:00",
+    "Title": "Prototype and Scriptaculous in Action",
+    "Authors": "Dave Crane and Bear Bibeault with Tom Locke"
+  },
+  {
+    "PublishDate": "2007-01-01T00:00:00",
+    "Title": "iBATIS in Action",
+    "Authors": "Clinton Begin, Brandon Goodin and Larry Meadors"
+  },
+  {
+    "PublishDate": "2006-10-01T00:00:00",
+    "Title": "iText in Action",
+    "Authors": "Bruno Lowagie"
+  },
+  {
+    "PublishDate": "2006-05-01T00:00:00",
+    "Title": "Ruby for Rails",
+    "Authors": "David A. Black"
+  },
+  {
+    "PublishDate": "2005-10-01T00:00:00",
+    "Title": "Ajax in Action",
+    "Authors": "Dave Crane and Eric Pascarello with Darren James"
+  },
+  {
+    "PublishDate": "2005-09-01T00:00:00",
+    "Title": "WebWork in Action",
+    "Authors": "Patrick Lightbody and Jason Carreira"
+  },
+  {
+    "PublishDate": "1997-03-01T00:00:00",
+    "Title": "Illustrated Guide to HTTP",
+    "Authors": "Paul S. Hethmon"
+  }
+]

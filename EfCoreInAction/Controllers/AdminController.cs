@@ -184,11 +184,23 @@ namespace EfCoreInAction.Controllers
         {
             Request.ThrowErrorIfNotLocal();
 
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
+            context.DevelopmentWipeCreated(env.WebRootPath);
             var numBooks = context.SeedDatabase(env.WebRootPath);
             SetupTraceInfo();
             return View("BookUpdated", $"Successfully reset the database and added {numBooks} books.");
+        }
+
+        public IActionResult GenerateBooks(int numBooksNeeded, [FromServices]EfCoreContext context, [FromServices]IHostingEnvironment env)
+        {
+            if (numBooksNeeded == 0)
+                return View("BookUpdated", "Error: should contain the number of books to generate.");
+
+            Request.ThrowErrorIfNotLocal();
+
+            context.DevelopmentWipeCreated(env.WebRootPath);
+            var numBooks = context.GenerateBooks(numBooksNeeded, env.WebRootPath);
+            SetupTraceInfo();
+            return View("BookUpdated", $"Successfully wiped the database and generated {numBooks} test books.");
         }
     }
 }
