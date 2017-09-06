@@ -29,8 +29,8 @@ namespace test.UnitTests.DataLayer
 
             //ATTEMPT
             var filepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
-                @"DataLayer\SqlCode\",
-                "AddUserDefinedFunctions.sql");
+                @"EfCoreInAction\wwwroot\",
+                UdfDefinitions.SqlScriptName);
 
             //VERIFY
             File.ReadAllLines(filepath).First().ShouldEqual("-- SQL script file to add SQL code to improve performance");
@@ -43,8 +43,8 @@ namespace test.UnitTests.DataLayer
             //SETUP
             var options = this.ClassUniqueDatabaseSeeded4Books();
             var filepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
-                @"DataLayer\SqlCode\",
-                "AddUserDefinedFunctions.sql");
+                @"EfCoreInAction\wwwroot\",
+                UdfDefinitions.SqlScriptName);
 
             using (var context = new EfCoreContext(options))
             {

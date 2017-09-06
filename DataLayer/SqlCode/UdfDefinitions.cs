@@ -8,6 +8,7 @@ namespace DataLayer.SqlCode
 {
     public static class UdfDefinitions
     {
+        public const string SqlScriptName = "AddUserDefinedFunctions.sql";
 
         public static void RegisterUdfDefintions(this ModelBuilder modelBuilder)
         {

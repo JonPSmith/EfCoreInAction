@@ -29,8 +29,8 @@ namespace Test.UnitTests.ServiceLayer
             //SETUP
             var options = this.ClassUniqueDatabaseSeeded4Books();
             var filepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
-                @"DataLayer\SqlCode\",
-                "AddUserDefinedFunctions.sql");
+                @"EfCoreInAction\wwwroot\",
+                UdfDefinitions.SqlScriptName);
 
             using (var context = new EfCoreContext(options))
             {

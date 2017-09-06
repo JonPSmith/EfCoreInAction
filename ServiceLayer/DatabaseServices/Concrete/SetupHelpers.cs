@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using DataLayer.EfCode;
+using DataLayer.SqlCode;
 using EfCoreInAction.DatabaseHelpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -48,13 +49,25 @@ namespace ServiceLayer.DatabaseServices.Concrete
             return builder.ToString();
         }
 
-        public static void DevelopmentEnsureCreated(this EfCoreContext db)
+        public static void ProductionMigrateDatabase(this EfCoreContext db, string wwwrootDirectory)
         {
-            db.Database.EnsureCreated();
-
+            var migrationsNeeded = db.Database.GetPendingMigrations().Any();
+            if (migrationsNeeded)
+            {
+                db.Database.Migrate();
+                var filepath = Path.Combine(wwwrootDirectory, UdfDefinitions.SqlScriptName);
+                db.ExecuteScriptFileInTransaction(filepath);
+            }
         }
 
-        public static int SeedDatabase(this EfCoreContext context, string dataDirectory)
+        public static void DevelopmentEnsureCreated(this EfCoreContext db, string wwwrootDirectory)
+        {
+            db.Database.EnsureCreated();
+            var filepath = Path.Combine(wwwrootDirectory, UdfDefinitions.SqlScriptName);
+            db.ExecuteScriptFileInTransaction(filepath);
+        }
+
+        public static int SeedDatabase(this EfCoreContext context, string wwwrootDirectory)
         {
             if (!(context.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists())
                 throw new InvalidOperationException("The database does not exist. If you are using Migrations then run PMC command update-database to create it");
@@ -63,7 +76,7 @@ namespace ServiceLayer.DatabaseServices.Concrete
             if (numBooks == 0)
             {
                 //the database is emply so we fill it from a json file
-                var books = BookJsonLoader.LoadBooks(Path.Combine(dataDirectory, SeedFileSubDirectory),
+                var books = BookJsonLoader.LoadBooks(Path.Combine(wwwrootDirectory, SeedFileSubDirectory),
                     SeedDataSearchName).ToList();
                 context.Books.AddRange(books);
                 context.SaveChanges();

@@ -29,7 +29,7 @@ namespace EfCoreInAction
                 {
                     try
                     {
-                        context.Database.Migrate();
+                        context.ProductionMigrateDatabase(GetWwwRootPath());
                     }
                     catch (Exception ex)
                     {
@@ -60,7 +60,7 @@ namespace EfCoreInAction
                 {
                     try
                     {
-                        context.DevelopmentEnsureCreated();
+                        context.DevelopmentEnsureCreated(GetWwwRootPath());
                         context.SeedDatabase(GetWwwRootPath());
                     }
                     catch (Exception ex)
