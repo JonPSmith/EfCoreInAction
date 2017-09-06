@@ -30,7 +30,7 @@ namespace ServiceLayer.DatabaseServices.Concrete
             for (int i = 0; i < numBooks; i++)
             {
                 var reviews = new List<Review>();
-                for (int j = 0; j < i % 10; j++)
+                for (int j = 0; j < i % 7; j++)
                 {
                     reviews.Add(new Review { VoterName = j.ToString(), NumStars = (j % 5) + 1 });
                 }
