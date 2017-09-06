@@ -90,12 +90,9 @@ namespace test.UnitTests.DataLayer
             {
                 var logIt = new LogDbContext(context);
                 //ATTEMPT
-                foreach (var book in context.Books)
+                foreach (var book in context.Books.IgnoreQueryFilters())
                 {
-                    var ex = Assert.Throws<InvalidOperationException>(() => context.Set<Ch12Review>().Where(x => x.Ch12BookId == book.Ch12BookId).ToList());
-
-                    //VERIFY
-                    ex.Message.ShouldEqual("There is already an open DataReader associated with this Command which must be closed first.");
+                    var reviews = context.Set<Ch12Review>().Where(x => x.Ch12BookId == book.Ch12BookId).ToList();
                 }
                 foreach (var log in logIt.Logs)
                 {
