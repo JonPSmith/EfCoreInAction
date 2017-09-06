@@ -25,7 +25,10 @@ namespace ServiceLayer.BookServices.QueryObjects
                         p.Promotion == null                   //#D
                           ? null                              //#D
                           : p.Promotion.PromotionalText,      //#D
-                AuthorsOrdered = UdfDefinitions.AuthorsStringUdf(p.BookId),
+                AuthorsOrdered = string.Join(", ",        //#E
+                    p.AuthorsLink                         //#E
+                        .OrderBy(q => q.Order)            //#E
+                        .Select(q => q.Author.Name)),     //#E
                 ReviewsCount = p.Reviews.Count,           //#F
                 ReviewsAverageVotes = UdfDefinitions.AverageVotesUdf(p.BookId)
             });
