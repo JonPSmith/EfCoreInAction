@@ -3,6 +3,7 @@
 
 using System.Linq;
 using DataLayer.EfClasses;
+using DataLayer.SqlCode;
 
 namespace ServiceLayer.BookServices.QueryObjects
 {
@@ -24,16 +25,9 @@ namespace ServiceLayer.BookServices.QueryObjects
                         p.Promotion == null                   //#D
                           ? null                              //#D
                           : p.Promotion.PromotionalText,      //#D
-                AuthorsOrdered = string.Join(", ",        //#E
-                        p.AuthorsLink                         //#E
-                        .OrderBy(q => q.Order)                //#E
-                        .Select(q => q.Author.Name)),         //#E
+                AuthorsOrdered = UdfDefinitions.AuthorsStringUdf(p.BookId),
                 ReviewsCount = p.Reviews.Count,           //#F
-                ReviewsAverageVotes =                     //#G
-                        p.Reviews.Count == 0              //#G
-                        ? null                            //#G
-                        : (double?)p.Reviews              //#G
-                                .Average(q => q.NumStars) //#G
+                ReviewsAverageVotes = UdfDefinitions.AverageVotesUdf(p.BookId)
             });
         }
         /*********************************************************

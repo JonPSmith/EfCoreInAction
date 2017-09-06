@@ -51,6 +51,7 @@ namespace ServiceLayer.DatabaseServices.Concrete
         public static void DevelopmentEnsureCreated(this EfCoreContext db)
         {
             db.Database.EnsureCreated();
+
         }
 
         public static int SeedDatabase(this EfCoreContext context, string dataDirectory)
