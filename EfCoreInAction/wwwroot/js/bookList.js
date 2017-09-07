@@ -65,6 +65,10 @@ var BookList = (function($, loggingDisplay) {
     function sendForm(inputElem) {
         var form = $(inputElem).parents('form');
         form.submit();
+        //Disable the items to stop second request before first request has finished (has to come after form submit for some reason)
+        //... otherwise you get the EF Core error
+        //A second operation started on this context before a previous operation completed. Any instance members are not guaranteed to be thread safe.
+        $('.form-control').prop('disabled', true);
     }
 
     //public parts
