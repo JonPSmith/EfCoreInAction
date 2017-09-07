@@ -30,9 +30,9 @@ namespace ServiceLayer.DatabaseServices.Concrete
             for (int i = 0; i < numBooks; i++)
             {
                 var reviews = new List<Review>();
-                for (int j = 0; j < i % 7; j++)
+                for (int j = 0; j < i % 12; j++)
                 {
-                    reviews.Add(new Review { VoterName = j.ToString(), NumStars = (j % 5) + 1 });
+                    reviews.Add(new Review { VoterName = j.ToString(), NumStars = (Math.Abs(3 - j) % 4) + 2 });
                 }
                 var book = new Book
                 {
@@ -44,6 +44,14 @@ namespace ServiceLayer.DatabaseServices.Concrete
                     Reviews = reviews,
                     AuthorsLink = new List<BookAuthor>()
                 };
+                if (i % 7 == 0)
+                {
+                    book.Promotion = new PriceOffer
+                    {
+                        NewPrice = book.Price * 0.5m,
+                        PromotionalText = "today only - 50% off! "
+                    };
+                }
 
                 AddAuthorsToBook(book, templateBooks[i % templateBooks.Count].Authors);
                 result.Add(book);

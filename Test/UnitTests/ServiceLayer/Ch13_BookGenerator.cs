@@ -40,7 +40,7 @@ namespace Test.UnitTests.ServiceLayer
             //VERIFY
             books.Count.ShouldEqual(numBooks);
             books.SelectMany(x => x.AuthorsLink.Select(y => y.Author)).Distinct().Count().ShouldEqual(17);
-            books.SelectMany(x => x.AuthorsLink).Distinct().Count().ShouldEqual(books.SelectMany(x => x.AuthorsLink).Count());
+            books.Count(x => x.Promotion != null).ShouldEqual(3);
         }
 
         [Fact]
