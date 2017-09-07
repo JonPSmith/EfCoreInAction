@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using DataLayer.EfCode;
 using DataLayer.SqlCode;
+using ServiceLayer.BookServices;
 using ServiceLayer.BookServices.QueryObjects;
 using test.EfHelpers;
 using test.Helpers;
@@ -44,6 +45,102 @@ namespace Test.UnitTests.ServiceLayer
                 //VERIFY
                 books.Select(x => x.AuthorsOrdered).ToArray()
                     .ShouldEqual(new string[]{ "Martin Fowler", "Martin Fowler", "Eric Evans", "Future Person" });
+                foreach (var log in logIt.Logs)
+                {
+                    _output.WriteLine(log);
+                }
+            }
+        }
+
+        [Fact]
+        public void TestBookListDtoImprovedOrderByVotes()
+        {
+            //SETUP
+            var options = this.ClassUniqueDatabaseSeeded4Books();
+            var filepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
+                @"EfCoreInAction\wwwroot\",
+                UdfDefinitions.SqlScriptName);
+
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.ExecuteScriptFileInTransaction(filepath);
+                var logIt = new LogDbContext(context);
+
+                //ATTEMPT
+                var books = context.Books.MapBookToDto().OrderBooksBy(OrderByOptions.ByVotes).ToList();
+
+                //VERIFY
+                books.Select(x => x.AuthorsOrdered).ToArray()
+                    .ShouldEqual(new string[] { "Future Person", "Martin Fowler", "Martin Fowler", "Eric Evans" });
+                foreach (var log in logIt.Logs)
+                {
+                    _output.WriteLine(log);
+                }
+            }
+        }
+
+        private class SimpleDto
+        {
+            public double? ReviewsAverageVotes { get; set; }
+            public string AuthorsOrdered { get; set; }
+        }
+
+        [Fact] public void TestUdfExceptionSimpleDto()
+        {
+            //SETUP
+            var options = this.ClassUniqueDatabaseSeeded4Books();
+            var filepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
+                @"EfCoreInAction\wwwroot\",
+                UdfDefinitions.SqlScriptName);
+
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.ExecuteScriptFileInTransaction(filepath);
+                var logIt = new LogDbContext(context);
+
+                //ATTEMPT
+                var books = context.Books.Select(p => new SimpleDto
+                {
+                    AuthorsOrdered = UdfDefinitions.AuthorsStringUdf(p.BookId)
+                }).OrderBy(x => x.ReviewsAverageVotes).ToList();
+
+                //VERIFY
+                books.Select(x => x.AuthorsOrdered).ToArray()
+                    .ShouldEqual(new string[] { "Martin Fowler", "Martin Fowler", "Eric Evans", "Future Person" });
+                foreach (var log in logIt.Logs)
+                {
+                    _output.WriteLine(log);
+                }
+            }
+        }
+
+        [Fact]
+        public void TestUdfExceptionBookListDto()
+        {
+            //SETUP
+            var options = this.ClassUniqueDatabaseSeeded4Books();
+            var filepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
+                @"EfCoreInAction\wwwroot\",
+                UdfDefinitions.SqlScriptName);
+
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.ExecuteScriptFileInTransaction(filepath);
+                var logIt = new LogDbContext(context);
+
+                //ATTEMPT
+                var books = context.Books.Select(p => new BookListDto
+                {
+                    ReviewsAverageVotes = UdfDefinitions.AverageVotesUdf(p.BookId),
+                    AuthorsOrdered = UdfDefinitions.AuthorsStringUdf(p.BookId)
+                }).OrderBy(x => x.ReviewsAverageVotes).ToList();
+
+                //VERIFY
+                books.Select(x => x.AuthorsOrdered).ToArray()
+                    .ShouldEqual(new string[] { "Martin Fowler", "Martin Fowler", "Eric Evans", "Future Person" });
                 foreach (var log in logIt.Logs)
                 {
                     _output.WriteLine(log);
