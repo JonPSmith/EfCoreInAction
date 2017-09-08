@@ -35,8 +35,7 @@ namespace ServiceLayer.BookServices.QueryObjects
                         x => x.BookId);                   //#A
                 case OrderByOptions.ByVotes:              //#B
                     return books.OrderByDescending(x =>   //#B
-                        x.ReviewsCount > 0                //#B
-                             ? x.ReviewsAverageVotes : 0);//#B
+                        x.ReviewsAverageVotes);           //#B
                 case OrderByOptions.ByPublicationDate:    //#C
                     return books.OrderByDescending(       //#C
                         x => x.PublishedOn);              //#C
@@ -52,7 +51,7 @@ namespace ServiceLayer.BookServices.QueryObjects
         }
         /************************************************************
         #A Because of paging we always need to sort. I default to showing latest entries first
-        #B This orders the book by votes. Books without any votes go at the bottom
+        #B This orders the book by votes. Books without any votes (null return) go at the bottom
         #C Order by publication date - latest books at the top
         #D Order by actual price, which takes into account any promotional price - both lowest first and highest first
          * ********************************************************/
