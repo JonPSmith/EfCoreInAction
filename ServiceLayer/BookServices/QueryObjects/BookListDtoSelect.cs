@@ -29,11 +29,10 @@ namespace ServiceLayer.BookServices.QueryObjects
                         .OrderBy(q => q.Order)                //#E
                         .Select(q => q.Author.Name)),         //#E
                 ReviewsCount = p.Reviews.Count,           //#F
-                ReviewsAverageVotes =                     //#G
-                        p.Reviews.Count == 0              //#G
-                        ? null                            //#G
-                        : (double?)p.Reviews              //#G
-                                .Average(q => q.NumStars) //#G
+                ReviewsAverageVotes =                  //#G
+                    p.Reviews.Select(y =>              //#G
+                        (double?)y.NumStars).Average() //#G
+
             });
         }
         /*********************************************************
@@ -43,7 +42,7 @@ namespace ServiceLayer.BookServices.QueryObjects
         #D The PromotionalText depends on whether a PriceOffer exists for this book
         #E This obtains an array of Authors' names, in the right order. We are using a Client vs. Server evaluation as we want the author's names combined into one string
         #F We need to calculate how many reviews there are
-        #G We cannot calculate the average of zero reviews, so we need to check the count first. EF Core turns the LINQ average into the SQL AVG command that runs on the database
+        #G To get EF Core to turn the LINQ average into the SQL AVG command I need to cast the NumStars to (double?)
         * *******************************************************/
 
     }
