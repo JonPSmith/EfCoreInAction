@@ -147,37 +147,5 @@ namespace Test.UnitTests.ServiceLayer
             }
         }
 
-        [Fact]
-        public void TestUdfExceptionBookListDto()
-        {
-            //SETUP
-            var options = this.ClassUniqueDatabaseSeeded4Books();
-            var filepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
-                @"EfCoreInAction\wwwroot\",
-                UdfDefinitions.SqlScriptName);
-
-            using (var context = new EfCoreContext(options))
-            {
-                context.Database.EnsureCreated();
-                context.ExecuteScriptFileInTransaction(filepath);
-                var logIt = new LogDbContext(context);
-
-                //ATTEMPT
-                var books = context.Books.Select(p => new BookListDto
-                {
-                    ReviewsAverageVotes = UdfDefinitions.AverageVotesUdf(p.BookId),
-                    AuthorsOrdered = UdfDefinitions.AuthorsStringUdf(p.BookId)
-                }).OrderBy(x => x.ReviewsAverageVotes).ToList();
-
-                //VERIFY
-                books.Select(x => x.AuthorsOrdered).ToArray()
-                    .ShouldEqual(new string[] { "Martin Fowler", "Martin Fowler", "Eric Evans", "Future Person" });
-                foreach (var log in logIt.Logs)
-                {
-                    _output.WriteLine(log);
-                }
-            }
-        }
-
     }
 }

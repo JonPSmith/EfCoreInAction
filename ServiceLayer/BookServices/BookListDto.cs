@@ -2,6 +2,8 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace ServiceLayer.BookServices
 {
@@ -15,7 +17,10 @@ namespace ServiceLayer.BookServices
             ActualPrice { get; set; }              //#D
         public string 
             PromotionPromotionalText { get; set; } //#E
-        public string AuthorsOrdered { get; set; }  //#F
+        public ICollection<string> AuthorNames { get; set; }
+        //There is a bug in EF Core 2.0.0 on this client vs. server query - see https://github.com/aspnet/EntityFrameworkCore/issues/9519
+        public string AuthorsOrdered => string.Join(", ", AuthorNames);
+        //public string AuthorsOrdered { get; set; }  //#F
 
         public int ReviewsCount { get; set; }      //#G
         public double? 

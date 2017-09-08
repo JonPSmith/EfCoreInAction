@@ -25,16 +25,15 @@ namespace Test.Chapter10Listings.QueryObjects
                         p.Promotion == null             
                           ? null                        
                           : p.Promotion.PromotionalText,
-                AuthorsOrdered = string.Join(", ",      
-                        p.AuthorsLink                   
-                        .OrderBy(q => q.Order)          
-                        .Select(q => q.Author.Name)),   
+                //There is a bug in EF Core 2.0.0 on this client vs. server query - see https://github.com/aspnet/EntityFrameworkCore/issues/9519
+                AuthorNames = p.AuthorsLink.Select(c => c.Author.Name).ToList(),
+                //AuthorsOrdered = string.Join(", ",        //#E
+                //        p.AuthorsLink                         //#E
+                //        .OrderBy(q => q.Order)                //#E
+                //        .Select(q => q.Author.Name)),         //#E
                 ReviewsCount = p.Reviews.Count(),       
-                ReviewsAverageVotes =                   
-                        !p.Reviews.Any()                
-                        ? null                          
-                        : (double?)p.Reviews           
-                            .Select(q => q.NumStars).Average()
+                ReviewsAverageVotes = p.Reviews           
+                            .Select(q => (double?)q.NumStars).Average()
             });
         }
         /*********************************************************

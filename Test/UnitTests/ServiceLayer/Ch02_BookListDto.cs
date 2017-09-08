@@ -50,17 +50,16 @@ namespace test.UnitTests.ServiceLayer
                             ?? firstBook.Price,            //#A
                     PromotionPromotionalText = firstBook   //#A
                         .Promotion?.PromotionalText,       //#A
-                    AuthorsOrdered = string.Join(", ",      //#B
-                         firstBook.AuthorsLink             //#B
-                        .OrderBy(l => l.Order)             //#B
-                        .Select(a => a.Author.Name)),      //#B
+                    //There is a bug in EF Core 2.0.0 on this client vs. server query - see https://github.com/aspnet/EntityFrameworkCore/issues/9519
+                    //AuthorsOrdered = string.Join(", ",      //#B
+                    //     firstBook.AuthorsLink             //#B
+                    //    .OrderBy(l => l.Order)             //#B
+                    //    .Select(a => a.Author.Name)),      //#B
+                    AuthorNames = firstBook.AuthorsLink.Select(c => c.Author.Name).ToList(),
                     ReviewsCount = firstBook.Reviews.Count,//#C
                     //The test on there being any reviews is needed because of bug in EF Core V2.0.0, issue #9516
-                    ReviewsAverageVotes =                  //#D
-                        firstBook.Reviews.Count == 0       //#D
-                            ? null                             //#D
-                            : (double?)firstBook.Reviews       //#D
-                                .Average(q => q.NumStars)          //#D
+                    ReviewsAverageVotes = firstBook.Reviews       //#D
+                                .Average(q => (double?)q.NumStars) //#D
                 };
 
                 //VERIFY
@@ -104,9 +103,7 @@ namespace test.UnitTests.ServiceLayer
                 var reviewsCount = context.Books.Select(p => p.Reviews.Count);
                 //The test on there being any reviews is needed because of bug in EF Core V2.0.0, issue #9516
                 var reviewsAverageVotes = context.Books.Select(p => 
-                        p.Reviews.Count == 0
-                        ? null
-                        : (double?) p.Reviews.Average(q => q.NumStars));
+                       p.Reviews.Average(q => (double?)q.NumStars));
 
                 //VERIFY
                 titles.ToList();
@@ -160,7 +157,7 @@ namespace test.UnitTests.ServiceLayer
                 var dtos = context.Books.Select(p => new 
                 {
                     NumReviews = p.Reviews.Count,
-                    ReviewsAverageVotes = p.Reviews.Count == 0 ? null : (double?) p.Reviews.Average(q => q.NumStars)  
+                    ReviewsAverageVotes = p.Reviews.Average(q => (double?)q.NumStars)  
                 }).ToList();
 
 

@@ -4,12 +4,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DataLayer.EfCode;
-using DataLayer.SqlCode;
 using Newtonsoft.Json;
-using ServiceLayer.BookServices.QueryObjects;
 using ServiceLayer.DatabaseServices.Concrete;
-using test.EfHelpers;
 using test.Helpers;
 using Xunit;
 using Xunit.Abstractions;
