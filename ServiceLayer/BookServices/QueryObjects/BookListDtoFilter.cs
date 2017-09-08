@@ -35,8 +35,8 @@ namespace ServiceLayer.BookServices.QueryObjects
                     return books;                               //#C
                 case BooksFilterBy.ByVotes:
                     var filterVote = int.Parse(filterValue);     //#D
-                    return books.Where(x => 
-                        x.ReviewsAverageVotes > filterVote);//#D
+                    return books.Where(x =>                      //#D
+                          x.ReviewsAverageVotes > filterVote);   //#D
                 case BooksFilterBy.ByPublicationYear:             
                     if (filterValue == AllBooksNotPublishedString)//#E
                         return books.Where(                       //#E
@@ -55,7 +55,7 @@ namespace ServiceLayer.BookServices.QueryObjects
         #A The method is given both the type of filter and the user selected filter value
         #B If the filter value isn't set then it returns the IQueryable with no change
         #C Same for no filter selected - it returns the IQueryable with no change
-        #D The filter by votes is a value and above, e.g. 3 and above. We also ignore books with no reviews
+        #D The filter by votes is a value and above, e.g. 3 and above. Note: not reviews returns null, and the test is always false
         #E If the "coming soon" was picked then we only return books not yet published
         #F If we have a specific year we filter on that. Note that we also remove future books (in case the user chose this year's date)
          * ************************************************************/
