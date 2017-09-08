@@ -27,7 +27,7 @@ namespace ServiceLayer.BookServices.QueryObjects
                           : p.Promotion.PromotionalText, 
                 ReviewsCount = p.Reviews.Count,
                 AuthorsOrdered = UdfDefinitions.AuthorsStringUdf(p.BookId),
-                ReviewsAverageVotes = UdfDefinitions.AverageVotesUdf(p.BookId)
+                ReviewsAverageVotes = p.Reviews.Select(y => (double?)y.NumStars).Average()
             });
         }
     }
