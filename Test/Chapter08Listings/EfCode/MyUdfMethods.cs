@@ -9,7 +9,8 @@ namespace Test.Chapter08Listings.EfCode
     {
         public static double? AverageVotes(int id)
         {
-            throw new Exception();
+            throw new NotImplementedException(
+                "Called in Client vs. Server evaluation.");
         }
     }
 }
