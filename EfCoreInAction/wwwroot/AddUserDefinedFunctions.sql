@@ -1,22 +1,6 @@
 ﻿-- SQL script file to add SQL code to improve performance
 -- I have built this as an Idempotent Script, that is, it can be applied even if there isn't a change and it will ensure the database is up to date
 
-IF OBJECT_ID('dbo.AverageVotesUdf') IS NOT NULL
-	DROP FUNCTION dbo.AverageVotesUdf
-GO
-
-CREATE FUNCTION AverageVotesUdf (@bookId int)
-RETURNS float
-AS
-BEGIN
-DECLARE @result AS float
-SELECT @result = AVG(CAST([NumStars] AS float)) 
-    FROM dbo.Review AS r
-    WHERE @bookId = r.BookId
-RETURN @result
-END
-GO
-
 IF OBJECT_ID('dbo.AuthorsStringUdf') IS NOT NULL
 	DROP FUNCTION dbo.AuthorsStringUdf
 GO
