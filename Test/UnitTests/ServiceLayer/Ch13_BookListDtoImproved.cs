@@ -84,6 +84,34 @@ namespace Test.UnitTests.ServiceLayer
         }
 
         [Fact]
+        public void TestBookListDtoImprovedCheckActualPrice()
+        {
+            //SETUP
+            var options = this.ClassUniqueDatabaseSeeded4Books();
+            var filepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
+                @"EfCoreInAction\wwwroot\",
+                UdfDefinitions.SqlScriptName);
+
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.ExecuteScriptFileInTransaction(filepath);
+                var logIt = new LogDbContext(context);
+
+                //ATTEMPT
+                var books = context.Books.MapBookToDto().ToList();
+
+                //VERIFY
+                books.Select(x => x.ActualPrice).ToArray()
+                    .ShouldEqual(new decimal[] { 40, 53, 56, 219 });
+                foreach (var log in logIt.Logs)
+                {
+                    _output.WriteLine(log);
+                }
+            }
+        }
+
+        [Fact]
         public void TestBookListDtoImprovedOrderByVotes()
         {
             //SETUP

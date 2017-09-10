@@ -15,9 +15,6 @@ namespace DataLayer.SqlCode
             modelBuilder.HasDbFunction(
                     () => AuthorsStringUdf(default(int)))
                 .HasSchema("dbo");
-            modelBuilder.HasDbFunction(
-                    () => ActualPriceUdf(default(int)))
-                .HasSchema("dbo");
         }
 
         public static double? AverageVotesUdf(int bookId)
@@ -27,12 +24,9 @@ namespace DataLayer.SqlCode
 
         public static string AuthorsStringUdf(int bookId)
         {
-            throw new Exception();
+            throw new NotImplementedException(
+                "Called by client vs. server evaluation.");
         }
 
-        public static decimal ActualPriceUdf(int bookId)
-        {
-            throw new Exception();
-        }
     }
 }

@@ -20,19 +20,3 @@ ORDER BY ba.[Order]
 RETURN @Names
 END
 GO
-
-IF OBJECT_ID('dbo.ActualPriceUdf') IS NOT NULL
-	DROP FUNCTION dbo.ActualPriceUdf
-GO
-
-CREATE FUNCTION ActualPriceUdf (@id int, @normalPrice decimal)
-RETURNS decimal  AS
-BEGIN
-  DECLARE @result AS decimal
-  SELECT @result = NewPrice FROM dbo.PriceOffers AS po
-  WHERE po.BookId = @Id
-  IF (@result IS NULL)
-     SET @result = @normalPrice
-  RETURN @result
-END
-GO
