@@ -39,7 +39,7 @@
                 <input asp-for="SortFilterPageData.PageNum" name="PageNum"
                        class="form-control page-control-width page-num-input"
                        onchange="BookList.sendForm(this)">
-                <span class="num-pages-text">of @Model.SortFilterPageData.NumPages</span>
+                <span class="num-pages-text">of @Model.SortFilterPageData.NumPages.ToString("##,###")</span>
             </div>
         </div>
 
@@ -70,7 +70,7 @@
                     @(item.ReviewsCount == 0 ? "Be the first to review this book" : $"Votes: {item.ReviewsAverageVotes:F1} by {item.ReviewsCount} customers")
                 </div>
                 <div>
-                    <span class="h4">@(item.ActualPrice < 0 ? "- not for sale - " : $"Price: ${item.ActualPrice:F}")</span>
+                    <span class="h4">@(item.ActualPrice < 0 ? "- not for sale - " : $"Price: ${item.ActualPrice:##,###.00}")</span>
                     @if (item.PromotionPromotionalText != null)
                     {
                         <span class="text-danger">
