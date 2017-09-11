@@ -4,6 +4,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +23,7 @@ namespace DataLayer.SqlCode
         {
             var scriptContent = File.ReadAllText(filePath);
             var regex = new Regex("^GO", RegexOptions.IgnoreCase | RegexOptions.Multiline);
-            var commands = regex.Split(scriptContent);
+            var commands = regex.Split(scriptContent).Select(x => x.Trim());
 
             using (var transaction = context.Database.BeginTransaction(IsolationLevel.ReadUncommitted))
             {
