@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DataLayer.EfClasses;
+using DataLayer.EfCode;
 using Newtonsoft.Json;
 
 namespace ServiceLayer.DatabaseServices.Concrete
 {
     public class BookGenerator
     {
+        public int WriteBatchSize { get; set; } = 500;
 
         private Dictionary<string, Author> _authorDict;
         public class BookData
@@ -21,12 +23,41 @@ namespace ServiceLayer.DatabaseServices.Concrete
             public string Authors { get; set; }
         }
 
-        public List<Book> GenerateBooks(string filePath, int numBooks = 100)
+        public void WriteBooks(string filePath, int numBooks, EfCoreContext context, Func<int, bool> progessCancel)
+        {
+            var numWritten = 0;
+            var batch = new List<Book>();
+            foreach (var book in GenerateBooks(filePath, numBooks))
+            {
+                batch.Add(book);
+                if (batch.Count < WriteBatchSize) continue;
+
+                //have a btach to write out
+                if (progessCancel(numWritten))
+                {
+                    return;
+                }
+                context.AddRange(batch);
+                context.SaveChanges();
+                numWritten += batch.Count;
+                batch.Clear();
+            }
+
+            //write any final batch out
+            if (batch.Count > 0)
+            {
+                context.AddRange(batch);
+                context.SaveChanges();
+                numWritten += batch.Count;
+            }
+            progessCancel(numWritten);
+        }
+
+        public IEnumerable<Book> GenerateBooks(string filePath, int numBooks)
         {
             var templateBooks = JsonConvert.DeserializeObject<List<BookData>>(File.ReadAllText(filePath));
 
             _authorDict = new Dictionary<string, Author>();
-            var result = new List<Book>();
             for (int i = 0; i < numBooks; i++)
             {
                 var reviews = new List<Review>();
@@ -54,9 +85,8 @@ namespace ServiceLayer.DatabaseServices.Concrete
                 }
 
                 AddAuthorsToBook(book, templateBooks[i % templateBooks.Count].Authors);
-                result.Add(book);
+                yield return book;
             }
-            return result;
         }
 
         private void AddAuthorsToBook(Book book, string authors)

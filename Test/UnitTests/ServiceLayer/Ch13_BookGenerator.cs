@@ -4,8 +4,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DataLayer.EfCode;
 using Newtonsoft.Json;
 using ServiceLayer.DatabaseServices.Concrete;
+using test.EfHelpers;
 using test.Helpers;
 using Xunit;
 using Xunit.Abstractions;
@@ -23,7 +25,7 @@ namespace Test.UnitTests.ServiceLayer
         //}
 
         [Fact]
-        public void TestBookGenerator20()
+        public void TestGenerateBooks20()
         {
             //SETUP
             const int numBooks = 20;
@@ -34,7 +36,7 @@ namespace Test.UnitTests.ServiceLayer
             var books = gen.GenerateBooks(filePath, numBooks);
 
             //VERIFY
-            books.Count.ShouldEqual(numBooks);
+            books.Count().ShouldEqual(numBooks);
             books.SelectMany(x => x.AuthorsLink.Select(y => y.Author)).Distinct().Count().ShouldEqual(17);
             books.Count(x => x.Promotion != null).ShouldEqual(3);
         }
@@ -56,7 +58,7 @@ namespace Test.UnitTests.ServiceLayer
         }
 
         [Fact]
-        public void TestBookGeneratorFullDataUniqueAuthorLinks()
+        public void TestGenerateBooksFullDataUniqueAuthorLinks()
         {
             //SETUP
             const int numBooks = 600;
@@ -69,12 +71,12 @@ namespace Test.UnitTests.ServiceLayer
             var books = gen.GenerateBooks(filepath, numBooks);
 
             //VERIFY
-            books.Count.ShouldEqual(numBooks);
+            books.Count().ShouldEqual(numBooks);
             books.Count(x => x.AuthorsLink.Select(y => y.Author.Name).Distinct().Count() != x.AuthorsLink.Count).ShouldEqual(0);
         }
 
         [Fact]
-        public void TestBookGeneratorDistinctTitles()
+        public void TestGenerateBooksDistinctTitles()
         {
             //SETUP
             const int numBooks = 600;
@@ -87,8 +89,66 @@ namespace Test.UnitTests.ServiceLayer
             var books = gen.GenerateBooks(filepath, numBooks);
 
             //VERIFY
-            books.Count.ShouldEqual(numBooks);
+            books.Count().ShouldEqual(numBooks);
             books.Select(x => x.Title).Distinct().Count().ShouldEqual(390);
+        }
+
+        //--------------------------------------------------------------------
+
+        [Fact]
+        public void TestWriteBooks20()
+        {
+            //SETUP
+            const int numBooks = 20;
+            var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                var progress = new List<int>();
+
+                //ATTEMPT
+                var gen = new BookGenerator();
+                gen.WriteBatchSize = 10;
+                gen.WriteBooks(filePath, numBooks, context, x => {
+                    progress.Add(x);
+                    return false;
+                });
+
+                //VERIFY
+                context.Books.Count().ShouldEqual(20);
+                progress.ShouldEqual(new List<int>{0, 10, 20});
+            }
+        }
+
+        [Fact]
+        public void TestWriteBooks20CancelSecondBatch()
+        {
+            //SETUP
+            const int numBooks = 20;
+            var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                var cancelCount = 0;
+                var progress = new List<int>();
+
+                //ATTEMPT
+                var gen = new BookGenerator();
+                gen.WriteBatchSize = 10;
+                gen.WriteBooks(filePath, numBooks, context,
+                    x => {
+                        progress.Add(x);
+                        return cancelCount++ > 0;
+                    });
+
+                //VERIFY
+                context.Books.Count().ShouldEqual(10);
+                progress.ShouldEqual(new List<int> { 0, 10 });
+            }
         }
     }
 }
