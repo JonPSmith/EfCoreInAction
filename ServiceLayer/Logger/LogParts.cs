@@ -8,6 +8,7 @@
 // Written by Jon P Smith : GitHub JonPSmith, www.thereformedprogrammer.net
 // =====================================================
 
+using System.Dynamic;
 using System.Text;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
@@ -19,6 +20,7 @@ namespace ServiceLayer.Logger
     public class LogParts
     {
         private const string EfCoreEventIdStartWith = "Microsoft.EntityFrameworkCore";
+        public const string DapperEventName = "EfCoreInAction.Dapper";
 
         [JsonConverter(typeof(StringEnumConverter))]
         public LogLevel LogLevel { get; private set; }
@@ -27,7 +29,14 @@ namespace ServiceLayer.Logger
 
         public string EventString { get; private set; }
 
-        public bool IsDb => EventId.Name?.StartsWith(EfCoreEventIdStartWith) ?? false;
+        public bool IsDb {
+            get
+            {
+                var name = EventId.Name;
+                return name != null && (name.StartsWith(EfCoreEventIdStartWith)
+                                        || name.StartsWith(DapperEventName)) ;
+            }  
+        }
 
         public LogParts(LogLevel logLevel, EventId eventId, string eventString)
         {
@@ -40,6 +49,5 @@ namespace ServiceLayer.Logger
         {
             return $"{LogLevel}: {EventString}";
         }
-
     }
 }

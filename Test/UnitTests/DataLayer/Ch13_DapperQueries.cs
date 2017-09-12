@@ -60,6 +60,23 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void DapperBookListQueryLog()
+        {
+            //SETUP 
+            using (var context = new EfCoreContext(_options))
+            {
+                var logIt = new LogDbContext(context);
+
+                //ATTEMPT
+                var options = new SortFilterPageOptions();
+                var books = context.BookListQuery(options).ToList();
+
+                //VERIFY
+                logIt.Logs.Count.ShouldEqual(1);
+            }
+        }
+
+        [Fact]
         public void DapperBookListCount()
         {
             //SETUP 

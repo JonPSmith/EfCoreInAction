@@ -3,36 +3,66 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using Dapper;
-using DataLayer.EfClasses;
 using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
-using Remotion.Linq.Clauses;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.Logging;
+using ServiceLayer.Logger;
 
 namespace ServiceLayer.BookServices.DapperQueries
 {
     public static class DapperQueries
     {
+        private class LogIt : IDisposable
+        {
+            private readonly string _command;
+            private readonly ILogger _myLogger;
+            private readonly Stopwatch stopwatch = new Stopwatch();
+
+            public LogIt(string command, EfCoreContext context)
+            {
+                _command = command;
+                _myLogger = context.GetService<ILoggerFactory>().CreateLogger(nameof(DapperQueries));
+                stopwatch.Start();
+            }
+
+            public void Dispose()
+            {
+                stopwatch.Stop();
+                _myLogger.LogInformation(new EventId(1, LogParts.DapperEventName), 
+                    $"Dapper Query. Execute time = {stopwatch.ElapsedMilliseconds} ms.\n"+ _command);
+            }
+        }
+
         public static IEnumerable<BookListDto>
             BookListQuery(this EfCoreContext context, SortFilterPageOptions options)
         {
-             return context.Database.GetDbConnection()
-                .Query<BookListDto>(BuildQueryString(options, false), new
+            var command = BuildQueryString(options, false);
+            using(new LogIt(command, context))
+            {
+                return context.Database.GetDbConnection()
+                    .Query<BookListDto>(command, new
                     {
                         pageSize = options.PageSize,
                         skipRows = options.PageSize * (options.PageNum - 1),
                         filterVal = options.FilterValue
-                });
+                    });
+            }
         }
 
         public static int BookListCount(this EfCoreContext context, SortFilterPageOptions options)
         {
-            return context.Database.GetDbConnection()
-                .ExecuteScalar<int>(BuildQueryString(options, true), new
-                {
-                    filterVal = options.FilterValue
-                });
+            var command = BuildQueryString(options, true);
+            using (new LogIt(command, context))
+            {
+                return context.Database.GetDbConnection()
+                    .ExecuteScalar<int>(command, new
+                    {
+                        filterVal = options.FilterValue
+                    });
+            }
         }
 
         private static string BuildQueryString
