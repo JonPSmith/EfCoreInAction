@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer.BookServices;
 using ServiceLayer.BookServices.Concrete;
+using ServiceLayer.BookServices.DapperQueries;
 using ServiceLayer.Logger;
 
 namespace EfCoreInAction.Controllers
@@ -23,12 +24,15 @@ namespace EfCoreInAction.Controllers
         public async Task<IActionResult> Index  //#A
             (SortFilterPageOptions options)         
         {
-            var listService =                       
-                new ListBooksService(_context);
+            //var listService =
+            //    new ListBooksService(_context);
 
-            var bookList = listService //#B       
-                .SortFilterPage(options)
-                .ToList(); //#C   
+            //var bookList = listService //#B       
+            //    .SortFilterPage(options)
+            //    .ToList(); //#C   
+
+            options.SetupRestOfDto(_context.BookListCount(options));
+            var bookList = _context.BookListQuery(options).ToList();
 
             //Because of EF Core 2.0.0 bug https://github.com/aspnet/EntityFrameworkCore/issues/9570 I have dropped this back to sync
             //var bookList = await listService //#B       

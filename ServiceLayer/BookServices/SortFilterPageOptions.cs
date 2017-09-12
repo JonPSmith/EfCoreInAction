@@ -55,10 +55,15 @@ namespace ServiceLayer.BookServices
 
         public void SetupRestOfDto<T>(IQueryable<T> query)
         {
-            NumPages = (int) Math.Ceiling(
-                (double) query.Count()/PageSize);
+            SetupRestOfDto(query.Count());
+        }
+
+        public void SetupRestOfDto(int numRows)
+        {
+            NumPages = (int)Math.Ceiling(
+                (double)numRows / PageSize);
             PageNum = Math.Min(
-                Math.Max(1, PageNum), NumPages);                                                            
+                Math.Max(1, PageNum), NumPages);
 
             var newCheckState = GenerateCheckState();
             if (PrevCheckState != newCheckState)
