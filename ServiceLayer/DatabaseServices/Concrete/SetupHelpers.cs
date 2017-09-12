@@ -97,21 +97,16 @@ namespace ServiceLayer.DatabaseServices.Concrete
             return numBooks;
         }
 
-        public static int GenerateBooks(this EfCoreContext context, int numBooksNeeded, string wwwrootDirectory, Func<int, bool> progessCancel)
+        public static void GenerateBooks(this EfCoreContext context, int numBooksToAdd, string wwwrootDirectory, Func<int, bool> progessCancel)
         {
             if (!(context.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists())
-                throw new InvalidOperationException("The database does not exist. If you are using Migrations then run PMC command update-database to create it");
-
-            var numBooks = context.Books.Count();
-            if (numBooks < numBooksNeeded)
-            {
-                //add more generated books
-                var gen = new BookGenerator();
-                gen.WriteBooks(Path.Combine(wwwrootDirectory, SeedFileSubDirectory, TemplateFileName), 
-                    numBooksNeeded - numBooks, context, progessCancel);
-            }
-
-            return context.Books.Count();
+                throw new InvalidOperationException(
+                    "The database does not exist. If you are using Migrations then run PMC command update-database to create it");
+            
+            //add generated books
+            var gen = new BookGenerator();
+            gen.WriteBooks(Path.Combine(wwwrootDirectory, SeedFileSubDirectory, TemplateFileName),
+                numBooksToAdd, context, progessCancel);
         }
     }
 }

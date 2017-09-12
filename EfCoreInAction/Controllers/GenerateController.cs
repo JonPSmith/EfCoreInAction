@@ -2,8 +2,6 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using DataLayer.EfCode;
 using EfCoreInAction.Helpers;
 using Microsoft.AspNetCore.Hosting;
@@ -31,21 +29,23 @@ namespace EfCoreInAction.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Books(int numBooks, [FromServices]EfCoreContext context, [FromServices]IHostingEnvironment env)
+        public IActionResult Books(int numBooks, bool wipeDatabase, [FromServices]EfCoreContext context, [FromServices]IHostingEnvironment env)
         {
             if (numBooks == 0)
-                return View((object)"Error: should contain the number of books to generate.");
+                return View((object) "Error: should contain the number of books to generate.");
 
             Request.ThrowErrorIfNotLocal();
 
-            context.DevelopmentWipeCreated(env.WebRootPath);
-            var booksInDatabase = context.GenerateBooks(numBooks, env.WebRootPath, numWritten =>
+            if (wipeDatabase)
+                context.DevelopmentWipeCreated(env.WebRootPath);
+            context.GenerateBooks(numBooks, env.WebRootPath, numWritten =>
             {
                 _progress = numWritten * 100.0 / numBooks;
                 return _cancel;
             });
-
-            return View((object)$"Successfull generate. Num books in database = {booksInDatabase}.");
+            return
+                View((object) ((_cancel ? "Cancelled" : "Successful") +
+                     $" generate. Num books in database = {context.Books.Count()}."));
         }
 
         [HttpPost]
