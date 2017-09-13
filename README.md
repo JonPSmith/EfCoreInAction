@@ -50,7 +50,11 @@ master    Ch1    Ch2 --> Ch3 --> Ch4 --> Ch5 -->
 ```
 ### Part 3 - Using Entity Framework in real-world applications
 ```
-(ch9) --> Ch10 --> Ch11 --> Ch12
+                                 ------- Ch13-Part4
+                                /
+                               /       Ch13-Part2
+                              /            /
+(ch9) --> Ch10 --> Ch11 --> Ch12 --> Ch13-Part1
 ```
 
 ## Live example book selling site
