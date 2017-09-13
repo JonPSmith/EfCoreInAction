@@ -3,6 +3,7 @@
 
 using System.IO;
 using System.Linq;
+using Dapper;
 using DataLayer.EfCode;
 using DataLayer.SqlCode;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +42,43 @@ namespace test.UnitTests.DataLayer
                     context.ExecuteScriptFileInTransaction(_sqlScriptFilepath);
                     context.SeedDatabaseFourBooks();
                 }
+            }
+        }
+
+
+        [Fact]
+        public void DapperMaptoBookListDto()
+        {
+            //SETUP 
+            using (var context = new EfCoreContext(_options))
+            {
+                //ATTEMPT
+                var books = context.Database
+                    .GetDbConnection()
+                    .Query<BookListDto>(
+                        @"SELECT [b].[BookId], [b].[Title], [b].[Price], 
+                [b].[PublishedOn], 
+                CASE
+                    WHEN [p.Promotion].[PriceOfferId] IS NULL
+                    THEN [b].[Price] ELSE [p.Promotion].[NewPrice]
+                END AS [ActualPrice], 
+                [p.Promotion].[PromotionalText] AS [PromotionPromotionalText], 
+                [dbo].AuthorsStringUdf([b].[BookId]) AS [AuthorsOrdered], (
+                    SELECT COUNT(*)
+                    FROM [Review] AS [r]
+                    WHERE [b].[BookId] = [r].[BookId]
+                ) AS [ReviewsCount], (
+                    SELECT AVG(CAST([y].[NumStars] AS float))
+                    FROM [Review] AS [y]
+                    WHERE [b].[BookId] = [y].[BookId]
+                ) AS [ReviewsAverageVotes]
+                FROM [Books] AS [b]
+                LEFT JOIN [PriceOffers] AS [p.Promotion] 
+                ON [b].[BookId] = [p.Promotion].[BookId]
+                WHERE [b].[SoftDeleted] = 0");
+
+                //VERIFY
+                books.Count().ShouldEqual(4);
             }
         }
 
