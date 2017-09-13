@@ -6,9 +6,8 @@
 
 <h3 class="text-danger">WARNING!</h3>
 <p class="text-danger">
-    This can take a long time! In Chrome, after 1 minute you will get a "HTTP Error 502.3 - Bad Gateway" message (2 minutes in FireFox).
-    BUT, the application is still running. So, be warned - don't stop the applictaion, or go back into the Generate again if this happens. 
-    Just keep monitoring the database to see when the generate has finished
+    This can take a LONG time! On my (fast) PC it takes 7 minutes to generate 100,000 books.
+    I have added a web.config file with a requestTimeout of 20 minutes, so that it doesn't time out the action
 </p>
 
 <div class="form-horizontal">
