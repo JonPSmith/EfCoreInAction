@@ -91,7 +91,9 @@ namespace ServiceLayer.BookServices.DapperQueries
     WHERE [b].[BookId] = [y0].[BookId]
 ) > @filterVal)";
                 case QueryObjects.BooksFilterBy.ByPublicationYear:
-                    throw new NotImplementedException("I didn't bother to create this one.");
+                    return start +
+@"AND (DATEPART(year, [b].[PublishedOn]) = @filterVal) 
+AND ([b].[PublishedOn] <= GETUTCDATE()) ";
             }
             throw new NotImplementedException();
         }
@@ -148,7 +150,8 @@ END AS [ActualPrice],
     WHERE [b].[BookId] = [y].[BookId]
 ) AS [ReviewsAverageVotes]
 FROM [Books] AS [b]
-LEFT JOIN [PriceOffers] AS [p.Promotion] ON [b].[BookId] = [p.Promotion].[BookId]";
+LEFT JOIN [PriceOffers] AS [p.Promotion] ON [b].[BookId] = [p.Promotion].[BookId]
+";
         }
     }
 }
