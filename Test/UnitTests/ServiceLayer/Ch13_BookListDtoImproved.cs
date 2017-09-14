@@ -44,7 +44,7 @@ namespace Test.UnitTests.ServiceLayer
                 var books = context.Books.MapBookToDto().ToList();
 
                 //VERIFY
-                books.Select(x => x.AuthorsOrdered).ToArray()
+                books.Select(x => x.AuthorsString).ToArray()
                     .ShouldEqual(new string[]{ "Martin Fowler", "Martin Fowler", "Eric Evans", "Future Person" });
                 foreach (var log in logIt.Logs)
                 {
@@ -72,7 +72,7 @@ namespace Test.UnitTests.ServiceLayer
                 var books = context.Books.MapBookToDto().ToList();
 
                 //VERIFY
-                books.Select(x => x.ReviewsAverageVotes).ToArray()
+                books.Select(x => x.AverageVotes).ToArray()
                     .ShouldEqual(new double?[] { null, null, null, 5 });
                 books.Select(x => x.ReviewsCount).ToArray()
                     .ShouldEqual(new int[] { 0, 0, 0, 2 });
@@ -130,7 +130,7 @@ namespace Test.UnitTests.ServiceLayer
                 var books = context.Books.MapBookToDto().OrderBooksBy(OrderByOptions.ByVotes).ToList();
 
                 //VERIFY
-                books.Select(x => x.AuthorsOrdered).ToArray()
+                books.Select(x => x.AuthorsString).ToArray()
                     .ShouldEqual(new string[] { "Future Person", "Martin Fowler", "Martin Fowler", "Eric Evans" });
                 foreach (var log in logIt.Logs)
                 {

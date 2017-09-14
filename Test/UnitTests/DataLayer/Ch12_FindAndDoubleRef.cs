@@ -73,7 +73,7 @@ namespace test.UnitTests.DataLayer
                 var books = context.Books.Select(b => new
                     {
                         b.BookId,
-                        ReviewCount = b.Reviews.Count
+                        ReviewCount = b.Reviews.Count()
                     }).OrderBy(x => x.ReviewCount)
                     .ToList();
 
@@ -101,7 +101,7 @@ namespace test.UnitTests.DataLayer
                 var books = context.Books.Select(b => new
                     {
                         b.BookId,
-                        ReviewCount = b.Reviews.Count
+                        ReviewCount = b.Reviews.Count()
                     }).OrderBy(x => x.BookId)
                     .ToList();
 

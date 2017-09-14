@@ -111,13 +111,13 @@ namespace test.UnitTests.ServiceLayer
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Book, BookListDto>()
-                    .ForMember(p => p.AuthorsOrdered, 
+                    .ForMember(p => p.AuthorsString, 
                         m => m.MapFrom(s => string.Join(", ",
                             s.AuthorsLink
                             .OrderBy(q => q.Order)
                             .Select(q => q.Author.Name))))
-                    .ForMember(p => p.ReviewsAverageVotes,
-                        m => m.MapFrom(s => s.Reviews.Count == 0
+                    .ForMember(p => p.AverageVotes,
+                        m => m.MapFrom(s => s.Reviews.Count() == 0
                             ? null
                             : (double?) s.Reviews
                                 .Select(q => q.NumStars)
@@ -140,7 +140,7 @@ namespace test.UnitTests.ServiceLayer
                 qNetBook.ActualPrice.ShouldEqual(219);
                 qNetBook.PromotionalText.ShouldEqual("Save $1 if you order 40 years ahead!");
                 qNetBook.ReviewsCount.ShouldEqual(2);
-                qNetBook.ReviewsAverageVotes.ShouldEqual(5);
+                qNetBook.AverageVotes.ShouldEqual(5);
                 foreach (var log in inMemDb.Logs)
                 {
                     _output.WriteLine(log);

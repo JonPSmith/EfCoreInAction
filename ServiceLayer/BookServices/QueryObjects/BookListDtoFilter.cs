@@ -36,7 +36,7 @@ namespace ServiceLayer.BookServices.QueryObjects
                 case BooksFilterBy.ByVotes:
                     var filterVote = int.Parse(filterValue);     //#D
                     return books.Where(x =>                      //#D
-                          x.ReviewsAverageVotes > filterVote);   //#D
+                          x.AverageVotes > filterVote);   //#D
                 case BooksFilterBy.ByPublicationYear:             
                     if (filterValue == AllBooksNotPublishedString)//#E
                         return books.Where(                       //#E

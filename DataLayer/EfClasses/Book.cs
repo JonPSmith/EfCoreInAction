@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Test")]
@@ -13,6 +14,9 @@ namespace DataLayer.EfClasses
     public class Book
     {
         public const int PromotionalTextLength = 200;
+
+        private readonly List<Review> _reviews = new List<Review>();
+        private readonly List<BookAuthor> _bookAuthors = new List<BookAuthor>();
 
         public int BookId { get; set; }
 
@@ -27,19 +31,21 @@ namespace DataLayer.EfClasses
         public decimal OrgPrice { get; private set; }
         [MaxLength(PromotionalTextLength)]
         public string PromotionalText { get; private set; }
-
         public bool HasPromotion => PromotionalText != null;
-
         [MaxLength(512)] //#B
         public string ImageUrl { get; set; }
         public bool SoftDeleted { get; set; }
 
+        //The pre-calculated values
+        public int ReviewsCount { get; private set; }
+        public double? AverageVotes { get; private set; }
+        public string AuthorsString { get; private set; }
+
         //-----------------------------------------------
         //relationships
-        
-        public ICollection<Review> Reviews { get; set; } 
-        public ICollection<BookAuthor> 
-            AuthorsLink { get; set; }
+
+        public IEnumerable<Review> Reviews => _reviews.ToList();
+        public IEnumerable<BookAuthor> AuthorsLink => _bookAuthors.ToList();
 
         //------------------------------------------------------
         //Ctors
@@ -61,7 +67,7 @@ namespace DataLayer.EfClasses
         /// <param name="authors"></param>
         /// <param name="authorsString"></param>
         public Book(string title, string description, DateTime publishedOn, string publisher, decimal orgPrice, string imageUrl, 
-            IEnumerable<Author> authors, string authorsString = "")
+            ICollection<Author> authors, string authorsString = null)
         {
             Title = title;
             Description = description;
@@ -70,10 +76,29 @@ namespace DataLayer.EfClasses
             ActualPrice = orgPrice;
             OrgPrice = orgPrice;
             ImageUrl = imageUrl;
+
+            _bookAuthors = authors.Select(a => new BookAuthor {Book = this, Author = a}).ToList();
+            AuthorsString = authorsString ?? string.Join(", ", authors.Select(a => a.Name));
         }
 
         //------------------------------------------
         //Action methods
+
+        public void AddReview(Review review) //#D
+        {
+            _reviews.Add(review);
+            AverageVotes = _reviews.Average(x => x.NumStars);
+            ReviewsCount = _reviews.Count;
+        }
+
+        public void RemoveReview(Review review) //#G
+        {
+            _reviews.Remove(review);
+            AverageVotes = _reviews.Any()
+                ? _reviews.Average(x => x.NumStars)
+                : (double?)null;
+            ReviewsCount = _reviews.Count;
+        }
 
         /// <summary>
         /// This sets up a promotion

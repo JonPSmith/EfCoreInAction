@@ -112,7 +112,7 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 books.Count.ShouldEqual(1);
                 books.First().Title.ShouldEqual("Quantum Networking");
-                books.First().Reviews.Count.ShouldEqual(2);
+                books.First().Reviews.Count().ShouldEqual(2);
                 foreach (var log in logIt.Logs)
                 {
                     _output.WriteLine(log);
@@ -343,12 +343,12 @@ namespace test.UnitTests.DataLayer
                         uniqueString, entity.BookId);
 
                 //ATTEMPT
-                entity.Reviews.Add(new Review{ NumStars = 99});
+                entity.AddReview(new Review{ NumStars = 99});
                 context.Entry(entity).Reload();
 
                 //VERIFY
                 entity.Description.ShouldEqual(uniqueString);
-                entity.Reviews.Count.ShouldEqual(3);
+                entity.Reviews.Count().ShouldEqual(3);
             }
         }
 

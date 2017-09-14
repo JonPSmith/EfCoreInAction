@@ -37,7 +37,7 @@ namespace ServiceLayer.AdminServices.Concrete
                 .Include(r => r.Reviews)//#E
                 .Single(k => k.BookId   //#E
                       == review.BookId);//#E
-            book.Reviews.Add(review); //#F
+            book.AddReview(review);
             _context.SaveChanges(); //#G
             return book; //#H
         }

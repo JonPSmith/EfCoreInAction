@@ -22,9 +22,10 @@ namespace DataLayer.EfCode.Configurations
                 .IsUnicode(false);
 
             entity.HasIndex(x => x.PublishedOn); //#D
+            entity.HasIndex(x => x.AverageVotes); //#D
+            entity.HasIndex(x => x.ActualPrice); //#D
 
             //Model-level query filter
-
             entity
                 .HasQueryFilter(p => !p.SoftDeleted); //#E
 
@@ -34,6 +35,19 @@ namespace DataLayer.EfCode.Configurations
             entity.HasMany(p => p.Reviews)  
                 .WithOne()                     
                 .HasForeignKey(p => p.BookId);
+
+
+            //see https://github.com/aspnet/EntityFramework/issues/6674
+            entity.Metadata 
+                .FindNavigation(nameof(Book.Reviews))
+                .SetPropertyAccessMode
+                (PropertyAccessMode.Field); 
+
+            //see https://github.com/aspnet/EntityFramework/issues/6674
+            var authorsLinkNav = entity.Metadata.FindNavigation(nameof(Book.AuthorsLink));
+            authorsLinkNav.SetField("_bookAuthors");
+            authorsLinkNav.SetPropertyAccessMode
+                (PropertyAccessMode.Field); 
         }
     }
     /*Type/Size setting**********************************************

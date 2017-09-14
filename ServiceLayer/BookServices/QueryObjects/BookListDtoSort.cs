@@ -35,7 +35,7 @@ namespace ServiceLayer.BookServices.QueryObjects
                         x => x.BookId);                   //#A
                 case OrderByOptions.ByVotes:              //#B
                     return books.OrderByDescending(x =>   //#B
-                        x.ReviewsAverageVotes);           //#B
+                        x.AverageVotes);           //#B
                 case OrderByOptions.ByPublicationDate:    //#C
                     return books.OrderByDescending(       //#C
                         x => x.PublishedOn);              //#C

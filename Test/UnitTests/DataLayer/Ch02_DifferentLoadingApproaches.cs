@@ -204,8 +204,6 @@ namespace test.UnitTests.DataLayer
                         {                         //#A
                             p.Title,              //#B
                             Price = p.ActualPrice,              //#B
-                            NumReviews            //#C
-                               = p.Reviews.Count, //#C
                         }
                     ).ToList();
                 /*********************************************************
@@ -215,7 +213,6 @@ namespace test.UnitTests.DataLayer
                 * *******************************************************/
 
                 //VERIFY
-                books.First().NumReviews.ShouldEqual(0);
                 foreach (var log in logIt.Logs)
                 {
                     _output.WriteLine(log);

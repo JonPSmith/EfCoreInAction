@@ -76,7 +76,7 @@ namespace test.UnitTests.DataLayer
                 //ATTEMPT
                 var dtos = await context.Books
                     .Select(p =>
-                    p.Reviews.Count == 0
+                    !p.Reviews.Any()
                                 ? null
                                 : (double?)p.Reviews
                                     .Average(q => q.NumStars)

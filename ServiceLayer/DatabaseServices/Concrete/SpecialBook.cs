@@ -22,11 +22,8 @@ namespace ServiceLayer.DatabaseServices.Concrete
                 new [] { new Author { Name = "Future Person" } }
             );
 
-            book4.Reviews = new List<Review>
-            {
-                new Review { VoterName = "Jon P Smith", NumStars = 5, Comment = "I look forward to reading this book, if I am still alive!"},
-                new Review { VoterName = "Albert Einstein", NumStars = 5, Comment = "I write this book if I was still alive!"}
-            };
+            book4.AddReview(new Review { VoterName = "Jon P Smith", NumStars = 5, Comment = "I look forward to reading this book, if I am still alive!" });
+            book4.AddReview(new Review { VoterName = "Albert Einstein", NumStars = 5, Comment = "I write this book if I was still alive!" });
             book4.AddPromotion(219, "Save $1 if you order 40 years ahead!");
 
             return book4;

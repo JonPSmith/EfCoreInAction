@@ -159,7 +159,7 @@ namespace test.UnitTests.DataLayer
                     p.PublishedOn,
                     Price = p.ActualPrice,
                     p.ImageUrl,
-                    ReviewsCount = p.Reviews.Count,
+                    ReviewsCount = p.Reviews.Count(),
                     ReviewsVotes = p.Reviews.Select(x => x.NumStars).ToList(),
                     Authors = p.AuthorsLink.OrderBy(x => x.Order).Select(x => x.Author).ToList()
                 })

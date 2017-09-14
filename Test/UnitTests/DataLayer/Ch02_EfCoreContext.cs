@@ -29,8 +29,8 @@ namespace test.UnitTests.DataLayer
 
             //VERIFY
             books.Count.ShouldEqual(4);
-            books.ForEach(x => x.AuthorsLink.Count.ShouldEqual(1));
-            books[3].Reviews.Count.ShouldEqual(2);
+            books.ForEach(x => x.AuthorsLink.Count().ShouldEqual(1));
+            books[3].Reviews.Count().ShouldEqual(2);
             books[3].HasPromotion.ShouldBeTrue();
         }
 
@@ -70,7 +70,7 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 var books = (from book in context.Books
-                            let count = book.Reviews.Count
+                            let count = book.Reviews.Count()
                             select new { Count1 = count, Count2 = count}
                     ).ToList();
 

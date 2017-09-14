@@ -44,7 +44,6 @@ namespace test.UnitTests.DataLayer
                     {                
                         p.Title,
                         PriceString = p.ActualPrice.ToString("C"),  //#B
-                        NumReviews = p.Reviews.Count
                     }
                     ).ToList();
                 /*********************************************************

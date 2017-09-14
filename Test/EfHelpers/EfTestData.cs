@@ -41,11 +41,6 @@ namespace test.EfHelpers
             var commonAuthor = new Author { Name = "CommonAuthor" };
             for (int i = 0; i < numBooks; i++)
             {
-                var reviews = new List<Review>();
-                for (int j = 0; j < i; j++)
-                {
-                    reviews.Add(new Review { VoterName = j.ToString(), NumStars = (j % 5) + 1 });
-                }
                 var book = new Book
                 (
                     $"Book{i:D4} Title",
@@ -56,7 +51,11 @@ namespace test.EfHelpers
                     $"Image{i:D4}",
                     new[] { new Author { Name = $"Author{i:D4}" }, commonAuthor}
                 );
-                book.Reviews = reviews;
+                var reviews = new List<Review>();
+                for (int j = 0; j < i; j++)
+                {
+                    book.AddReview(new Review { VoterName = j.ToString(), NumStars = (j % 5) + 1 });
+                }
                 book.BookId = setBookId ? i + 1 : 0;
                 result.Add(book);
             }
@@ -89,7 +88,6 @@ namespace test.EfHelpers
                 null,
                 new[] { martinFowler }
             );
-            book1.AuthorsLink = new List<BookAuthor> { new BookAuthor { Author = martinFowler, Book = book1 } };
             books.Add(book1);
 
             var book2 = new Book
@@ -126,12 +124,8 @@ namespace test.EfHelpers
                 null,
                 new[] { new Author { Name = "Future Person" } }
             );
-
-            book4.Reviews = new List<Review>
-            {
-                new Review { VoterName = "Jon P Smith", NumStars = 5, Comment = "I look forward to reading this book, if I am still alive!"},
-                new Review { VoterName = "Albert Einstein", NumStars = 5, Comment = "I write this book if I was still alive!"}
-            };
+            book4.AddReview(new Review { VoterName = "Jon P Smith", NumStars = 5, Comment = "I look forward to reading this book, if I am still alive!" });
+            book4.AddReview(new Review { VoterName = "Albert Einstein", NumStars = 5, Comment = "I write this book if I was still alive!" });
             book4.AddPromotion(219, "Save $1 if you order 40 years ahead!");
             books.Add(book4);
 

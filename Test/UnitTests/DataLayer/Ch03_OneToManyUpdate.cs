@@ -39,12 +39,12 @@ namespace test.UnitTests.DataLayer
                     .Include(p => p.Reviews)        //#A
                     .First();                       //#A
 
-                book.Reviews.Add(new Review         //#B
+                book.AddReview(new Review         //#B
                 {                                   //#B
                     VoterName = "Unit Test",        //#B
                     NumStars = 5,                   //#B
                     Comment = "Great book!"         //#B
-                });                                 //#B
+                });                               //#B
                 context.SaveChanges();              //#C           
                 /**********************************************************
                 #A This finds the first book and loads it with any reviews it might have
@@ -57,7 +57,7 @@ namespace test.UnitTests.DataLayer
                     .Include(p => p.Reviews)                    
                     .Single(p => p.BookId == book.BookId);
                 bookAgain.Reviews.ShouldNotBeNull();
-                bookAgain.Reviews.Count.ShouldEqual(1);   
+                bookAgain.Reviews.Count().ShouldEqual(1);   
             }
         }
 
@@ -75,10 +75,10 @@ namespace test.UnitTests.DataLayer
                     .Include(p => p.Reviews)
                     .First(p => p.Reviews.Any());
 
-                var orgReviews = book.Reviews.Count;
+                var orgReviews = book.Reviews.Count();
 
                 //ATTEMPT
-                book.Reviews.Add(new Review
+                book.AddReview(new Review
                 {
                     VoterName = "Unit Test",
                     NumStars = 5,
@@ -90,104 +90,9 @@ namespace test.UnitTests.DataLayer
                     .Include(p => p.Reviews)
                     .Single(p => p.BookId == book.BookId);
                 bookAgain.Reviews.ShouldNotBeNull();
-                bookAgain.Reviews.Count.ShouldEqual(orgReviews+1);
+                bookAgain.Reviews.Count().ShouldEqual(orgReviews+1);
             }
         }
-
-        [Fact]
-        public void TestConnectedUpdateNoIncludeOk()
-        {
-            //SETUP
-            var options =
-                this.ClassUniqueDatabaseSeeded4Books();
-
-            int bookId;
-            int orgReviews;
-            using (var context = new EfCoreContext(options))
-            {
-                //ATTEMPT
-                var bookWithReviews = context.Books.Include(x => x.Reviews).First(x => x.Reviews.Count > 0);
-                bookId = bookWithReviews.BookId;
-                orgReviews = bookWithReviews.Reviews.Count;
-            }
-
-            using (var context = new EfCoreContext(options))
-            {
-                var book = context.Books
-                    .Single(p => p.BookId == bookId);
-                book.Reviews = new List<Review>
-                {
-                    new Review
-                    {
-                        VoterName = "Unit Test",
-                        NumStars = 5,
-                    }
-                };
-                context.SaveChanges();
-
-                //VERIFY
-                var bookAgain = context.Books
-                    .Include(p => p.Reviews)
-                    .Single(p => p.BookId == book.BookId);
-                bookAgain.Reviews.ShouldNotBeNull();
-                bookAgain.Reviews.Count.ShouldEqual(orgReviews + 1);
-            }
-        }
-
-        [Fact]
-        public void TestReplaceReviewsLoggedOk()
-        {
-            //SETUP
-            var options =
-                this.NewMethodUniqueDatabaseSeeded4Books( );
-
-            int twoReviewBookId;
-            using (var context = new EfCoreContext(options))
-            {
-                //ATTEMPT
-                twoReviewBookId = context.Books.ToList().Last().BookId; //Last has reviews
-
-            }
-
-            using (var context = new EfCoreContext(options))
-            {
-
-                var logIt = new LogDbContext(context);
-
-                var book = context.Books
-                    .Include(p => p.Reviews)                  //#A
-                    .Single(p => p.BookId == twoReviewBookId);//#B
-
-                book.Reviews = new List<Review>               //#C 
-                {                                             //#C
-                    new Review                                //#C
-                    {                                         //#C
-                        VoterName = "Unit Test",              //#C
-                        NumStars = 5,                         //#C
-                    }                                         //#C
-                };                                            //#C
-                context.SaveChanges();                        //#D
-                /*******************************************************
-                #A This include is important, otherwise EF Core won't know about the old reviews 
-                #B This book I am loading has two review
-                #C I completely replace the whole collection
-                #D SaveChanges, via DetectChanges knows that a) the old collection should be deleted, b) the new collection should be written to the database
-                 * ******************************************************/
-                //VERIFY
-                var bookAgain = context.Books
-                    .Include(p => p.Reviews)
-                    .Single(p => p.BookId == book.BookId);
-                bookAgain.Reviews.ShouldNotBeNull();
-                bookAgain.Reviews.Count.ShouldEqual(1);
-                context.Set<Review>().Count().ShouldEqual(1);
-
-                foreach (var log in logIt.Logs)
-                {
-                    _output.WriteLine(log);
-                }
-            }
-        }
-
 
         private class ChangeReviewDto
         {
@@ -232,7 +137,7 @@ namespace test.UnitTests.DataLayer
                     .Include(p => p.Reviews)
                     .First();
                 bookAgain.Reviews.ShouldNotBeNull();
-                bookAgain.Reviews.Count.ShouldEqual(1);
+                bookAgain.Reviews.Count().ShouldEqual(1);
             }
         }
     }

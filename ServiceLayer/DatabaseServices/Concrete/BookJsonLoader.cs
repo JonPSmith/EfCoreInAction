@@ -46,10 +46,16 @@ namespace EfCoreInAction.DatabaseHelpers
                 bookInfoJson.publisher,
                 (decimal)(bookInfoJson.saleInfoListPriceAmount ?? -1),
                 bookInfoJson.imageLinksThumbnail,
-                bookInfoJson.authors.Select(x => authorDict[x])
+                bookInfoJson.authors.Select(x => authorDict[x]).ToArray()
             );
             if (bookInfoJson.averageRating != null)
-                book.Reviews = CalculateReviewsToMatch((double)bookInfoJson.averageRating, (int)bookInfoJson.ratingsCount);
+            {
+                foreach (var review in CalculateReviewsToMatch((double)bookInfoJson.averageRating, (int)bookInfoJson.ratingsCount))
+                {
+                    book.AddReview(review);
+                }
+                
+            }
 
             return book;
         }

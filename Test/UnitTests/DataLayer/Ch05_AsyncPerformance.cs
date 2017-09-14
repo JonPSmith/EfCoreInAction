@@ -136,15 +136,15 @@ namespace test.UnitTests.DataLayer
             using (var context = new EfCoreContext(_options))
             {
                 //ATTEMPT
-                RunTest(context, 1, "First access, synch:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.ActualPrice).Take(10).ToList());
-                await Task.WhenAll(RunTestAsync(context, 1, "First access, async:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.ActualPrice).Take(10).ToListAsync()));
+                RunTest(context, 1, "First access, synch:", (c, id) => c.Books.Where(x => x.Reviews.Count() > 3).OrderByDescending(x => x.ActualPrice).Take(10).ToList());
+                await Task.WhenAll(RunTestAsync(context, 1, "First access, async:", (c, id) => c.Books.Where(x => x.Reviews.Count() > 3).OrderByDescending(x => x.ActualPrice).Take(10).ToListAsync()));
 
-                await Task.WhenAll(RunTestAsync(context, 1, "1 access, async:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.ActualPrice).Take(10).ToListAsync()));
-                await Task.WhenAll(RunTestAsync(context, 100, "100 access, async:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.ActualPrice).Take(10).ToListAsync()));
-                RunTest(context, 1, "1 access, synch:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.ActualPrice).Take(10).ToList());
-                RunTest(context, 100, "100 access, synch:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.ActualPrice).Take(10).ToList());
-                await Task.WhenAll(RunTestAsync(context, 100, "100 access, async:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.ActualPrice).Take(10).ToListAsync()));
-                RunTest(context, 100, "100 access, synch:", (c, id) => c.Books.Where(x => x.Reviews.Count > 3).OrderByDescending(x => x.ActualPrice).Take(10).ToList());
+                await Task.WhenAll(RunTestAsync(context, 1, "1 access, async:", (c, id) => c.Books.Where(x => x.Reviews.Count() > 3).OrderByDescending(x => x.ActualPrice).Take(10).ToListAsync()));
+                await Task.WhenAll(RunTestAsync(context, 100, "100 access, async:", (c, id) => c.Books.Where(x => x.Reviews.Count() > 3).OrderByDescending(x => x.ActualPrice).Take(10).ToListAsync()));
+                RunTest(context, 1, "1 access, synch:", (c, id) => c.Books.Where(x => x.Reviews.Count() > 3).OrderByDescending(x => x.ActualPrice).Take(10).ToList());
+                RunTest(context, 100, "100 access, synch:", (c, id) => c.Books.Where(x => x.Reviews.Count() > 3).OrderByDescending(x => x.ActualPrice).Take(10).ToList());
+                await Task.WhenAll(RunTestAsync(context, 100, "100 access, async:", (c, id) => c.Books.Where(x => x.Reviews.Count() > 3).OrderByDescending(x => x.ActualPrice).Take(10).ToListAsync()));
+                RunTest(context, 100, "100 access, synch:", (c, id) => c.Books.Where(x => x.Reviews.Count() > 3).OrderByDescending(x => x.ActualPrice).Take(10).ToList());
            }
             //VERIFY
         }

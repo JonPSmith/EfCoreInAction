@@ -60,11 +60,7 @@ namespace ServiceLayer.DatabaseServices.Concrete
             _authorDict = new Dictionary<string, Author>();
             for (int i = 0; i < numBooks; i++)
             {
-                var reviews = new List<Review>();
-                for (int j = 0; j < i % 12; j++)
-                {
-                    reviews.Add(new Review { VoterName = j.ToString(), NumStars = (Math.Abs(3 - j) % 4) + 2 });
-                }
+
                 var book = new Book(
                     templateBooks[i % templateBooks.Count].Title,
                     $"Book{i:D4} Description",
@@ -72,9 +68,13 @@ namespace ServiceLayer.DatabaseServices.Concrete
                     "Manning",
                     (i + 1),
                     null,
-                    GetAuthors(templateBooks[i % templateBooks.Count].Authors),
+                    GetAuthors(templateBooks[i % templateBooks.Count].Authors).ToArray(),
                     templateBooks[i % templateBooks.Count].Authors
                 );
+                for (int j = 0; j < i % 12; j++)
+                {
+                    book.AddReview(new Review { VoterName = j.ToString(), NumStars = (Math.Abs(3 - j) % 4) + 2 });
+                }          
                 if (i % 7 == 0)
                 {
                     book.AddPromotion(book.ActualPrice * 0.5m, "today only - 50% off! ");

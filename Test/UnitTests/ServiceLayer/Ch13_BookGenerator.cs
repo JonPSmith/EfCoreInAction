@@ -42,6 +42,22 @@ namespace Test.UnitTests.ServiceLayer
         }
 
         [Fact]
+        public void TestGenerateBooks20Reviews()
+        {
+            //SETUP
+            const int numBooks = 20;
+            var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
+
+            //ATTEMPT
+            var gen = new BookGenerator();
+            var books = gen.GenerateBooks(filePath, numBooks).ToList();
+
+            //VERIFY
+            books.Count().ShouldEqual(numBooks);
+            books.SelectMany(x => x.Reviews).Count().ShouldEqual(94);
+        }
+
+        [Fact]
         public void CheckMainData()
         {
             //SETUP
@@ -68,11 +84,11 @@ namespace Test.UnitTests.ServiceLayer
 
             //ATTEMPT
             var gen = new BookGenerator();
-            var books = gen.GenerateBooks(filepath, numBooks);
+            var books = gen.GenerateBooks(filepath, numBooks).ToList();
 
             //VERIFY
             books.Count().ShouldEqual(numBooks);
-            books.Count(x => x.AuthorsLink.Select(y => y.Author.Name).Distinct().Count() != x.AuthorsLink.Count).ShouldEqual(0);
+            books.Count(x => x.AuthorsLink.Select(y => y.Author.Name).Distinct().Count() != x.AuthorsLink.Count()).ShouldEqual(0);
         }
 
         [Fact]
@@ -86,7 +102,7 @@ namespace Test.UnitTests.ServiceLayer
 
             //ATTEMPT
             var gen = new BookGenerator();
-            var books = gen.GenerateBooks(filepath, numBooks);
+            var books = gen.GenerateBooks(filepath, numBooks).ToList();
 
             //VERIFY
             books.Count().ShouldEqual(numBooks);
