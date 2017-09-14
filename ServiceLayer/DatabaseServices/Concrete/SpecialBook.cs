@@ -22,10 +22,10 @@ namespace ServiceLayer.DatabaseServices.Concrete
                 new [] { new Author { Name = "Future Person" } }
             );
 
-            book4.AddReviewWhenYouKnowReviewCollectionIsLoaded
-                (new Review { VoterName = "Jon P Smith", NumStars = 5, Comment = "I look forward to reading this book, if I am still alive!" });
-            book4.AddReviewWhenYouKnowReviewCollectionIsLoaded(
-                new Review { VoterName = "Albert Einstein", NumStars = 5, Comment = "I write this book if I was still alive!" });
+            book4.AddReviewWhenYouKnowReviewCollectionIsLoaded( 5,
+                "I look forward to reading this book, if I am still alive!", "Jon P Smith");
+            book4.AddReviewWhenYouKnowReviewCollectionIsLoaded(5,
+                "I write this book if I was still alive!", "Albert Einstein");
             book4.AddPromotion(219, "Save $1 if you order 40 years ahead!");
 
             return book4;

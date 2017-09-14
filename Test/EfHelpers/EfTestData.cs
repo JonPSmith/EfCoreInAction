@@ -54,7 +54,7 @@ namespace test.EfHelpers
                 var reviews = new List<Review>();
                 for (int j = 0; j < i; j++)
                 {
-                    book.AddReviewWhenYouKnowReviewCollectionIsLoaded(new Review { VoterName = j.ToString(), NumStars = (j % 5) + 1 });
+                    book.AddReviewWhenYouKnowReviewCollectionIsLoaded((j % 5) + 1, null, j.ToString());
                 }
                 book.BookId = setBookId ? i + 1 : 0;
                 result.Add(book);
@@ -124,9 +124,10 @@ namespace test.EfHelpers
                 null,
                 new[] { new Author { Name = "Future Person" } }
             );
-            book4.AddReviewWhenYouKnowReviewCollectionIsLoaded(new Review { VoterName = "Jon P Smith", NumStars = 5, Comment = "I look forward to reading this book, if I am still alive!" });
-            book4.AddReviewWhenYouKnowReviewCollectionIsLoaded(new Review { VoterName = "Albert Einstein", NumStars = 5, Comment = "I write this book if I was still alive!" });
-            book4.AddPromotion(219, "Save $1 if you order 40 years ahead!");
+            book4.AddReviewWhenYouKnowReviewCollectionIsLoaded(5,
+                "I look forward to reading this book, if I am still alive!", "Jon P Smith");
+            book4.AddReviewWhenYouKnowReviewCollectionIsLoaded(5,
+                "I write this book if I was still alive!", "Albert Einstein"); book4.AddPromotion(219, "Save $1 if you order 40 years ahead!");
             books.Add(book4);
 
             return books;

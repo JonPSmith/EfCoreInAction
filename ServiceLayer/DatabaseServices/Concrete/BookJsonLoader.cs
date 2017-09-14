@@ -50,9 +50,9 @@ namespace EfCoreInAction.DatabaseHelpers
             );
             if (bookInfoJson.averageRating != null)
             {
-                foreach (var review in CalculateReviewsToMatch((double)bookInfoJson.averageRating, (int)bookInfoJson.ratingsCount))
+                foreach (var numStars in CalculateReviewsToMatch((double)bookInfoJson.averageRating, (int)bookInfoJson.ratingsCount))
                 {
-                    book.AddReviewWhenYouKnowReviewCollectionIsLoaded(review);
+                    book.AddReviewWhenYouKnowReviewCollectionIsLoaded(numStars, "", "anonymous");
                 }
                 
             }
@@ -66,18 +66,14 @@ namespace EfCoreInAction.DatabaseHelpers
         /// <param name="averageRating"></param>
         /// <param name="ratingsCount"></param>
         /// <returns></returns>
-        internal static ICollection<Review> CalculateReviewsToMatch(double averageRating, int ratingsCount)
+        internal static ICollection<int> CalculateReviewsToMatch(double averageRating, int ratingsCount)
         {
-            var reviews = new List<Review>();
+            var reviews = new List<int>();
             var currentAve = averageRating;
             for (int i = 0; i < ratingsCount; i++)
             {
-                reviews.Add( new Review
-                {
-                    VoterName = "anonymous",
-                    NumStars = (int)( currentAve > averageRating ? Math.Truncate(averageRating) : Math.Ceiling(averageRating))
-                });
-                currentAve = reviews.Average(x => x.NumStars);
+                reviews.Add( (int)( currentAve > averageRating ? Math.Truncate(averageRating) : Math.Ceiling(averageRating)));
+                currentAve = reviews.Average(x => x);
             }
             return reviews;
         }

@@ -25,11 +25,11 @@ namespace test.UnitTests.ServiceLayer
             var numVotes = voteVals.Length;
 
             //ATTEMPT
-            var reviews = BookJsonLoader.CalculateReviewsToMatch(avgRating, numVotes);
+            var numStars = BookJsonLoader.CalculateReviewsToMatch(avgRating, numVotes);
 
             //VERIFY
-            reviews.Count.ShouldEqual(numVotes);
-            reviews.Average(x => x.NumStars).ShouldEqual(avgRating);
+            numStars.Count.ShouldEqual(numVotes);
+            numStars.Average().ShouldEqual(avgRating);
         }
     }
 }

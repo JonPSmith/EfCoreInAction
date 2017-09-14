@@ -19,6 +19,8 @@ namespace DataLayer.EfClasses
         //Relationships
 
         public int BookId { get; set; }
+
+        internal Review() { }
     }
 
 }
