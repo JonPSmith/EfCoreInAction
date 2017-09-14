@@ -38,11 +38,7 @@ namespace test.Mocks
             var numBooks = createLastInFuture ? DateTime.UtcNow.Year - EfTestData.DummyBookStartDate.Year + 2 : 10;
             var books = EfTestData.CreateDummyBooks(numBooks, createLastInFuture);
             if (promotionPriceForFirstBook != null)
-                books.First().Promotion = new PriceOffer
-                {
-                    NewPrice = (int)promotionPriceForFirstBook,
-                    PromotionalText = "Unit Test"
-                };
+                books.First().AddPromotion((int)promotionPriceForFirstBook, "Unit Test");
             Books = books.ToImmutableList();
         }
 

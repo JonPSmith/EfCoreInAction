@@ -131,26 +131,24 @@ namespace EfCoreInAction.Controllers
             return View("BookUpdated", "Successfully changed publication date");
         }
 
-        public IActionResult ChangePromotion(int id, [FromServices]IChangePriceOfferService service)
+        public IActionResult AddPromotion(int id, [FromServices]IChangePriceOfferService service)
         {
             Request.ThrowErrorIfNotLocal();
 
-            var priceOffer = service.GetOriginal(id);
-            ViewData["BookTitle"] = service.OrgBook.Title;
-            ViewData["OrgPrice"] = service.OrgBook.Price < 0 
-                ? "Not currently for sale"
-                : service.OrgBook.Price.ToString("c", new CultureInfo("en-US"));
+            var priceOffer = service.GetOfferData(id);
             SetupTraceInfo();
             return View(priceOffer);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ChangePromotion(PriceOffer dto, [FromServices]IChangePriceOfferService service)
+        public IActionResult AddPromotion(ChangePriceOfferDto dto, [FromServices]IChangePriceOfferService service)
         {
             Request.ThrowErrorIfNotLocal();
 
-            var book = service.UpdateBook(dto);
+            var error = service.AddPromotion(dto);
+            if (error != null)
+                throw new InvalidOperationException(error);
             SetupTraceInfo();
             return View("BookUpdated", "Successfully added/changed a promotion");
         }

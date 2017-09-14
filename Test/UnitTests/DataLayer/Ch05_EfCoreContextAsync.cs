@@ -64,32 +64,5 @@ namespace test.UnitTests.DataLayer
             }
         }
 
-        [Fact]
-        public async Task TestMapBookToDtoAsyncOk()
-        {
-
-            //SETUP
-            var inMemDb = new SqliteInMemory();
-
-            //ATTEMPT
-            using (var context = inMemDb.GetContextWithSetup())
-            {
-                context.Books.AddRange(EfTestData.CreateFourBooks());
-                await context.SaveChangesAsync();
-
-                //ATTEMPT
-                var result = await context.Books.Select(p => 
-                    new BookListDto
-                    {
-                        ActualPrice = p.Promotion == null
-                            ? p.Price
-                            : p.Promotion.NewPrice,
-                        ReviewsCount = p.Reviews.Count,
-                    }).ToListAsync();
-
-                //VERIFY
-                result.Count.ShouldEqual(4);
-            }
-        }
     }
 }

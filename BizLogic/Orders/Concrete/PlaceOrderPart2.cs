@@ -49,8 +49,7 @@ namespace BizLogic.Orders.Concrete
      " Please remove that book and try again.");            
 
                 var book = booksDict[lineItem.BookId];
-                var bookPrice = 
-                    book.Promotion?.NewPrice ?? book.Price; 
+                var bookPrice = book.ActualPrice; 
                 if (book.PublishedOn > DateTime.UtcNow)     
                     AddError(                            
     $"Sorry, the book '{book.Title}' is not yet in print.");

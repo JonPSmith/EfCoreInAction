@@ -46,7 +46,7 @@ namespace test.UnitTests.DataLayer
                             {
                                 LineNum = 0,
                                 ChosenBook = books.First(),
-                                BookPrice = books.First().Price,
+                                BookPrice = books.First().ActualPrice,
                                 NumBooks = 1
                             }
                         },

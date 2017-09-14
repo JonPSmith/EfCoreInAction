@@ -87,12 +87,7 @@ namespace test.UnitTests.DataLayer
 
         private Book CreateBookEntity()
         {
-            return new Book
-            {
-                Title = Guid.NewGuid().ToString(),
-                Price = 10,
-                PublishedOn = new DateTime(2000,1,1)
-            };
+            return EfTestData.CreateDummyBookOneAuthor();
         }
 
         private void RunTest(EfCoreContext context, int numCyclesToRun, string testType, Action<EfCoreContext> actionToRun)

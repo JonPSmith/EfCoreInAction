@@ -42,7 +42,7 @@ namespace ServiceLayer.CheckoutServices.Concrete
                         book.AuthorsLink
                             .OrderBy(q => q.Order)
                             .Select(q => q.Author.Name)),
-                    BookPrice = book.Promotion == null ? book.Price : book.Promotion.NewPrice,
+                    BookPrice = book.ActualPrice,
                     ImageUrl = book.ImageUrl,
                     NumBooks = lineItem.NumBooks
                 }).Single(y => y.BookId == lineItem.BookId));

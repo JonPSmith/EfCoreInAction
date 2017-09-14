@@ -22,7 +22,7 @@ namespace test.UnitTests.Tests
            
             //VERIFY
             mock.Books.Count.ShouldEqual(10);
-            mock.Books.ForEach(b => b.Promotion.ShouldBeNull());
+            mock.Books.ForEach(b => b.HasPromotion.ShouldBeFalse());
             mock.Books.ForEach(b => b.PublishedOn.Year.ShouldEqual(EfTestData.DummyBookStartDate.Year));
         }
 
@@ -53,9 +53,9 @@ namespace test.UnitTests.Tests
 
             //VERIFY
             mock.Books.Count.ShouldEqual(10);
-            mock.Books.First().Promotion.ShouldNotBeNull();
-            mock.Books.First().Promotion.NewPrice.ShouldEqual(100);
-            mock.Books.Skip(1).ToList().ForEach(b => b.Promotion.ShouldBeNull());
+            mock.Books.First().HasPromotion.ShouldBeTrue();
+            mock.Books.First().ActualPrice.ShouldEqual(100);
+            mock.Books.Skip(1).ToList().ForEach(b => b.HasPromotion.ShouldBeFalse());
         }
     }
 }

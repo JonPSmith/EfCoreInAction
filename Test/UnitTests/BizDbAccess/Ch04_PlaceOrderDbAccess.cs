@@ -27,8 +27,8 @@ namespace test.UnitTests.BizDbAccess
 
                 //VERIFY
                 booksDict.Count.ShouldEqual(2);
-                booksDict[1].Promotion.ShouldBeNull();
-                booksDict[4].Promotion.ShouldNotBeNull();
+                booksDict[1].HasPromotion.ShouldBeFalse();
+                booksDict[4].HasPromotion.ShouldBeTrue();
             }
         }
 

@@ -19,11 +19,8 @@ namespace test.UnitTests.ServiceLayer
             //SETUP
             var inMemDb = new SqliteInMemory();
             var books = EfTestData.CreateDummyBooks();
-            books[5].Promotion = new PriceOffer
-            {
-                NewPrice = 1.5m,
-                PromotionalText = "Test to check order by works"
-            };
+            books[5].AddPromotion(1.5m, "Test to check order by works");
+        
 
             using (var db = inMemDb.GetContextWithSetup())
             {

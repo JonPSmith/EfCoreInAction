@@ -25,7 +25,6 @@ namespace Test.Chapter07Listings.EFCode
 
         //Backing fields on relationships
         public DbSet<Ch07Book> Books { get; set; }
-        public DbSet<PriceOffer> PriceOffers { get; set; }
 
         //delete behavior
         public DbSet<DeletePrincipal> DeletePrincipals { get; set; }

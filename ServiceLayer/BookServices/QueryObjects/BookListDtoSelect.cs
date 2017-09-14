@@ -14,23 +14,17 @@ namespace ServiceLayer.BookServices.QueryObjects
         {
             return books.Select(p => new BookListDto
             {
-                BookId = p.BookId,                        //#B
-                Title = p.Title,                          //#B
-                Price = p.Price,                          //#B
-                PublishedOn = p.PublishedOn,              //#B
-                ActualPrice = p.Promotion == null         //#C
-                        ? p.Price                             //#C
-                        : p.Promotion.NewPrice,               //#C
-                PromotionPromotionalText =                //#D
-                        p.Promotion == null                   //#D
-                          ? null                              //#D
-                          : p.Promotion.PromotionalText,      //#D
-                AuthorsOrdered = UdfDefinitions.AuthorsStringUdf(p.BookId),
+                BookId = p.BookId,                     
+                Title = p.Title,                        
+                PublishedOn = p.PublishedOn,              
+                ActualPrice = p.ActualPrice,
+                OrgPrice = p.OrgPrice,                   
+                PromotionalText =  p.PromotionalText,
                 //There is a bug in EF Core 2.0.0 on this client vs. server query - see https://github.com/aspnet/EntityFrameworkCore/issues/9519
-                //AuthorsOrdered = string.Join(", ",        //#E
-                //        p.AuthorsLink                         //#E
-                //        .OrderBy(q => q.Order)                //#E
-                //        .Select(q => q.Author.Name)),         //#E
+                AuthorsOrdered = string.Join(", ",        //#E
+                        p.AuthorsLink                         //#E
+                        .OrderBy(q => q.Order)                //#E
+                        .Select(q => q.Author.Name)),         //#E
                 ReviewsCount = p.Reviews.Count,           //#F
                 ReviewsAverageVotes =                  //#G
                     p.Reviews.Select(y =>              //#G

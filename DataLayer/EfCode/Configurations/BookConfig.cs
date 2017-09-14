@@ -15,7 +15,7 @@ namespace DataLayer.EfCode.Configurations
             entity.Property(p => p.PublishedOn)//#A
                 .HasColumnType("date");        
 
-            entity.Property(p => p.Price) //#B
+            entity.Property(p => p.ActualPrice) //#B
                 .HasColumnType("decimal(9,2)");
 
             entity.Property(x => x.ImageUrl) //#C
@@ -31,13 +31,9 @@ namespace DataLayer.EfCode.Configurations
             //----------------------------
             //relationships
 
-            entity.HasOne(p => p.Promotion) //#A
-                .WithOne() //#A
-                .HasForeignKey<PriceOffer>(p => p.BookId); //#A
-
-            entity.HasMany(p => p.Reviews)     //#B
-                .WithOne()                     //#B
-                .HasForeignKey(p => p.BookId); //#B
+            entity.HasMany(p => p.Reviews)  
+                .WithOne()                     
+                .HasForeignKey(p => p.BookId);
         }
     }
     /*Type/Size setting**********************************************
@@ -47,8 +43,5 @@ namespace DataLayer.EfCode.Configurations
     #D I add an index to the PublishedOn property because I sort and filter on this property
     #E This sets a model-level query filter on the Book entity. By default, a query will exclude Book entites where th SoftDeleted property is true
      * * ******************************************************/
-    /*CH07********************************************************
-    #A This defines the One-to-One relationship to the promotion that a book can optionally have. The foreign key is in the PriceOffer
-    #B This defines the One-to-Many relationship, with a book having zero to many reviews
-     * ***********************************************************/
+
 }

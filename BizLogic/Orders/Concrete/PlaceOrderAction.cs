@@ -75,8 +75,7 @@ namespace BizLogic.Orders.Concrete
      $"id = {lineItem.BookId} was missing.");               //#L
 
                 var book = booksDict[lineItem.BookId];
-                var bookPrice = 
-                    book.Promotion?.NewPrice ?? book.Price; //#M
+                var bookPrice = book.ActualPrice; //#M
                 if (bookPrice <= 0)                         //#N
                     AddError(                               //#N
     $"Sorry, the book '{book.Title}' is not for sale.");    //#N
@@ -108,7 +107,7 @@ namespace BizLogic.Orders.Concrete
     #J This private method handles the creation of each LineItem entity class for each book ordered
     #K This goes through each book type that the person has ordered
     #L I treat a book being missing as a system error, and throw an exception
-    #M I calculate the price at the time of the order
+    #M I get the price at the time of the order
     #N More validation where I check the book can be sold
     #O All is OK, so now I can create the LineItem entity class with the details
     #P I return all the LineItems for this order

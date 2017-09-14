@@ -13,7 +13,6 @@ namespace Test.Chapter08Listings.EfCode
     {
         public DbSet<Book> Books { get; set; }              
         public DbSet<Author> Authors { get; set; }          
-        public DbSet<PriceOffer> PriceOffers { get; set; }  
         public DbSet<Order> Orders { get; set; }            
 
         public Chapter08EfCoreContext(                             
@@ -25,7 +24,6 @@ namespace Test.Chapter08Listings.EfCode
         {
             modelBuilder.ApplyConfiguration(new BookConfig());
             modelBuilder.ApplyConfiguration(new BookAuthorConfig());
-            modelBuilder.ApplyConfiguration(new PriceOfferConfig()); 
             modelBuilder.ApplyConfiguration(new LineItemConfig());
 
             //needed this to add .HasSchema - see bug https://github.com/aspnet/EntityFrameworkCore/issues/9663

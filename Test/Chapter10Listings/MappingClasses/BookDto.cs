@@ -9,12 +9,12 @@ namespace Test.Chapter10Listings.MappingClasses
     {
         public int BookId { get; set; } //#B
         public string Title { get; set; } //#B
-        public decimal Price { get; set; } //#B
+        public decimal ActualPrice { get; set; } //#B
 
-        public decimal? //#C
-            PromotionNewPrice { get; set; } //#D
+        public decimal //#C
+            OrgPrice { get; set; } //#D
         public string
-            PromotionPromotionalText { get; set; } //#D
+            PromotionalText { get; set; } //#D
 
         public ICollection<ReviewDto> 
             Reviews { get; set; } //#E

@@ -4,7 +4,6 @@
 using DataLayer.EfClasses;
 using DataLayer.EfCode.Configurations;
 using Microsoft.EntityFrameworkCore;
-using DataLayer.EfCode.Configurations;
 using DataLayer.SqlCode;
 
 namespace DataLayer.EfCode
@@ -13,7 +12,6 @@ namespace DataLayer.EfCode
     {
         public DbSet<Book> Books { get; set; }              //#A
         public DbSet<Author> Authors { get; set; }          //#A
-        public DbSet<PriceOffer> PriceOffers { get; set; }  //#A
         public DbSet<Order> Orders { get; set; }            //#A
 
         public EfCoreContext(                             
@@ -25,7 +23,6 @@ namespace DataLayer.EfCode
         {
             modelBuilder.ApplyConfiguration(new BookConfig());       //#B
             modelBuilder.ApplyConfiguration(new BookAuthorConfig()); //#B
-            modelBuilder.ApplyConfiguration(new PriceOfferConfig()); //#B
             modelBuilder.ApplyConfiguration(new LineItemConfig());   //#B
 
             modelBuilder.RegisterUdfDefintions();

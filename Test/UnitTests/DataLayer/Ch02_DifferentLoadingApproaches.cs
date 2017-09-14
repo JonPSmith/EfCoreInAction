@@ -35,7 +35,6 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 book.AuthorsLink.ShouldBeNull(); //#D
                 book.Reviews.ShouldBeNull();     //#E
-                book.Promotion.ShouldBeNull();   //#F
             }
         }
         /*********************************************************
@@ -93,7 +92,6 @@ namespace test.UnitTests.DataLayer
                          .ThenInclude(r => r.Author)     //#B
 
                     .Include(r => r.Reviews)             //#C
-                    .Include(r => r.Promotion)           //#D
                     .First();                            //#E
                 /*********************************************************
                 #A The first Include() gets a collection of BookAuthor
@@ -138,8 +136,6 @@ namespace test.UnitTests.DataLayer
                 }                                          //#C
                 context.Entry(book)                             //#D
                     .Collection(c => c.Reviews).Load();    //#D
-                context.Entry(book)                             //#E
-                    .Reference(r => r.Promotion).Load();   //#E
                 /*********************************************************
                 #A This reads in the first book on its own
                 #B This explicitly loads the linking table, BookAuthor
@@ -207,7 +203,7 @@ namespace test.UnitTests.DataLayer
                     .Select(p => new              //#A
                         {                         //#A
                             p.Title,              //#B
-                            p.Price,              //#B
+                            Price = p.ActualPrice,              //#B
                             NumReviews            //#C
                                = p.Reviews.Count, //#C
                         }

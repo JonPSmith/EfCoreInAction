@@ -31,7 +31,7 @@ namespace test.UnitTests.DataLayer
             books.Count.ShouldEqual(4);
             books.ForEach(x => x.AuthorsLink.Count.ShouldEqual(1));
             books[3].Reviews.Count.ShouldEqual(2);
-            books[3].Promotion.ShouldNotBeNull();
+            books[3].HasPromotion.ShouldBeTrue();
         }
 
         [Fact]

@@ -39,23 +39,15 @@ namespace EfCoreInAction.DatabaseHelpers
         //private methods
         private static Book CreateBookWithRefs(BookInfoJson bookInfoJson, Dictionary<string, Author> authorDict)
         {
-            var book = new Book
-            {
-                Title = bookInfoJson.title,
-                Description = bookInfoJson.description,
-                PublishedOn = DecodePubishDate(bookInfoJson.publishedDate),
-                Publisher = bookInfoJson.publisher,
-                Price = (decimal) (bookInfoJson.saleInfoListPriceAmount ?? -1),
-                ImageUrl = bookInfoJson.imageLinksThumbnail
-            };
-
-            byte i = 0;
-            book.AuthorsLink = new List<BookAuthor>();
-            foreach (var author in bookInfoJson.authors)
-            {
-                book.AuthorsLink.Add(new BookAuthor { Book = book, Author = authorDict[author], Order = i++});
-            }
-
+            var book = new Book(
+                bookInfoJson.title,
+                bookInfoJson.description,
+                DecodePubishDate(bookInfoJson.publishedDate),
+                bookInfoJson.publisher,
+                (decimal)(bookInfoJson.saleInfoListPriceAmount ?? -1),
+                bookInfoJson.imageLinksThumbnail,
+                bookInfoJson.authors.Select(x => authorDict[x])
+            );
             if (bookInfoJson.averageRating != null)
                 book.Reviews = CalculateReviewsToMatch((double)bookInfoJson.averageRating, (int)bookInfoJson.ratingsCount);
 

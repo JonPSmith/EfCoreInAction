@@ -71,10 +71,10 @@
                 </div>
                 <div>
                     <span class="h4">@(item.ActualPrice < 0 ? "- not for sale - " : $"Price: ${item.ActualPrice:##,###.00}")</span>
-                    @if (item.PromotionPromotionalText != null)
+                    @if (item.PromotionalText != null)
                     {
                         <span class="text-danger">
-                            <strong >&nbsp;<del>$@($"{item.Price:F}")</del>&nbsp;<i>@(item.PromotionPromotionalText)</i></strong>
+                            <strong >&nbsp;<del>$@($"{item.OrgPrice:F}")</del>&nbsp;<i>@(item.PromotionalText)</i></strong>
                         </span>
                     }                    
                 </div>
@@ -89,7 +89,7 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                             <li>@Html.ActionLink("Change Pub Date", "ChangePubDate", "Admin", new { id = item.BookId })</li>
-                            <li>@Html.ActionLink("Add Price Promotion", "ChangePromotion", "Admin", new { id = item.BookId })</li>
+                            <li>@Html.ActionLink("Add Price Promotion", "AddPromotion", "Admin", new { id = item.BookId })</li>
                             <li>@Html.ActionLink("Add Review", "AddBookReview", "Admin", new { id = item.BookId })</li>
                         </ul>
                     </div>           

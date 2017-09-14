@@ -37,7 +37,7 @@ namespace DataLayer.EfClasses
             var currContext = 
                 validationContext.GetService(typeof(DbContext));//#D
 
-            if (ChosenBook.Price < 0)                      //#E
+            if (ChosenBook.ActualPrice < 0)                      //#E
                 yield return new ValidationResult(         //#E
 $"Sorry, the book '{ChosenBook.Title}' is not for sale."); //#E
 

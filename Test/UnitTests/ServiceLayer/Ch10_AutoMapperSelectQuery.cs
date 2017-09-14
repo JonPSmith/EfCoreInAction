@@ -39,13 +39,9 @@ namespace test.UnitTests.ServiceLayer
                     {
                         BookId = p.BookId,
                         Title = p.Title,
-                        Price = p.Price,
-                        PromotionNewPrice = p.Promotion == null
-                            ? (decimal?)null
-                            : p.Promotion.NewPrice,
-                        PromotionPromotionalText = p.Promotion == null
-                            ? null
-                            : p.Promotion.PromotionalText,
+                        ActualPrice = p.ActualPrice,
+                        OrgPrice = p.OrgPrice,
+                        PromotionalText = p.PromotionalText,
                         Reviews = p.Reviews
                             .Select(x => new ReviewDto
                             {
@@ -57,9 +53,8 @@ namespace test.UnitTests.ServiceLayer
 
                 //VERIFY
                 result.Count.ShouldEqual(4);
-                result.Where(x => x.Title != "Quantum Networking").All(x => x.PromotionNewPrice == null).ShouldBeTrue();
-                result.Last().PromotionNewPrice.ShouldNotBeNull();
-                result.Last().PromotionPromotionalText.ShouldNotBeNull();
+                result.Where(x => x.Title != "Quantum Networking").All(x => x.ActualPrice == x.OrgPrice).ShouldBeTrue();
+                result.Last().ActualPrice.ShouldNotEqual(result.Last().ActualPrice);
                 foreach (var log in inMemDb.Logs)
                 {
                     _output.WriteLine(log);
@@ -95,9 +90,9 @@ namespace test.UnitTests.ServiceLayer
              
                 //VERIFY
                 result.Count.ShouldEqual(4);
-                result.Where(x => x.Title != "Quantum Networking").All(x => x.PromotionNewPrice == null).ShouldBeTrue();
-                result.Last().PromotionNewPrice.ShouldNotBeNull();
-                result.Last().PromotionPromotionalText.ShouldNotBeNull();
+                result.Where(x => x.Title != "Quantum Networking").All(x => x.OrgPrice == x.ActualPrice).ShouldBeTrue();
+                result.Last().OrgPrice.ShouldNotBeNull();
+                result.Last().PromotionalText.ShouldNotBeNull();
                 result.Last().Reviews.Count.ShouldEqual(2);
                 foreach (var log in inMemDb.Logs)
                 {
@@ -116,9 +111,6 @@ namespace test.UnitTests.ServiceLayer
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Book, BookListDto>()
-                    .ForMember(p => p.ActualPrice,
-                        m => m.MapFrom(s => s.Promotion == null 
-                        ? s.Price : s.Promotion.NewPrice))
                     .ForMember(p => p.AuthorsOrdered, 
                         m => m.MapFrom(s => string.Join(", ",
                             s.AuthorsLink
@@ -146,7 +138,7 @@ namespace test.UnitTests.ServiceLayer
                 var qNetBook = result.Last();
                 qNetBook.Title.ShouldEqual("Quantum Networking");
                 qNetBook.ActualPrice.ShouldEqual(219);
-                qNetBook.PromotionPromotionalText.ShouldEqual("Save $1 if you order 40 years ahead!");
+                qNetBook.PromotionalText.ShouldEqual("Save $1 if you order 40 years ahead!");
                 qNetBook.ReviewsCount.ShouldEqual(2);
                 qNetBook.ReviewsAverageVotes.ShouldEqual(5);
                 foreach (var log in inMemDb.Logs)

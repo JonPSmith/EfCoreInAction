@@ -65,33 +65,26 @@ namespace ServiceLayer.DatabaseServices.Concrete
                 {
                     reviews.Add(new Review { VoterName = j.ToString(), NumStars = (Math.Abs(3 - j) % 4) + 2 });
                 }
-                var book = new Book
-                {
-                    Title = templateBooks[i % templateBooks.Count].Title,
-                    Description = $"Book{i:D4} Description",
-                    Price = (i + 1),
-                    PublishedOn = templateBooks[i % templateBooks.Count].PublishDate,
-                    Publisher = "Manning",
-                    Reviews = reviews,
-                    AuthorsLink = new List<BookAuthor>()
-                };
+                var book = new Book(
+                    templateBooks[i % templateBooks.Count].Title,
+                    $"Book{i:D4} Description",
+                    templateBooks[i % templateBooks.Count].PublishDate,
+                    "Manning",
+                    (i + 1),
+                    null,
+                    GetAuthors(templateBooks[i % templateBooks.Count].Authors),
+                    templateBooks[i % templateBooks.Count].Authors
+                );
                 if (i % 7 == 0)
                 {
-                    book.Promotion = new PriceOffer
-                    {
-                        NewPrice = book.Price * 0.5m,
-                        PromotionalText = "today only - 50% off! "
-                    };
+                    book.AddPromotion(book.ActualPrice * 0.5m, "today only - 50% off! ");
                 }
-
-                AddAuthorsToBook(book, templateBooks[i % templateBooks.Count].Authors);
                 yield return book;
             }
         }
 
-        private void AddAuthorsToBook(Book book, string authors)
+        private IEnumerable<Author> GetAuthors(string authors)
         {
-            byte order = 0;
             foreach(var authorName in authors.Replace(" and ", ",").Replace(" with ", ",")
                 .Split(',').Select(x => x.Trim()).Where(x => x.Length > 1))
             {
@@ -99,7 +92,7 @@ namespace ServiceLayer.DatabaseServices.Concrete
                 {
                     _authorDict.Add(authorName, new Author {Name = authorName});
                 }
-                book.AuthorsLink.Add(new BookAuthor { Book = book, Author = _authorDict[authorName], Order = order++});
+                yield return _authorDict[authorName];
             }
         }
     }

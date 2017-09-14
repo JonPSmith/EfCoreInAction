@@ -16,12 +16,12 @@ namespace Test.Chapter10Listings.QueryObjects
             {
                 BookId = p.BookId,                      
                 Title = p.Title,                        
-                Price = p.Price,                        
+                OrgPrice = p.Price,                        
                 PublishedOn = p.PublishedOn,            
                 ActualPrice = p.Promotion == null       
                         ? p.Price                       
                         : p.Promotion.NewPrice,         
-                PromotionPromotionalText =              
+                PromotionalText =              
                         p.Promotion == null             
                           ? null                        
                           : p.Promotion.PromotionalText,

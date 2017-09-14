@@ -4,11 +4,16 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Test")]
 
 namespace DataLayer.EfClasses
 {
-    public class Book                        
+    public class Book
     {
+        public const int PromotionalTextLength = 200;
+
         public int BookId { get; set; }
 
         [Required] //#A
@@ -18,7 +23,12 @@ namespace DataLayer.EfClasses
         public DateTime PublishedOn { get; set; }
         [MaxLength(64)] //#B
         public string Publisher { get; set; }
-        public decimal Price { get; set; }
+        public decimal ActualPrice { get; private set; }
+        public decimal OrgPrice { get; private set; }
+        [MaxLength(PromotionalTextLength)]
+        public string PromotionalText { get; private set; }
+
+        public bool HasPromotion => PromotionalText != null;
 
         [MaxLength(512)] //#B
         public string ImageUrl { get; set; }
@@ -26,14 +36,66 @@ namespace DataLayer.EfClasses
 
         //-----------------------------------------------
         //relationships
-
-        public PriceOffer Promotion { get; set; }         
+        
         public ICollection<Review> Reviews { get; set; } 
         public ICollection<BookAuthor> 
-            AuthorsLink { get; set; }                    
+            AuthorsLink { get; set; }
+
+        //------------------------------------------------------
+        //Ctors
+
+        //This ctor is needed for EF Core
+        internal Book()
+        {
+        }
+
+        /// <summary>
+        /// This is used for creating a new Book
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="description"></param>
+        /// <param name="publishedOn"></param>
+        /// <param name="publisher"></param>
+        /// <param name="orgPrice"></param>
+        /// <param name="imageUrl"></param>
+        /// <param name="authors"></param>
+        /// <param name="authorsString"></param>
+        public Book(string title, string description, DateTime publishedOn, string publisher, decimal orgPrice, string imageUrl, 
+            IEnumerable<Author> authors, string authorsString = "")
+        {
+            Title = title;
+            Description = description;
+            PublishedOn = publishedOn;
+            Publisher = publisher;
+            ActualPrice = orgPrice;
+            OrgPrice = orgPrice;
+            ImageUrl = imageUrl;
+        }
+
+        //------------------------------------------
+        //Action methods
+
+        /// <summary>
+        /// This sets up a promotion
+        /// It assumes OrgPrice was set 
+        /// </summary>
+        /// <param name="newPrice"></param>
+        /// <param name="promotionalText"></param>
+        /// <returns>string conatining error, or null if no error</returns>
+        public string AddPromotion(decimal newPrice, string promotionalText)
+        {
+            if (promotionalText == null)
+                return "You must provide some text to go with the promotion";
+            ActualPrice = newPrice;
+            PromotionalText = promotionalText;
+            return null;
+        }
+
+        public void RemovePromotion()
+        {
+            ActualPrice = OrgPrice;
+            PromotionalText = null;
+        }
     }
-    /****************************************************
-    #A This tells EF Core that the string is non-nullable.
-    #B The [MaxLength] attibute defines the the size of the string column in the database
-     * **************************************************/
+
 }

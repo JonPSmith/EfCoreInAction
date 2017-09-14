@@ -4,7 +4,6 @@
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
-using Microsoft.EntityFrameworkCore;
 
 namespace ServiceLayer.AdminServices.Concrete
 {
@@ -12,58 +11,40 @@ namespace ServiceLayer.AdminServices.Concrete
     {
         private readonly EfCoreContext _context;
 
-        public Book OrgBook { get; private set; } 
-
         public ChangePriceOfferService(EfCoreContext context)
         {
             _context = context;
         }
 
-        public PriceOffer GetOriginal(int id)      //#A
+        public ChangePriceOfferDto GetOfferData(int id) 
         {
-            OrgBook = _context.Books               //#B
-                .Include(r => r.Promotion)         //#B
-                .Single(k => k.BookId == id);      //#B
-
-            return OrgBook?.Promotion              //#C
-                ?? new PriceOffer                  //#C
-                   {                               //#C
-                       BookId = id,                //#C
-                       NewPrice = OrgBook.Price    //#C
-                   };                              //#C
+            var book = _context.Find<Book>(id);
+            return new ChangePriceOfferDto
+            {
+                BookId = book.BookId,
+                Title = book.Title,
+                NewPrice = book.ActualPrice,
+                OrgPrice = book.OrgPrice,
+                PromotionalText = book.PromotionalText
+            };
         }
 
-        public Book UpdateBook(PriceOffer promotion)//#D
+        public string AddPromotion(ChangePriceOfferDto dto)
         {
-            var book = _context.Books               //#E
-                .Include(r => r.Promotion)          //#E
-                .Single(k => k.BookId               //#E
-                      == promotion.BookId);         //#E
-            if (book.Promotion == null)             //#F
-            {
-                book.Promotion = promotion;         //#G
-            }
-            else
-            {
-                book.Promotion.NewPrice             //#H
-                    = promotion.NewPrice;           //#H
-                book.Promotion.PromotionalText      //#H
-                    = promotion.PromotionalText;    //#H
-            }
-            _context.SaveChanges();                 //#I
-            return book;                            //#J
+            var book = _context.Find<Book>(dto.BookId);
+            var error = book.AddPromotion(dto.NewPrice, dto.PromotionalText);
+            if (error != null)
+                return error;
+            _context.SaveChanges(); 
+            return null;     
+        }
+
+        public void RemovePromotion(int bookId)
+        {
+            var book = _context.Find<Book>(bookId);
+            book.RemovePromotion();
+            _context.SaveChanges();
         }
     }
-    /*********************************************************
-    #A This method gets a PriceOffer class to send to the user to update
-    #B This loads the book with any existing Promotion
-    #C I return either the existing Promotion for editing, or create a new one. The important point is to set the BookId, as we need to pass that through to the second stage
-    #D This method handles the second part of the update, i.e. performing a selective update of the chosen book
-    #E This loads the book, with any existing promotion, which is important as otherwise our new PriceOffer will clash, and throw an error
-    #F I check if this an update of an existing PriceOffer or adding a new PriceOffer
-    #G I need to add a new ProceOffer, so I simply assign the promotion to the relational link. EF Core will see this and add a new row in the PriceOffer table
-    #H I need to do an update, so I copy over just the parts that I want to change. EF Core will see this update and produce code to unpdate just these two columns
-    #I The SaveChanges uses its DetectChanges method, which sees what has changes - either adding a new PriceOffer or updating an existing PriceOffer
-    #H The method returns the updated book
-     * ******************************************************/
+
 }

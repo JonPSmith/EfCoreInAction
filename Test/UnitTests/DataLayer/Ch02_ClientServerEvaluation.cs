@@ -43,7 +43,7 @@ namespace test.UnitTests.DataLayer
                     .Select(p => new
                     {                
                         p.Title,
-                        PriceString = p.Price.ToString("C"),  //#B
+                        PriceString = p.ActualPrice.ToString("C"),  //#B
                         NumReviews = p.Reviews.Count
                     }
                     ).ToList();

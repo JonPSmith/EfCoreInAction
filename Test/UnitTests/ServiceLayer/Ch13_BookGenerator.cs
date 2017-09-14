@@ -33,12 +33,12 @@ namespace Test.UnitTests.ServiceLayer
 
             //ATTEMPT
             var gen = new BookGenerator();
-            var books = gen.GenerateBooks(filePath, numBooks);
+            var books = gen.GenerateBooks(filePath, numBooks).ToList();
 
             //VERIFY
             books.Count().ShouldEqual(numBooks);
             books.SelectMany(x => x.AuthorsLink.Select(y => y.Author)).Distinct().Count().ShouldEqual(17);
-            books.Count(x => x.Promotion != null).ShouldEqual(3);
+            books.Count(x => x.HasPromotion).ShouldEqual(3);
         }
 
         [Fact]

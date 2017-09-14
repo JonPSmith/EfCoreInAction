@@ -80,7 +80,6 @@ namespace test.UnitTests.DataLayer
                     .Where(p => p.Title == "Quantum Networking")
                     .Include(x => x.AuthorsLink).ThenInclude(x => x.Author)
                     .Include(x => x.Reviews)
-                    .Include(x => x.Promotion)
                     .Single();
                 book.AuthorsLink.First().Author.Name = "New Person";
                 json = JsonConvert.SerializeObject(book, new JsonSerializerSettings

@@ -76,20 +76,17 @@ namespace test.UnitTests.DataLayer
                     .Include(x => x.AuthorsLink)
                     .ThenInclude(x => x.Author)
                     .Include(x => x.Reviews)
-                    .Include(x => x.Promotion)
                     .Single(x => x.BookId == id));
                 var oneLogs = logger.Logs;
                 RunTest(context, 1, "Second access, EagerLoad:", (c, id) => c.Books
                     .Include(x => x.AuthorsLink)
                     .ThenInclude(x => x.Author)
                     .Include(x => x.Reviews)
-                    .Include(x => x.Promotion)
                     .Single(x => x.BookId == id));
                 RunTest(context, 100, "Multi access, EagerLoad:", (c, id) => c.Books
                     .Include(x => x.AuthorsLink)
                     .ThenInclude(x => x.Author)
                     .Include(x => x.Reviews)
-                    .Include(x => x.Promotion)
                     .Single(x => x.BookId == id));
 
                 //VERIFY
@@ -149,7 +146,6 @@ namespace test.UnitTests.DataLayer
                     .Reference(r => r.Author).Load();
             }
             context.Entry(book).Collection(c => c.Reviews).Load();
-            context.Entry(book).Reference(r => r.Promotion).Load();
         }
 
         private void SelectLoad(EfCoreContext context, int id)
@@ -161,10 +157,8 @@ namespace test.UnitTests.DataLayer
                     p.Description,
                     p.Publisher,
                     p.PublishedOn,
-                    p.Price,
+                    Price = p.ActualPrice,
                     p.ImageUrl,
-                    NewPrice = p.Promotion == null ? null : (decimal?)p.Promotion.NewPrice,
-                    PromotionalText = p.Promotion == null ? null : p.Promotion.PromotionalText,
                     ReviewsCount = p.Reviews.Count,
                     ReviewsVotes = p.Reviews.Select(x => x.NumStars).ToList(),
                     Authors = p.AuthorsLink.OrderBy(x => x.Order).Select(x => x.Author).ToList()

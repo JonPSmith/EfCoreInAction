@@ -125,7 +125,6 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 context.Books.Count().ShouldEqual(0);
                 context.Authors.Count().ShouldEqual(0);
-                context.PriceOffers.Count().ShouldEqual(0);
             }
         }
 

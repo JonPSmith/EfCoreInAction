@@ -11,7 +11,6 @@ namespace Test.Chapter10Listings.EfCode
     {
         public DbSet<Book> Books { get; set; } //#A
         public DbSet<Author> Authors { get; set; } //#A
-        public DbSet<PriceOffer> PriceOffers { get; set; } //#A
 
         public BookContext(
             DbContextOptions<BookContext> options)      
@@ -22,7 +21,6 @@ namespace Test.Chapter10Listings.EfCode
         {
             modelBuilder.ApplyConfiguration(new BookConfig());       //#B
             modelBuilder.ApplyConfiguration(new BookAuthorConfig()); //#B
-            modelBuilder.ApplyConfiguration(new PriceOfferConfig()); //#B
         }
         /*****************************************************************
         #A We only define three of the five tables in the database: Books, Authors and PriceOffers. The other two tables, Review and BookAuthor are found via navigational links from the other tables

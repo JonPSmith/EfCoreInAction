@@ -9,14 +9,13 @@ namespace ServiceLayer.BookServices
 {
     public class BookListDto
     {
-        public int BookId { get; set; }            //#A
+        public int BookId { get; set; }   
         public string Title { get; set; }
-        public DateTime PublishedOn { get; set; }  //#B
-        public decimal Price { get; set; }         //#C
-        public decimal 
-            ActualPrice { get; set; }              //#D
-        public string 
-            PromotionPromotionalText { get; set; } //#E
+        public DateTime PublishedOn { get; set; }  
+        public decimal ActualPrice { get; set; } 
+        public decimal OrgPrice { get; set; }   
+        public string PromotionalText { get; set; }
+        public bool HasPromotion => PromotionalText != null;
         public ICollection<string> AuthorNames { get; set; }
         //There is a bug in EF Core 2.0.0 on this client vs. server query - see https://github.com/aspnet/EntityFrameworkCore/issues/9519
         //public string AuthorsOrdered => string.Join(", ", AuthorNames);

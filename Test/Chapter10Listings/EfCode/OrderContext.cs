@@ -24,7 +24,6 @@ namespace Test.Chapter10Listings.EfCode
             modelBuilder.ApplyConfiguration( new LineItemConfig());
 
             modelBuilder.Ignore<Review>();    //#B
-            modelBuilder.Ignore<PriceOffer>();//#B
             modelBuilder.Ignore<Author>();    //#B
             modelBuilder.Ignore<BookAuthor>();//#B
         }
