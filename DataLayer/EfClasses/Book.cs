@@ -37,7 +37,9 @@ namespace DataLayer.EfClasses
         public bool SoftDeleted { get; set; }
 
         //The pre-calculated values
+        [ConcurrencyCheck]
         public int ReviewsCount { get; private set; }
+        [ConcurrencyCheck]
         public double? AverageVotes { get; private set; }
         public string AuthorsString { get; private set; }
 
