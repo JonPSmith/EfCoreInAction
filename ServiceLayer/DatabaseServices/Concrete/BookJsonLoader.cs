@@ -52,7 +52,7 @@ namespace EfCoreInAction.DatabaseHelpers
             {
                 foreach (var review in CalculateReviewsToMatch((double)bookInfoJson.averageRating, (int)bookInfoJson.ratingsCount))
                 {
-                    book.AddReview(review);
+                    book.AddReviewWhenYouKnowReviewCollectionIsLoaded(review);
                 }
                 
             }

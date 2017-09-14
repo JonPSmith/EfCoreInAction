@@ -1,13 +1,11 @@
-﻿@model DataLayer.EfClasses.Review
-
-
+﻿@model int
 
 <h2>Add a book review</h2>
 
 <div class="form-horizontal">
     <form asp-controller="Admin" asp-action="AddBookReview" method="post">
         <!-- Input and Submit elements -->
-        <input name="BookId" type="hidden" value="@Model.BookId" />
+        <input name="BookId" type="hidden" value="@Model" />
         
         <div class="form-group">
             <div class="col-sm-2">
@@ -22,21 +20,21 @@
             <div class="col-sm-2">
                 <label class="control-label">YourName</label>
             </div>
-            <input asp-for="VoterName" class="form-control col-sm-10" />
+            <input name="VoterName" class="form-control col-sm-10" />
         </div>
         
         <div class="form-group">
             <div class="col-sm-2">
                 <label class="control-label">Grade (0 to 5)</label>
             </div>
-            <input asp-for="NumStars" min="0" max="5" class="form-control col-sm-10" />
+            <input name="NumStars" min="0" max="5" class="form-control col-sm-10" />
         </div>
         
         <div class="form-group">
             <div class="col-sm-2">
                 <label class="control-label">Your comment</label>
             </div>
-            <textarea  asp-for="Comment" class="form-control col-sm-10"></textarea>
+            <textarea  name="Comment" class="form-control col-sm-10"></textarea>
         </div>
 
         <div class="form-group">

@@ -4,12 +4,8 @@ namespace ServiceLayer.AdminServices
 {
     public interface IAddReviewService
     {
-        string BookTitle { get; }
+        string GetTitleOfBook(int id);
 
-        Review GetBlankReview(int id) //#A
-            ;
-
-        Book AddReviewToBook(Review review)//#D
-            ;
+        void AddReviewToBook(int bookId, int numStars, string comment, string voterName);
     }
 }

@@ -6,12 +6,13 @@ using System.Linq;
 using DataLayer.EfClasses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Remotion.Linq.Parsing.Structure.IntermediateModel;
 
 namespace DataLayer.EfCode
 {
     public static class SaveChangesBookFixer
     {
-        public static int BookSaveChanges(EfCoreContext context)
+        public static int BookSaveChanges(this EfCoreContext context)
         {
             try
             {
@@ -35,25 +36,29 @@ namespace DataLayer.EfCode
             EfCoreContext context,
             EntityEntry entry)
         {
-            var book = (Book)entry.Entity;
+            var book = (Book) entry.Entity;
+            entry.Collection(nameof(Book.Reviews)).Load();
 
-            var databaseEntity =  
-                context.Books.AsNoTracking() 
+            var databaseEntity =
+                context.Books.AsNoTracking()
                     .SingleOrDefault(p => p.BookId == book.BookId);
             if (databaseEntity == null)
                 //Book has been deleted, so ignore it
-                return; 
+                return;
+
+            var databaseEntry = context.Entry(databaseEntity);
 
             //We need to fix the ReviewCount and the AverageReview 
             var countProp = entry.Property(nameof(Book.ReviewsCount));
-            var averageProp = entry.Property(nameof(Book.ReviewsCount));
-            var reviews = context.Set<Review>().Where(x => x.BookId == book.BookId).ToList();
-            countProp.CurrentValue = reviews.Count;
-            countProp.OriginalValue = countProp.CurrentValue;
-            averageProp.CurrentValue = reviews.Any()
-                ? reviews.Average(x => (double?) x.NumStars)
+            var averageProp = entry.Property(nameof(Book.AverageVotes));
+            //I take the ones in the database and the ones waiting to be written out
+            var reviewCount = book.Reviews.Count();
+            countProp.CurrentValue = reviewCount;
+            countProp.OriginalValue = databaseEntry.Property(nameof(Book.ReviewsCount)).CurrentValue;
+            averageProp.CurrentValue = reviewCount > 0
+                ? book.Reviews.Average(x => (double?) x.NumStars)
                 : null;
-            averageProp.OriginalValue = averageProp.CurrentValue;
+            averageProp.OriginalValue = databaseEntry.Property(nameof(Book.AverageVotes)).CurrentValue;
         }
     }
 }

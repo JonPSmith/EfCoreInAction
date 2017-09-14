@@ -331,7 +331,6 @@ namespace test.UnitTests.DataLayer
             using (var context = new EfCoreContext(_options))
             {
                 var entity = context.Books
-                    .Include(p => p.Reviews)
                     .Single(x => x.Title == "Quantum Networking");
                 var uniqueString = Guid.NewGuid().ToString();
 
@@ -343,7 +342,7 @@ namespace test.UnitTests.DataLayer
                         uniqueString, entity.BookId);
 
                 //ATTEMPT
-                entity.AddReview(new Review{ NumStars = 99});
+                entity.AddReview(context, 99, null, null);
                 context.Entry(entity).Reload();
 
                 //VERIFY

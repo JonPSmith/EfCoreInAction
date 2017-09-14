@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Microsoft.EntityFrameworkCore;
 
 [assembly: InternalsVisibleTo("Test")]
 
@@ -79,6 +80,9 @@ namespace DataLayer.EfClasses
             OrgPrice = orgPrice;
             ImageUrl = imageUrl;
 
+            ReviewsCount = 0;
+            AverageVotes = null;
+
             _bookAuthors = authors.Select(a => new BookAuthor {Book = this, Author = a}).ToList();
             AuthorsString = authorsString ?? string.Join(", ", authors.Select(a => a.Name));
         }
@@ -86,15 +90,36 @@ namespace DataLayer.EfClasses
         //------------------------------------------
         //Action methods
 
-        public void AddReview(Review review) //#D
+        public void AddReview(DbContext context,
+            int numStars, string comment, string voterName) 
+        {
+            var review = new Review()
+            {
+                NumStars = numStars,
+                Comment = comment,
+                VoterName = voterName
+            };
+
+            context.Entry(this)
+                .Collection(c => c.Reviews).Load();
+            AddReviewWhenYouKnowReviewCollectionIsLoaded(review);
+
+        }
+
+        //This is for 
+        public void AddReviewWhenYouKnowReviewCollectionIsLoaded(Review review)
         {
             _reviews.Add(review);
             AverageVotes = _reviews.Average(x => x.NumStars);
             ReviewsCount = _reviews.Count;
         }
 
-        public void RemoveReview(Review review) //#G
+
+        public void RemoveReview(DbContext context, Review review) //#G
         {
+            context.Entry(this) //#D
+                .Collection(c => c.Reviews).Load(); //#D
+
             _reviews.Remove(review);
             AverageVotes = _reviews.Any()
                 ? _reviews.Average(x => x.NumStars)

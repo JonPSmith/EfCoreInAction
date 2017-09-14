@@ -33,11 +33,8 @@ namespace Test.UnitTests.ServiceLayer
                 const int bookId = 1;
 
                 //ATTEMPT
-                var review = service.GetBlankReview(bookId);
-                review.Comment = "Great stuff!";
-                review.NumStars = 5;
-                service.AddReviewToBook(review);
-                context.SaveChanges();
+                service.AddReviewToBook(bookId, 5, null, null);
+                context.BookSaveChanges();
 
                 //VERIFY
                 var book = context.Books.Include(x => x.Reviews).Single(x => x.BookId == bookId);
@@ -59,11 +56,8 @@ namespace Test.UnitTests.ServiceLayer
                 const int bookId = 4;
 
                 //ATTEMPT
-                var review = service.GetBlankReview(bookId);
-                review.Comment = "terrible";
-                review.NumStars = 1;
-                service.AddReviewToBook(review);
-                context.SaveChanges();
+                service.AddReviewToBook(bookId, 1, null, null);
+                context.BookSaveChanges();
 
                 //VERIFY
                 var book = context.Books.Include(x => x.Reviews).Single(x => x.BookId == bookId);

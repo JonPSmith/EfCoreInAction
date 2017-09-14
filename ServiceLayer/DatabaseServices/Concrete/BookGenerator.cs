@@ -73,7 +73,8 @@ namespace ServiceLayer.DatabaseServices.Concrete
                 );
                 for (int j = 0; j < i % 12; j++)
                 {
-                    book.AddReview(new Review { VoterName = j.ToString(), NumStars = (Math.Abs(3 - j) % 4) + 2 });
+                    book.AddReviewWhenYouKnowReviewCollectionIsLoaded(
+                        new Review { VoterName = j.ToString(), NumStars = (Math.Abs(3 - j) % 4) + 2 });
                 }          
                 if (i % 7 == 0)
                 {

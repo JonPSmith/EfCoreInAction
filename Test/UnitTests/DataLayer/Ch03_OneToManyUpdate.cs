@@ -36,15 +36,9 @@ namespace test.UnitTests.DataLayer
                 //ATTEMPT
                 //NOTE: I know that the first book does not have a review!
                 var book = context.Books            //#A
-                    .Include(p => p.Reviews)        //#A
                     .First();                       //#A
 
-                book.AddReview(new Review         //#B
-                {                                   //#B
-                    VoterName = "Unit Test",        //#B
-                    NumStars = 5,                   //#B
-                    Comment = "Great book!"         //#B
-                });                               //#B
+                book.AddReview(context, 5, "Great book!", "Unit Test");
                 context.SaveChanges();              //#C           
                 /**********************************************************
                 #A This finds the first book and loads it with any reviews it might have
@@ -72,17 +66,12 @@ namespace test.UnitTests.DataLayer
                 context.SeedDatabaseFourBooks();
 
                 var book = context.Books
-                    .Include(p => p.Reviews)
                     .First(p => p.Reviews.Any());
 
                 var orgReviews = book.Reviews.Count();
 
                 //ATTEMPT
-                book.AddReview(new Review
-                {
-                    VoterName = "Unit Test",
-                    NumStars = 5,
-                });
+                book.AddReview(context, 5, null, "Unit Test");
                 context.SaveChanges();
 
                 //VERIFY

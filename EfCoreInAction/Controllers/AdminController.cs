@@ -158,19 +158,18 @@ namespace EfCoreInAction.Controllers
         {
             Request.ThrowErrorIfNotLocal();
 
-            var review = service.GetBlankReview(id);
-            ViewData["BookTitle"] = service.BookTitle;
+            ViewData["BookTitle"] = service.GetTitleOfBook(id);
             SetupTraceInfo();
-            return View(review);
+            return View(id);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddBookReview(Review dto, [FromServices]IAddReviewService service)
+        public IActionResult AddBookReview(int bookId, int numStars, string comment, string voterName, [FromServices]IAddReviewService service)
         {
             Request.ThrowErrorIfNotLocal();
 
-            var book = service.AddReviewToBook(dto);
+            service.AddReviewToBook(bookId, numStars, comment, voterName);
             SetupTraceInfo();
             return View("BookUpdated", "Successfully added a review");
         }
