@@ -49,7 +49,7 @@ namespace test.UnitTests.DataLayer
                 {
                     Title = "Quantem Networking"
                 };
-                entity.AddReview(new Review{NumStars = 5, VoterName = "Unit Test"});
+                entity.AddReview(new Review(5, null, "Unit Test"));
 
                 //VERIFY
                 entity.Reviews.ShouldNotBeNull();
@@ -71,8 +71,8 @@ namespace test.UnitTests.DataLayer
                 {
                     Title = "Quantem Networking"
                 };
-                entity.AddReview(new Review { NumStars = 4, VoterName = "Unit Test" });
-                entity.AddReview(new Review { NumStars = 2, VoterName = "Unit Test" });
+                entity.AddReview(new Review(4, null, "Unit Test"));
+                entity.AddReview(new Review(2, null, "Unit Test"));
 
                 //VERIFY
                 entity.Reviews.ShouldNotBeNull();
@@ -94,7 +94,7 @@ namespace test.UnitTests.DataLayer
                 {
                     Title = "Quantem Networking"
                 };
-                var review = new Review {NumStars = 5, VoterName = "Unit Test"};
+                var review = new Review( 5, null, "Unit Test");
                 entity.AddReview(review);
                 entity.RemoveReview(review);
 
@@ -119,7 +119,7 @@ namespace test.UnitTests.DataLayer
                 {
                     Title = "Quantem Networking"
                 };
-                entity.AddReview(new Review {NumStars = 5, VoterName = "Unit Test"});
+                entity.AddReview(new Review(5, null, "Unit Test"));
                 context.Add(entity);
                 context.SaveChanges();
             }

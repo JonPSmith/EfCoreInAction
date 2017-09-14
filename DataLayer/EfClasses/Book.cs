@@ -104,12 +104,7 @@ namespace DataLayer.EfClasses
         //This is for 
         public void AddReviewWhenYouKnowReviewCollectionIsLoaded(int numStars, string comment, string voterName)
         {
-            var review = new Review()
-            {
-                NumStars = numStars,
-                Comment = comment,
-                VoterName = voterName
-            };
+            var review = new Review(numStars, comment, voterName);
             _reviews.Add(review);
             AverageVotes = _reviews.Average(x => x.NumStars);
             ReviewsCount = _reviews.Count;

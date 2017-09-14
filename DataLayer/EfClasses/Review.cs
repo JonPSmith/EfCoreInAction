@@ -9,11 +9,11 @@ namespace DataLayer.EfClasses
     {
         public const int NameLength = 100;
 
-        public int ReviewId { get; set; }
+        public int ReviewId { get; private set; }
         [MaxLength(NameLength)]
-        public string VoterName { get; set; }
-        public int NumStars { get; set; }
-        public string Comment { get; set; }
+        public string VoterName { get; private set; }
+        public int NumStars { get; private set; }
+        public string Comment { get; private set; }
 
         //-----------------------------------------
         //Relationships
@@ -21,6 +21,13 @@ namespace DataLayer.EfClasses
         public int BookId { get; set; }
 
         internal Review() { }
+
+        internal Review(int numStars, string comment, string voterName)
+        {
+            NumStars = numStars;
+            Comment = comment;
+            VoterName = voterName;
+        }
     }
 
 }
