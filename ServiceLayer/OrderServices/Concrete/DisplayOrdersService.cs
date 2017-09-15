@@ -59,10 +59,7 @@ namespace ServiceLayer.OrderServices.Concrete
                                    {
                                        BookId = lineItem.BookId,
                                        Title = lineItem.ChosenBook.Title,
-                                       AuthorsName = string.Join(", ",
-                                        lineItem.ChosenBook.AuthorsLink
-                                            .OrderBy(q => q.Order)
-                                            .Select(q => q.Author.Name)),
+                                       AuthorsName = lineItem.ChosenBook.AuthorsString,
                                        BookPrice = lineItem.BookPrice,
                                        NumBooks = lineItem.NumBooks,
                                    })

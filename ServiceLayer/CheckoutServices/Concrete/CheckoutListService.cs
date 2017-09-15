@@ -38,10 +38,7 @@ namespace ServiceLayer.CheckoutServices.Concrete
                 {
                     BookId = book.BookId,
                     Title = book.Title,
-                    AuthorsName = string.Join(", ",
-                        book.AuthorsLink
-                            .OrderBy(q => q.Order)
-                            .Select(q => q.Author.Name)),
+                    AuthorsName = book.AuthorsString,
                     BookPrice = book.ActualPrice,
                     ImageUrl = book.ImageUrl,
                     NumBooks = lineItem.NumBooks
