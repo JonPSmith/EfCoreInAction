@@ -20,32 +20,58 @@
                 <a href="https://www.manning.com/books/entity-framework-core-in-action?a_aid=su4utaraxuTre8tuthup&a_bid=4cef27ce">Manning Publications site</a>
                 to find out more about the book and its content.
             </p>
+            <h3>What am I seeing?</h3>
             <p>
-                On a hosted site you cannot change the data, but you can:
+                This site is currently running a version from my chapter 13, which is called "A worked example of performance tuning".
+                In this chapter I go through various stages of performance tuning. The version that is running is the third stage of
+                performance tuning - and I think it is pretty fast!
+            </p>
+            <p>
+                The database contains 100,000 books, plus other entities as shown in the table below.
+                This is test data I use for performance testing, and I build data using 300 real books from Manning's site 
+                and replicating it multiple times.
+            </p>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>Books</th>
+                    <th>Reviews</th>
+                    <th>BookAuthor</th>
+                    <th>Authors</th>
+                </tr>
+                <tr>
+                    <td>The books!</td>
+                    <td>Holds reviews of the books</td>
+                    <td>Many-to-Many linking table</td>
+                    <td>Authors</td>
+                </tr>
+                <tr>
+                    <td>100,000</td>
+                    <td>549,984</td>
+                    <td>188,235</td>
+                    <td>580</td>
+                </tr>
+                </tbody>
+            </table>
 
-                <ul>
-                    <li>Query the books in this site, using the controls at the top of the home page</li>
-                    <li>
-                        See the actual SQL commands that EF Core creates to do these book queries - Click the
-                        <strong>Logs</strong> menu item.
-                    </li>
-                    <li>
-                        'Purchase' books - No money needed, but then again we don't send you the books either :)
-                        <br />
-                        <span class="text-muted">Note: the checkout will use a cookie to hold your order.</span>
-                    </li>
-                </ul>
-            </p>
             <p>
-                Note: There is a Git repo to support this site. Have a look at
-                <a href="https://www.manning.com/books/entity-framework-core-in-action?a_aid=su4utaraxuTre8tuthup&a_bid=4cef27ce">the book</a> to find out where that is.
-                If you can clone the Git repo and run the application locally then various update feature
-                will appear, as shown in chapter 3.
+                You can't change the data, for obvious reasons, but you can 'buy' a book or two -
+                no money needed, but then again we don't send you the books either :)
+                <br/>
+                <span class="text-muted">Note: the checkout will use a cookie to hold your order.</span>
             </p>
-            <p>See below for information of the library versions that were used to build this application.</p>
+                
+
+            <p>                 
+                You can download and run the application locally, which allows you to change the data, if you clone the github repo
+                (see <a href="https://www.manning.com/books/entity-framework-core-in-action?a_aid=su4utaraxuTre8tuthup&a_bid=4cef27ce">the book</a>)
+                which goes with the book.
+            </p>
             <h4>Jon P Smith</h4>
-            <p>Author of the <strong>Entity Framework Core in Action</strong> book.</p>
+            <p>Author of the <strong>Entity Framework Core in Action</strong> book.
+            </p>
             <a href="http://www.thereformedprogrammer.net/">My blog site</a>, where you will find articles on Entity Framework, ASP.NET, React.js and much more.
+            <p>See below for information of the library versions that were used to build this application.</p>
         </td>
         <td>
             <a href="https://www.manning.com/books/entity-framework-core-in-action?a_aid=su4utaraxuTre8tuthup&a_bid=4cef27ce">
