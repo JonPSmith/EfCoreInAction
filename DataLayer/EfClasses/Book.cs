@@ -83,7 +83,8 @@ namespace DataLayer.EfClasses
             ReviewsCount = 0;
             AverageVotes = null;
 
-            _bookAuthors = authors.Select(a => new BookAuthor {Book = this, Author = a}).ToList();
+            byte order = 0;
+            _bookAuthors = authors.Select(a => new BookAuthor {Book = this, Author = a, Order = order++}).ToList();
             AuthorsString = authorsString ?? string.Join(", ", authors.Select(a => a.Name));
         }
 
