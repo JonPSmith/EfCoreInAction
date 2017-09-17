@@ -5,15 +5,15 @@ namespace DataLayer.EfClasses
 {
     public class BookAuthor               
     {
-        public int BookId { get; set; }  //#A
-        public int AuthorId { get; set; }//#A
-        public byte Order { get; set; }   
+        public int BookId { get; private set; }  //#A
+        public int AuthorId { get; private set; }//#A
+        public byte Order { get; internal set; }   
 
         //-----------------------------
         //Relationships
 
-        public Book Book { get; set; }      
-        public Author Author { get; set; }  
+        public Book Book { get; internal set; }      
+        public Author Author { get; internal set; }  
     }
     /************************************************************
     A# The primary key is make up of the two foreign keys

@@ -10,7 +10,7 @@ namespace DataLayer.EfClasses
     {
         public const int NameLength = 100;
 
-        public int AuthorId { get; set; }
+        public int AuthorId { get; internal set; }
         [Required]
         [MaxLength(NameLength)]
         public string Name { get; set; }
