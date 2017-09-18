@@ -71,7 +71,7 @@ namespace test.UnitTests.DataLayer
 
                 //VERIFY
                 tableNames
-                    .ShouldEqual(new[] { "[BookAuthor]", "[PriceOffers]", "[Review]", "[Books]", "[Authors]"});
+                    .ShouldEqual(new[] { "[BookAuthor]", "[Review]", "[Books]", "[Authors]"});
             }
         }
 

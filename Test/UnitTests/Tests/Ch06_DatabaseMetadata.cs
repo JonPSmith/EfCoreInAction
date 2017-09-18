@@ -103,7 +103,7 @@ namespace test.UnitTests.Tests
         [Theory]
         [InlineData("BookId", "int")]
         [InlineData("PublishedOn", "date")]
-        [InlineData("Price", "decimal(9,2)")]
+        [InlineData("ActualPrice", "decimal(9,2)")]
         [InlineData("Description", "nvarchar(max)")]
         [InlineData("ImageUrl", "varchar(512)")]
         public void TestGetColumnStoreTypesOk(string propName, string expectedType)

@@ -33,8 +33,7 @@ namespace test.UnitTests.DataLayer
                 var book = context.Books.First();     //#C
 
                 //VERIFY
-                book.AuthorsLink.ShouldBeNull(); //#D
-                book.Reviews.ShouldBeNull();     //#E
+                book.Reviews.ShouldNotBeNull();     //#E
             }
         }
         /*********************************************************
@@ -67,7 +66,6 @@ namespace test.UnitTests.DataLayer
 
                 //VERIFY
                 book.Reviews.ShouldNotBeNull();
-                book.AuthorsLink.ShouldBeNull();
                 foreach (var log in logIt.Logs)
                 {
                     _output.WriteLine(log);

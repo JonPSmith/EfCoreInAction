@@ -46,20 +46,6 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void TestCheckProcExistsOk()
-        {
-            //SETUP
-            using (var context = new EfCoreContext(_options))
-            {
-                //ATTEMPT
-                context.AddUpdateSqlProcs();
-
-                //VERIFY
-                context.EnsureSqlProcsSet().ShouldBeTrue();
-            }
-        }
-
-        [Fact]
         public void TestFromSqlOk()
         {
             //SETUP
