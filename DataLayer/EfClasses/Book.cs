@@ -16,7 +16,7 @@ namespace DataLayer.EfClasses
     {
         public const int PromotionalTextLength = 200;
 
-        private readonly List<Review> _reviews = new List<Review>();
+        private readonly List<Review> _reviews = new List<Review>(); //#A
         private readonly List<BookAuthor> _bookAuthors = new List<BookAuthor>();
 
         public int BookId { get; set; }
@@ -38,16 +38,16 @@ namespace DataLayer.EfClasses
         public bool SoftDeleted { get; set; }
 
         //The pre-calculated values
-        [ConcurrencyCheck]
-        public int ReviewsCount { get; private set; }
-        [ConcurrencyCheck]
-        public double? AverageVotes { get; private set; }
+        [ConcurrencyCheck] //#B
+        public int ReviewsCount { get; private set; } //#C
+        [ConcurrencyCheck] //#B
+        public double? AverageVotes { get; private set; } //#C
         public string AuthorsString { get; private set; }
 
         //-----------------------------------------------
         //relationships
 
-        public IEnumerable<Review> Reviews => _reviews.ToList();
+        public IEnumerable<Review> Reviews => _reviews.ToList(); //#D
         public IEnumerable<BookAuthor> AuthorsLink => _bookAuthors.ToList();
 
         //------------------------------------------------------
@@ -116,7 +116,7 @@ namespace DataLayer.EfClasses
             ActualPrice = OrgPrice; //#K
             PromotionalText = null; //#L
         }
-        /******************************************************************
+        /**ActualPrice part*******************************************************
         #A The properties that control the price all have a private setter so that only the Book entity can change their values
         #B The only public way to create a Book entity is now via this constructor
         #C I set the OrgPrice with the recommended retail price of the book
@@ -131,35 +131,52 @@ namespace DataLayer.EfClasses
         #L It also nulls the PromotionalText, which tells the rest of the system that there isn't a price promotion on this book
          * ****************************************************************/
 
-
-        public void AddReview(DbContext context,
-            int numStars, string comment, string voterName) 
+        public void AddReview(DbContext context, //#E
+            int numStars, string comment, 
+            string voterName) 
         {
             context.Entry(this)
-                .Collection(c => c.Reviews).Load();
+                .Collection(c => c.Reviews).Load(); //#F
             AddReviewWhenYouKnowReviewCollectionIsLoaded(numStars, comment, voterName);
         }
 
         public void AddReviewWhenYouKnowReviewCollectionIsLoaded(int numStars, string comment, string voterName)
         {
-            var review = new Review(numStars, comment, voterName);
-            _reviews.Add(review);
-            AverageVotes = _reviews.Average(x => x.NumStars);
-            ReviewsCount = _reviews.Count;
+            var review = new 
+                Review(numStars, comment, voterName); //#G
+            _reviews.Add(review); //#G
+            AverageVotes = _reviews.Average(x => x.NumStars); //#H
+            ReviewsCount = _reviews.Count;                    //#H
         }
 
-        public void RemoveReview(DbContext context, Review review) //#G
+        public void RemoveReview(DbContext context, //#I
+            Review review)                          //#I
         {
-            context.Entry(this) //#D
-                .Collection(c => c.Reviews).Load(); //#D
+            context.Entry(this) //#J
+                .Collection(c => c.Reviews).Load(); //#J
 
-            _reviews.Remove(review);
+            _reviews.Remove(review); //#K
             AverageVotes = _reviews.Any()
-                ? _reviews.Average(x => x.NumStars)
-                : (double?)null;
-            ReviewsCount = _reviews.Count;
+                ? _reviews.Average(x => x.NumStars) //#L
+                : (double?)null; //#M
+            ReviewsCount = _reviews.Count; //#N
         }
-
+        /**Reviews*******************************************
+        #A I add a backing field, which is a list. I then tell EF Core to use this for all reads and writes
+        #B I add a [ConcurrencyCheck] attribute to this property - see section on handling concurrent updates of reviews
+        #C This holds a pre-calculated average of the reviews and the number of reviews for this book. Note that it is read-only so that it cannot be changed outside this class
+        #D This returns a copy of the reviews that were loaded. By taking a copy it means no one can alter the list by casting the IEnumerable<T> to List<T>
+        #E I add a method to allow a new Review to be added to the _reviews collection
+        #F I make sure the backing field, _reviews, has the reviews for this book loaded
+        #G I create a new review using the data give and then add the new review to the backing field _reviews. This will update the database on the call to SaveChanges
+        #H I then recalculate the average votes and number of reviews for this book
+        #I I add a method to remove a review from the _reviews collection
+        #J I make sure the backing field, _reviews, has the reviews for this book loaded
+        #K I remove the review from the list. This will update the database on the call to SaveChanges
+        #L If there are any reviews I recalculate the average votes for the book
+        #M If there are no reviews I set the value to null
+        #N I recalculate the number of reviews in this book
+        * *********************************************************/
 
     }
 
