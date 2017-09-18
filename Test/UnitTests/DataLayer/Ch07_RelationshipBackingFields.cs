@@ -59,6 +59,29 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void TestCreateBookAddRemoveOneReviewOk()
+        {
+            //SETUP
+            using (var context = new Chapter07DbContext(SqliteInMemory.CreateOptions<Chapter07DbContext>()))
+            {
+                context.Database.EnsureCreated();
+                var entity = new Ch07Book
+                {
+                    Title = "Quantem Networking"
+                };
+
+                //ATTEMPT
+                var review = new Review {NumStars = 5, VoterName = "Unit Test"};
+                entity.AddReview(review);
+                entity.RemoveReview(review);
+
+                //VERIFY
+                entity.Reviews.Count().ShouldEqual(0);
+                entity.CachedVotes.ShouldEqual(null);
+            }
+        }
+
+        [Fact]
         public void TestCreateBookTwoReviewOk()
         {
             //SETUP
