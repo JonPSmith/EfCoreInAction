@@ -34,7 +34,7 @@ namespace Test.UnitTests.ServiceLayer
 
                 //ATTEMPT
                 service.AddReviewToBook(bookId, 5, null, null);
-                context.BookSaveChanges();
+                context.SaveChangesWithReviewCheck();
 
                 //VERIFY
                 var book = context.Books.Include(x => x.Reviews).Single(x => x.BookId == bookId);
@@ -57,7 +57,7 @@ namespace Test.UnitTests.ServiceLayer
 
                 //ATTEMPT
                 service.AddReviewToBook(bookId, 1, null, null);
-                context.BookSaveChanges();
+                context.SaveChangesWithReviewCheck();
 
                 //VERIFY
                 var book = context.Books.Include(x => x.Reviews).Single(x => x.BookId == bookId);
