@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using DataLayer.EfCode;
 using EfCoreInAction.Helpers;
@@ -30,6 +31,9 @@ namespace EfCoreInAction.Controllers
             var bookList = listService //#B       
                 .SortFilterPage(options)
                 .ToList(); //#C   
+
+            //options.SetupRestOfDto(_context.BookListCount(options));
+            //var bookList = _context.BookListQuery(options).ToList();
 
             //Because of EF Core 2.0.0 bug https://github.com/aspnet/EntityFrameworkCore/issues/9570 I have dropped this back to sync
             //var bookList = await listService //#B       
