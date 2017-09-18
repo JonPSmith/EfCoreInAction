@@ -29,7 +29,7 @@ namespace test.EfHelpers
                 "Book Publisher",
                 123,
                 null,
-                new[] { new Author { Name = "Test Author" } }
+                new[] { new Author ("Test Author") }
             );
 
             return book;
@@ -38,7 +38,7 @@ namespace test.EfHelpers
         public static List<Book> CreateDummyBooks(int numBooks = 10, bool stepByYears = false, bool setBookId = true)
         {
             var result = new List<Book>();
-            var commonAuthor = new Author { Name = "CommonAuthor" };
+            var commonAuthor = new Author("CommonAuthor");
             for (int i = 0; i < numBooks; i++)
             {
                 var book = new Book
@@ -49,7 +49,7 @@ namespace test.EfHelpers
                     "Publisher",
                     (short)(i + 1),
                     $"Image{i:D4}",
-                    new[] { new Author { Name = $"Author{i:D4}" }, commonAuthor}
+                    new[] { new Author( $"Author{i:D4}"), commonAuthor}
                 );
                 var reviews = new List<Review>();
                 for (int j = 0; j < i; j++)
@@ -71,10 +71,7 @@ namespace test.EfHelpers
 
         public static List<Book> CreateFourBooks()
         {
-            var martinFowler = new Author
-            {
-                Name = "Martin Fowler"
-            };
+            var martinFowler = new Author("Martin Fowler");
 
             var books = new List<Book>();
 
@@ -110,7 +107,7 @@ namespace test.EfHelpers
                  null,
                 56,
                 null,
-                new[] { new Author { Name = "Eric Evans" } }
+                new[] { new Author("Eric Evans") }
             );
             books.Add(book3);
 
@@ -122,7 +119,7 @@ namespace test.EfHelpers
                 "Future Published",
                 220,
                 null,
-                new[] { new Author { Name = "Future Person" } }
+                new[] { new Author("Future Person") }
             );
             book4.AddReviewWhenYouKnowReviewCollectionIsLoaded(5,
                 "I look forward to reading this book, if I am still alive!", "Jon P Smith");

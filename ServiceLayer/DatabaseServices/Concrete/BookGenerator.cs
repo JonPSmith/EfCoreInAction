@@ -91,7 +91,7 @@ namespace ServiceLayer.DatabaseServices.Concrete
             {
                 if (!_authorDict.ContainsKey(authorName))
                 {
-                    _authorDict.Add(authorName, new Author {Name = authorName});
+                    _authorDict.Add(authorName, new Author(authorName));
                 }
                 yield return _authorDict[authorName];
             }

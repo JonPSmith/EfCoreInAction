@@ -27,7 +27,7 @@ namespace test.Mocks
             if (dto.Mode == MockBizActionTransact2Modes.ThrowExceptionPart2)
                 throw new InvalidOperationException("I have thrown an exception.");
 
-            _context.Authors.Add(new Author {Name = "Part2"});
+            _context.Authors.Add(new Author("Part2"));
 
             return dto;
         }

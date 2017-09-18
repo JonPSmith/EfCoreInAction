@@ -10,16 +10,24 @@ namespace DataLayer.EfClasses
     {
         public const int NameLength = 100;
 
-        public int AuthorId { get; internal set; }
+        public int AuthorId { get; private set; }
         [Required]
         [MaxLength(NameLength)]
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         //------------------------------
         //Relationships
 
         public ICollection<BookAuthor> 
             BooksLink { get; set; }
+
+        //Needed by EF Core
+        internal Author () { }
+
+        public Author(string name)
+        {
+            Name = name;
+        }
     }
 
 }

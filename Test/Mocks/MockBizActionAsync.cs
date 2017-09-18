@@ -25,7 +25,7 @@ namespace test.Mocks
             if (intIn < 0)
                 AddError("The intInt is less than zero");
 
-            _context.Authors.Add(new Author { Name = "MockBizAction" });
+            _context.Authors.Add(new Author("MockBizAction"));
 
             return Task.FromResult(intIn.ToString());
         }

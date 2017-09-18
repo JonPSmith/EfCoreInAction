@@ -19,7 +19,7 @@ namespace ServiceLayer.DatabaseServices.Concrete
                 "Future Published",
                 220,
                 null,
-                new [] { new Author { Name = "Future Person" } }
+                new [] { new Author("Future Person") }
             );
 
             book4.AddReviewWhenYouKnowReviewCollectionIsLoaded( 5,

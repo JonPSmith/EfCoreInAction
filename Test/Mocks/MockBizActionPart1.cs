@@ -24,7 +24,7 @@ namespace test.Mocks
             if (dto.Mode == MockBizActionTransact2Modes.BizErrorPart1)
                 AddError("Failed in Part1");
 
-            _context.Authors.Add(new Author {Name = "Part1"});
+            _context.Authors.Add(new Author("Part1"));
 
             return dto;
         }
