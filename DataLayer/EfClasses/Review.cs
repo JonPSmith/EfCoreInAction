@@ -18,11 +18,12 @@ namespace DataLayer.EfClasses
         //-----------------------------------------
         //Relationships
 
-        public int BookId { get; set; }
+        public int BookId { get; private set; }
 
         internal Review() { }
 
-        internal Review(int numStars, string comment, string voterName)
+        internal Review(int numStars, 
+            string comment, string voterName)
         {
             NumStars = numStars;
             Comment = comment;
