@@ -122,7 +122,7 @@ namespace DataLayer.EfClasses
         #C I set the OrgPrice with the recommended retail price of the book
         #D I also set the ActualPrice to the OrgPrice because a new book starts off without any promotion
         #E This method adds a price promotion. It returns null if successful, or an error message if there was an error
-        #F A promotion is deemed to be in place of the PromotionalText property isn't null, so we need to check this
+        #F I used the fact that the PromotionalText property is not null to tell me if there is a promotion on this book. Therefore it mustn’t be null when adding a promotion
         #G I replace the current ActualPrice with the new, promotional price
         #H I also set the PromotionalText property, which then tells the rest of the system that a propmotion is in place
         #I I return null to say that it was successful

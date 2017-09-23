@@ -83,12 +83,12 @@ namespace DataLayer.EfCode
     #J I also need to load what the current values for the book entity in the database. I need that later to stop EF Core seeing a concurrency error again
     #K If there is no book in the database then its deleted. I this case I leave the book deleted and I don't save the updated book
     #L I get the EntityEntry class of the databaseEntity, as I need to access its currentValues
-    #M I get references to the PropertyEntry for the ReviewsCount and AverageVotes in the Book entity as I cannot set these values via the setter, as it private
-    #N I recalculate the reviews count using the actual number of reviews, both new ones and the ones in the database
+    #M I get references to the PropertyEntry for the ReviewsCount and AverageVotes in the Book entity as I cannot set these values directly because they have a private setter      
+    #N I recalculate the reviews count using the actual number of reviews, using both any new Reviews added and the Reviews freshly read from the database
     #O I update the ReviewsCount property to this recalculated value
-    #P I now set the OriginalValue of the ReviewsCount property to the last read value. This stops EF Core decalring a DbUpdateConcurrencyException
-    #Q I set the AverageVotes value to the recalulated the average votes value the actual number of reviews, both new ones and the ones in the database
-    #R I now set the OriginalValue of the AverageVotes property to the last read value. This stops EF Core decalring a DbUpdateConcurrencyException
+    #P I now set the OriginalValue of the ReviewsCount property to the last read value. This stops EF Core throwing a DbUpdateConcurrencyException again
+    #Q I set the AverageVotes value to the recalulated the average votes value using both any new Reviews added and the Reviews freshly read from the database
+    #R I now set the OriginalValue of the AverageVotes property to the last read value. This stops EF Core throwing a DbUpdateConcurrencyException again
     #S I return true to say that SaveChanges needs to be called again to update the Book entity with the corrected data
      * *******************************************************************/
 }
