@@ -25,12 +25,9 @@ namespace ServiceLayer.BookServices.QueryObjects
                         p.Promotion == null                   //#D
                           ? null                              //#D
                           : p.Promotion.PromotionalText,      //#D
-                AuthorsOrdered = UdfDefinitions.AuthorsStringUdf(p.BookId),
-                //There is a bug in EF Core 2.0.0 on this client vs. server query - see https://github.com/aspnet/EntityFrameworkCore/issues/9519
-                //AuthorsOrdered = string.Join(", ",        //#E
-                //        p.AuthorsLink                         //#E
-                //        .OrderBy(q => q.Order)                //#E
-                //        .Select(q => q.Author.Name)),         //#E
+                AuthorNames = p.AuthorsLink
+                    .OrderBy(q => q.Order)
+                    .Select(q => q.Author.Name).ToList(),
                 ReviewsCount = p.Reviews.Count,           //#F
                 ReviewsAverageVotes =                  //#G
                     p.Reviews.Select(y =>              //#G
