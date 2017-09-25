@@ -1,39 +1,65 @@
 ﻿// Copyright (c) 2016 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using DataLayer.EfClasses;
 using DataLayer.EfCode.Configurations;
 using Microsoft.EntityFrameworkCore;
 using DataLayer.EfCode.Configurations;
+using DataLayer.NoSql;
 using DataLayer.SqlCode;
+using Microsoft.Extensions.Primitives;
 
 namespace DataLayer.EfCode
 {
     public class EfCoreContext : DbContext
     {
-        public DbSet<Book> Books { get; set; }              //#A
-        public DbSet<Author> Authors { get; set; }          //#A
-        public DbSet<PriceOffer> PriceOffers { get; set; }  //#A
-        public DbSet<Order> Orders { get; set; }            //#A
+        public DbSet<Book> Books { get; set; }            
+        public DbSet<Author> Authors { get; set; }        
+        public DbSet<PriceOffer> PriceOffers { get; set; }
+        public DbSet<Order> Orders { get; set; }          
 
         public EfCoreContext(                             
             DbContextOptions<EfCoreContext> options)      
             : base(options) {}
 
+        public override int SaveChanges()
+        {
+            //I need to remember the changes, but not process them yet, as new entries BookId's are not set until after SaveChanges
+            var copyOfChanged = ChangeTracker.Entries(); 
+            var result = base.SaveChanges();
+            var updater = new NoSqlUpdater(this);
+            var bookChanged = BookChanges.FindChangedBooks(copyOfChanged);
+            updater.UpdateNoSql(bookChanged);
+            return result;
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            //I need to remember the changes, but not process them yet, as new entries BookId's are not set until after SaveChanges
+            var copyOfChanged = ChangeTracker.Entries();
+            var result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            var updater = new NoSqlUpdater(this);
+            var bookChanged = BookChanges.FindChangedBooks(copyOfChanged);
+            updater.UpdateNoSql(bookChanged);
+            return result;
+        }
+
+
+
         protected override void
             OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new BookConfig());       //#B
-            modelBuilder.ApplyConfiguration(new BookAuthorConfig()); //#B
-            modelBuilder.ApplyConfiguration(new PriceOfferConfig()); //#B
-            modelBuilder.ApplyConfiguration(new LineItemConfig());   //#B
+            modelBuilder.ApplyConfiguration(new BookConfig());      
+            modelBuilder.ApplyConfiguration(new BookAuthorConfig());
+            modelBuilder.ApplyConfiguration(new PriceOfferConfig());
+            modelBuilder.ApplyConfiguration(new LineItemConfig());  
 
             modelBuilder.RegisterUdfDefintions();
         }
-        /*****************************************************************
-        #A We only define three of the five tables in the database: Books, Authors and PriceOffers. The other two tables, Review and BookAuthor are found via navigational links from the other tables
-        #B I have moved the Fluent API configuration of various entity classes to separate configration classes that implement the IEntityTypeConfiguration<T> interface
-         * ****************************************************************/
     }
 }
 

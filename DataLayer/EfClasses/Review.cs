@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataLayer.EfClasses
 {
-    public class Review
+    public class Review : IBookId
     {
         public const int NameLength = 100;
 
