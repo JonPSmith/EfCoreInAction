@@ -16,6 +16,38 @@ namespace test.UnitTests.BizLogic
     public class Ch04_PlaceOrderAction
     {
         [Fact]
+        public void ExampleOfMockingOk()
+        {
+            //SETUP
+            var lineItems = new List<OrderLineItem>         //#A
+            {                                               //#A
+                new OrderLineItem {BookId = 1, NumBooks = 4}//#A
+            };                                              //#A
+            var userId = Guid.NewGuid();                    //#A
+            var input = new PlaceOrderInDto(true, userId,   //#A
+                lineItems.ToImmutableList());               //#A
+
+            var mockDbA = new MockPlaceOrderDbAccess(); //#B
+            var service = new PlaceOrderAction(mockDbA); //#C
+
+            //ATTEMPT
+            var order = service.Action(input); //#D
+
+            //VERIFY
+            service.Errors.Any().ShouldEqual(false); //#E
+            mockDbA.AddedOrder.CustomerName //#F
+                .ShouldEqual(userId);       //#F
+        }
+        /****************************************************************
+        #A I have to create the input to the PlaceOrderAction method
+        #B I create an instance of my mock database access code. This has various controls, but in this case I use the default settings
+        #C Now I create my PlaceOrderAction instance, providing it with my mock of the database access code
+        #D Now I run the PlaceOrderAction's method called Action, which takes in the input data and output an order
+        #E I need to check the order placement completed successfully
+        #F My mock database access code has captured the order that the PlaceOrderAction's method 'wrote' to the database so that I can check it was formed properly
+         * ************************************************************/
+
+        [Fact]
         public void PlaceOrderOk()
         {
             //SETUP
