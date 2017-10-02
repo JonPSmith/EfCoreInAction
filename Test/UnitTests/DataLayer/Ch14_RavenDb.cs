@@ -139,6 +139,25 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void TestQueryWithIndexSortAndPage()
+        {
+            //SETUP
+            using (var session = Store.OpenSession())
+            {
+                //ATTEMPT
+                var data = session.Query<BookNoSqlDto>().OrderByDescending(x => x.Id)
+                    .Skip(5)
+                    .Take(2)
+                    .ToList();
+
+                //VERIFY
+                data.Count.ShouldEqual(2);
+                var i = 10 - 5;
+                data.ForEach(x => x.Id.ShouldEqual(BookNoSqlDto.ConvertIdToRavenId(i--)));
+            }
+        }
+
+        [Fact]
         public void TestQueryWithPriceSort()
         {
             //SETUP
