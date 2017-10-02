@@ -52,9 +52,8 @@ namespace test.Helpers
 
         public static BookNoSqlDto MapBookToDto(this Book book)
         {
-            return new BookNoSqlDto
+            return new BookNoSqlDto(book.BookId)
             {
-                Id = BookNoSqlDto.ConvertIdToRavenId(book.BookId),
                 Title = book.Title,
                 Price = book.Price,
                 PublishedOn = book.PublishedOn,

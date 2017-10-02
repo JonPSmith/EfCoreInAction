@@ -12,7 +12,26 @@ namespace DataLayer.NoSql
 {
     internal class BookNoSqlDto
     {
-        public string Id { get; set; }           
+        /// <summary>
+        /// This ensures that the Id is set to the correct format
+        /// </summary>
+        /// <param name="bookId"></param>
+        public BookNoSqlDto(int bookId)
+        {
+            Id = ConvertIdToRavenId(bookId);
+        }
+
+        public BookNoSqlDto()
+        {
+        }
+
+        //For RavenDb I make the Id into a string.
+        //Note: to allow orderby it needs to be in format D10, i.e. has leading zeros
+        public string Id { get; private set; }       
+        
+        //This returns the RavenId as an int
+        public int RavenIdAsInt => int.Parse(Id);
+
         public string Title { get; set; }
         public DateTime PublishedOn { get; set; } 
         public decimal Price { get; set; }        
