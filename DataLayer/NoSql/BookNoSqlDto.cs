@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using DataLayer.EfClasses;
-using DataLayer.SqlCode;
 
 [assembly: InternalsVisibleTo("Test")]
 namespace DataLayer.NoSql
