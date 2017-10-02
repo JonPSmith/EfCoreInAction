@@ -12,7 +12,7 @@ namespace DataLayer.NoSql
 {
     internal class BookNoSqlDto
     {
-        public int BookId { get; set; }           
+        public string Id { get; set; }           
         public string Title { get; set; }
         public DateTime PublishedOn { get; set; } 
         public decimal Price { get; set; }        
@@ -23,11 +23,11 @@ namespace DataLayer.NoSql
         public int ReviewsCount { get; set; }      
         public double? ReviewsAverageVotes { get; set; }
 
-        public static BookNoSqlDto SelectBook(IQueryable<Book> books, int bookId)
+        public static BookNoSqlDto SelectBook(IQueryable<Book> books, string id)
         {
             return books.Select(p => new BookNoSqlDto
             {
-                BookId = p.BookId,                      
+                Id = p.BookId.ToString(),                      
                 Title = p.Title,                        
                 Price = p.Price,                        
                 PublishedOn = p.PublishedOn,            
@@ -44,7 +44,7 @@ namespace DataLayer.NoSql
                 ReviewsCount = p.Reviews.Count,        
                 ReviewsAverageVotes =  p.Reviews.Select(y => (double?)y.NumStars).Average() 
 
-            }).Single(x => x.BookId == bookId);
+            }).Single(x => x.Id == id);
         }
     }
 }

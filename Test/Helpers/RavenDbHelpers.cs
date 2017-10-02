@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.NoSql;
-using Raven.Client;
-using Raven.Json.Linq;
+using Raven.Client.Documents;
+using Raven.Client.Documents.Session;
 using test.EfHelpers;
 
 namespace test.Helpers
@@ -54,7 +54,7 @@ namespace test.Helpers
         {
             return new BookNoSqlDto
             {
-                BookId = book.BookId,
+                Id = book.BookId.ToString("D10"),
                 Title = book.Title,
                 Price = book.Price,
                 PublishedOn = book.PublishedOn,

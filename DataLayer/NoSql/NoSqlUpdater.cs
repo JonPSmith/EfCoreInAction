@@ -29,11 +29,11 @@ namespace DataLayer.NoSql
                         //Send delete of BookId to NoSql
                         break;
                     case EntityState.Modified:
-                        var modifiedBook = BookNoSqlDto.SelectBook(_context.Books, bookToUpdate.BookId);
+                        var modifiedBook = BookNoSqlDto.SelectBook(_context.Books, bookToUpdate.BookId.ToString());
                         //Send updated information to NoSQL
                         break;
                     case EntityState.Added:
-                        var newBook = BookNoSqlDto.SelectBook(_context.Books, bookToUpdate.BookId);
+                        var newBook = BookNoSqlDto.SelectBook(_context.Books, bookToUpdate.BookId.ToString());
                         //Send new book information to NoSQL
                         break;
                     case EntityState.Unchanged:
