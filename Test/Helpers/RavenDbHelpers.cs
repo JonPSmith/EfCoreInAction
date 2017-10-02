@@ -7,7 +7,7 @@ using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.NoSql;
 using Raven.Client;
-using Raven.Client.Document;
+using Raven.Json.Linq;
 using test.EfHelpers;
 
 namespace test.Helpers
@@ -15,16 +15,6 @@ namespace test.Helpers
     internal static class RavenDbHelpers
     {
         public const string RavenDbTestServerUrl = "http://4.live-test.ravendb.net";
-
-        public static void EnsureCreated(this string databaseName)
-        {
-            var storeNoDefault = new DocumentStore
-            {
-                Url = RavenDbTestServerUrl
-            }.Initialize();
-            storeNoDefault.Initialize();
-            storeNoDefault.DatabaseCommands.GlobalAdmin.EnsureDatabaseExists(databaseName);
-        }
 
         public static int NumEntriesInDb(this IDocumentStore store)
         {
@@ -49,10 +39,13 @@ namespace test.Helpers
 
         public static void SeedDummyBooks(this IDocumentStore store, int numBooks = 10, bool stepByYears = false)
         {
-            using (var bulk = store.BulkInsert())
+            using (var session = store.OpenSession())
             {
-                var dtos = CreateDummyBooks(numBooks, stepByYears);
-                bulk.Store(dtos);
+                foreach (var dto in CreateDummyBooks(numBooks, stepByYears))
+                {
+                    session.Store(dto);
+                    session.SaveChanges();
+                }
             }
         }
 

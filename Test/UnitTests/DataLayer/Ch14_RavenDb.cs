@@ -25,22 +25,12 @@ namespace test.UnitTests.DataLayer
                 Url = RavenDbHelpers.RavenDbTestServerUrl,
                 DefaultDatabase = DatabaseName
             }.Initialize();
-            //if (_store.NumEntriesInDb() <= 0)
-            //{
-            //    _store.SeedDummyBooks();
-            //}
+            if (_store.NumEntriesInDb() <= 0)
+            {
+                _store.SeedDummyBooks();
+            }
         }
 
-        [Fact]
-        public void TestEnsureCreated()
-        {
-            //SETUP
-
-            //ATTEMPT
-            DatabaseName.EnsureCreated();
-
-            //VERIFY
-        }
 
         [Fact]
         public void TestAccessDatabase()
