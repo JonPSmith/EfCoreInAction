@@ -29,7 +29,7 @@ namespace DataLayer.EfCode
         public override int SaveChanges()
         {
             //I need to remember the changes, but not process them yet, as new entries BookId's are not set until after SaveChanges
-            var copyOfChanged = ChangeTracker.Entries(); 
+            var copyOfChanged = ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged); 
             var result = base.SaveChanges();
             var updater = new NoSqlUpdater(this);
             var bookChanged = BookChanges.FindChangedBooks(copyOfChanged);
@@ -40,7 +40,7 @@ namespace DataLayer.EfCode
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             //I need to remember the changes, but not process them yet, as new entries BookId's are not set until after SaveChanges
-            var copyOfChanged = ChangeTracker.Entries();
+            var copyOfChanged = ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged);
             var result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             var updater = new NoSqlUpdater(this);
             var bookChanged = BookChanges.FindChangedBooks(copyOfChanged);
