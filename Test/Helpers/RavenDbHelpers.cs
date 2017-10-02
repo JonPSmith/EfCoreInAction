@@ -54,7 +54,7 @@ namespace test.Helpers
         {
             return new BookNoSqlDto
             {
-                Id = book.BookId.ToString("D10"),
+                Id = BookNoSqlDto.ConvertIdToRavenId(book.BookId),
                 Title = book.Title,
                 Price = book.Price,
                 PublishedOn = book.PublishedOn,

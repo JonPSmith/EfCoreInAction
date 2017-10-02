@@ -23,11 +23,16 @@ namespace DataLayer.NoSql
         public int ReviewsCount { get; set; }      
         public double? ReviewsAverageVotes { get; set; }
 
-        public static BookNoSqlDto SelectBook(IQueryable<Book> books, string id)
+        public static string ConvertIdToRavenId(int bookId)
+        {
+            return bookId.ToString("D10");
+        }
+
+        public static BookNoSqlDto SelectBook(IQueryable<Book> books, int bookId)
         {
             return books.Select(p => new BookNoSqlDto
             {
-                Id = p.BookId.ToString(),                      
+                Id = ConvertIdToRavenId(bookId),                      
                 Title = p.Title,                        
                 Price = p.Price,                        
                 PublishedOn = p.PublishedOn,            
@@ -44,7 +49,7 @@ namespace DataLayer.NoSql
                 ReviewsCount = p.Reviews.Count,        
                 ReviewsAverageVotes =  p.Reviews.Select(y => (double?)y.NumStars).Average() 
 
-            }).Single(x => x.Id == id);
+            }).Single(x => x.Id == ConvertIdToRavenId(bookId));
         }
     }
 }

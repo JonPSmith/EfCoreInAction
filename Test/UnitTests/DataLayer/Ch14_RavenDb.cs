@@ -3,10 +3,8 @@
 
 using System.Linq;
 using DataLayer.NoSql;
-using Raven.Client;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Indexes;
-using Raven.Client.Documents.Session;
 using test.Helpers;
 using Xunit;
 using Xunit.Abstractions;
@@ -79,12 +77,13 @@ namespace test.UnitTests.DataLayer
             using (var session = _store.OpenSession())
             {
                 //ATTEMPT
-                var data = session.Advanced.DocumentQuery<BookNoSqlDto, BookById>()
-                    .WhereEquals(x => x.Id, 1.ToString("D10"))
+                var data = session.Query<BookNoSqlDto>()
+                    .Where(x => x.Id == BookNoSqlDto.ConvertIdToRavenId(1))
                     .ToList();
 
                 //VERIFY
                 data.Count.ShouldEqual(1);
+                data.First().Title.ShouldEqual("Book0000 Title");
             }
         }
 
@@ -100,7 +99,7 @@ namespace test.UnitTests.DataLayer
 
                 //VERIFY
                 var i = 10;
-                data.ForEach(x => x.Id.ShouldEqual((i--).ToString("D10")));
+                data.ForEach(x => x.Id.ShouldEqual(BookNoSqlDto.ConvertIdToRavenId(i--)));
             }
         }
     }
