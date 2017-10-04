@@ -107,7 +107,7 @@ namespace Test.UnitTests.ServiceLayer
             //VERIFY
             books.Count().ShouldEqual(numBooks);
             books.Select(x => x.Title).Distinct().Count().ShouldEqual(20);
-            books.Count(x => x.Title.Contains("(Copy ")).ShouldEqual(10);
+            books.Count(x => x.Title.Contains("(copy ")).ShouldEqual(10);
         }
 
         //--------------------------------------------------------------------
@@ -127,7 +127,7 @@ namespace Test.UnitTests.ServiceLayer
 
                 //ATTEMPT
                 var gen = new BookGenerator(filePath);
-                gen.WriteBooks(numBooks, context, x => {
+                gen.WriteBooks(numBooks, options, x => {
                     progress.Add(x);
                     return false;
                 });
@@ -135,6 +135,36 @@ namespace Test.UnitTests.ServiceLayer
                 //VERIFY
                 context.Books.Count().ShouldEqual(20);
                 progress.ShouldEqual(new List<int>{0, 10, 20});
+            }
+        }
+
+        [Fact]
+        public void TestWriteBooks20SecondTime()
+        {
+            //SETUP
+            const int numBooks = 20;
+            var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                var progress = new List<int>();
+
+                //ATTEMPT
+                var gen = new BookGenerator(filePath);
+                gen.WriteBooks(numBooks, options, x => {
+                    progress.Add(x);
+                    return false;
+                });
+                gen.WriteBooks(numBooks, options, x => {
+                    progress.Add(x);
+                    return false;
+                });
+
+                //VERIFY
+                context.Books.Count().ShouldEqual(40);
+                context.Authors.Count().ShouldEqual(17);
             }
         }
 
@@ -154,7 +184,7 @@ namespace Test.UnitTests.ServiceLayer
 
                 //ATTEMPT
                 var gen = new BookGenerator(filePath);
-                gen.WriteBooks(numBooks, context,
+                gen.WriteBooks(numBooks, options,
                     x => {
                         progress.Add(x);
                         return cancelCount++ > 0;

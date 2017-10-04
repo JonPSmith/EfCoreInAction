@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace ServiceLayer.DatabaseServices.Concrete
@@ -35,9 +36,10 @@ namespace ServiceLayer.DatabaseServices.Concrete
             public string Authors { get; set; }
         }
 
-        public void WriteBooks(int numBooks, EfCoreContext context, Func<int, bool> progessCancel)
+        public void WriteBooks(int numBooks, DbContextOptions<EfCoreContext> options, Func<int, bool> progessCancel)
         {
-            _authorDict = context.Authors.ToDictionary(k => k.Name);
+            //I read in any existing authors in case we are adding to a database
+
             var numWritten = 0;
             var batch = new List<Book>();
             foreach (var book in GenerateBooks(numBooks))
@@ -50,8 +52,8 @@ namespace ServiceLayer.DatabaseServices.Concrete
                 {
                     return;
                 }
-                context.AddRange(batch);
-                context.SaveChanges();
+
+                CreateContextAndWriteBatch(options, batch);
                 numWritten += batch.Count;
                 batch.Clear();
             }
@@ -59,8 +61,7 @@ namespace ServiceLayer.DatabaseServices.Concrete
             //write any final batch out
             if (batch.Count > 0)
             {
-                context.AddRange(batch);
-                context.SaveChanges();
+                CreateContextAndWriteBatch(options, batch);
                 numWritten += batch.Count;
             }
             progessCancel(numWritten);
@@ -98,6 +99,26 @@ namespace ServiceLayer.DatabaseServices.Concrete
 
                 AddAuthorsToBook(book, _loadedBookData[i % _loadedBookData.Count].Authors);
                 yield return book;
+            }
+        }
+
+        //------------------------------------------------------------------
+        //private methods
+
+        private void CreateContextAndWriteBatch(DbContextOptions<EfCoreContext> options, List<Book> batch)
+        {
+            using (var context = new EfCoreContext(options))
+            {
+                //need to set the key of the authors entities. They aren't tarcked but the add will sort out whether to add/Unchanged based on primary key
+                foreach (var dbAuthor in context.Authors.ToList())
+                {
+                    if (_authorDict.ContainsKey(dbAuthor.Name))
+                    {
+                        _authorDict[dbAuthor.Name].AuthorId = dbAuthor.AuthorId;
+                    }
+                }            
+                context.AddRange(batch);
+                context.SaveChanges();
             }
         }
 
