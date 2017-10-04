@@ -104,9 +104,8 @@ namespace ServiceLayer.DatabaseServices.Concrete
                     "The database does not exist. If you are using Migrations then run PMC command update-database to create it");
             
             //add generated books
-            var gen = new BookGenerator();
-            gen.WriteBooks(Path.Combine(wwwrootDirectory, SeedFileSubDirectory, TemplateFileName),
-                numBooksToAdd, context, progessCancel);
+            var gen = new BookGenerator(Path.Combine(wwwrootDirectory, SeedFileSubDirectory, TemplateFileName));
+            gen.WriteBooks(numBooksToAdd, context, progessCancel);
         }
     }
 }
