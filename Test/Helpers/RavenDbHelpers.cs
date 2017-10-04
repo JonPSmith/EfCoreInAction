@@ -36,7 +36,7 @@ namespace test.Helpers
             var booksQueryable = EfTestData.CreateDummyBooks(numBooks, stepByYears).AsQueryable();
             foreach (var book in booksQueryable)
             {
-                yield return BookNoSqlDto.SelectBook(booksQueryable, book.BookId);
+                yield return BookNoSqlDto.ProjectBook(booksQueryable, book.BookId);
             }
 
         }

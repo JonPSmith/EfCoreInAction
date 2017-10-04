@@ -52,7 +52,7 @@ namespace DataLayer.NoSql
             return bookId.ToString("D10");
         }
 
-        public static BookNoSqlDto SelectBook(IQueryable<Book> books, int bookId)
+        public static BookNoSqlDto ProjectBook(IQueryable<Book> books, int bookId)
         {
             var dto = books.Select(p => new BookNoSqlDto
             {

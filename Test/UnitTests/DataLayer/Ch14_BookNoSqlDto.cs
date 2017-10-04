@@ -36,7 +36,7 @@ namespace test.UnitTests.DataLayer
                 var logIt = new LogDbContext(context);
 
                 //ATTEMPT
-                var dto = BookNoSqlDto.SelectBook(context.Books, 1);
+                var dto = BookNoSqlDto.ProjectBook(context.Books, 1);
 
                 //VERIFY
                 dto.AuthorsOrdered.ShouldEqual("Author0000, CommonAuthor");
