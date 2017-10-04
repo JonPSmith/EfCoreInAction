@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DataLayer.EfClasses;
 using DataLayer.NoSql;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
@@ -34,7 +33,12 @@ namespace test.Helpers
 
         public static IEnumerable<BookNoSqlDto> CreateDummyBooks(int numBooks = 10, bool stepByYears = false)
         {
-            return EfTestData.CreateDummyBooks(numBooks, stepByYears).Select(x => x.MapBookToDto());
+            var booksQueryable = EfTestData.CreateDummyBooks(numBooks, stepByYears).AsQueryable();
+            foreach (var book in booksQueryable)
+            {
+                yield return BookNoSqlDto.SelectBook(booksQueryable, book.BookId);
+            }
+
         }
 
         public static void SeedDummyBooks(this IDocumentStore store, int numBooks = 10, bool stepByYears = false)
@@ -47,25 +51,6 @@ namespace test.Helpers
                     session.SaveChanges();
                 }
             }
-        }
-
-
-        public static BookNoSqlDto MapBookToDto(this Book book)
-        {
-            return new BookNoSqlDto(book.BookId)
-            {
-                Title = book.Title,
-                Price = book.Price,
-                PublishedOn = book.PublishedOn,
-                ActualPrice = book.Promotion?.NewPrice ?? book.Price,
-                PromotionPromotionalText =
-                    book.Promotion?.PromotionalText,
-                AuthorNames = book.AuthorsLink
-                    .OrderBy(q => q.Order)
-                    .Select(q => q.Author.Name).ToList(),
-                ReviewsCount = book.Reviews.Count,
-                ReviewsAverageVotes = book.Reviews.Select(y => (double?)y.NumStars).Average()
-            };
         }
 
     }

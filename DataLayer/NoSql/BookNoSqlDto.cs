@@ -12,12 +12,18 @@ namespace DataLayer.NoSql
 {
     internal class BookNoSqlDto
     {
+        //Need this to make the EF Core LINQ code efficient at finding the item
+        private int _bookId;
+
+        private List<string> _authors;
+
         /// <summary>
         /// This ensures that the Id is set to the correct format
         /// </summary>
         /// <param name="bookId"></param>
         public BookNoSqlDto(int bookId)
         {
+            _bookId = bookId;
             Id = ConvertIdToRavenId(bookId);
         }
 
@@ -27,7 +33,7 @@ namespace DataLayer.NoSql
 
         //For RavenDb I make the Id into a string.
         //Note: to allow orderby it needs to be in format D10, i.e. has leading zeros
-        public string Id { get; private set; }       
+        public string Id { get; set; }       
         
         //This returns the RavenId as an int
         public int RavenIdAsInt => int.Parse(Id);
@@ -37,8 +43,7 @@ namespace DataLayer.NoSql
         public decimal Price { get; set; }        
         public decimal ActualPrice { get; set; }             
         public string PromotionPromotionalText { get; set; }
-        public string AuthorsOrdered => string.Join(", ", AuthorNames);
-        internal ICollection<string> AuthorNames { get; set; }
+        public string AuthorsOrdered { get; set; }
         public int ReviewsCount { get; set; }      
         public double? ReviewsAverageVotes { get; set; }
 
@@ -49,8 +54,12 @@ namespace DataLayer.NoSql
 
         public static BookNoSqlDto SelectBook(IQueryable<Book> books, int bookId)
         {
-            return books.Select(p => new BookNoSqlDto
+            var dto = books.Select(p => new BookNoSqlDto
             {
+                _bookId = p.BookId,
+                _authors = p.AuthorsLink
+                    .OrderBy(q => q.Order)
+                    .Select(q => q.Author.Name).ToList(),
                 Id = ConvertIdToRavenId(bookId),                      
                 Title = p.Title,                        
                 Price = p.Price,                        
@@ -62,13 +71,14 @@ namespace DataLayer.NoSql
                     p.Promotion == null                 
                         ? null                          
                         : p.Promotion.PromotionalText,
-                AuthorNames = p.AuthorsLink
-                        .OrderBy(q => q.Order)
-                        .Select(q => q.Author.Name).ToList(),
                 ReviewsCount = p.Reviews.Count,        
                 ReviewsAverageVotes =  p.Reviews.Select(y => (double?)y.NumStars).Average() 
 
-            }).Single(x => x.Id == ConvertIdToRavenId(bookId));
+            }).Single(x => x._bookId == bookId);
+
+            dto.AuthorsOrdered = string.Join(", ", dto._authors);
+
+            return dto;
         }
     }
 }

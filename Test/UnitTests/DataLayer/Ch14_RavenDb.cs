@@ -77,7 +77,18 @@ namespace test.UnitTests.DataLayer
                 Indexes.Add(x => x.Id, FieldIndexing.Default);
             }
         }
+        [Fact]
+        public void CheckRavenDbHlpersCreateDummyBooks()
+        {
+            //SETUP
 
+            //ATTEMPT
+            var books = RavenDbHelpers.CreateDummyBooks().ToList();
+
+            //VERIFY
+            books.Count().ShouldEqual(10);
+            books.First().AuthorsOrdered.ShouldEqual("Author0000, CommonAuthor");
+        }
 
         [Fact]
         public void TestAccessDatabase()
