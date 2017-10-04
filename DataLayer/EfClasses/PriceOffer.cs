@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataLayer.EfClasses
 {
-    public class PriceOffer
+    public class PriceOffer : IBookId
     {
         public const int PromotionalTextLength = 200;
 

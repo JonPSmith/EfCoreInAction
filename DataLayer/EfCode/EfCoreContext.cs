@@ -1,10 +1,14 @@
 ﻿// Copyright (c) 2016 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using DataLayer.EfClasses;
 using DataLayer.EfCode.Configurations;
 using Microsoft.EntityFrameworkCore;
 using DataLayer.EfCode.Configurations;
+using DataLayer.NoSql;
 using DataLayer.SqlCode;
 
 namespace DataLayer.EfCode
@@ -19,6 +23,28 @@ namespace DataLayer.EfCode
         public EfCoreContext(                             
             DbContextOptions<EfCoreContext> options)      
             : base(options) {}
+
+        public override int SaveChanges()
+        {
+            //I need to remember the changes, but not process them yet, as new entries BookId's are not set until after SaveChanges
+            var copyOfChanged = ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged);
+            var result = base.SaveChanges();
+            var updater = new NoSqlUpdater(this);
+            var bookChanged = BookChanges.FindChangedBooks(copyOfChanged);
+            updater.UpdateNoSql(bookChanged);
+            return result;
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            //I need to remember the changes, but not process them yet, as new entries BookId's are not set until after SaveChanges
+            var copyOfChanged = ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged);
+            var result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            var updater = new NoSqlUpdater(this);
+            var bookChanged = BookChanges.FindChangedBooks(copyOfChanged);
+            updater.UpdateNoSql(bookChanged);
+            return result;
+        }
 
         protected override void
             OnModelCreating(ModelBuilder modelBuilder)

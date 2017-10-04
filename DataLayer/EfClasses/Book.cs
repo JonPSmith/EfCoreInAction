@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataLayer.EfClasses
 {
-    public class Book                        
+    public class Book : IBookId
     {
         public int BookId { get; set; }
 
