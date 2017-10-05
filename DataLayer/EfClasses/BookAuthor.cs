@@ -3,7 +3,7 @@
 
 namespace DataLayer.EfClasses
 {
-    public class BookAuthor               
+    public class BookAuthor : IBookId              
     {
         public int BookId { get; set; }  //#A
         public int AuthorId { get; set; }//#A
