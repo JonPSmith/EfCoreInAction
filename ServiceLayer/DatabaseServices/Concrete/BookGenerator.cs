@@ -22,7 +22,7 @@ namespace ServiceLayer.DatabaseServices.Concrete
 
         public ImmutableDictionary<string, Author> AuthorDict => _authorDict.ToImmutableDictionary();
 
-        public BookGenerator(string filePath, bool makeBookTitlesDistinct = false)
+        public BookGenerator(string filePath, bool makeBookTitlesDistinct)
         {
             _makeBookTitlesDistinct = makeBookTitlesDistinct;
             _loadedBookData = JsonConvert.DeserializeObject<List<BookData>>(File.ReadAllText(filePath))
@@ -38,11 +38,16 @@ namespace ServiceLayer.DatabaseServices.Concrete
 
         public void WriteBooks(int numBooks, DbContextOptions<EfCoreContext> options, Func<int, bool> progessCancel)
         {
-            //I read in any existing authors in case we are adding to a database
+            //Find out how many in db so we can pick up where we left off
+            int numBooksInDb;
+            using (var context = new EfCoreContext(options))
+            {
+                numBooksInDb = context.Books.IgnoreQueryFilters().Count();
+            }
 
             var numWritten = 0;
             var batch = new List<Book>();
-            foreach (var book in GenerateBooks(numBooks))
+            foreach (var book in GenerateBooks(numBooks, numBooksInDb))
             {
                 batch.Add(book);
                 if (batch.Count < NumBooksInSet) continue;
@@ -67,10 +72,11 @@ namespace ServiceLayer.DatabaseServices.Concrete
             progessCancel(numWritten);
         }
 
-        public IEnumerable<Book> GenerateBooks(int numBooks)
+        public IEnumerable<Book> GenerateBooks(int numBooks, int numBooksInDb)
         {
-            for (int i = 0; i < numBooks; i++)
+            for (int i = numBooksInDb; i < numBooksInDb + numBooks; i++)
             {
+                var sectionNum = Math.Truncate(i * 1.0 / NumBooksInSet);
                 var reviews = new List<Review>();
                 for (int j = 0; j < i % 12; j++)
                 {
@@ -81,13 +87,13 @@ namespace ServiceLayer.DatabaseServices.Concrete
                     Title = _loadedBookData[i % _loadedBookData.Count].Title,
                     Description = $"Book{i:D4} Description",
                     Price = (i + 1),
-                    PublishedOn = _loadedBookData[i % _loadedBookData.Count].PublishDate,
+                    PublishedOn = _loadedBookData[i % _loadedBookData.Count].PublishDate.AddDays(sectionNum),
                     Publisher = "Manning",
                     Reviews = reviews,
                     AuthorsLink = new List<BookAuthor>()
                 };
                 if (i >= NumBooksInSet && _makeBookTitlesDistinct)
-                    book.Title += $" (copy {Math.Truncate((i * 1.0) / NumBooksInSet)})";
+                    book.Title += $" (copy {sectionNum})";
                 if (i % 7 == 0)
                 {
                     book.Promotion = new PriceOffer
