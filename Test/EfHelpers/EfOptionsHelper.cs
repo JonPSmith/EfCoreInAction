@@ -47,7 +47,7 @@ namespace test.EfHelpers
 
         //--------------------------------------------------------------------
         //private methods
-        private static DbContextOptionsBuilder<EfCoreContext> SetupOptionsWithCorrectConnection<T>(T testClass, string methodName = null)
+        public static DbContextOptionsBuilder<EfCoreContext> SetupOptionsWithCorrectConnection<T>(this T testClass, string methodName = null)
         {
             var connection = testClass.GetUniqueDatabaseConnectionString(methodName);
             var optionsBuilder =

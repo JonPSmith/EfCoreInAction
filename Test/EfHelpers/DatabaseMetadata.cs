@@ -29,6 +29,14 @@ namespace test.EfHelpers
             return efType.GetProperties();
         }
 
+        public static IProperty GetProperty<TEntity, TProperty>(this DbContext context, TEntity source,
+            Expression<Func<TEntity, TProperty>> model) where TEntity : class
+        {
+            var efType = context.Model.FindEntityType(typeof(TEntity).FullName);
+            var propInfo = GetPropertyInfoFromLambda(model);
+            return efType.FindProperty(propInfo.Name);
+        }
+
         public static string GetColumnName<TEntity, TProperty>(this DbContext context, TEntity source, 
             Expression<Func<TEntity, TProperty>> model) where TEntity : class
         {
