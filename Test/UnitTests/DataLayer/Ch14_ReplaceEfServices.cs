@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using test.EfHelpers;
 using test.Helpers;
 using Test.Chapter14Listings.EfClasses;
@@ -20,26 +22,40 @@ namespace Test.UnitTests.DataLayer
 {
     public class Ch14_ReplaceEfServices
     {
-        public class CustomSqlServerTypeMapper : SqlServerTypeMapper
+        public class CustomSqlServerTypeMapper //#A
+            : SqlServerTypeMapper              //#A
         {
-            public CustomSqlServerTypeMapper(RelationalTypeMapperDependencies dependencies) 
-                : base(dependencies) {}
+            public CustomSqlServerTypeMapper(                 //#B
+                RelationalTypeMapperDependencies dependencies)//#B 
+                : base(dependencies) {}                       //#B
 
-            public override RelationalTypeMapping FindMapping(IProperty property)
+            public override RelationalTypeMapping 
+                FindMapping(IProperty property) //#C
             {
-                var currentMapping = base.FindMapping(property);
-                if (property.ClrType == typeof(string) && property.Name.EndsWith("Ascii"))
-                    return new StringTypeMapping($"varchar({currentMapping.Size?.ToString() ?? "max"})", 
-                       DbType.AnsiString, true, currentMapping.Size);
+                var currentMapping = base.FindMapping(property); //#D
+                if (property.ClrType == typeof(string)   //#E
+                    && property.Name.EndsWith("Ascii"))  //#E
+                    return new StringTypeMapping( //#F
+                        "varchar(" +         //#G
+                        currentMapping.Size  //#G
+                        ?? "max" + ")",      //#G 
+                       DbType.AnsiString, true, //#H
+                       currentMapping.Size); //#H
 
-                return currentMapping;
-            }
-
-            public override RelationalTypeMapping FindMapping(string storeType)
-            {
-                return base.FindMapping(storeType);
+                return currentMapping; //#I
             }
         }
+        /***********************************************************
+        #A I create my custom type mapper by inheriting the SqlSever type mapper. 
+        #B I need to add a constructor that passes the dependencies it needs to the inherited class
+        #C I only override the FindMapping method that deals with .NET type to SQL type. All the other mapping methods I leave as they were
+        #D I get the mapping that the Sql Server database provider would nomally do. This gives me information I can use
+        #E This is where I insert my new rule. If the property is of .NET type 'string' and the property name ends with "Ascii" then I want to set it as a SQL varchar, instead of the normal SQL nvarchar
+        #F The if was true, so now I return a new SQL mapping result
+        #G This forms a SQL type string of "varchar(<size>)", where <size> is either the string length defined by my EF Core configuration, or "max" if nothing is defined
+        #H This fills in the other parts of the mapping information
+        #I If the property didn’t fit my new rule, then I want the normal EF Core mapping. I therefore I return the SQL type mapping the base method has calculated
+         * **********************************************************/
 
         public class CustomSqlServerModelValidator : SqlServerModelValidator
         {
@@ -118,6 +134,24 @@ namespace Test.UnitTests.DataLayer
                 //VERIFY
                 ex.Message.EndsWith("BookAuthor, LineItem, Review").ShouldBeTrue();
             }
+        }
+
+
+        private void DummyMethodWithAspNetCoreStartup(IServiceCollection services)
+        {
+            IConfiguration Configuration = null;
+
+            var connection = Configuration
+                .GetConnectionString("DefaultConnection");
+            services.AddDbContext<EfCoreContext>(           //#A
+                options => options.UseSqlServer(connection, //#A
+                    b => b.MigrationsAssembly("DataLayer")) //#A
+            .ReplaceService<IRelationalTypeMapper, CustomSqlServerTypeMapper>() //#B
+                    );
+            /********************************************************
+            #A This is the normal code register the EFCoreContext class, which is my application's DbContext, and its options with ASP.NET Core dependency injection module
+            #B This is the new code that replaces the normal relational type mapper with my modified type mapper
+             * ****************************************************/
         }
     }
 }
