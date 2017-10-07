@@ -14,21 +14,6 @@ namespace test.Helpers
 {
     internal static class RavenDbHelpers
     {
-        public static DocumentStore FormDocumentStore()
-        {
-            var ravenDbTestConnection = AppSettings.GetConfiguration().GetConnectionString("RavenDb-Test");
-            var infoDict = (from part in ravenDbTestConnection.Split(';')
-                    let namedPart = part.Substring(0, part.IndexOf('='))
-                    select new {key = namedPart, value = part.Substring(namedPart.Length + 1)})
-                .ToDictionary(x => x.key, y => y.value);
-            return new DocumentStore
-            {
-                Url = infoDict["Url"],
-                DefaultDatabase = infoDict["Database"],
-                ApiKey = infoDict["ApiKey"]
-            };
-        }
-
         public static int NumEntriesInDb(this IDocumentStore store)
         {
             try

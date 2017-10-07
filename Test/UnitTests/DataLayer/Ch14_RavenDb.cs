@@ -4,12 +4,9 @@
 using System;
 using System.Linq;
 using DataLayer.NoSql;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Raven.Abstractions.Indexing;
 using Raven.Client;
-using Raven.Client.Document;
-
 using Raven.Client.Indexes;
 using test.Helpers;
 using Xunit;
@@ -22,25 +19,16 @@ namespace test.UnitTests.DataLayer
     {
         private readonly ITestOutputHelper _output;
 
-        private static readonly Lazy<IDocumentStore> theDocStore = new Lazy<IDocumentStore>(() =>
+        private static readonly Lazy<RavenStoreSingleton> StoreHolder = new Lazy<RavenStoreSingleton>(() =>
         {
-
-            var store = RavenDbHelpers.FormDocumentStore();
-            store.Initialize();
-
-            new BookById().Execute(store);
-            new BookByActualPrice().Execute(store);
-            new BookByVotes().Execute(store);
-            if (store.NumEntriesInDb() <= 0)
-            {
-                store.SeedDummyBooks();
-            }
-            return store;
+            var ravenDbTestConnection = AppSettings.GetConfiguration().GetConnectionString("RavenDb-Test");
+            var storeHolder = new RavenStoreSingleton(ravenDbTestConnection);
+            return storeHolder;
         });
 
         private IDocumentStore Store
         {
-            get { return theDocStore.Value; }
+            get { return StoreHolder.Value.Store; }
         }
 
         public Ch14_RavenDb(ITestOutputHelper output)
@@ -48,7 +36,6 @@ namespace test.UnitTests.DataLayer
             _output = output;
             
         }
-
 
         [Fact]
         public void CheckRavenDbHelpersCreateDummyBooks()
@@ -62,49 +49,6 @@ namespace test.UnitTests.DataLayer
             books.Count().ShouldEqual(10);
             books.First().AuthorsOrdered.ShouldEqual("Author0000, CommonAuthor");
         }
-
-        [Fact]
-        public void CheckRavenDbHelpersFormDocumentStore()
-        {
-            //SETUP
-
-            //ATTEMPT
-            var store = RavenDbHelpers.FormDocumentStore();
-
-            //VERIFY
-            store.DefaultDatabase.ShouldEqual("EfCoreInAction-Test");
-        }
-
-        private class BookById : AbstractIndexCreationTask<BookNoSqlDto>
-        {
-            public BookById()
-            {
-                Map = books => from book in books
-                    select new { book.Id };
-                Indexes.Add(x => x.Id, FieldIndexing.Default);
-            }
-        }
-
-        private class BookByActualPrice : AbstractIndexCreationTask<BookNoSqlDto>
-        {
-            public BookByActualPrice()
-            {
-                Map = books => from book in books
-                    select new { book.ActualPrice };
-                Indexes.Add(x => x.Id, FieldIndexing.Default);
-            }
-        }
-
-        private class BookByVotes : AbstractIndexCreationTask<BookNoSqlDto>
-        {
-            public BookByVotes()
-            {
-                Map = books => from book in books
-                    select new { book.ReviewsAverageVotes };
-                Indexes.Add(x => x.Id, FieldIndexing.Default);
-            }
-        }
-
 
         [Fact]
         public void TestAccessDatabase()

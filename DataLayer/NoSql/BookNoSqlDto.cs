@@ -10,7 +10,7 @@ using DataLayer.EfClasses;
 [assembly: InternalsVisibleTo("Test")]
 namespace DataLayer.NoSql
 {
-    internal class BookNoSqlDto
+    public class BookNoSqlDto
     {
         //Need this to make the EF Core LINQ code efficient at finding the item
         private int _bookId;
@@ -21,13 +21,13 @@ namespace DataLayer.NoSql
         /// This ensures that the Id is set to the correct format
         /// </summary>
         /// <param name="bookId"></param>
-        public BookNoSqlDto(int bookId)
+        internal BookNoSqlDto(int bookId)
         {
             _bookId = bookId;
             Id = ConvertIdToRavenId(bookId);
         }
 
-        public BookNoSqlDto()
+        internal BookNoSqlDto()
         {
         }
 
