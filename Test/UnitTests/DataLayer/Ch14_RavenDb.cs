@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using DataLayer.NoSql;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Raven.Abstractions.Indexing;
 using Raven.Client;
@@ -138,13 +139,11 @@ namespace test.UnitTests.DataLayer
             using (var session = Store.OpenSession())
             {
                 //ATTEMPT
-                var data = session.Query<BookNoSqlDto>()
-                    .Where(x => x.Id == BookNoSqlDto.ConvertIdToRavenId(1))
-                    .ToList();
+                var data = session .Load<BookNoSqlDto>(BookNoSqlDto.ConvertIdToRavenId(1));
 
                 //VERIFY
-                data.Count.ShouldEqual(1);
-                data.First().Title.ShouldEqual("Book0000 Title");
+                data.ShouldNotBeNull();
+                data.Title.ShouldEqual("Book0000 Title");
             }
         }
 
