@@ -19,12 +19,12 @@ namespace test.Mocks
 
         public void CreateNewBook(BookNoSqlDto book)
         {
-            Logs.Add($"Create: BookId = {book.StringIdAsInt}");
+            Logs.Add($"Create: BookId = {book.StringIdAsInt()}");
         }
 
         public void UpdateBook(BookNoSqlDto book)
         {
-            Logs.Add($"Update: BookId = {book.StringIdAsInt}");
+            Logs.Add($"Update: BookId = {book.StringIdAsInt()}");
         }
     }
 }

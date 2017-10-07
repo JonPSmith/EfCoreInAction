@@ -11,6 +11,8 @@ using EfCoreInAction.DatabaseHelpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
+using ServiceLayer.BookServices.RavenDb;
 
 namespace ServiceLayer.DatabaseServices.Concrete
 {
@@ -97,10 +99,14 @@ namespace ServiceLayer.DatabaseServices.Concrete
             return numBooks;
         }
 
-        public static void GenerateBooks(this DbContextOptions<EfCoreContext> options, int numBooksToAdd, string wwwrootDirectory, Func<int, bool> progessCancel)
+        public static void GenerateBooks(this DbContextOptions<EfCoreContext> options,
+            RavenStore storeProvider,
+            ILogger logger,
+            int numBooksToAdd, string wwwrootDirectory, Func<int, bool> progessCancel)
         {           
             //add generated books
-            var gen = new BookGenerator(Path.Combine(wwwrootDirectory, SeedFileSubDirectory, TemplateFileName), true);
+            var gen = new BookGenerator(Path.Combine(wwwrootDirectory, SeedFileSubDirectory, TemplateFileName),
+                storeProvider.CreateSqlUpdater(logger), true);
             gen.WriteBooks(numBooksToAdd, options, progessCancel);
         }
     }

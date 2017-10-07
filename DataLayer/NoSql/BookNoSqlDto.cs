@@ -12,7 +12,7 @@ namespace DataLayer.NoSql
 {
     public class BookNoSqlDto
     {
-        private const string IdStart = "booklist\\";
+        private const string IdStart = "booklist/";
 
         //Need this to make the EF Core LINQ code efficient at finding the item
         private int _bookId;
@@ -38,7 +38,10 @@ namespace DataLayer.NoSql
         public string Id { get; set; }       
         
         //This returns the RavenId as an int
-        public int StringIdAsInt => int.Parse(Id.Substring(IdStart.Length));
+        public int StringIdAsInt()
+        {
+            return int.Parse(Id.Substring(IdStart.Length));
+        }
 
         public string Title { get; set; }
         public DateTime PublishedOn { get; set; } 

@@ -7,6 +7,8 @@ using EfCoreInAction.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using ServiceLayer.BookServices.RavenDb;
 using ServiceLayer.DatabaseServices.Concrete;
 
 namespace EfCoreInAction.Controllers
@@ -33,6 +35,8 @@ namespace EfCoreInAction.Controllers
         public IActionResult Books(int numBooks, bool wipeDatabase, 
             [FromServices]EfCoreContext context,
             [FromServices]DbContextOptions<EfCoreContext> options,
+            [FromServices]RavenStore storeProvider,
+            [FromServices]ILogger<RavenStore> ravenLogger,
             [FromServices]IHostingEnvironment env)
         {
             if (numBooks == 0)
@@ -42,7 +46,8 @@ namespace EfCoreInAction.Controllers
 
             if (wipeDatabase)
                 context.DevelopmentWipeCreated(env.WebRootPath);
-            options.GenerateBooks(numBooks, env.WebRootPath, numWritten =>
+            options.GenerateBooks(storeProvider, ravenLogger,
+                numBooks, env.WebRootPath, numWritten =>
             {
                 _progress = numWritten * 100.0 / numBooks;
                 return _cancel;

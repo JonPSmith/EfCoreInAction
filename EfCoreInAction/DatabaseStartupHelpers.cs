@@ -37,7 +37,7 @@ namespace EfCoreInAction
                 var logger = provider.GetService<ILogger<RavenUpdater>>();
 
                 //pass any parameters
-                return new EfCoreContext(options, new RavenUpdater(storeSource.Store, logger));
+                return new EfCoreContext(options, storeSource.CreateSqlUpdater(logger));
             });
 
             return serviceCollection;

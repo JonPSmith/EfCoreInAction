@@ -30,7 +30,10 @@ namespace test.UnitTests.DataLayer
         public Ch14_RavenDb(ITestOutputHelper output)
         {
             _output = output;
-            
+            if (Store.NumEntriesInDb() <= 0)
+            {
+                Store.SeedDummyBooks();
+            }
         }
 
         [Fact]

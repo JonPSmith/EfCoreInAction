@@ -32,7 +32,7 @@ namespace Test.UnitTests.ServiceLayer
             var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
 
             //ATTEMPT
-            var gen = new BookGenerator(filePath, false);
+            var gen = new BookGenerator(filePath, null, false);
             var books = gen.GenerateBooks(numBooks, 0).ToList();
 
             //VERIFY
@@ -50,7 +50,7 @@ namespace Test.UnitTests.ServiceLayer
             var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
 
             //ATTEMPT
-            var gen = new BookGenerator(filePath, true);
+            var gen = new BookGenerator(filePath, null, true);
             var books = gen.GenerateBooks(numBooks, 0).ToList();
 
             //VERIFY
@@ -67,7 +67,7 @@ namespace Test.UnitTests.ServiceLayer
             var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
 
             //ATTEMPT
-            var gen = new BookGenerator(filePath, false);
+            var gen = new BookGenerator(filePath, null, false);
             var books = gen.GenerateBooks(numBooks, 0).ToList();
 
             //VERIFY
@@ -107,7 +107,7 @@ namespace Test.UnitTests.ServiceLayer
                 SetupHelpers.TemplateFileName);
 
             //ATTEMPT
-            var gen = new BookGenerator(filePath, false);
+            var gen = new BookGenerator(filePath, null, false);
             var books = gen.GenerateBooks(numBooks, 0).ToList();
 
             //VERIFY
@@ -125,7 +125,7 @@ namespace Test.UnitTests.ServiceLayer
                 SetupHelpers.TemplateFileName);
 
             //ATTEMPT
-            var gen = new BookGenerator(filePath, false);
+            var gen = new BookGenerator(filePath, null, false);
             var books = gen.GenerateBooks(numBooks, 0).ToList();
 
             //VERIFY
@@ -150,7 +150,7 @@ namespace Test.UnitTests.ServiceLayer
                 var progress = new List<int>();
 
                 //ATTEMPT
-                var gen = new BookGenerator(filePath, false);
+                var gen = new BookGenerator(filePath, null, false);
                 gen.WriteBooks(numBooks, options, x => {
                     progress.Add(x);
                     return false;
@@ -176,7 +176,7 @@ namespace Test.UnitTests.ServiceLayer
                 var progress = new List<int>();
 
                 //ATTEMPT
-                var gen = new BookGenerator(filePath, true);
+                var gen = new BookGenerator(filePath, null, true);
                 gen.WriteBooks(numBooks, options, x => {
                     progress.Add(x);
                     return false;
@@ -208,7 +208,7 @@ namespace Test.UnitTests.ServiceLayer
                 var progress = new List<int>();
 
                 //ATTEMPT
-                var gen = new BookGenerator(filePath, false);
+                var gen = new BookGenerator(filePath, null, false);
                 gen.WriteBooks(numBooks, options,
                     x => {
                         progress.Add(x);

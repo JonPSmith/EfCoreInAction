@@ -56,7 +56,7 @@ namespace ServiceLayer.BookServices.RavenDb
 
         public void CreateNewBook(BookNoSqlDto book)
         {
-            using (new LogRavenCommand($"Create: bookId {book.StringIdAsInt}", _logger))
+            using (new LogRavenCommand($"Create: bookId {book.StringIdAsInt()}", _logger))
             using (var bulkInsert = _store.BulkInsert())
             {
                 bulkInsert.Store(book);
@@ -65,7 +65,7 @@ namespace ServiceLayer.BookServices.RavenDb
 
         public void UpdateBook(BookNoSqlDto book)
         {
-            using (new LogRavenCommand($"Update: bookId {book.StringIdAsInt}", _logger))
+            using (new LogRavenCommand($"Update: bookId {book.StringIdAsInt()}", _logger))
             using (var bulkInsert = _store.BulkInsert(null, new BulkInsertOptions{ OverwriteExisting = true}))
             {
                 bulkInsert.Store(book);

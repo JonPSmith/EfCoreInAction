@@ -25,12 +25,12 @@ namespace ServiceLayer.BookServices.RavenDb
 
         public void CreateNewBook(BookNoSqlDto book)
         {
-            _logger.LogInformation(new EventId(1234567, RavenStore.RavenEventIdStart + ".Create"), $"Create: BookId = {book.StringIdAsInt}");
+            _logger.LogInformation(new EventId(1234567, RavenStore.RavenEventIdStart + ".Create"), $"Create: BookId = {book.StringIdAsInt()}");
         }
 
         public void UpdateBook(BookNoSqlDto book)
         {
-            _logger.LogInformation(new EventId(1234567, RavenStore.RavenEventIdStart + ".Update"), $"Update: BookId = {book.StringIdAsInt}");
+            _logger.LogInformation(new EventId(1234567, RavenStore.RavenEventIdStart + ".Update"), $"Update: BookId = {book.StringIdAsInt()}");
         }
     }
 }

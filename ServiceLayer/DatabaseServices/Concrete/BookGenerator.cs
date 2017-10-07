@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using DataLayer.EfClasses;
 using DataLayer.EfCode;
+using DataLayer.NoSql;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -15,15 +16,18 @@ namespace ServiceLayer.DatabaseServices.Concrete
 {
     public class BookGenerator
     {
+        private readonly INoSqlUpdater _updater;
         private readonly bool _makeBookTitlesDistinct;
+
         private readonly ImmutableList<BookData> _loadedBookData;
-        private Dictionary<string, Author> _authorDict = new Dictionary<string, Author>();
+        private readonly Dictionary<string, Author> _authorDict = new Dictionary<string, Author>();
         private int NumBooksInSet => _loadedBookData.Count;
 
         public ImmutableDictionary<string, Author> AuthorDict => _authorDict.ToImmutableDictionary();
 
-        public BookGenerator(string filePath, bool makeBookTitlesDistinct)
+        public BookGenerator(string filePath, INoSqlUpdater updater, bool makeBookTitlesDistinct)
         {
+            _updater = updater;
             _makeBookTitlesDistinct = makeBookTitlesDistinct;
             _loadedBookData = JsonConvert.DeserializeObject<List<BookData>>(File.ReadAllText(filePath))
                 .ToImmutableList();
@@ -113,7 +117,7 @@ namespace ServiceLayer.DatabaseServices.Concrete
 
         private void CreateContextAndWriteBatch(DbContextOptions<EfCoreContext> options, List<Book> batch)
         {
-            using (var context = new EfCoreContext(options))
+            using (var context = new EfCoreContext(options, _updater))
             {
                 //need to set the key of the authors entities. They aren't tarcked but the add will sort out whether to add/Unchanged based on primary key
                 foreach (var dbAuthor in context.Authors.ToList())
