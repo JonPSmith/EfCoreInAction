@@ -15,34 +15,59 @@ namespace DataLayer.EfCode
 {
     public class EfCoreContext : DbContext
     {
+        private INoSqlUpdater _updater;
+
         public DbSet<Book> Books { get; set; }              //#A
         public DbSet<Author> Authors { get; set; }          //#A
         public DbSet<PriceOffer> PriceOffers { get; set; }  //#A
         public DbSet<Order> Orders { get; set; }            //#A
 
         public EfCoreContext(                             
-            DbContextOptions<EfCoreContext> options)      
-            : base(options) {}
+            DbContextOptions<EfCoreContext> options, INoSqlUpdater updater = null)      
+            : base(options)
+        {
+            _updater = updater;
+        }
 
         public override int SaveChanges()
         {
             //I need to remember the changes, but not process them yet, as new entries BookId's are not set until after SaveChanges
-            var copyOfChanged = ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged);
-            var result = base.SaveChanges();
-            var updater = new NoSqlUpdater(this);
-            var bookChanged = BookChanges.FindChangedBooks(copyOfChanged);
-            updater.UpdateNoSql(bookChanged);
+            ChangeTracker.DetectChanges();
+            var detectedChanges = BookChangeDetector.FindBookChanges(ChangeTracker.Entries());
+            int result;
+            try
+            {
+                ChangeTracker.AutoDetectChangesEnabled = false;
+                result = base.SaveChanges();
+            }
+            finally
+            {
+                ChangeTracker.AutoDetectChangesEnabled = true;
+            }
+            var booksChanged = BookChanges.FindChangedBooks(detectedChanges);
+            var updater = new ApplyChangeToNoSql(this, _updater);
+            updater.UpdateNoSql(booksChanged);
             return result;
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             //I need to remember the changes, but not process them yet, as new entries BookId's are not set until after SaveChanges
-            var copyOfChanged = ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged);
-            var result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            var updater = new NoSqlUpdater(this);
-            var bookChanged = BookChanges.FindChangedBooks(copyOfChanged);
-            updater.UpdateNoSql(bookChanged);
+            ChangeTracker.DetectChanges();
+            var detectedChanges = BookChangeDetector.FindBookChanges(ChangeTracker.Entries());
+            int result;
+            try
+            {
+                ChangeTracker.AutoDetectChangesEnabled = false;
+                result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            }
+            finally
+            {
+                ChangeTracker.AutoDetectChangesEnabled = true;
+            }
+            var booksChanged = BookChanges.FindChangedBooks(detectedChanges);
+            var updater = new ApplyChangeToNoSql(this, _updater);
+            updater.UpdateNoSql(booksChanged);
             return result;
         }
 

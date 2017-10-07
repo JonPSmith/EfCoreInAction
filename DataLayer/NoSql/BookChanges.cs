@@ -29,39 +29,20 @@ namespace DataLayer.NoSql
         /// </summary>
         /// <param name="changes">The tracked changes to look at</param>
         /// <returns>A list of BookChanges that </returns>
-        public static IImmutableList<BookChanges> FindChangedBooks(IEnumerable<EntityEntry> changes)
+        public static IImmutableList<BookChanges> FindChangedBooks(IImmutableList<BookChangeDetector> changes)
         {
-            var booksDict = new Dictionary<int, EntityState>();
-            foreach (var entity in changes)
+            var booksDict = new Dictionary<int, BookChangeDetector>();
+            foreach (var taggedBook in changes)
             {
-                var bookRef = entity.Entity as IBookId;
-                if (bookRef == null) continue;
-
-                if (booksDict.ContainsKey(bookRef.BookId) && 
-                    (booksDict[bookRef.BookId] == EntityState.Added || booksDict[bookRef.BookId] == EntityState.Deleted))
+                if (booksDict.ContainsKey(taggedBook.BookId) && 
+                    (booksDict[taggedBook.BookId].State == EntityState.Added || booksDict[taggedBook.BookId].State == EntityState.Deleted))
                     //The book is already set as added or deleted, so don't let anything change that
                     continue;
 
-                if (entity.Entity is Book book)
-                {
-                    //The book entity state has presidence
-                    booksDict[bookRef.BookId] =
-                        (entity.State == EntityState.Deleted || book.SoftDeleted)
-                            ? EntityState.Deleted //it is removed from NoSql if deleted or soft deleted
-                            : entity.State == EntityState.Modified &&
-                               ((bool) entity.Property(nameof(Book.SoftDeleted)).OriginalValue)
-                               //If the book was soft deleted and is now un-soft deleted, then treat it as a new entry
-                                ? EntityState.Added
-                                : entity.State; //otherwise use the state it is at
-                }
-                else
-                {
-                    //Any change to a related entity sets the book as modified
-                    booksDict[bookRef.BookId] = EntityState.Modified;
-                }
+                booksDict[taggedBook.BookId] = taggedBook;
             }
 
-            return booksDict.Select(x => new BookChanges(x.Key, x.Value)).ToImmutableList();
+            return booksDict.Select(x => new BookChanges(x.Value.FinalBookId, x.Value.State)).ToImmutableList();
         }
     }
 }

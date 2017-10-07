@@ -5,9 +5,8 @@ using System;
 using System.Linq;
 using DataLayer.NoSql;
 using Microsoft.Extensions.Configuration;
-using Raven.Abstractions.Indexing;
 using Raven.Client;
-using Raven.Client.Indexes;
+using ServiceLayer.BookServices.RavenDb;
 using test.Helpers;
 using Xunit;
 using Xunit.Abstractions;
@@ -19,17 +18,14 @@ namespace test.UnitTests.DataLayer
     {
         private readonly ITestOutputHelper _output;
 
-        private static readonly Lazy<RavenStoreSingleton> StoreHolder = new Lazy<RavenStoreSingleton>(() =>
+        private static readonly Lazy<IDocumentStore> LazyStore = new Lazy<IDocumentStore>(() =>
         {
             var ravenDbTestConnection = AppSettings.GetConfiguration().GetConnectionString("RavenDb-Test");
-            var storeHolder = new RavenStoreSingleton(ravenDbTestConnection);
-            return storeHolder;
+            var storeFactory = new RavenStoreFactory(ravenDbTestConnection);
+            return storeFactory.Build();
         });
 
-        private IDocumentStore Store
-        {
-            get { return StoreHolder.Value.Store; }
-        }
+        private IDocumentStore Store => LazyStore.Value;
 
         public Ch14_RavenDb(ITestOutputHelper output)
         {

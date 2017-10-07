@@ -40,7 +40,8 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 bookTracked.Title = Guid.NewGuid().ToString();
-                var changes = BookChanges.FindChangedBooks(context.ChangeTracker.Entries());
+                var tagged = BookChangeDetector.FindBookChanges(context.ChangeTracker.Entries());
+                var changes = BookChanges.FindChangedBooks(tagged);
 
                 //VERIFY
                 changes.Count.ShouldEqual(1);
@@ -59,7 +60,7 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 bookTracked.Reviews.First().NumStars = 0;
-                var changes = BookChanges.FindChangedBooks(context.ChangeTracker.Entries());
+                var changes = BookChanges.FindChangedBooks(BookChangeDetector.FindBookChanges(context.ChangeTracker.Entries()));
 
                 //VERIFY
                 changes.Count.ShouldEqual(1);
@@ -78,7 +79,7 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 context.Add(new PriceOffer { BookId = bookTracked.BookId, PromotionalText = "Unit Test", NewPrice = 1 });
-                var changes = BookChanges.FindChangedBooks(context.ChangeTracker.Entries());
+                var changes = BookChanges.FindChangedBooks(BookChangeDetector.FindBookChanges(context.ChangeTracker.Entries()));
 
                 //VERIFY
                 changes.Count.ShouldEqual(1);
@@ -97,7 +98,7 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 context.Remove(bookTracked);
-                var changes = BookChanges.FindChangedBooks(context.ChangeTracker.Entries());
+                var changes = BookChanges.FindChangedBooks(BookChangeDetector.FindBookChanges(context.ChangeTracker.Entries()));
 
                 //VERIFY
                 changes.Count.ShouldEqual(1);
@@ -116,7 +117,7 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 bookTracked.SoftDeleted = true;
-                var changes = BookChanges.FindChangedBooks(context.ChangeTracker.Entries());
+                var changes = BookChanges.FindChangedBooks(BookChangeDetector.FindBookChanges(context.ChangeTracker.Entries()));
 
                 //VERIFY
                 changes.Count.ShouldEqual(1);
@@ -145,12 +146,65 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 bookTracked.SoftDeleted = false;
-                var changes = BookChanges.FindChangedBooks(context.ChangeTracker.Entries());
+                var changes = BookChanges.FindChangedBooks(BookChangeDetector.FindBookChanges(context.ChangeTracker.Entries()));
 
                 //VERIFY
                 changes.Count.ShouldEqual(1);
                 changes.First().BookId.ShouldEqual(bookTracked.BookId);
                 changes.First().State.ShouldEqual(EntityState.Added);
+            }
+        }
+
+        [Fact]
+        public void TestCreateNewBook()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                var book = EfTestData.CreateDummyBookOneAuthor();
+
+                //ATTEMPT
+                context.Books.Add(book);
+                context.ChangeTracker.DetectChanges();
+                var preChanges = BookChangeDetector.FindBookChanges(context.ChangeTracker.Entries());
+                context.SaveChanges();
+                var changes = BookChanges.FindChangedBooks(preChanges);
+
+                //VERIFY
+                changes.Count.ShouldEqual(1);
+                changes.First().BookId.ShouldEqual(1);
+                changes.First().State.ShouldEqual(EntityState.Added);
+            }
+        }
+
+        [Fact]
+        public void TestDeleteBook()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+            }
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                var book = EfTestData.CreateDummyBookOneAuthor();
+
+                //ATTEMPT
+                context.Remove(context.Books.First());
+                context.ChangeTracker.DetectChanges();
+                var preChanges = BookChangeDetector.FindBookChanges(context.ChangeTracker.Entries());
+                context.SaveChanges();
+                var changes = BookChanges.FindChangedBooks(preChanges);
+
+                //VERIFY
+                changes.Count.ShouldEqual(1);
+                changes.First().BookId.ShouldEqual(1);
+                changes.First().State.ShouldEqual(EntityState.Deleted);
             }
         }
     }

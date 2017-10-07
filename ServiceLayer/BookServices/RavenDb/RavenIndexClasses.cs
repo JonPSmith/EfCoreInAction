@@ -2,10 +2,11 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System.Linq;
+using DataLayer.NoSql;
 using Raven.Abstractions.Indexing;
 using Raven.Client.Indexes;
 
-namespace DataLayer.NoSql
+namespace ServiceLayer.BookServices.RavenDb
 {
     public class BookById : AbstractIndexCreationTask<BookNoSqlDto>
     {

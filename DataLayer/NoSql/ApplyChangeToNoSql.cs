@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
@@ -10,33 +11,35 @@ using Microsoft.EntityFrameworkCore;
 [assembly: InternalsVisibleTo("Test")]
 namespace DataLayer.NoSql
 {
-    internal class NoSqlUpdater
+    internal class ApplyChangeToNoSql
     {
         private readonly EfCoreContext _context;
+        private readonly INoSqlUpdater _updater;
 
-        public NoSqlUpdater(EfCoreContext context)
+        public ApplyChangeToNoSql(EfCoreContext context, INoSqlUpdater updater)
         {
             _context = context;
+            _updater = updater;
         }
 
         public void UpdateNoSql(IImmutableList<BookChanges> booksToUpdate)
         {
+            if (_updater == null || !booksToUpdate.Any()) return;
+
             foreach (var bookToUpdate in booksToUpdate)
             {
                 switch (bookToUpdate.State)
                 {
                     case EntityState.Deleted:
-                        //Send delete of BookId to NoSql
+                        _updater.DeleteBook(bookToUpdate.BookId);
                         break;
                     case EntityState.Modified:
                         var modifiedBook = BookNoSqlDto.ProjectBook(_context.Books, bookToUpdate.BookId);
-                        //Send updated information to NoSQL
+                        _updater.UpdateBook(modifiedBook);
                         break;
                     case EntityState.Added:
                         var newBook = BookNoSqlDto.ProjectBook(_context.Books, bookToUpdate.BookId);
-                        //Send new book information to NoSQL
-                        break;
-                    case EntityState.Unchanged:
+                        _updater.CreateNewBook(newBook);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

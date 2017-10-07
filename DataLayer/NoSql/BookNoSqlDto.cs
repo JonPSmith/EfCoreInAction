@@ -36,7 +36,7 @@ namespace DataLayer.NoSql
         public string Id { get; set; }       
         
         //This returns the RavenId as an int
-        public int RavenIdAsInt => int.Parse(Id);
+        public int StringIdAsInt => int.Parse(Id);
 
         public string Title { get; set; }
         public DateTime PublishedOn { get; set; } 
