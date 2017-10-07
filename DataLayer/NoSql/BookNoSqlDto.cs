@@ -12,6 +12,8 @@ namespace DataLayer.NoSql
 {
     public class BookNoSqlDto
     {
+        private const string IdStart = "booklist\\";
+
         //Need this to make the EF Core LINQ code efficient at finding the item
         private int _bookId;
 
@@ -24,7 +26,7 @@ namespace DataLayer.NoSql
         internal BookNoSqlDto(int bookId)
         {
             _bookId = bookId;
-            Id = ConvertIdToRavenId(bookId);
+            Id = ConvertIdToNoSqlId(bookId);
         }
 
         internal BookNoSqlDto()
@@ -36,7 +38,7 @@ namespace DataLayer.NoSql
         public string Id { get; set; }       
         
         //This returns the RavenId as an int
-        public int StringIdAsInt => int.Parse(Id);
+        public int StringIdAsInt => int.Parse(Id.Substring(IdStart.Length));
 
         public string Title { get; set; }
         public DateTime PublishedOn { get; set; } 
@@ -47,9 +49,9 @@ namespace DataLayer.NoSql
         public int ReviewsCount { get; set; }      
         public double? ReviewsAverageVotes { get; set; }
 
-        public static string ConvertIdToRavenId(int bookId)
+        public static string ConvertIdToNoSqlId(int bookId)
         {
-            return bookId.ToString("D10");
+            return IdStart + bookId.ToString("D10");
         }
 
         public static BookNoSqlDto ProjectBook(IQueryable<Book> books, int bookId)
@@ -60,7 +62,7 @@ namespace DataLayer.NoSql
                 _authors = p.AuthorsLink
                     .OrderBy(q => q.Order)
                     .Select(q => q.Author.Name).ToList(),
-                Id = ConvertIdToRavenId(bookId),                      
+                Id = ConvertIdToNoSqlId(bookId),                      
                 Title = p.Title,                        
                 Price = p.Price,                        
                 PublishedOn = p.PublishedOn,            

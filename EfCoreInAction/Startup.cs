@@ -48,15 +48,10 @@ namespace EfCoreInAction
                 //if running in development mode then we alter the connection to have the branch name in it
                 connection = connection.FormDatabaseConnection(gitBranchName);
             }
-            //Swapped to DbContext Pooling
-            services.AddDbContextPool<EfCoreContext>( //#A
-                options => options.UseSqlServer(connection, //#B
-                b => b.MigrationsAssembly("DataLayer"))); //#C
-            /************************************************************
-            #A I register my applictaion DbContext using the AddDbContextPool<T>, instead of the normal AddDbContext<T> method
-            #B Here I am using a Sql Server database, but pooling works with any database provider
-            #C Because I am using migrations in a layered architecture I need to tell the database provider which assembly the migration code is in
-             * ********************************************************/
+            var ravenDb = Configuration.GetConnectionString("RavenDb");
+            services.RegisterDbContextWithRavenDb<EfCoreContext>(
+                options => options.UseSqlServer(connection,
+                b => b.MigrationsAssembly("DataLayer")), ravenDb);
 
             //Add AutoFac
             var containerBuilder = new ContainerBuilder();

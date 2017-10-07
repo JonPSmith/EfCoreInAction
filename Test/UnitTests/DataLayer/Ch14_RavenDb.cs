@@ -21,8 +21,8 @@ namespace test.UnitTests.DataLayer
         private static readonly Lazy<IDocumentStore> LazyStore = new Lazy<IDocumentStore>(() =>
         {
             var ravenDbTestConnection = AppSettings.GetConfiguration().GetConnectionString("RavenDb-Test");
-            var storeFactory = new RavenStoreFactory(ravenDbTestConnection);
-            return storeFactory.Build();
+            var storeFactory = new RavenStore(ravenDbTestConnection);
+            return storeFactory.Store;
         });
 
         private IDocumentStore Store => LazyStore.Value;
@@ -79,7 +79,7 @@ namespace test.UnitTests.DataLayer
             using (var session = Store.OpenSession())
             {
                 //ATTEMPT
-                var data = session .Load<BookNoSqlDto>(BookNoSqlDto.ConvertIdToRavenId(1));
+                var data = session .Load<BookNoSqlDto>(BookNoSqlDto.ConvertIdToNoSqlId(1));
 
                 //VERIFY
                 data.ShouldNotBeNull();
@@ -99,7 +99,7 @@ namespace test.UnitTests.DataLayer
 
                 //VERIFY
                 var i = 10;
-                data.ForEach(x => x.Id.ShouldEqual(BookNoSqlDto.ConvertIdToRavenId(i--)));
+                data.ForEach(x => x.Id.ShouldEqual(BookNoSqlDto.ConvertIdToNoSqlId(i--)));
             }
         }
 
@@ -118,7 +118,7 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 data.Count.ShouldEqual(2);
                 var i = 10 - 5;
-                data.ForEach(x => x.Id.ShouldEqual(BookNoSqlDto.ConvertIdToRavenId(i--)));
+                data.ForEach(x => x.Id.ShouldEqual(BookNoSqlDto.ConvertIdToNoSqlId(i--)));
             }
         }
 
@@ -151,7 +151,7 @@ namespace test.UnitTests.DataLayer
 
                 //VERIFY
                 data.Count.ShouldEqual(2);
-                data.Select(x => x.Id).ShouldEqual(new []{BookNoSqlDto.ConvertIdToRavenId(6), BookNoSqlDto.ConvertIdToRavenId(10)});
+                data.Select(x => x.Id).ShouldEqual(new []{BookNoSqlDto.ConvertIdToNoSqlId(6), BookNoSqlDto.ConvertIdToNoSqlId(10)});
             }
         }
     }

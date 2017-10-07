@@ -8,11 +8,10 @@
 // Written by Jon P Smith : GitHub JonPSmith, www.thereformedprogrammer.net
 // =====================================================
 
-using System.Text;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using ServiceLayer.BookServices.RavenDb;
 
 namespace ServiceLayer.Logger
 {
@@ -27,7 +26,15 @@ namespace ServiceLayer.Logger
 
         public string EventString { get; private set; }
 
-        public bool IsDb => EventId.Name?.StartsWith(EfCoreEventIdStartWith) ?? false;
+        public bool IsDb
+        {
+            get
+            {
+                var name = EventId.Name;
+                return name != null && (name.StartsWith(EfCoreEventIdStartWith)
+                                        || name.StartsWith(RavenStore.RavenEventIdStart));
+            }
+        }
 
         public LogParts(LogLevel logLevel, EventId eventId, string eventString)
         {
