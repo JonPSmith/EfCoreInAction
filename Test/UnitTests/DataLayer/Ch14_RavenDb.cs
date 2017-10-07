@@ -4,8 +4,12 @@
 using System;
 using System.Linq;
 using DataLayer.NoSql;
-using Raven.Client.Documents;
-using Raven.Client.Documents.Indexes;
+using Microsoft.Extensions.Configuration;
+using Raven.Abstractions.Indexing;
+using Raven.Client;
+using Raven.Client.Document;
+
+using Raven.Client.Indexes;
 using test.Helpers;
 using Xunit;
 using Xunit.Abstractions;
@@ -17,15 +21,11 @@ namespace test.UnitTests.DataLayer
     {
         private readonly ITestOutputHelper _output;
 
-        private const string DatabaseName = "EfCoreInAction-Ch14-RavenDb";
-
         private static readonly Lazy<IDocumentStore> theDocStore = new Lazy<IDocumentStore>(() =>
         {
-            var store = new DocumentStore
-            {
-                Urls = new[] { RavenDbHelpers.RavenDbTestServerUrl },
-                Database = DatabaseName
-            }.Initialize();
+
+            var store = RavenDbHelpers.FormDocumentStore();
+            store.Initialize();
 
             new BookById().Execute(store);
             new BookByActualPrice().Execute(store);
@@ -48,13 +48,39 @@ namespace test.UnitTests.DataLayer
             
         }
 
+
+        [Fact]
+        public void CheckRavenDbHelpersCreateDummyBooks()
+        {
+            //SETUP
+
+            //ATTEMPT
+            var books = RavenDbHelpers.CreateDummyBooks().ToList();
+
+            //VERIFY
+            books.Count().ShouldEqual(10);
+            books.First().AuthorsOrdered.ShouldEqual("Author0000, CommonAuthor");
+        }
+
+        [Fact]
+        public void CheckRavenDbHelpersFormDocumentStore()
+        {
+            //SETUP
+
+            //ATTEMPT
+            var store = RavenDbHelpers.FormDocumentStore();
+
+            //VERIFY
+            store.DefaultDatabase.ShouldEqual("EfCoreInAction-Test");
+        }
+
         private class BookById : AbstractIndexCreationTask<BookNoSqlDto>
         {
             public BookById()
             {
                 Map = books => from book in books
                     select new { book.Id };
-                Indexes.Add(x => x.Id, FieldIndexing.Exact);
+                Indexes.Add(x => x.Id, FieldIndexing.Default);
             }
         }
 
@@ -77,18 +103,7 @@ namespace test.UnitTests.DataLayer
                 Indexes.Add(x => x.Id, FieldIndexing.Default);
             }
         }
-        [Fact]
-        public void CheckRavenDbHlpersCreateDummyBooks()
-        {
-            //SETUP
 
-            //ATTEMPT
-            var books = RavenDbHelpers.CreateDummyBooks().ToList();
-
-            //VERIFY
-            books.Count().ShouldEqual(10);
-            books.First().AuthorsOrdered.ShouldEqual("Author0000, CommonAuthor");
-        }
 
         [Fact]
         public void TestAccessDatabase()
