@@ -3,7 +3,6 @@
 
 using System.Linq;
 using DataLayer.EfCode;
-using DataLayer.NoSql;
 using Microsoft.EntityFrameworkCore;
 using test.EfHelpers;
 using test.Mocks;
@@ -25,7 +24,7 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void TestSelectBookAuthors()
+        public void TestNoSqlUpdateNewBook()
         {
             //SETUP
             var fakeUpdater = new FakeNoSqlUpdater();
@@ -44,6 +43,94 @@ namespace test.UnitTests.DataLayer
             }
         }
 
-        
+        [Fact]
+        public void TestNoSqlUpdateUpdatedBook()
+        {
+            //SETUP
+            var fakeUpdater = new FakeNoSqlUpdater();
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+            }
+            using (var context = new EfCoreContext(options, fakeUpdater))
+            {
+                //ATTEMPT
+                context.Books.First().Title = "new title";
+                context.SaveChanges();
+
+                //VERIFY    
+                fakeUpdater.AllLogs.ShouldEqual("Update: BookId = 1");
+            }
+        }
+
+        [Fact]
+        public void TestNoSqlUpdateDeleteBook()
+        {
+            //SETUP
+            var fakeUpdater = new FakeNoSqlUpdater();
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+            }
+            using (var context = new EfCoreContext(options, fakeUpdater))
+            {
+                //ATTEMPT
+                context.Remove(context.Books.First());
+                context.SaveChanges();
+
+                //VERIFY    
+                fakeUpdater.AllLogs.ShouldEqual("Delete: BookId = 1");
+            }
+        }
+
+        [Fact]
+        public void TestNoSqlUpdateSoftDeleteBook()
+        {
+            //SETUP
+            var fakeUpdater = new FakeNoSqlUpdater();
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+            }
+            using (var context = new EfCoreContext(options, fakeUpdater))
+            {
+                //ATTEMPT
+                context.Books.First().SoftDeleted = true;
+                context.SaveChanges();
+
+                //VERIFY    
+                fakeUpdater.AllLogs.ShouldEqual("Delete: BookId = 1");
+            }
+        }
+
+        [Fact]
+        public void TestNoSqlUpdateSoftDeleteUndoneBook()
+        {
+            //SETUP
+            var fakeUpdater = new FakeNoSqlUpdater();
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.SeedDatabaseFourBooks();
+                context.Books.First().SoftDeleted = true;
+                context.SaveChanges();
+            }
+            using (var context = new EfCoreContext(options, fakeUpdater))
+            {
+                //ATTEMPT
+                context.Books.IgnoreQueryFilters().First().SoftDeleted = false;
+                context.SaveChanges();
+
+                //VERIFY    
+                fakeUpdater.AllLogs.ShouldEqual("Create: BookId = 1");
+            }
+        }
     }
 }
