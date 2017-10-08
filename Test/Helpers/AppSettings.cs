@@ -3,6 +3,7 @@
 
 using System.Data.SqlClient;
 using System.IO;
+using EfCoreInAction;
 using Microsoft.Extensions.Configuration;
 
 namespace test.Helpers
@@ -17,8 +18,9 @@ namespace test.Helpers
             var testDir = Path.Combine(TestFileHelpers.GetSolutionDirectory(), "test");
             var builder = new ConfigurationBuilder()
                 .SetBasePath(testDir)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)               
-                .AddEnvironmentVariables();
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
+                .AddEnvironmentVariables()
+                .AddUserSecrets<Startup>();
             return builder.Build();
         }
 

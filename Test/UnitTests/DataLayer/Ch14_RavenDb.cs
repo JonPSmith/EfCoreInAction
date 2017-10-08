@@ -20,7 +20,11 @@ namespace test.UnitTests.DataLayer
 
         private static readonly Lazy<IDocumentStore> LazyStore = new Lazy<IDocumentStore>(() =>
         {
-            var ravenDbTestConnection = AppSettings.GetConfiguration().GetConnectionString("RavenDb-Test");
+            //var ravenDbTestConnection = AppSettings.GetConfiguration().GetConnectionString("RavenDb-Test");
+            var ravenDbTestConnection = AppSettings.GetConfiguration()["RavenDb-Unit-Test"];
+            if (string.IsNullOrEmpty( ravenDbTestConnection ))
+                throw new InvalidOperationException("You need a RavenDb database host to run these tests." +
+                                                    " You can get a free RavenDb database at http://www.ravenhq.com/");
             var storeFactory = new RavenStore(ravenDbTestConnection);
             return storeFactory.Store;
         });
