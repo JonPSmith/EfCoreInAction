@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using DataLayer.EfCode;
@@ -48,10 +44,11 @@ namespace EfCoreInAction
                 //if running in development mode then we alter the connection to have the branch name in it
                 connection = connection.FormDatabaseConnection(gitBranchName);
             }
-            var ravenDb = Configuration.GetConnectionString("RavenDb");
+
+            var ravenDbTestConnection = Configuration["RavenDb-Unit-Test"];
             services.RegisterDbContextWithRavenDb<EfCoreContext>(
                 options => options.UseSqlServer(connection,
-                b => b.MigrationsAssembly("DataLayer")), ravenDb);
+                b => b.MigrationsAssembly("DataLayer")), ravenDbTestConnection);
 
             //Add AutoFac
             var containerBuilder = new ContainerBuilder();
