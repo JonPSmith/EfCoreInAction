@@ -39,16 +39,18 @@ namespace EfCoreInAction
             services.AddSingleton(new AppInformation(gitBranchName));
 
             var connection = Configuration.GetConnectionString("DefaultConnection");
+            var ravenDbConnection = Configuration.GetConnectionString("RavenDbConnection");
             if (Configuration["ENVIRONMENT"] == "Development")
             {
                 //if running in development mode then we alter the connection to have the branch name in it
                 connection = connection.FormDatabaseConnection(gitBranchName);
+                //And set the RavenDb connection string from user secrets
+                ravenDbConnection = Configuration["RavenDb-Main"];
             }
 
-            var ravenDbTestConnection = Configuration["RavenDb-Unit-Test"];
             services.RegisterDbContextWithRavenDb<EfCoreContext>(
                 options => options.UseSqlServer(connection,
-                b => b.MigrationsAssembly("DataLayer")), ravenDbTestConnection);
+                b => b.MigrationsAssembly("DataLayer")), ravenDbConnection);
 
             //Add AutoFac
             var containerBuilder = new ContainerBuilder();
