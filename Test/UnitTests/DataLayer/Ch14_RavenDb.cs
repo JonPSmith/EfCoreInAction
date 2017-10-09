@@ -3,9 +3,7 @@
 
 using System;
 using System.Linq;
-using DataLayer.NoSql;
 using DataNoSql;
-using Microsoft.Extensions.Configuration;
 using Raven.Client;
 using test.Helpers;
 using Xunit;

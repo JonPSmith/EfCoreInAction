@@ -21,12 +21,12 @@ namespace DataNoSql
 
         public void CreateNewBook(BookListNoSql book)
         {
-            _logger.LogInformation(new EventId(1234567, RavenStore.RavenEventIdStart + ".Create"), $"Create: BookId = {book.StringIdAsInt()}");
+            _logger.LogInformation(new EventId(1234567, RavenStore.RavenEventIdStart + ".Create"), $"Create: BookId = {book.GetIdAsInt()}");
         }
 
         public void UpdateBook(BookListNoSql book)
         {
-            _logger.LogInformation(new EventId(1234567, RavenStore.RavenEventIdStart + ".Update"), $"Update: BookId = {book.StringIdAsInt()}");
+            _logger.LogInformation(new EventId(1234567, RavenStore.RavenEventIdStart + ".Update"), $"Update: BookId = {book.GetIdAsInt()}");
         }
     }
 }

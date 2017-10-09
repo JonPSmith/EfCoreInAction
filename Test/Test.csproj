@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataLayer\DataLayer.csproj" />
+    <ProjectReference Include="..\DataNoSql\DataNoSql.csproj" />
     <ProjectReference Include="..\EfCoreInAction\EfCoreInAction.csproj" />
     <ProjectReference Include="..\ServiceLayer\ServiceLayer.csproj" />
   </ItemGroup>

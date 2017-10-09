@@ -20,12 +20,12 @@ namespace test.Mocks
 
         public void CreateNewBook(BookListNoSql book)
         {
-            Logs.Add($"Create: BookId = {book.StringIdAsInt()}");
+            Logs.Add($"Create: BookId = {book.GetIdAsInt()}");
         }
 
         public void UpdateBook(BookListNoSql book)
         {
-            Logs.Add($"Update: BookId = {book.StringIdAsInt()}");
+            Logs.Add($"Update: BookId = {book.GetIdAsInt()}");
         }
     }
 }

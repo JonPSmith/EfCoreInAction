@@ -17,10 +17,7 @@
     <ProjectReference Include="..\BizDbAccess\BizDbAccess.csproj" />
     <ProjectReference Include="..\BizLogic\BizLogic.csproj" />
     <ProjectReference Include="..\DataLayer\DataLayer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="BookServices\RavenDb\" />
+    <ProjectReference Include="..\DataNoSql\DataNoSql.csproj" />
   </ItemGroup>
 
 </Project>

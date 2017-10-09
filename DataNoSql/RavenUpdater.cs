@@ -20,27 +20,6 @@ namespace DataNoSql
             _logger = logger;
         }
 
-        private class LogRavenCommand : IDisposable
-        {
-            private readonly string _command;
-            private readonly Stopwatch _stopwatch = new Stopwatch();
-            private readonly ILogger _logger;
-
-            public LogRavenCommand(string command, ILogger logger)
-            {
-                _command = command;
-                _logger = logger;
-                _stopwatch.Start();
-            }
-
-            public void Dispose()
-            {
-                _stopwatch.Stop();
-                _logger.LogInformation(new EventId(1, RavenStore.RavenEventIdStart+ ".Write"),
-                    $"Raven Write. Execute time = {_stopwatch.ElapsedMilliseconds} ms.\n" + _command);
-            }
-        }
-
         public void DeleteBook(int bookId)
         {
             using(new LogRavenCommand($"Delete: bookId {bookId}", _logger))
@@ -52,7 +31,7 @@ namespace DataNoSql
 
         public void CreateNewBook(BookListNoSql book)
         {
-            using (new LogRavenCommand($"Create: bookId {book.StringIdAsInt()}", _logger))
+            using (new LogRavenCommand($"Create: bookId {book.GetIdAsInt()}", _logger))
             using (var bulkInsert = _store.BulkInsert())
             {
                 bulkInsert.Store(book);
@@ -61,7 +40,7 @@ namespace DataNoSql
 
         public void UpdateBook(BookListNoSql book)
         {
-            using (new LogRavenCommand($"Update: bookId {book.StringIdAsInt()}", _logger))
+            using (new LogRavenCommand($"Update: bookId {book.GetIdAsInt()}", _logger))
             using (var bulkInsert = _store.BulkInsert(null, new BulkInsertOptions{ OverwriteExisting = true}))
             {
                 bulkInsert.Store(book);

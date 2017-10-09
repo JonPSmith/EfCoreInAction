@@ -19,7 +19,7 @@ namespace DataNoSql
         public string Id { get; set; }       
         
         //This returns the RavenId as an int
-        public int StringIdAsInt()
+        public int GetIdAsInt()
         {
             return int.Parse(Id.Substring(IdStart.Length));
         }
