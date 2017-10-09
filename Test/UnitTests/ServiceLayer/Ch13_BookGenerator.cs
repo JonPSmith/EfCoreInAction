@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using ServiceLayer.DatabaseServices.Concrete;
 using test.EfHelpers;
 using test.Helpers;
+using test.Mocks;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -143,6 +144,7 @@ namespace Test.UnitTests.ServiceLayer
             const int numBooks = 20;
             var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            var fakeUpdater = new FakeNoSqlUpdater();
 
             using (var context = new EfCoreContext(options))
             {
@@ -150,7 +152,7 @@ namespace Test.UnitTests.ServiceLayer
                 var progress = new List<int>();
 
                 //ATTEMPT
-                var gen = new BookGenerator(filePath, null, false);
+                var gen = new BookGenerator(filePath, fakeUpdater, false);
                 gen.WriteBooks(numBooks, options, x => {
                     progress.Add(x);
                     return false;
@@ -159,6 +161,7 @@ namespace Test.UnitTests.ServiceLayer
                 //VERIFY
                 context.Books.Count().ShouldEqual(20);
                 progress.ShouldEqual(new List<int>{0, 10, 20});
+                fakeUpdater.Logs.Count.ShouldEqual(2);
             }
         }
 
@@ -169,6 +172,7 @@ namespace Test.UnitTests.ServiceLayer
             const int numBooks = 20;
             var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            var fakeUpdater = new FakeNoSqlUpdater();
 
             using (var context = new EfCoreContext(options))
             {
@@ -176,7 +180,7 @@ namespace Test.UnitTests.ServiceLayer
                 var progress = new List<int>();
 
                 //ATTEMPT
-                var gen = new BookGenerator(filePath, null, true);
+                var gen = new BookGenerator(filePath, fakeUpdater, true);
                 gen.WriteBooks(numBooks, options, x => {
                     progress.Add(x);
                     return false;
@@ -190,6 +194,7 @@ namespace Test.UnitTests.ServiceLayer
                 context.Books.Count().ShouldEqual(40);
                 context.Authors.Count().ShouldEqual(17);
                 context.Books.Count(x => x.Title.EndsWith("(copy 3)")).ShouldEqual(10);
+
             }
         }
 
@@ -200,6 +205,7 @@ namespace Test.UnitTests.ServiceLayer
             const int numBooks = 20;
             var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            var fakeUpdater = new FakeNoSqlUpdater();
 
             using (var context = new EfCoreContext(options))
             {
@@ -208,7 +214,7 @@ namespace Test.UnitTests.ServiceLayer
                 var progress = new List<int>();
 
                 //ATTEMPT
-                var gen = new BookGenerator(filePath, null, false);
+                var gen = new BookGenerator(filePath, fakeUpdater, false);
                 gen.WriteBooks(numBooks, options,
                     x => {
                         progress.Add(x);

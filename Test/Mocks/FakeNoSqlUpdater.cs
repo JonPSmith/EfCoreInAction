@@ -2,7 +2,6 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
-using DataLayer.NoSql;
 using DataNoSql;
 
 namespace test.Mocks
@@ -26,6 +25,11 @@ namespace test.Mocks
         public void UpdateBook(BookListNoSql book)
         {
             Logs.Add($"Update: BookId = {book.GetIdAsInt()}");
+        }
+
+        public void BulkLoad(IList<BookListNoSql> books)
+        {
+            Logs.Add($"Bulk load: num books = {books.Count}");
         }
     }
 }

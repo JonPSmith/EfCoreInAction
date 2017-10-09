@@ -2,9 +2,11 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Raven.Abstractions.Data;
+using Raven.Abstractions.Extensions;
 using Raven.Client.Document;
 
 namespace DataNoSql
@@ -44,6 +46,15 @@ namespace DataNoSql
             using (var bulkInsert = _store.BulkInsert(null, new BulkInsertOptions{ OverwriteExisting = true}))
             {
                 bulkInsert.Store(book);
+            }
+        }
+
+        public void BulkLoad(IList<BookListNoSql> books)
+        {
+            using (new LogRavenCommand($"Bulk load: num books = {books.Count}", _logger))
+            using (var bulkInsert = _store.BulkInsert(null, new BulkInsertOptions { OverwriteExisting = true }))
+            {
+                books.ForEach(x => bulkInsert.Store(x));
             }
         }
     }

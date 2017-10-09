@@ -118,7 +118,9 @@ namespace ServiceLayer.DatabaseServices.Concrete
 
         private void CreateContextAndWriteBatch(DbContextOptions<EfCoreContext> options, List<Book> batch)
         {
-            using (var context = new EfCoreContext(options, _updater))
+            if (_updater == null)
+                throw new InvalidOperationException("The NoSql updater is null. This can be caused by the NoSql connection string being null or empty.");
+            using (var context = new EfCoreContext(options))
             {
                 //need to set the key of the authors entities. They aren't tarcked but the add will sort out whether to add/Unchanged based on primary key
                 foreach (var dbAuthor in context.Authors.ToList())
@@ -130,7 +132,14 @@ namespace ServiceLayer.DatabaseServices.Concrete
                 }            
                 context.AddRange(batch);
                 context.SaveChanges();
+                //Now we update the NoSql database
+                SendBatchToNoSql(batch);
             }
+        }
+
+        private void SendBatchToNoSql(List<Book> batch)
+        {
+            _updater.BulkLoad(batch.AsQueryable().ProjectBooks());
         }
 
         private void AddAuthorsToBook(Book book, string authors)
