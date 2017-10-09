@@ -13,7 +13,7 @@ using ServiceLayer.DatabaseServices.Concrete;
 
 namespace EfCoreInAction.Controllers
 {
-    public class GenerateController : Controller
+    public class GenerateController : BaseTraceController
     {
 
         //This is a hack. Shouldn't use static variables like this! Not multi-user safe!!
@@ -52,6 +52,9 @@ namespace EfCoreInAction.Controllers
                 _progress = numWritten * 100.0 / numBooks;
                 return _cancel;
             });
+
+            SetupTraceInfo();
+
             return
                 View((object) ((_cancel ? "Cancelled" : "Successful") +
                      $" generate. Num books in database = {context.Books.Count()}."));
