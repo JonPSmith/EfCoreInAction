@@ -135,5 +135,25 @@ namespace test.UnitTests.ServiceLayer
             log.RequestLogs.First().EventString.ShouldContain("Could not find the log you asked for.");
         }
 
+        [Fact]
+        public void AddTooManyLogsCausingTrim()
+        {
+            //SETUP
+            const string traceIdent = "t1";
+            const int largeNumLogs = 1000;
+
+            //ATTEMPT
+            for (int i = 0; i < largeNumLogs; i++)
+            {
+                HttpRequestLog.AddLog(traceIdent, LogLevel.Information, 1, $"Log {i:D4}");               
+            }
+
+            //VERIFY
+            var log = HttpRequestLog.GetHttpRequestLog(traceIdent);
+            (log.RequestLogs.Count < largeNumLogs).ShouldBeTrue();
+            log.RequestLogs.First().EventString.StartsWith("The number of logs exceeded ").ShouldBeTrue();
+
+        }
+
     }
 }
