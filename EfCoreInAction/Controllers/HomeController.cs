@@ -2,11 +2,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DataLayer.EfCode;
+using DataNoSql;
 using EfCoreInAction.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using ServiceLayer.BookServices;
 using ServiceLayer.BookServices.Concrete;
+using ServiceLayer.BookServices.RavenDb;
 using ServiceLayer.Logger;
 
 namespace EfCoreInAction.Controllers
@@ -18,26 +21,27 @@ namespace EfCoreInAction.Controllers
         public HomeController(EfCoreContext context)
         {                                           
             _context = context;                     
-        }                                           
+        }
 
-        public async Task<IActionResult> Index  //#A
-            (SortFilterPageOptions options)         
+        public IActionResult Index
+        (NoSqlSortFilterPageOptions options,
+            [FromServices] IRavenStore storeFactory,
+            [FromServices] ILogger<RavenStore> logger)         
         {
             var listService =                       
-                new ListBooksService(_context);
+                new ListBooksNoSqlService(storeFactory);
 
-            var bookList = listService //#B       
-                .SortFilterPage(options)
-                .ToList(); //#C   
-
-            //Because of EF Core 2.0.0 bug https://github.com/aspnet/EntityFrameworkCore/issues/9570 I have dropped this back to sync
-            //var bookList = await listService //#B       
-            //    .SortFilterPage(options)
-            //    .ToListAsync(); //#C                   
-
+            List<BookListNoSql> bookList;
+            using (new LogRavenCommand($"Query = {options}", logger))
+            {
+                bookList = listService
+                    .SortFilterPage(options)
+                    .ToList();
+            }
+                 
             SetupTraceInfo();           //REMOVE THIS FOR BOOK as it could be confusing
 
-            return View(new BookListCombinedDto  
+            return View(new BookListNoSqlCombinedDto
                 (options, bookList));              
         }
         /*******************************************************

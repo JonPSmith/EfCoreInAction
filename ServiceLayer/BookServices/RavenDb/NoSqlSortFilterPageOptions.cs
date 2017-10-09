@@ -66,6 +66,13 @@ namespace ServiceLayer.BookServices.RavenDb
             PrevCheckState = newCheckState;
         }
 
+        public override string ToString()
+        {
+            return $"Sort by: {OrderByOptions}, Filter by: {FilterBy}" +
+                   (string.IsNullOrEmpty(FilterValue) ? "" : $" (filter value = {FilterValue})") +
+                  $", PageSize = {PageSize}, PageNum = {PageNum}";
+        }
+
         //----------------------------------------
         //private methods
 
@@ -78,6 +85,7 @@ namespace ServiceLayer.BookServices.RavenDb
         {
             return $"{(int) FilterBy},{FilterValue},{PageSize},{NumPages}";
         }
+
 
     }
 }

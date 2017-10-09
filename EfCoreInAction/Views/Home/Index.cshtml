@@ -1,5 +1,5 @@
 ﻿@using EfCoreInAction.Helpers
-@model ServiceLayer.BookServices.BookListCombinedDto
+@model ServiceLayer.BookServices.BookListNoSqlCombinedDto
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -88,9 +88,9 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                            <li>@Html.ActionLink("Change Pub Date", "ChangePubDate", "Admin", new { id = item.BookId })</li>
-                            <li>@Html.ActionLink("Add Price Promotion", "ChangePromotion", "Admin", new { id = item.BookId })</li>
-                            <li>@Html.ActionLink("Add Review", "AddBookReview", "Admin", new { id = item.BookId })</li>
+                            <li>@Html.ActionLink("Change Pub Date", "ChangePubDate", "Admin", new { id = item.GetIdAsInt() })</li>
+                            <li>@Html.ActionLink("Add Price Promotion", "ChangePromotion", "Admin", new { id = item.GetIdAsInt() })</li>
+                            <li>@Html.ActionLink("Add Review", "AddBookReview", "Admin", new { id = item.GetIdAsInt() })</li>
                         </ul>
                     </div>           
                 }
@@ -104,9 +104,9 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <li>@Html.ActionLink("Buy 1 book", "Buy", "Checkout", new {bookId = item.BookId, numBooks = 1})</li>
-                            <li>@Html.ActionLink("Buy 2 books", "Buy", "Checkout", new {bookId = item.BookId, numBooks = 2})</li>
-                            <li>@Html.ActionLink("Buy 3 books", "Buy", "Checkout", new {bookId = item.BookId, numBooks = 3})</li>
+                            <li>@Html.ActionLink("Buy 1 book", "Buy", "Checkout", new {bookId = item.GetIdAsInt(), numBooks = 1})</li>
+                            <li>@Html.ActionLink("Buy 2 books", "Buy", "Checkout", new {bookId = item.GetIdAsInt(), numBooks = 2})</li>
+                            <li>@Html.ActionLink("Buy 3 books", "Buy", "Checkout", new {bookId = item.GetIdAsInt(), numBooks = 3})</li>
                         </ul>
                     </div>
                 }

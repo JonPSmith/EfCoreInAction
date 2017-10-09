@@ -22,65 +22,6 @@ namespace EfCoreInAction
             return Path.Combine(Directory.GetCurrentDirectory(), WwwRootDirectory);
         }
 
-        public static IServiceCollection RegisterDbContextWithRavenDb<TContext>(this IServiceCollection serviceCollection,
-            Action<DbContextOptionsBuilder> optionsAction,
-            string ravenDbConnectionString) where TContext : DbContext
-        {
-            AddCoreServices<EfCoreContext>(serviceCollection, (p, b) => optionsAction.Invoke(b), ServiceLifetime.Scoped);
-
-            serviceCollection.AddSingleton(p => new RavenStore(ravenDbConnectionString));
-            serviceCollection.AddTransient(provider =>
-            {
-                //resolve another classes from DI
-                var options = provider.GetService<DbContextOptions<EfCoreContext>>();
-                var storeSource = provider.GetService<RavenStore>();
-                var logger = provider.GetService<ILogger<RavenUpdater>>();
-
-                //pass any parameters
-                return new EfCoreContext(options, storeSource.CreateSqlUpdater(logger));
-            });
-
-            return serviceCollection;
-        }
-
-        private static void AddCoreServices<TContext>(
-            IServiceCollection serviceCollection,
-            Action<IServiceProvider, DbContextOptionsBuilder> optionsAction,
-            ServiceLifetime optionsLifetime)
-            where TContext : DbContext
-        {
-            serviceCollection
-                .AddMemoryCache()
-                .AddLogging();
-
-            serviceCollection.TryAdd(
-                new ServiceDescriptor(
-                    typeof(DbContextOptions<TContext>),
-                    p => DbContextOptionsFactory<TContext>(p, optionsAction),
-                    optionsLifetime));
-
-            serviceCollection.Add(
-                new ServiceDescriptor(
-                    typeof(DbContextOptions),
-                    p => p.GetRequiredService<DbContextOptions<TContext>>(),
-                    optionsLifetime));
-        }
-
-        private static DbContextOptions<TContext> DbContextOptionsFactory<TContext>(
-            IServiceProvider applicationServiceProvider,
-            Action<IServiceProvider, DbContextOptionsBuilder> optionsAction)
-            where TContext : DbContext
-        {
-            var builder = new DbContextOptionsBuilder<TContext>(
-                new DbContextOptions<TContext>(new Dictionary<Type, IDbContextOptionsExtension>()));
-
-            builder.UseApplicationServiceProvider(applicationServiceProvider);
-
-            optionsAction?.Invoke(applicationServiceProvider, builder);
-
-            return builder.Options;
-        }
-
         //see https://github.com/aspnet/EntityFrameworkCore/issues/9033#issuecomment-317104564
         public static IWebHost MigrateDatabase(this IWebHost webHost)
         {

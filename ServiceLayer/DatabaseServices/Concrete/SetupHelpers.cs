@@ -100,7 +100,7 @@ namespace ServiceLayer.DatabaseServices.Concrete
         }
 
         public static void GenerateBooks(this DbContextOptions<EfCoreContext> options,
-            RavenStore storeProvider,
+            IRavenStore storeProvider,
             ILogger logger,
             int numBooksToAdd, string wwwrootDirectory, Func<int, bool> progessCancel)
         {           

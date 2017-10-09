@@ -35,7 +35,7 @@ namespace EfCoreInAction.Controllers
         public IActionResult Books(int numBooks, bool wipeDatabase, 
             [FromServices]EfCoreContext context,
             [FromServices]DbContextOptions<EfCoreContext> options,
-            [FromServices]RavenStore storeProvider,
+            [FromServices]IRavenStore storeProvider,
             [FromServices]ILogger<RavenStore> ravenLogger,
             [FromServices]IHostingEnvironment env)
         {
