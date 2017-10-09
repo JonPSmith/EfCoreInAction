@@ -1,8 +1,7 @@
-﻿using DataLayer.NoSql;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Raven.Client.Document;
 
-namespace ServiceLayer.BookServices.RavenDb
+namespace DataNoSql
 {
     public interface IRavenStore
     {

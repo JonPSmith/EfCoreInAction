@@ -2,13 +2,12 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System.Linq;
-using DataLayer.NoSql;
 using Raven.Abstractions.Indexing;
 using Raven.Client.Indexes;
 
-namespace ServiceLayer.BookServices.RavenDb
+namespace DataNoSql
 {
-    public class BookById : AbstractIndexCreationTask<BookNoSqlDto>
+    public class BookById : AbstractIndexCreationTask<BookListNoSql>
     {
         public BookById()
         {
@@ -18,7 +17,7 @@ namespace ServiceLayer.BookServices.RavenDb
         }
     }
 
-    public class BookByActualPrice : AbstractIndexCreationTask<BookNoSqlDto>
+    public class BookByActualPrice : AbstractIndexCreationTask<BookListNoSql>
     {
         public BookByActualPrice()
         {
@@ -28,7 +27,7 @@ namespace ServiceLayer.BookServices.RavenDb
         }
     }
 
-    public class BookByVotes : AbstractIndexCreationTask<BookNoSqlDto>
+    public class BookByVotes : AbstractIndexCreationTask<BookListNoSql>
     {
         public BookByVotes()
         {

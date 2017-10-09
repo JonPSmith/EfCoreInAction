@@ -19,4 +19,8 @@
     <ProjectReference Include="..\DataLayer\DataLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="BookServices\RavenDb\" />
+  </ItemGroup>
+
 </Project>

@@ -6,6 +6,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using DataLayer.EfCode;
+using DataNoSql;
 using Microsoft.EntityFrameworkCore;
 
 [assembly: InternalsVisibleTo("Test")]
@@ -34,11 +35,11 @@ namespace DataLayer.NoSql
                         _updater.DeleteBook(bookToUpdate.BookId);
                         break;
                     case EntityState.Modified:
-                        var modifiedBook = BookNoSqlDto.ProjectBook(_context.Books, bookToUpdate.BookId);
+                        var modifiedBook = _context.Books.ProjectBook( bookToUpdate.BookId);
                         _updater.UpdateBook(modifiedBook);
                         break;
                     case EntityState.Added:
-                        var newBook = BookNoSqlDto.ProjectBook(_context.Books, bookToUpdate.BookId);
+                        var newBook = _context.Books.ProjectBook(bookToUpdate.BookId);
                         _updater.CreateNewBook(newBook);
                         break;
                     default:

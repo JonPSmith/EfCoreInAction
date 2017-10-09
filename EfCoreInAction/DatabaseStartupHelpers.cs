@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using DataLayer.EfCode;
+using DataNoSql;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using ServiceLayer.BookServices.RavenDb;
 using ServiceLayer.DatabaseServices.Concrete;
 
 namespace EfCoreInAction

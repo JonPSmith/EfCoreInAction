@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DataLayer.NoSql;
+using DataNoSql;
 using Microsoft.Extensions.Configuration;
 using Raven.Client;
 using Raven.Client.Document;
@@ -20,7 +21,7 @@ namespace test.Helpers
             {
                 using (IDocumentSession session = store.OpenSession())
                 {
-                    return session.Query<BookNoSqlDto>().Count();
+                    return session.Query<BookListNoSql>().Count();
                 }
             }
             catch (InvalidOperationException e)
@@ -30,12 +31,12 @@ namespace test.Helpers
         }
 
 
-        public static IEnumerable<BookNoSqlDto> CreateDummyBooks(int numBooks = 10, bool stepByYears = false)
+        public static IEnumerable<BookListNoSql> CreateDummyBooks(int numBooks = 10, bool stepByYears = false)
         {
             var booksQueryable = EfTestData.CreateDummyBooks(numBooks, stepByYears).AsQueryable();
             foreach (var book in booksQueryable)
             {
-                yield return BookNoSqlDto.ProjectBook(booksQueryable, book.BookId);
+                yield return booksQueryable.ProjectBook(book.BookId);
             }
 
         }

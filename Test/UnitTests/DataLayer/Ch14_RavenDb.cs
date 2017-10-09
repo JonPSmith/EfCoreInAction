@@ -4,9 +4,9 @@
 using System;
 using System.Linq;
 using DataLayer.NoSql;
+using DataNoSql;
 using Microsoft.Extensions.Configuration;
 using Raven.Client;
-using ServiceLayer.BookServices.RavenDb;
 using test.Helpers;
 using Xunit;
 using Xunit.Abstractions;
@@ -72,7 +72,7 @@ namespace test.UnitTests.DataLayer
             using (var session = Store.OpenSession())
             {
                 //ATTEMPT
-                var data = session.Query<BookNoSqlDto>().ToList();
+                var data = session.Query<BookListNoSql>().ToList();
 
                 //VERIFY
                 data.Count.ShouldEqual(10);
@@ -86,7 +86,7 @@ namespace test.UnitTests.DataLayer
             using (var session = Store.OpenSession())
             {
                 //ATTEMPT
-                var data = session .Load<BookNoSqlDto>(BookNoSqlDto.ConvertIdToNoSqlId(1));
+                var data = session .Load<BookListNoSql>(BookListNoSql.ConvertIdToNoSqlId(1));
 
                 //VERIFY
                 data.ShouldNotBeNull();
@@ -101,12 +101,12 @@ namespace test.UnitTests.DataLayer
             using (var session = Store.OpenSession())
             {
                 //ATTEMPT
-                var data = session.Query<BookNoSqlDto>().OrderByDescending(x => x.Id)
+                var data = session.Query<BookListNoSql>().OrderByDescending(x => x.Id)
                     .ToList();
 
                 //VERIFY
                 var i = 10;
-                data.ForEach(x => x.Id.ShouldEqual(BookNoSqlDto.ConvertIdToNoSqlId(i--)));
+                data.ForEach(x => x.Id.ShouldEqual(BookListNoSql.ConvertIdToNoSqlId(i--)));
             }
         }
 
@@ -117,7 +117,7 @@ namespace test.UnitTests.DataLayer
             using (var session = Store.OpenSession())
             {
                 //ATTEMPT
-                var data = session.Query<BookNoSqlDto>().OrderByDescending(x => x.Id)
+                var data = session.Query<BookListNoSql>().OrderByDescending(x => x.Id)
                     .Skip(5)
                     .Take(2)
                     .ToList();
@@ -125,7 +125,7 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 data.Count.ShouldEqual(2);
                 var i = 10 - 5;
-                data.ForEach(x => x.Id.ShouldEqual(BookNoSqlDto.ConvertIdToNoSqlId(i--)));
+                data.ForEach(x => x.Id.ShouldEqual(BookListNoSql.ConvertIdToNoSqlId(i--)));
             }
         }
 
@@ -136,7 +136,7 @@ namespace test.UnitTests.DataLayer
             using (var session = Store.OpenSession())
             {
                 //ATTEMPT
-                var data = session.Query<BookNoSqlDto>().OrderByDescending(x => x.ActualPrice)
+                var data = session.Query<BookListNoSql>().OrderByDescending(x => x.ActualPrice)
                     .ToList();
 
                 //VERIFY
@@ -152,13 +152,13 @@ namespace test.UnitTests.DataLayer
             using (var session = Store.OpenSession())
             {
                 //ATTEMPT
-                var data = session.Query<BookNoSqlDto>().OrderBy(x => x.ActualPrice)
+                var data = session.Query<BookListNoSql>().OrderBy(x => x.ActualPrice)
                     .Where(x => x.ReviewsAverageVotes > 2.75)
                     .ToList();
 
                 //VERIFY
                 data.Count.ShouldEqual(2);
-                data.Select(x => x.Id).ShouldEqual(new []{BookNoSqlDto.ConvertIdToNoSqlId(6), BookNoSqlDto.ConvertIdToNoSqlId(10)});
+                data.Select(x => x.Id).ShouldEqual(new []{BookListNoSql.ConvertIdToNoSqlId(6), BookListNoSql.ConvertIdToNoSqlId(10)});
             }
         }
     }

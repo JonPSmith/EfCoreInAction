@@ -8,10 +8,10 @@
 // Written by Jon P Smith : GitHub JonPSmith, www.thereformedprogrammer.net
 // =====================================================
 
+using DataNoSql;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using ServiceLayer.BookServices.RavenDb;
 
 namespace ServiceLayer.Logger
 {

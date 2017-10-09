@@ -3,15 +3,11 @@
 
 using System;
 using System.Diagnostics;
-using DataLayer.EfCode;
-using DataLayer.NoSql;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Raven.Abstractions.Data;
 using Raven.Client.Document;
-using ServiceLayer.Logger;
 
-namespace ServiceLayer.BookServices.RavenDb
+namespace DataNoSql
 {
     public class RavenUpdater : INoSqlUpdater
     {
@@ -50,11 +46,11 @@ namespace ServiceLayer.BookServices.RavenDb
             using(new LogRavenCommand($"Delete: bookId {bookId}", _logger))
             using (var session = _store.OpenSession())
             {
-                session.Delete(BookNoSqlDto.ConvertIdToNoSqlId(bookId));
+                session.Delete(BookListNoSql.ConvertIdToNoSqlId(bookId));
             }
         }
 
-        public void CreateNewBook(BookNoSqlDto book)
+        public void CreateNewBook(BookListNoSql book)
         {
             using (new LogRavenCommand($"Create: bookId {book.StringIdAsInt()}", _logger))
             using (var bulkInsert = _store.BulkInsert())
@@ -63,7 +59,7 @@ namespace ServiceLayer.BookServices.RavenDb
             }
         }
 
-        public void UpdateBook(BookNoSqlDto book)
+        public void UpdateBook(BookListNoSql book)
         {
             using (new LogRavenCommand($"Update: bookId {book.StringIdAsInt()}", _logger))
             using (var bulkInsert = _store.BulkInsert(null, new BulkInsertOptions{ OverwriteExisting = true}))

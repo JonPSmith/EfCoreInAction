@@ -1,19 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfCoreInAction", "EfCoreInAction\EfCoreInAction.csproj", "{1BEF189E-36F6-4E4E-AF0E-198EDE8A1120}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EfCoreInAction", "EfCoreInAction\EfCoreInAction.csproj", "{1BEF189E-36F6-4E4E-AF0E-198EDE8A1120}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayer", "DataLayer\DataLayer.csproj", "{FC4DB53F-B15E-4BC2-BA65-ACBDB75452AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer", "DataLayer\DataLayer.csproj", "{FC4DB53F-B15E-4BC2-BA65-ACBDB75452AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceLayer", "ServiceLayer\ServiceLayer.csproj", "{63EA6F03-8409-44AF-AC0E-205D2D695B40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceLayer", "ServiceLayer\ServiceLayer.csproj", "{63EA6F03-8409-44AF-AC0E-205D2D695B40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{6848C51B-B214-4FFC-9975-FB63532AFE0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{6848C51B-B214-4FFC-9975-FB63532AFE0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BizLogic", "BizLogic\BizLogic.csproj", "{A804B2C9-E3A4-4F24-87C9-99D971335900}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BizLogic", "BizLogic\BizLogic.csproj", "{A804B2C9-E3A4-4F24-87C9-99D971335900}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BizDbAccess", "BizDbAccess\BizDbAccess.csproj", "{AAF00E71-CDFB-4F41-AFE6-804DCBD93917}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BizDbAccess", "BizDbAccess\BizDbAccess.csproj", "{AAF00E71-CDFB-4F41-AFE6-804DCBD93917}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataNoSql", "DataNoSql\DataNoSql.csproj", "{5C2AD412-0318-47C0-A051-B22A8FD29914}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,8 +99,23 @@ Global
 		{AAF00E71-CDFB-4F41-AFE6-804DCBD93917}.Release|x64.Build.0 = Release|Any CPU
 		{AAF00E71-CDFB-4F41-AFE6-804DCBD93917}.Release|x86.ActiveCfg = Release|Any CPU
 		{AAF00E71-CDFB-4F41-AFE6-804DCBD93917}.Release|x86.Build.0 = Release|Any CPU
+		{5C2AD412-0318-47C0-A051-B22A8FD29914}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C2AD412-0318-47C0-A051-B22A8FD29914}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C2AD412-0318-47C0-A051-B22A8FD29914}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5C2AD412-0318-47C0-A051-B22A8FD29914}.Debug|x64.Build.0 = Debug|Any CPU
+		{5C2AD412-0318-47C0-A051-B22A8FD29914}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5C2AD412-0318-47C0-A051-B22A8FD29914}.Debug|x86.Build.0 = Debug|Any CPU
+		{5C2AD412-0318-47C0-A051-B22A8FD29914}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C2AD412-0318-47C0-A051-B22A8FD29914}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C2AD412-0318-47C0-A051-B22A8FD29914}.Release|x64.ActiveCfg = Release|Any CPU
+		{5C2AD412-0318-47C0-A051-B22A8FD29914}.Release|x64.Build.0 = Release|Any CPU
+		{5C2AD412-0318-47C0-A051-B22A8FD29914}.Release|x86.ActiveCfg = Release|Any CPU
+		{5C2AD412-0318-47C0-A051-B22A8FD29914}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E58611ED-EF6E-4B01-B6FE-65039B0A7FB8}
 	EndGlobalSection
 EndGlobal

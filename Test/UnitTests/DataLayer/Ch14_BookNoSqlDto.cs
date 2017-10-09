@@ -3,6 +3,7 @@
 
 using DataLayer.EfCode;
 using DataLayer.NoSql;
+using DataNoSql;
 using test.EfHelpers;
 using Xunit;
 using Xunit.Abstractions;
@@ -36,7 +37,7 @@ namespace test.UnitTests.DataLayer
                 var logIt = new LogDbContext(context);
 
                 //ATTEMPT
-                var dto = BookNoSqlDto.ProjectBook(context.Books, 1);
+                var dto = context.Books.ProjectBook(1);
 
                 //VERIFY
                 dto.AuthorsOrdered.ShouldEqual("Author0000, CommonAuthor");

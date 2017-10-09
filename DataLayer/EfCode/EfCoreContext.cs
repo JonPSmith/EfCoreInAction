@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using DataLayer.EfCode.Configurations;
 using DataLayer.NoSql;
 using DataLayer.SqlCode;
+using DataNoSql;
 
 namespace DataLayer.EfCode
 {

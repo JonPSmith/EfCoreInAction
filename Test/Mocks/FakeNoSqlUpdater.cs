@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using DataLayer.NoSql;
+using DataNoSql;
 
 namespace test.Mocks
 {
@@ -17,12 +18,12 @@ namespace test.Mocks
             Logs.Add($"Delete: BookId = {bookId}");
         }
 
-        public void CreateNewBook(BookNoSqlDto book)
+        public void CreateNewBook(BookListNoSql book)
         {
             Logs.Add($"Create: BookId = {book.StringIdAsInt()}");
         }
 
-        public void UpdateBook(BookNoSqlDto book)
+        public void UpdateBook(BookListNoSql book)
         {
             Logs.Add($"Update: BookId = {book.StringIdAsInt()}");
         }
