@@ -52,10 +52,10 @@ namespace ServiceLayer.BookServices.RavenDb
         public string PrevCheckState { get; set; }
 
 
-        public void SetupRestOfDto<T>(IQueryable<T> query)
+        public void SetupRestOfDto(int numBooks)
         {
             NumPages = (int) Math.Ceiling(
-                (double) query.Count()/PageSize);
+                (double)numBooks / PageSize);
             PageNum = Math.Min(
                 Math.Max(1, PageNum), NumPages);                                                            
 

@@ -67,6 +67,7 @@ namespace Test.UnitTests.ServiceLayer
 
             //ATTEMPT
             options.PageSize = 5;
+            options.SetupRestOfDto(_numEntries); //need this otherwise page is set back to 1
             options.PageNum = pageNum;
             var books = service.SortFilterPage(options).ToList();
 
@@ -75,6 +76,42 @@ namespace Test.UnitTests.ServiceLayer
             books.First().GetIdAsInt().ShouldEqual(10 - ((pageNum - 1) * options.PageSize));
         }
 
+        [Fact]
+        public void TestSortByPriceLowestFirst()
+        {
+            //SETUP
+            var service = new ListBooksNoSqlService(StoreFactory);
+            var options = new NoSqlSortFilterPageOptions();
 
+            //ATTEMPT
+            options.OrderByOptions = OrderNoSqlByOptions.ByPriceLowestFirst;
+            var books = service.SortFilterPage(options).ToList();
+
+            //VERIFY
+            books.Count.ShouldEqual(options.PageSize);
+            var i = books.First().ActualPrice;
+            books.ForEach(x =>
+            {
+                (x.ActualPrice >= i).ShouldBeTrue();
+                i = x.ActualPrice;
+            });
+        }
+
+        [Fact]
+        public void TestFilterByVotes()
+        {
+            //SETUP
+            var service = new ListBooksNoSqlService(StoreFactory);
+            var options = new NoSqlSortFilterPageOptions();
+
+            //ATTEMPT
+            options.FilterBy = BooksNoSqlFilterBy.ByVotes;
+            options.FilterValue = (3).ToString();
+            var books = service.SortFilterPage(options).ToList();
+
+            //VERIFY
+            books.All(x => x.ReviewsAverageVotes > 3).ShouldBeTrue();
+
+        }
     }
 }
