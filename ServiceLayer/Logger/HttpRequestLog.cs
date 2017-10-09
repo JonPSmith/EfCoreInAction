@@ -112,7 +112,7 @@ namespace ServiceLayer.Logger
             {
                 thisSessionLog._requestLogs = thisSessionLog._requestLogs.Skip(thisSessionLog._requestLogs.Count - ExceedMaxLogsTrimTo).ToList();
                 thisSessionLog._requestLogs.Insert(0, new LogParts(LogLevel.Warning, new EventId(1, "EfCoreInAction"),
-                    $"The number of logs exceeded {MaxLogsInOneTrace}. I have removed older logs to stop the display from working."));
+                    $"The number of logs exceeded {MaxLogsInOneTrace}. I have removed older logs so that the display of logs won't break."));
             }
         }
 
