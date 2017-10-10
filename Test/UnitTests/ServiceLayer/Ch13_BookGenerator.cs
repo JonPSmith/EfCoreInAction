@@ -32,8 +32,8 @@ namespace Test.UnitTests.ServiceLayer
             var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
 
             //ATTEMPT
-            var gen = new BookGenerator();
-            var books = gen.GenerateBooks(filePath, numBooks);
+            var gen = new BookGenerator(filePath, false);
+            var books = gen.GenerateBooks(numBooks, 0).ToList();
 
             //VERIFY
             books.Count().ShouldEqual(numBooks);
@@ -41,16 +41,56 @@ namespace Test.UnitTests.ServiceLayer
             books.Count(x => x.Promotion != null).ShouldEqual(3);
         }
 
+
+        [Fact]
+        public void TestGenerateBooksDistinctTitles()
+        {
+            //SETUP
+            const int numBooks = 20;
+            var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
+
+            //ATTEMPT
+            var gen = new BookGenerator(filePath, true);
+            var books = gen.GenerateBooks(numBooks, 0).ToList();
+
+            //VERIFY
+            books.Count().ShouldEqual(numBooks);
+            books.Select(x => x.Title).Distinct().Count().ShouldEqual(20);
+            books.Count(x => x.Title.Contains("(copy ")).ShouldEqual(10);
+        }
+
+        [Fact]
+        public void TestGenerateBooksPublicationDate()
+        {
+            //SETUP
+            const int numBooks = 20;
+            var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
+
+            //ATTEMPT
+            var gen = new BookGenerator(filePath, false);
+            var books = gen.GenerateBooks(numBooks, 0).ToList();
+
+            //VERIFY
+            books.Count.ShouldEqual(numBooks);
+            for (int i = 0; i < 10; i++)
+            {
+                books[i].PublishedOn.ShouldEqual(books[i+10].PublishedOn.AddDays(-1));
+            }
+        }
+
+        //--------------------------------------------------------------------
+        //Check main json book data
+
         [Fact]
         public void CheckMainData()
         {
             //SETUP
-            var filepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
+            var filePath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
                 @"EfCoreInAction\wwwroot\", SetupHelpers.SeedFileSubDirectory,
                 SetupHelpers.TemplateFileName);
 
             //ATTEMPT
-            var templateBooks = JsonConvert.DeserializeObject<List<BookGenerator.BookData>>(File.ReadAllText(filepath));
+            var templateBooks = JsonConvert.DeserializeObject<List<BookGenerator.BookData>>(File.ReadAllText(filePath));
 
             //VERIFY
             templateBooks.Count.ShouldEqual(390);
@@ -58,17 +98,17 @@ namespace Test.UnitTests.ServiceLayer
         }
 
         [Fact]
-        public void TestGenerateBooksFullDataUniqueAuthorLinks()
+        public void TestGenerateBooksFullDataCheckUniqueAuthorLinks()
         {
             //SETUP
             const int numBooks = 600;
-            var filepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
+            var filePath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
                 @"EfCoreInAction\wwwroot\", SetupHelpers.SeedFileSubDirectory,
                 SetupHelpers.TemplateFileName);
 
             //ATTEMPT
-            var gen = new BookGenerator();
-            var books = gen.GenerateBooks(filepath, numBooks);
+            var gen = new BookGenerator(filePath, false);
+            var books = gen.GenerateBooks(numBooks, 0).ToList();
 
             //VERIFY
             books.Count().ShouldEqual(numBooks);
@@ -76,22 +116,23 @@ namespace Test.UnitTests.ServiceLayer
         }
 
         [Fact]
-        public void TestGenerateBooksDistinctTitles()
+        public void TestGenerateBooksNotDistinctTitles()
         {
             //SETUP
             const int numBooks = 600;
-            var filepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
+            var filePath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
                 @"EfCoreInAction\wwwroot\", SetupHelpers.SeedFileSubDirectory,
                 SetupHelpers.TemplateFileName);
 
             //ATTEMPT
-            var gen = new BookGenerator();
-            var books = gen.GenerateBooks(filepath, numBooks);
+            var gen = new BookGenerator(filePath, false);
+            var books = gen.GenerateBooks(numBooks, 0).ToList();
 
             //VERIFY
             books.Count().ShouldEqual(numBooks);
             books.Select(x => x.Title).Distinct().Count().ShouldEqual(390);
         }
+
 
         //--------------------------------------------------------------------
 
@@ -109,9 +150,8 @@ namespace Test.UnitTests.ServiceLayer
                 var progress = new List<int>();
 
                 //ATTEMPT
-                var gen = new BookGenerator();
-                gen.WriteBatchSize = 10;
-                gen.WriteBooks(filePath, numBooks, context, x => {
+                var gen = new BookGenerator(filePath, false);
+                gen.WriteBooks(numBooks, options, x => {
                     progress.Add(x);
                     return false;
                 });
@@ -119,6 +159,37 @@ namespace Test.UnitTests.ServiceLayer
                 //VERIFY
                 context.Books.Count().ShouldEqual(20);
                 progress.ShouldEqual(new List<int>{0, 10, 20});
+            }
+        }
+
+        [Fact]
+        public void TestWriteBooks20SecondTime()
+        {
+            //SETUP
+            const int numBooks = 20;
+            var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                var progress = new List<int>();
+
+                //ATTEMPT
+                var gen = new BookGenerator(filePath, true);
+                gen.WriteBooks(numBooks, options, x => {
+                    progress.Add(x);
+                    return false;
+                });
+                gen.WriteBooks(numBooks, options, x => {
+                    progress.Add(x);
+                    return false;
+                });
+
+                //VERIFY
+                context.Books.Count().ShouldEqual(40);
+                context.Authors.Count().ShouldEqual(17);
+                context.Books.Count(x => x.Title.EndsWith("(copy 3)")).ShouldEqual(10);
             }
         }
 
@@ -137,9 +208,8 @@ namespace Test.UnitTests.ServiceLayer
                 var progress = new List<int>();
 
                 //ATTEMPT
-                var gen = new BookGenerator();
-                gen.WriteBatchSize = 10;
-                gen.WriteBooks(filePath, numBooks, context,
+                var gen = new BookGenerator(filePath, false);
+                gen.WriteBooks(numBooks, options,
                     x => {
                         progress.Add(x);
                         return cancelCount++ > 0;

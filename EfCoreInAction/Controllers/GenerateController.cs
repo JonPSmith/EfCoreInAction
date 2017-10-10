@@ -6,11 +6,12 @@ using DataLayer.EfCode;
 using EfCoreInAction.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ServiceLayer.DatabaseServices.Concrete;
 
 namespace EfCoreInAction.Controllers
 {
-    public class GenerateController : Controller
+    public class GenerateController : BaseTraceController
     {
 
         //This is a hack. Shouldn't use static variables like this! Not multi-user safe!!
@@ -29,7 +30,10 @@ namespace EfCoreInAction.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Books(int numBooks, bool wipeDatabase, [FromServices]EfCoreContext context, [FromServices]IHostingEnvironment env)
+        public IActionResult Books(int numBooks, bool wipeDatabase, 
+            [FromServices]EfCoreContext context,
+            [FromServices]DbContextOptions<EfCoreContext> options,
+            [FromServices]IHostingEnvironment env)
         {
             if (numBooks == 0)
                 return View((object) "Error: should contain the number of books to generate.");
@@ -38,11 +42,14 @@ namespace EfCoreInAction.Controllers
 
             if (wipeDatabase)
                 context.DevelopmentWipeCreated(env.WebRootPath);
-            context.GenerateBooks(numBooks, env.WebRootPath, numWritten =>
+            options.GenerateBooks(numBooks, env.WebRootPath, numWritten =>
             {
                 _progress = numWritten * 100.0 / numBooks;
                 return _cancel;
             });
+
+            SetupTraceInfo();
+
             return
                 View((object) ((_cancel ? "Cancelled" : "Successful") +
                      $" generate. Num books in database = {context.Books.Count()}."));

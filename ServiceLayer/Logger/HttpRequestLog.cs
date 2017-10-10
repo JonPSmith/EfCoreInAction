@@ -29,10 +29,12 @@ namespace ServiceLayer.Logger
     public class HttpRequestLog
     {
         private const int MaxKeepLogMinutes = 10;
+        private const int MaxLogsInOneTrace = 500;
+        private const int ExceedMaxLogsTrimTo = MaxLogsInOneTrace/2;
 
         private static readonly ConcurrentDictionary<string, HttpRequestLog> AllHttpRequestLogs = new ConcurrentDictionary<string, HttpRequestLog>();
 
-        private readonly List<LogParts> _requestLogs;
+        private List<LogParts> _requestLogs;
 
         public string TraceIdentifier { get; }
 
@@ -59,6 +61,9 @@ namespace ServiceLayer.Logger
         {
             var thisSessionLog = AllHttpRequestLogs.GetOrAdd(traceIdentifier,
                 x => new HttpRequestLog(traceIdentifier));
+
+            //This stops a single session having too many logs
+            TrimLogsIfTooLong(thisSessionLog);
 
             thisSessionLog._requestLogs.Add(new LogParts(logLevel, eventId, eventString));
             thisSessionLog.LastAccessed = DateTime.UtcNow;
@@ -98,6 +103,17 @@ namespace ServiceLayer.Logger
                     x => DateTime.UtcNow.Subtract(x.LastAccessed).TotalMinutes > maxKeepLogMinutes);
 
             RemoveLogs(logsToRemove);
+        }
+
+
+        private static void TrimLogsIfTooLong(HttpRequestLog thisSessionLog)
+        {
+            if (thisSessionLog._requestLogs.Count > MaxLogsInOneTrace)
+            {
+                thisSessionLog._requestLogs = thisSessionLog._requestLogs.Skip(thisSessionLog._requestLogs.Count - ExceedMaxLogsTrimTo).ToList();
+                thisSessionLog._requestLogs.Insert(0, new LogParts(LogLevel.Warning, new EventId(1, "EfCoreInAction"),
+                    $"The number of logs exceeded {MaxLogsInOneTrace}. I have removed older logs so that the display of logs won't break."));
+            }
         }
 
         private static void RemoveLogs(IEnumerable<HttpRequestLog> logsToRemove)
