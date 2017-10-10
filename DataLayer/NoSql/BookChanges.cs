@@ -29,10 +29,10 @@ namespace DataLayer.NoSql
         /// </summary>
         /// <param name="changes">The tracked changes to look at</param>
         /// <returns>A list of BookChanges that </returns>
-        public static IImmutableList<BookChanges> FindChangedBooks(IImmutableList<BookChangeDetector> changes)
+        public static IImmutableList<BookChanges> FindChangedBooks(IImmutableList<BookChangeInfo> changes)
         {
-            var booksDict = new Dictionary<int, BookChangeDetector>();
-            foreach (var taggedBook in changes)
+            var booksDict = new Dictionary<int, BookChangeInfo>();
+            foreach (var taggedBook in changes.Where(x => x.State != EntityState.Unchanged))
             {
                 if (booksDict.ContainsKey(taggedBook.BookId) && 
                     (booksDict[taggedBook.BookId].State == EntityState.Added || booksDict[taggedBook.BookId].State == EntityState.Deleted))

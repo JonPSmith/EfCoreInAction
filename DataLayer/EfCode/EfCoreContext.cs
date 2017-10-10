@@ -30,42 +30,39 @@ namespace DataLayer.EfCode
             _updater = updater;
         }
 
-        public override int SaveChanges()
+        public override int SaveChanges() //#A
         {
             //I need to remember the changes, but not process them yet, as new entries BookId's are not set until after SaveChanges
-            ChangeTracker.DetectChanges();
-            var detectedChanges = BookChangeDetector.FindBookChanges(ChangeTracker.Entries());
-            int result;
-            try
-            {
-                ChangeTracker.AutoDetectChangesEnabled = false;
-                result = base.SaveChanges();
-            }
-            finally
-            {
-                ChangeTracker.AutoDetectChangesEnabled = true;
-            }
-            var booksChanged = BookChanges.FindChangedBooks(detectedChanges);
-            var updater = new ApplyChangeToNoSql(this, _updater);
-            updater.UpdateNoSql(booksChanged);
+            var detectedChanges = BookChangeInfo      //#B
+                .FindBookChanges(ChangeTracker.Entries());//#B
+
+            var result = base.SaveChanges(); //#C
+
+            var booksChanged = BookChanges          //#D
+                .FindChangedBooks(detectedChanges); //#D
+            var updater = new ApplyChangeToNoSql //#E
+                (this, _updater);                //#E
+            updater.UpdateNoSql(booksChanged);   //#F
             return result;
         }
+        /********************************************************
+        #A I must override all the SaveChanges methods (sync and async) to make sure I capture all updates to the database
+        #B This stage is all about detecting the State of all the tracked entities before they get cleared by the call to the base SaveChanges
+        #C Now I can call the base SaveChanges, as I have all the state information
+        #D There may have been multiple changes to a single Book. This stage combines them so that I only send one update to the NoSQL database
+        #E My Data Layer oversees the projection of the SQL database into the form that the NoSQL database needs it in. The NoSQL provides an updater method, via the constuctor, which will do the update
+        #F Now I apply apply any updates to the NoSQL database
+         * ******************************************************/
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             //I need to remember the changes, but not process them yet, as new entries BookId's are not set until after SaveChanges
-            ChangeTracker.DetectChanges();
-            var detectedChanges = BookChangeDetector.FindBookChanges(ChangeTracker.Entries());
+
+            var detectedChanges = BookChangeInfo.FindBookChanges(ChangeTracker.Entries());
             int result;
-            try
-            {
-                ChangeTracker.AutoDetectChangesEnabled = false;
-                result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            }
-            finally
-            {
-                ChangeTracker.AutoDetectChangesEnabled = true;
-            }
+
+            result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
             var booksChanged = BookChanges.FindChangedBooks(detectedChanges);
             var updater = new ApplyChangeToNoSql(this, _updater);
             updater.UpdateNoSql(booksChanged);
