@@ -23,7 +23,7 @@ namespace DataLayer.NoSql
             _updater = updater;
         }
 
-        public void UpdateNoSql(IImmutableList<BookChanges> booksToUpdate)
+        public void UpdateNoSql(IImmutableList<BookChange> booksToUpdate)
         {
             if (_updater == null || !booksToUpdate.Any()) return;
 

@@ -48,7 +48,7 @@ namespace EfCoreInAction
                 ravenDbConnection = Configuration["RavenDb-Main"];
             }
 
-            services.RegisterDbContextWithRavenDb<EfCoreContext>(
+            services.RegisterDbContextWithRavenDb(
                 options => options.UseSqlServer(connection,
                 b => b.MigrationsAssembly("DataLayer")), ravenDbConnection);
 

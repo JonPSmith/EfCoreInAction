@@ -38,7 +38,7 @@ namespace DataLayer.EfCode
 
             var result = base.SaveChanges(); //#C
 
-            var booksChanged = BookChanges          //#D
+            var booksChanged = BookChange          //#D
                 .FindChangedBooks(detectedChanges); //#D
             var updater = new ApplyChangeToNoSql //#E
                 (this, _updater);                //#E
@@ -63,7 +63,7 @@ namespace DataLayer.EfCode
 
             result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            var booksChanged = BookChanges.FindChangedBooks(detectedChanges);
+            var booksChanged = BookChange.FindChangedBooks(detectedChanges);
             var updater = new ApplyChangeToNoSql(this, _updater);
             updater.UpdateNoSql(booksChanged);
             return result;

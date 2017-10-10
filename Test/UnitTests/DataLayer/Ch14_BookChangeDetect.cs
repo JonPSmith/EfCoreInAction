@@ -42,7 +42,7 @@ namespace test.UnitTests.DataLayer
                 //ATTEMPT
                 bookTracked.Title = Guid.NewGuid().ToString();
                 var tagged = BookChangeInfo.FindBookChanges(context.ChangeTracker.Entries());
-                var changes = BookChanges.FindChangedBooks(tagged);
+                var changes = BookChange.FindChangedBooks(tagged);
 
                 //VERIFY
                 changes.Count.ShouldEqual(1);
@@ -61,7 +61,7 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 bookTracked.Reviews.First().NumStars = 0;
-                var changes = BookChanges.FindChangedBooks(BookChangeInfo.FindBookChanges(context.ChangeTracker.Entries()));
+                var changes = BookChange.FindChangedBooks(BookChangeInfo.FindBookChanges(context.ChangeTracker.Entries()));
 
                 //VERIFY
                 changes.Count.ShouldEqual(1);
@@ -80,7 +80,7 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 context.Add(new PriceOffer { BookId = bookTracked.BookId, PromotionalText = "Unit Test", NewPrice = 1 });
-                var changes = BookChanges.FindChangedBooks(BookChangeInfo.FindBookChanges(context.ChangeTracker.Entries()));
+                var changes = BookChange.FindChangedBooks(BookChangeInfo.FindBookChanges(context.ChangeTracker.Entries()));
 
                 //VERIFY
                 changes.Count.ShouldEqual(1);
@@ -99,7 +99,7 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 context.Remove(bookTracked);
-                var changes = BookChanges.FindChangedBooks(BookChangeInfo.FindBookChanges(context.ChangeTracker.Entries()));
+                var changes = BookChange.FindChangedBooks(BookChangeInfo.FindBookChanges(context.ChangeTracker.Entries()));
 
                 //VERIFY
                 changes.Count.ShouldEqual(1);
@@ -118,7 +118,7 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 bookTracked.SoftDeleted = true;
-                var changes = BookChanges.FindChangedBooks(BookChangeInfo.FindBookChanges(context.ChangeTracker.Entries()));
+                var changes = BookChange.FindChangedBooks(BookChangeInfo.FindBookChanges(context.ChangeTracker.Entries()));
 
                 //VERIFY
                 changes.Count.ShouldEqual(1);
@@ -147,7 +147,7 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 bookTracked.SoftDeleted = false;
-                var changes = BookChanges.FindChangedBooks(BookChangeInfo.FindBookChanges(context.ChangeTracker.Entries()));
+                var changes = BookChange.FindChangedBooks(BookChangeInfo.FindBookChanges(context.ChangeTracker.Entries()));
 
                 //VERIFY
                 changes.Count.ShouldEqual(1);
@@ -170,7 +170,7 @@ namespace test.UnitTests.DataLayer
                 context.Books.Add(book);
                 var preChanges = BookChangeInfo.FindBookChanges(context.ChangeTracker.Entries());
                 context.SaveChanges();
-                var changes = BookChanges.FindChangedBooks(preChanges);
+                var changes = BookChange.FindChangedBooks(preChanges);
 
                 //VERIFY
                 changes.Count.ShouldEqual(1);
@@ -198,7 +198,7 @@ namespace test.UnitTests.DataLayer
                 context.Remove(context.Books.First());
                 var preChanges = BookChangeInfo.FindBookChanges(context.ChangeTracker.Entries());
                 context.SaveChanges();
-                var changes = BookChanges.FindChangedBooks(preChanges);
+                var changes = BookChange.FindChangedBooks(preChanges);
 
                 //VERIFY
                 changes.Count.ShouldEqual(1);
@@ -225,7 +225,7 @@ namespace test.UnitTests.DataLayer
                 context.Remove(context.Books.IgnoreQueryFilters().First());
                 var preChanges = BookChangeInfo.FindBookChanges(context.ChangeTracker.Entries());
                 context.SaveChanges();
-                var changes = BookChanges.FindChangedBooks(preChanges);
+                var changes = BookChange.FindChangedBooks(preChanges);
 
                 //VERIFY
                 changes.Count.ShouldEqual(0);
@@ -250,7 +250,7 @@ namespace test.UnitTests.DataLayer
                 context.Books.IgnoreQueryFilters().First().Title = "New Title";
                 var preChanges = BookChangeInfo.FindBookChanges(context.ChangeTracker.Entries());
                 context.SaveChanges();
-                var changes = BookChanges.FindChangedBooks(preChanges);
+                var changes = BookChange.FindChangedBooks(preChanges);
 
                 //VERIFY
                 changes.Count.ShouldEqual(0);
