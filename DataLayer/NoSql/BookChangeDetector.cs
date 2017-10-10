@@ -14,9 +14,8 @@ namespace DataLayer.NoSql
 {
     internal class BookChangeDetector
     {
-        private readonly int _bookId;
-        public int BookId => _bookId;
-        public int FinalBookId => Book?.BookId ?? _bookId;
+        public int BookId { get; private set; }
+        public int FinalBookId => Book?.BookId ?? BookId;
         public EntityEntry Entity { get; private set; }
         public EntityState State { get; private set; }
 
@@ -24,7 +23,7 @@ namespace DataLayer.NoSql
 
         public BookChangeDetector(int bookId, EntityEntry entity, Book book)
         {
-            _bookId = bookId;
+            BookId = bookId;
             Entity = entity;
             Book = book;
 
