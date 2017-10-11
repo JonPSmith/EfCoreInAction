@@ -13,10 +13,8 @@ namespace test.EfHelpers
     {
 
         //NOTE: This will not handle a circular relationship: e.g. EntityA->EntityB->EntityA
-        public static IEnumerable<string>
-            GetTableNamesInOrderForWipe //#A
-            (this DbContext context, 
-             int maxDepth = 10, params Type[] excludeTypes) //#B
+        public static IEnumerable<string> GetTableNamesInOrderForWipe //#A
+            (this DbContext context, bool justTableName = false, int maxDepth = 10, params Type[] excludeTypes) //#B
         {
             var allEntities = context.Model
                 .GetEntityTypes()
@@ -74,7 +72,7 @@ namespace test.EfHelpers
         }
         reversePrincipals.Reverse();//#J
         result.AddRange(reversePrincipals);//#K
-        return result.Select(FormTableNameWithSchema);//#L
+        return result.Select(x => FormTableNameWithSchema(x, justTableName));//#L
     }
     /************************************************************************
     #A I am going to produce a list of principal entities in the reverse order that they should have all rows wiped in them
@@ -91,11 +89,10 @@ namespace test.EfHelpers
     #L Finally I return a collection of table names, with a optional schema, in the right order
     * ***********************************************************************/
 
-        public static void WipeAllDataFromDatabase(this DbContext context, 
-            int maxDepth = 10, params Type[] excludeTypes)
+        public static void WipeAllDataFromDatabase(this DbContext context, bool justTableName = false, int maxDepth = 10, params Type[] excludeTypes)
         {
             foreach (var tableName in
-                context.GetTableNamesInOrderForWipe(maxDepth, excludeTypes))
+                GetTableNamesInOrderForWipe(context, justTableName, maxDepth, excludeTypes))
             {
                 var commandString = $"DELETE FROM {tableName}";
                 context.Database
@@ -106,10 +103,12 @@ namespace test.EfHelpers
         //------------------------------------------------
         //private methods
 
-        private static string FormTableNameWithSchema(IEntityType entityType)
+        private static string FormTableNameWithSchema(IEntityType entityType, bool justTableName)
         {
             var relational = entityType.Relational();
-            return "[" + (relational.Schema == null
+            return justTableName 
+                ? relational.TableName
+                : "[" + (relational.Schema == null
                        ? ""
                        : relational.Schema + "].[")
                    + relational.TableName + "]";
