@@ -164,7 +164,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new WipeDbContext(options))
             {
                 //ATTEMPT
-                var tableNames = string.Join(",", context.GetTableNamesInOrderForWipe(10, typeof(CircularRef1), typeof(CircularRef2)));
+                var tableNames = string.Join(",", context.GetTableNamesInOrderForWipe(false, 10, typeof(CircularRef1), typeof(CircularRef2)));
 
                 //VERIFY
                 tableNames.ShouldEqual("[Many],[T2P4],[T2P3],[T2P2],[T2P1],[Top],[T1P1],[T1P2],[T1P3],[T1P4],[SelfRef]");
@@ -194,7 +194,7 @@ namespace test.UnitTests.DataLayer
                 context.SaveChanges();
 
                 //ATTEMPT
-                context.WipeAllDataFromDatabase(10, typeof(CircularRef1), typeof(CircularRef2));
+                context.WipeAllDataFromDatabase(false, 10, typeof(CircularRef1), typeof(CircularRef2));
             }
             using (var context = new WipeDbContext(options))
             {
