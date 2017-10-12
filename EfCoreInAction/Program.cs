@@ -32,7 +32,7 @@ namespace EfCoreInAction
                 //})
                 .UseStartup<Startup>()
                 .Build()
-                .SetupDevelopmentDatabase();
+                .MigrateDatabase();
 
             webHost.Run();
         }

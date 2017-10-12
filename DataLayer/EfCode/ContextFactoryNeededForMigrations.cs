@@ -1,9 +1,9 @@
 ﻿// Copyright (c) 2017 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace DataLayer.EfCode
 {
@@ -17,13 +17,15 @@ namespace DataLayer.EfCode
     public class ContextFactoryNeededForMigrations : IDesignTimeDbContextFactory<EfCoreContext>
     {
         private const string ConnectionString =
-            "Server=(localdb)\\mssqllocaldb;Database=EfCoreInActionDb;Trusted_Connection=True;MultipleActiveResultSets=true";
+            "Server=localhost;Database=EfCoreInActionDevelopment;Uid=mysqladmin;Pwd=mysqladmin;";
 
         public EfCoreContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseSqlServer(ConnectionString,
-                b => b.MigrationsAssembly("DataLayer"));
+            optionsBuilder.UseMySql(ConnectionString,
+                b => b.MigrationsAssembly("DataLayer")
+                    .MaxBatchSize(1) //Needed to overcome https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/issues/397
+            );
 
             return new EfCoreContext(optionsBuilder.Options);
         }
