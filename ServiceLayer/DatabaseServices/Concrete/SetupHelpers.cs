@@ -66,14 +66,11 @@ namespace ServiceLayer.DatabaseServices.Concrete
         public static void DevelopmentEnsureCreated(this EfCoreContext db, string wwwrootDirectory)
         {
             db.Database.EnsureCreated();
-            var filepath = Path.Combine(wwwrootDirectory, UdfDefinitions.SqlScriptName);
-            db.ExecuteScriptFileInTransaction(filepath);
         }
 
         public static void DevelopmentWipeCreated(this EfCoreContext db, string wwwrootDirectory)
         {
             db.Database.EnsureDeleted();
-            db.Database.EnsureCreated();
             db.DevelopmentEnsureCreated(wwwrootDirectory);
         }
 

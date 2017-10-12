@@ -3,6 +3,7 @@ using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
@@ -17,15 +18,17 @@ namespace DataLayer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
+                .HasAnnotation("ProductVersion", "2.0.0-rtm-26452");
 
             modelBuilder.Entity("DataLayer.EfClasses.Author", b =>
                 {
                     b.Property<int>("AuthorId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
                     b.HasKey("AuthorId");
 
@@ -39,19 +42,28 @@ namespace DataLayer.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("ImageUrl");
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(512)
+                        .IsUnicode(false);
 
-                    b.Property<decimal>("Price");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(9,2)");
 
-                    b.Property<DateTime>("PublishedOn");
+                    b.Property<DateTime>("PublishedOn")
+                        .HasColumnType("date");
 
-                    b.Property<string>("Publisher");
+                    b.Property<string>("Publisher")
+                        .HasMaxLength(64);
 
                     b.Property<bool>("SoftDeleted");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(256);
 
                     b.HasKey("BookId");
+
+                    b.HasIndex("PublishedOn");
 
                     b.ToTable("Books");
                 });
@@ -116,9 +128,12 @@ namespace DataLayer.Migrations
 
                     b.Property<int>("BookId");
 
-                    b.Property<decimal>("NewPrice");
+                    b.Property<decimal>("NewPrice")
+                        .HasColumnType("decimal(9,2)");
 
-                    b.Property<string>("PromotionalText");
+                    b.Property<string>("PromotionalText")
+                        .IsRequired()
+                        .HasMaxLength(200);
 
                     b.HasKey("PriceOfferId");
 
@@ -139,7 +154,8 @@ namespace DataLayer.Migrations
 
                     b.Property<int>("NumStars");
 
-                    b.Property<string>("VoterName");
+                    b.Property<string>("VoterName")
+                        .HasMaxLength(100);
 
                     b.HasKey("ReviewId");
 

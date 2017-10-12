@@ -3,6 +3,7 @@ using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
@@ -11,22 +12,24 @@ using System;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(EfCoreContext))]
-    [Migration("20170824075334_Chapter02")]
-    partial class Chapter02
+    [Migration("20171012081641_Chapter14MySql")]
+    partial class Chapter14MySql
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
+                .HasAnnotation("ProductVersion", "2.0.0-rtm-26452");
 
             modelBuilder.Entity("DataLayer.EfClasses.Author", b =>
                 {
                     b.Property<int>("AuthorId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
                     b.HasKey("AuthorId");
 
@@ -40,19 +43,28 @@ namespace DataLayer.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("ImageUrl");
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(512)
+                        .IsUnicode(false);
 
-                    b.Property<decimal>("Price");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(9,2)");
 
-                    b.Property<DateTime>("PublishedOn");
+                    b.Property<DateTime>("PublishedOn")
+                        .HasColumnType("date");
 
-                    b.Property<string>("Publisher");
+                    b.Property<string>("Publisher")
+                        .HasMaxLength(64);
 
                     b.Property<bool>("SoftDeleted");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(256);
 
                     b.HasKey("BookId");
+
+                    b.HasIndex("PublishedOn");
 
                     b.ToTable("Books");
                 });
@@ -72,6 +84,44 @@ namespace DataLayer.Migrations
                     b.ToTable("BookAuthor");
                 });
 
+            modelBuilder.Entity("DataLayer.EfClasses.LineItem", b =>
+                {
+                    b.Property<int>("LineItemId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("BookId");
+
+                    b.Property<decimal>("BookPrice");
+
+                    b.Property<byte>("LineNum");
+
+                    b.Property<short>("NumBooks");
+
+                    b.Property<int>("OrderId");
+
+                    b.HasKey("LineItemId");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("LineItem");
+                });
+
+            modelBuilder.Entity("DataLayer.EfClasses.Order", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("CustomerName");
+
+                    b.Property<DateTime>("DateOrderedUtc");
+
+                    b.HasKey("OrderId");
+
+                    b.ToTable("Orders");
+                });
+
             modelBuilder.Entity("DataLayer.EfClasses.PriceOffer", b =>
                 {
                     b.Property<int>("PriceOfferId")
@@ -79,9 +129,12 @@ namespace DataLayer.Migrations
 
                     b.Property<int>("BookId");
 
-                    b.Property<decimal>("NewPrice");
+                    b.Property<decimal>("NewPrice")
+                        .HasColumnType("decimal(9,2)");
 
-                    b.Property<string>("PromotionalText");
+                    b.Property<string>("PromotionalText")
+                        .IsRequired()
+                        .HasMaxLength(200);
 
                     b.HasKey("PriceOfferId");
 
@@ -102,7 +155,8 @@ namespace DataLayer.Migrations
 
                     b.Property<int>("NumStars");
 
-                    b.Property<string>("VoterName");
+                    b.Property<string>("VoterName")
+                        .HasMaxLength(100);
 
                     b.HasKey("ReviewId");
 
@@ -121,6 +175,19 @@ namespace DataLayer.Migrations
                     b.HasOne("DataLayer.EfClasses.Book", "Book")
                         .WithMany("AuthorsLink")
                         .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DataLayer.EfClasses.LineItem", b =>
+                {
+                    b.HasOne("DataLayer.EfClasses.Book", "ChosenBook")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DataLayer.EfClasses.Order")
+                        .WithMany("LineItems")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
