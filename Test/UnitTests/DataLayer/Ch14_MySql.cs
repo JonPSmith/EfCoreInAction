@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
+using test.Attributes;
 using test.EfHelpers;
 using test.Helpers;
 using Xunit;
@@ -67,6 +68,27 @@ namespace test.UnitTests.DataLayer
                 {
                     _output.WriteLine(log);
                 }
+            }
+        }
+
+        [RunnableInDebugOnly]
+        public void TestMySqlDatabaseDeleteAndCreate()
+        {
+            //SETUP
+            var connection = AppSettings.GetConfiguration().GetConnectionString("MySqlDatabaseUnitTest");
+            var optionsBuilder =
+                new DbContextOptionsBuilder<EfCoreContext>();
+            optionsBuilder.UseMySql(connection, mysqlOptions => mysqlOptions.MaxBatchSize(1));
+
+            //ATTEMPT
+            using (var context = new EfCoreContext(optionsBuilder.Options))
+            {
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+
+                //VERIFY
+                var exists = (context.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists();
+                exists.ShouldBeTrue();
             }
         }
 
