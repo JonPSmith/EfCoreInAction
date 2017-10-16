@@ -155,9 +155,12 @@ AND ([b].[PublishedOn] <= GETUTCDATE()) ";
                 : "SELECT ";
 
             return selectOpt +
-@"[b].[BookId], [b].[Title], [b].[PublishedOn], 
-[b].[ActualPrice], [b].[OrgPrice], [b].[PromotionalText], 
-[b].[AuthorsString], [b].[ReviewsCount], [b].[AverageVotes]
+@"[b].[BookId], [b].[Title], [b].[Price], [b].[PublishedOn],
+COALESCE([p.Promotion].[NewPrice], [b].[Price]) AS [ActualPrice],  
+[p.Promotion].[PromotionalText] AS [PromotionPromotionalText], 
+[dbo].AuthorsStringUdf([b].[BookId]) AS [AuthorsOrdered], 
+( SELECT COUNT(*) FROM [Review] AS [r] WHERE [b].[BookId] = [r].[BookId] ) AS [ReviewsCount], 
+( SELECT AVG(CAST([y].[NumStars] AS float)) FROM [Review] AS [y] WHERE [b].[BookId] = [y].[BookId] ) AS [ReviewsAverageVotes] 
 FROM [Books] AS [b]
 ";
         }
