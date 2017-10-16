@@ -54,7 +54,7 @@ namespace EfCoreInAction
             return webHost;
         }
 
-        public static IWebHost SetupDevelopmentDatabase(this IWebHost webHost)
+        public static IWebHost SetupDevelopmentDatabase(this IWebHost webHost, bool seedDatabase = true)
         {
             using (var scope = webHost.Services.CreateScope())
             {
@@ -64,7 +64,8 @@ namespace EfCoreInAction
                     try
                     {
                         context.DevelopmentEnsureCreated(GetWwwRootPath());
-                        context.SeedDatabase(GetWwwRootPath());
+                        if (seedDatabase)
+                            context.SeedDatabase(GetWwwRootPath());
                     }
                     catch (Exception ex)
                     {

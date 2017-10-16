@@ -44,8 +44,6 @@ namespace EfCoreInAction
             {
                 //if running in development mode then we alter the connection to have the branch name in it
                 connection = connection.FormDatabaseConnection(gitBranchName);
-                //And set the RavenDb connection string from user secrets
-                ravenDbConnection = Configuration["RavenDb-Main"];
             }
 
             services.RegisterDbContextWithRavenDb(

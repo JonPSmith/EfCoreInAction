@@ -2,7 +2,7 @@
 
 
 <h2>How many books do you want to have?</h2>
-<p>There are currenty @Model.ToString("##,###") in the database.</p>
+<h4>There are currenty <strong>@Model.ToString("##,###") books</strong> in the SQL database.</h4>
 
 <h3 class="text-danger">WARNING!</h3>
 <p class="text-danger">
@@ -30,6 +30,10 @@
             <div class="col-sm-1">
                 <input type="checkbox" name="wipeDatabase" value="true" class="form-control" />
                 <input type="hidden" name="wipeDatabase" value="false" />
+            </div>
+            <div class="col-sm-9 text-danger">
+                NOTE: I haven't implemented a wipe RavenDb feature, so if you are going to wipe the SQL database your MUST
+                manually wipe the RavenDb database BEFORE you run the Generate with the <strong>Wipe database?</strong> ticked.
             </div>
         </div>
 

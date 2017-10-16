@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using DataNoSql;
+using Microsoft.Extensions.Configuration;
 using Raven.Client;
 using test.Helpers;
 using Xunit;
@@ -18,11 +19,9 @@ namespace test.UnitTests.DataLayer
 
         private static readonly Lazy<IDocumentStore> LazyStore = new Lazy<IDocumentStore>(() =>
         {
-            //var ravenDbTestConnection = AppSettings.GetConfiguration().GetConnectionString("RavenDb-Test");
-            var ravenDbTestConnection = AppSettings.GetConfiguration()["RavenDb-Unit-Test"];
+            var ravenDbTestConnection = AppSettings.GetConfiguration().GetConnectionString("RavenDb-Test");
             if (string.IsNullOrEmpty( ravenDbTestConnection ))
-                throw new InvalidOperationException("You need a RavenDb database host to run these tests." +
-                                                    " You can get a free RavenDb database at http://www.ravenhq.com/");
+                throw new InvalidOperationException("You need a connection string in the test's appsetting.json file.");
             var storeFactory = new RavenStore(ravenDbTestConnection);
             return storeFactory.Store;
         });

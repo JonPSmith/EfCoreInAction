@@ -9,6 +9,8 @@ using DataLayer.EfCode;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Configuration;
+using test.Attributes;
 using test.EfHelpers;
 using test.Helpers;
 using Xunit;
@@ -21,20 +23,22 @@ namespace test.UnitTests.DataLayer
     {
         private readonly ITestOutputHelper _output;
 
+        private readonly string _connection;
 
         public Ch14_MySql(ITestOutputHelper output)
         {
             _output = output;
+            _connection = AppSettings.GetConfiguration().GetConnectionString("MySqlDatabaseUnitTest");
         }
 
-        [Fact]
+        [RunnableInDebugOnly]
         public void TestMySqlDatabaseExists()
         {
             //SETUP
-            var connection = AppSettings.GetConfiguration()["MySql-Test"];
+
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseMySql(connection);
+            optionsBuilder.UseMySql(_connection);
 
             //ATTEMPT
             using (var context = new EfCoreContext(optionsBuilder.Options))
@@ -50,10 +54,9 @@ namespace test.UnitTests.DataLayer
         public void TestMySqlDatabaseCreate()
         {
             //SETUP
-            var connection = AppSettings.GetConfiguration()["MySql-Test"];
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseMySql(connection, b => b.MigrationsAssembly("DataLayer"));
+            optionsBuilder.UseMySql(_connection);
 
             //ATTEMPT
             using (var context = new EfCoreContext(optionsBuilder.Options))
@@ -73,10 +76,10 @@ namespace test.UnitTests.DataLayer
         public void TestMySqlAddBook()
         {
             //SETUP
-            var connection = AppSettings.GetConfiguration()["MySql-Test"];
+
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseMySql(connection, b => b.MigrationsAssembly("DataLayer"));
+            optionsBuilder.UseMySql(_connection);
             optionsBuilder.EnableSensitiveDataLogging();
 
             using (var context = new EfCoreContext(optionsBuilder.Options))
@@ -98,10 +101,10 @@ namespace test.UnitTests.DataLayer
         public void TestMySqlAddBookWithReview()
         {
             //SETUP
-            var connection = AppSettings.GetConfiguration()["MySql-Test"];
+
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseMySql(connection, b => b.MigrationsAssembly("DataLayer"));
+            optionsBuilder.UseMySql(_connection);
             optionsBuilder.EnableSensitiveDataLogging();
 
             using (var context = new EfCoreContext(optionsBuilder.Options))
@@ -127,10 +130,10 @@ namespace test.UnitTests.DataLayer
         public void TestMySqlAddBookWithTwoReview()
         {
             //SETUP
-            var connection = AppSettings.GetConfiguration()["MySql-Test"];
+
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseMySql(connection, b => b.MigrationsAssembly("DataLayer"));
+            optionsBuilder.UseMySql(_connection);
             optionsBuilder.EnableSensitiveDataLogging();
 
             using (var context = new EfCoreContext(optionsBuilder.Options))
@@ -156,10 +159,10 @@ namespace test.UnitTests.DataLayer
         public void TestMySqlWipeDatabase()
         {
             //SETUP
-            var connection = AppSettings.GetConfiguration()["MySql-Test"];
+
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseMySql(connection, b => b.MigrationsAssembly("DataLayer"));
+            optionsBuilder.UseMySql(_connection);
             optionsBuilder.EnableSensitiveDataLogging();
 
             using (var context = new EfCoreContext(optionsBuilder.Options))
@@ -178,10 +181,10 @@ namespace test.UnitTests.DataLayer
         public void TestMySqlCreateBooks()
         {
             //SETUP
-            var connection = AppSettings.GetConfiguration()["MySql-Test"];
+
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseMySql(connection, mysqlOptions => mysqlOptions.MaxBatchSize(1));
+            optionsBuilder.UseMySql(_connection, mysqlOptions => mysqlOptions.MaxBatchSize(1));
             optionsBuilder.EnableSensitiveDataLogging();
 
             using (var context = new EfCoreContext(optionsBuilder.Options))
