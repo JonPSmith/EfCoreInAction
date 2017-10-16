@@ -77,29 +77,30 @@ namespace ServiceLayer.DatabaseServices.Concrete
             for (int i = numBooksInDb; i < numBooksInDb + numBooks; i++)
             {
                 var sectionNum = Math.Truncate(i * 1.0 / NumBooksInSet);
-                var reviews = new List<Review>();
+                var bookTitle = _loadedBookData[i % _loadedBookData.Count].Title;
+                if (i >= NumBooksInSet && _makeBookTitlesDistinct)
+                    bookTitle += $" (copy {sectionNum})";
+
+                var book = new Book(
+                    bookTitle,
+                    $"Book{i:D4} Description",
+                    _loadedBookData[i % _loadedBookData.Count].PublishDate,
+                    "Manning",
+                    (i + 1),
+                    null,
+                    GetAuthors(_loadedBookData[i % _loadedBookData.Count].Authors).ToArray(),
+                    _loadedBookData[i % _loadedBookData.Count].Authors
+                );
                 for (int j = 0; j < i % 12; j++)
                 {
-                    reviews.Add(new Review { VoterName = j.ToString(), NumStars = (Math.Abs(3 - j) % 4) + 2 });
+                    book.AddReviewWhenYouKnowReviewCollectionIsLoaded(
+                        (Math.Abs(3 - j) % 4) + 2, null, j.ToString());
                 }
-                var book = new Book
-                {
-                    Title = _loadedBookData[i % _loadedBookData.Count].Title,
-                    Description = $"Book{i:D4} Description",
-                    Price = (i + 1),
-                    PublishedOn = _loadedBookData[i % _loadedBookData.Count].PublishDate.AddDays(sectionNum),
-                    Publisher = "Manning",
-                    Reviews = reviews,
-                    AuthorsLink = new List<BookAuthor>()
-                };
-                if (i >= NumBooksInSet && _makeBookTitlesDistinct)
-                    book.Title += $" (copy {sectionNum})";
                 if (i % 7 == 0)
                 {
                     book.AddPromotion(book.ActualPrice * 0.5m, "today only - 50% off! ");
                 }
 
-                AddAuthorsToBook(book, _loadedBookData[i % _loadedBookData.Count].Authors);
                 yield return book;
             }
         }
@@ -124,14 +125,14 @@ namespace ServiceLayer.DatabaseServices.Concrete
             }
         }
 
-        private void AddAuthorsToBook(Book book, string authors)
+        private IEnumerable<Author> GetAuthors(string authors)
         {
             byte order = 0;
-            foreach(var authorName in ExtractAuthorsFromBookData(authors))
+            foreach (var authorName in ExtractAuthorsFromBookData(authors))
             {
                 if (!_authorDict.ContainsKey(authorName))
                 {
-                    _authorDict[authorName] = new Author {Name = authorName};
+                    _authorDict[authorName] = new Author (authorName);
                 }
                 yield return _authorDict[authorName];
             }

@@ -3,14 +3,16 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("ServiceLayer")] //bit of cop out, I made the book generator easier!
 namespace DataLayer.EfClasses
 {
     public class Author
     {
         public const int NameLength = 100;
 
-        public int AuthorId { get; private set; }
+        public int AuthorId { get; internal set; }
         [Required]
         [MaxLength(NameLength)]
         public string Name { get; private set; }

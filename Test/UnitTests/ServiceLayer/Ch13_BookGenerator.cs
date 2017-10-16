@@ -49,8 +49,8 @@ namespace Test.UnitTests.ServiceLayer
             var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
 
             //ATTEMPT
-            var gen = new BookGenerator();
-            var books = gen.GenerateBooks(filePath, numBooks).ToList();
+            var gen = new BookGenerator(filePath, false);
+            var books = gen.GenerateBooks(numBooks, 0).ToList();
 
             //VERIFY
             books.Count().ShouldEqual(numBooks);
