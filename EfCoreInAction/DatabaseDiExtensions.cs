@@ -55,48 +55,31 @@ namespace EfCoreInAction
         #J The standard signature for a service registering extension method is to return the serviceCollection to allow for fluent chaining
          * ****************************************************************/
 
-        private static void AddCoreServices<TContext>(        //#J
-            IServiceCollection serviceCollection,             //#J
-            Action<IServiceProvider, DbContextOptionsBuilder> //#J
-                optionsAction,                                //#J
-            ServiceLifetime optionsLifetime)                  //#J
-            where TContext : DbContext                        //#J
+        private static void AddCoreServices<TContext>(IServiceCollection serviceCollection,            
+            Action<IServiceProvider, DbContextOptionsBuilder> optionsAction, ServiceLifetime optionsLifetime)                 
+            where TContext : DbContext                       
         {
-            serviceCollection
-                .AddMemoryCache()
-                .AddLogging();
+            serviceCollection.AddMemoryCache().AddLogging();
 
             serviceCollection.TryAdd(
-                new ServiceDescriptor(
-                    typeof(DbContextOptions<TContext>),
-                    p => DbContextOptionsFactory<TContext>
-                        (p, optionsAction),
-                    optionsLifetime));
+                new ServiceDescriptor(typeof(DbContextOptions<TContext>),
+                    p => DbContextOptionsFactory<TContext>(p, optionsAction), optionsLifetime));
 
             serviceCollection.Add(
-                new ServiceDescriptor(
-                    typeof(DbContextOptions),
-                    p => p.GetRequiredService
-                        <DbContextOptions<TContext>>(),
-                    optionsLifetime));
+                new ServiceDescriptor(typeof(DbContextOptions), 
+                    p => p.GetRequiredService<DbContextOptions<TContext>>(), optionsLifetime));
         }
 
-        private static DbContextOptions<TContext>            //#J
-            DbContextOptionsFactory<TContext>(               //#J
-            IServiceProvider applicationServiceProvider,     //#J
-            Action<IServiceProvider, DbContextOptionsBuilder>//#J 
-                optionsAction)                               //#J
-            where TContext : DbContext                       //#J
+        private static DbContextOptions<TContext>DbContextOptionsFactory<TContext>(
+            IServiceProvider applicationServiceProvider, Action<IServiceProvider, DbContextOptionsBuilder>optionsAction)                               
+            where TContext : DbContext                       
         {
             var builder = new DbContextOptionsBuilder<TContext>(
-                new DbContextOptions<TContext>(new 
-                Dictionary<Type, IDbContextOptionsExtension>()));
+                new DbContextOptions<TContext>(new Dictionary<Type, IDbContextOptionsExtension>()));
 
-            builder.UseApplicationServiceProvider(
-                applicationServiceProvider);
+            builder.UseApplicationServiceProvider(applicationServiceProvider);
 
-            optionsAction?.Invoke(
-                applicationServiceProvider, builder);
+            optionsAction?.Invoke(applicationServiceProvider, builder);
 
             return builder.Options;
         }
