@@ -49,8 +49,7 @@ namespace EfCoreInAction
                 connection = connection.FormDatabaseConnection(gitBranchName);
             }
 
-            var ravenStore = new RavenStore(ravenDbConnection);
-            services.AddSingleton<IRavenStore>(ravenStore);
+            services.AddSingleton<IRavenStore>(new RavenStore(ravenDbConnection));
 
             services.AddDbContext<EfCoreContext>(
                 options => options.UseSqlServer(connection,
