@@ -18,12 +18,9 @@ namespace EfCoreInAction
 {
     public class Startup
     {
-        private IHostingEnvironment _webHost;
-
-        public Startup(IConfiguration configuration, IHostingEnvironment webHost)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            _webHost = webHost;
         }
 
         public IConfiguration Configuration { get; }
@@ -48,10 +45,13 @@ namespace EfCoreInAction
                 //if running in development mode then we alter the connection to have the branch name in it
                 connection = connection.FormDatabaseConnection(gitBranchName);
             }
-
-            var ravenStore = new RavenStore(ravenDbConnection);
-            services.AddSingleton<IRavenStore>(ravenStore);
-            services.AddSingleton<IUpdateCreator>(ravenStore);
+            services.AddSingleton(ctr =>
+            {
+                var logger = ctr.GetService<ILogger<RavenStore>>();
+                return new RavenStore(ravenDbConnection, logger);
+            });
+            services.AddSingleton<IUpdateCreator>(ctr => ctr.GetService<RavenStore>());
+            services.AddSingleton<IQueryCreator>(ctr => ctr.GetService<RavenStore>());
 
             services.AddDbContext<EfCoreContext>(
                 options => options.UseSqlServer(connection,

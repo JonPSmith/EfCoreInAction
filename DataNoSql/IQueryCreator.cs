@@ -7,6 +7,6 @@ namespace DataNoSql
 {
     public interface IQueryCreator
     {
-        INoSqlAccessor CreateNoSqlAccessor(ILogger logger);
+        INoSqlAccessor CreateNoSqlAccessor();
     }
 }

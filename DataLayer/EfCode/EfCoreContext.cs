@@ -28,7 +28,7 @@ namespace DataLayer.EfCode
             DbContextOptions<EfCoreContext> options, IUpdateCreator updateCreator = null, ILogger<INoSqlUpdater> logger = null)      
             : base(options)
         {
-            _updater = updateCreator?.CreateSqlUpdater(logger);
+            _updater = updateCreator?.CreateSqlUpdater();
         }
 
         public override int SaveChanges() //#A

@@ -15,7 +15,7 @@ namespace test.Mocks
         public List<string> Logs => _updater.Logs;
         public string AllLogs => string.Join(",", Logs);
 
-        public INoSqlUpdater CreateSqlUpdater(ILogger logger)
+        public INoSqlUpdater CreateSqlUpdater()
         {
             return _updater;
         }

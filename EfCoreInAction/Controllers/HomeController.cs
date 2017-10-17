@@ -25,12 +25,12 @@ namespace EfCoreInAction.Controllers
 
         public IActionResult Index
         (NoSqlSortFilterPageOptions options,
-            [FromServices] IRavenStore storeFactory,
+            [FromServices] IQueryCreator creator,
             [FromServices] ILogger<RavenStore> ravenLogger)         
         {
 
             List<BookListNoSql> bookList;
-            using (var context = storeFactory.CreateNoSqlAccessor(ravenLogger))
+            using (var context = creator.CreateNoSqlAccessor())
             {
                 var listService = new ListBooksNoSqlService(context.BookListQuery());
                 bookList = listService

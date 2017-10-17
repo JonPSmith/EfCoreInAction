@@ -6,16 +6,18 @@ using Raven.Client.Document;
 
 namespace DataNoSql
 {
-    public class RavenStore : IRavenStore, IUpdateCreator
+    public class RavenStore : IRavenStore, IUpdateCreator, IQueryCreator
     {
+        private readonly ILogger _logger;
         public const string RavenEventIdStart = "EfCoreInAction.NoSql.RavenDb";
 
         public DocumentStore Store { get; }
 
-        public RavenStore(string connectionString)
+        public RavenStore(string connectionString, ILogger logger)
         {
             if (string.IsNullOrEmpty(connectionString))
                 return;
+            _logger = logger;
 
             var store = new DocumentStore();
             store.ParseConnectionString(connectionString);
@@ -29,14 +31,14 @@ namespace DataNoSql
             Store = store;
         }
 
-        public INoSqlUpdater CreateSqlUpdater(ILogger logger)
+        public INoSqlUpdater CreateSqlUpdater()
         {
-            return Store == null ? null : new RavenUpdater(Store, logger);
+            return Store == null ? null : new RavenUpdater(Store, _logger);
         }
 
-        public INoSqlAccessor CreateNoSqlAccessor(ILogger logger)
+        public INoSqlAccessor CreateNoSqlAccessor()
         {
-            return Store == null ? null : new RavenBookAccesser(Store, logger);
+            return Store == null ? null : new RavenBookAccesser(Store, _logger);
         }
     }
 }

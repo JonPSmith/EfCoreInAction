@@ -5,8 +5,10 @@ using Microsoft.Extensions.Logging;
 
 namespace DataNoSql
 {
-    public interface IUpdateCreator
+    public class RavenStoreSettings
     {
-        INoSqlUpdater CreateSqlUpdater();
+        public string ConnnectionString { get; set; }
+
+        public ILogger Logger { get; set; }
     }
 }

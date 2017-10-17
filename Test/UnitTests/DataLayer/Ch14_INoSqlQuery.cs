@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DataNoSql;
 using Microsoft.Extensions.Configuration;
-using Raven.Client;
+using Microsoft.Extensions.Logging;
 using test.Helpers;
 using test.Mocks;
 using Xunit;
@@ -18,18 +18,19 @@ namespace test.UnitTests.DataLayer
     public class Ch14_INoSqlQuery
     {
         private readonly ITestOutputHelper _output;
-        private static List<string> _logList;
+        private static List<string> _logList = new List<string>();
+        private static ILogger _logger = new StandInLogger(_logList);
 
-        private static readonly Lazy<IRavenStore> LazyStore = new Lazy<IRavenStore>(() =>
+        private static readonly Lazy<RavenStore> LazyStore = new Lazy<RavenStore>(() =>
         {
             var ravenDbTestConnection = AppSettings.GetConfiguration().GetConnectionString("RavenDb-Test");
             if (string.IsNullOrEmpty( ravenDbTestConnection ))
                 throw new InvalidOperationException("You need a connection string in the test's appsetting.json file.");
-            var storeFactory = new RavenStore(ravenDbTestConnection);
+            var storeFactory = new RavenStore(ravenDbTestConnection, _logger);
             return storeFactory;
         });
 
-        private IRavenStore StoreFactory => LazyStore.Value;
+        private RavenStore StoreFactory => LazyStore.Value;
 
         public Ch14_INoSqlQuery(ITestOutputHelper output)
         {
@@ -45,11 +46,10 @@ namespace test.UnitTests.DataLayer
         public void TestCreateUseCreateNoSqlAccessor()
         {
             //SETUP
-            var logs = new List<string>();
-            var logger = new StandInLogger(logs);
+            _logList.Clear();
 
             //ATTEMPT
-            using (var context = StoreFactory.CreateNoSqlAccessor(logger))
+            using (var context = StoreFactory.CreateNoSqlAccessor())
             {
                 context.Command = "Count";
                 var count = context.BookListQuery().Count();
@@ -57,9 +57,9 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 count.ShouldEqual(10);
             }
-            logs.Count.ShouldEqual(1);
-            logs.First().StartsWith("Information: Raven Command. Execute time =").ShouldBeTrue();
-            logs.First().EndsWith("\nCount").ShouldBeTrue();
+            _logList.Count.ShouldEqual(1);
+            _logList.First().StartsWith("Information: Raven Command. Execute time =").ShouldBeTrue();
+            _logList.First().EndsWith("\nCount").ShouldBeTrue();
         }
 
         

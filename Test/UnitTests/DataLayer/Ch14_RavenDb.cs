@@ -19,14 +19,15 @@ namespace test.UnitTests.DataLayer
     public class Ch14_RavenDb
     {
         private readonly ITestOutputHelper _output;
-        private static List<string> _logList;
+        private static List<string> _logList = new List<string>();
+        private static ILogger _logger = new StandInLogger(_logList);
 
         private static readonly Lazy<IDocumentStore> LazyStore = new Lazy<IDocumentStore>(() =>
         {
             var ravenDbTestConnection = AppSettings.GetConfiguration().GetConnectionString("RavenDb-Test");
             if (string.IsNullOrEmpty( ravenDbTestConnection ))
                 throw new InvalidOperationException("You need a connection string in the test's appsetting.json file.");
-            var storeFactory = new RavenStore(ravenDbTestConnection);
+            var storeFactory = new RavenStore(ravenDbTestConnection, _logger);
             return storeFactory.Store;
         });
 

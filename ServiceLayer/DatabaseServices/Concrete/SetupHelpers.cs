@@ -106,7 +106,7 @@ namespace ServiceLayer.DatabaseServices.Concrete
         {           
             //add generated books
             var gen = new BookGenerator(Path.Combine(wwwrootDirectory, SeedFileSubDirectory, TemplateFileName),
-                updateCreator.CreateSqlUpdater(logger), true);
+                updateCreator.CreateSqlUpdater(), true);
             gen.WriteBooks(numBooksToAdd, options, progessCancel);
         }
     }
