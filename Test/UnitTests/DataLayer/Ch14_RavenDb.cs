@@ -2,11 +2,14 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DataNoSql;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Raven.Client;
 using test.Helpers;
+using test.Mocks;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -16,13 +19,15 @@ namespace test.UnitTests.DataLayer
     public class Ch14_RavenDb
     {
         private readonly ITestOutputHelper _output;
+        private static List<string> _logList;
 
         private static readonly Lazy<IDocumentStore> LazyStore = new Lazy<IDocumentStore>(() =>
         {
             var ravenDbTestConnection = AppSettings.GetConfiguration().GetConnectionString("RavenDb-Test");
             if (string.IsNullOrEmpty( ravenDbTestConnection ))
                 throw new InvalidOperationException("You need a connection string in the test's appsetting.json file.");
-            var storeFactory = new RavenStore(ravenDbTestConnection);
+            var logger = new StandInLogger(_logList, LogLevel.Information);
+            var storeFactory = new RavenStore(ravenDbTestConnection, logger);
             return storeFactory.Store;
         });
 

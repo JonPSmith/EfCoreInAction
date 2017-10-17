@@ -9,12 +9,12 @@ namespace DataNoSql
     public class NullRavenStore : IRavenStore
     {
         public DocumentStore Store { get; } = null;
-
-        public NullRavenStore(string connectionString)
+        public ILogger RavenLogger { get; } = null;
+        public NullRavenStore()
         {    
         }
 
-        public INoSqlUpdater CreateSqlUpdater(ILogger logger)
+        public INoSqlUpdater CreateSqlUpdater()
         {
             return null;
         }

@@ -10,12 +10,14 @@ namespace DataNoSql
     {
         public const string RavenEventIdStart = "EfCoreInAction.NoSql.RavenDb";
 
-        public DocumentStore Store { get; private set; }
+        public DocumentStore Store { get; }
+        public ILogger RavenLogger { get; }
 
-        public RavenStore(string connectionString)
+        public RavenStore(string connectionString, ILogger ravenLogger)
         {
             if (string.IsNullOrEmpty(connectionString))
                 return;
+            RavenLogger = ravenLogger;
 
             var store = new DocumentStore();
             store.ParseConnectionString(connectionString);
@@ -29,9 +31,9 @@ namespace DataNoSql
             Store = store;
         }
 
-        public INoSqlUpdater CreateSqlUpdater(ILogger logger)
+        public INoSqlUpdater CreateSqlUpdater()
         {
-            return Store == null ? null : new RavenUpdater(Store, logger);
+            return Store == null ? null : new RavenUpdater(Store, RavenLogger);
         }
     }
 }

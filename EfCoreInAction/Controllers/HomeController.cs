@@ -25,14 +25,13 @@ namespace EfCoreInAction.Controllers
 
         public IActionResult Index
         (NoSqlSortFilterPageOptions options,
-            [FromServices] IRavenStore storeFactory,
-            [FromServices] ILogger<RavenStore> logger)         
+            [FromServices] IRavenStore storeFactory)         
         {
             var listService =                       
                 new ListBooksNoSqlService(storeFactory);
 
             List<BookListNoSql> bookList;
-            using (new LogRavenCommand($"Query = {options}", logger))
+            using (new LogRavenCommand($"Query = {options}", storeFactory.RavenLogger))
             {
                 bookList = listService
                     .SortFilterPage(options)

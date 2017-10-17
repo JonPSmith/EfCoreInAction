@@ -2,6 +2,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using DataLayer.EfCode;
+using DataNoSql;
 using EfCoreInAction.Logger;
 using EfCoreInAction.Services;
 using Microsoft.AspNetCore.Builder;
@@ -17,10 +18,12 @@ namespace EfCoreInAction
 {
     public class Startup
     {
+        private IHostingEnvironment _webHost;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment webHost)
         {
             Configuration = configuration;
+            _webHost = webHost;
         }
 
         public IConfiguration Configuration { get; }
@@ -45,10 +48,18 @@ namespace EfCoreInAction
                 //if running in development mode then we alter the connection to have the branch name in it
                 connection = connection.FormDatabaseConnection(gitBranchName);
             }
+            var logger = services.BuildServiceProvider().GetService<ILogger<RavenStore>>();
+            var ravenStore = new RavenStore(ravenDbConnection, logger);
+            services.AddSingleton<IRavenStore>(ravenStore);
+            services.AddSingleton<INoSqlUpdater>(ravenStore.CreateSqlUpdater());
 
-            services.RegisterDbContextWithRavenDb(
+            services.AddDbContext<EfCoreContext>(
                 options => options.UseSqlServer(connection,
-                b => b.MigrationsAssembly("DataLayer")), ravenDbConnection);
+                    b => b.MigrationsAssembly("DataLayer")));
+
+            //services.RegisterDbContextWithRavenDb(
+            //    options => options.UseSqlServer(connection,
+            //    b => b.MigrationsAssembly("DataLayer")), ravenDbConnection);
 
             //Add AutoFac
             var containerBuilder = new ContainerBuilder();
