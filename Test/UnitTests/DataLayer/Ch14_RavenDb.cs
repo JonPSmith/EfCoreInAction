@@ -26,8 +26,7 @@ namespace test.UnitTests.DataLayer
             var ravenDbTestConnection = AppSettings.GetConfiguration().GetConnectionString("RavenDb-Test");
             if (string.IsNullOrEmpty( ravenDbTestConnection ))
                 throw new InvalidOperationException("You need a connection string in the test's appsetting.json file.");
-            var logger = new StandInLogger(_logList, LogLevel.Information);
-            var storeFactory = new RavenStore(ravenDbTestConnection, logger);
+            var storeFactory = new RavenStore(ravenDbTestConnection);
             return storeFactory.Store;
         });
 

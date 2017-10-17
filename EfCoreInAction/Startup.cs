@@ -48,18 +48,13 @@ namespace EfCoreInAction
                 //if running in development mode then we alter the connection to have the branch name in it
                 connection = connection.FormDatabaseConnection(gitBranchName);
             }
-            var logger = services.BuildServiceProvider().GetService<ILogger<RavenStore>>();
-            var ravenStore = new RavenStore(ravenDbConnection, logger);
+
+            var ravenStore = new RavenStore(ravenDbConnection);
             services.AddSingleton<IRavenStore>(ravenStore);
-            services.AddSingleton<INoSqlUpdater>(ravenStore.CreateSqlUpdater());
 
             services.AddDbContext<EfCoreContext>(
                 options => options.UseSqlServer(connection,
                     b => b.MigrationsAssembly("DataLayer")));
-
-            //services.RegisterDbContextWithRavenDb(
-            //    options => options.UseSqlServer(connection,
-            //    b => b.MigrationsAssembly("DataLayer")), ravenDbConnection);
 
             //Add AutoFac
             var containerBuilder = new ContainerBuilder();

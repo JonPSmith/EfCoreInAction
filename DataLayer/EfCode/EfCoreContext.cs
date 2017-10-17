@@ -25,10 +25,10 @@ namespace DataLayer.EfCode
         public DbSet<Order> Orders { get; set; }            //#A
 
         public EfCoreContext(                             
-            DbContextOptions<EfCoreContext> options, INoSqlUpdater updater = null)      
+            DbContextOptions<EfCoreContext> options, IRavenStore ravenStore = null, ILogger<RavenStore> logger = null)      
             : base(options)
         {
-            _updater = updater;
+            _updater = ravenStore?.CreateSqlUpdater(logger);
         }
 
         public override int SaveChanges() //#A

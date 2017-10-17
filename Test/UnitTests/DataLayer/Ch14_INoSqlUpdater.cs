@@ -27,7 +27,7 @@ namespace test.UnitTests.DataLayer
         public void TestNoSqlUpdateNewBook()
         {
             //SETUP
-            var fakeUpdater = new FakeNoSqlUpdater();
+            var fakeUpdater = new FakeRavenStoreAndUpdater();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options, fakeUpdater))
             {
@@ -47,7 +47,7 @@ namespace test.UnitTests.DataLayer
         public void TestNoSqlUpdateUpdatedBook()
         {
             //SETUP
-            var fakeUpdater = new FakeNoSqlUpdater();
+            var fakeUpdater = new FakeRavenStoreAndUpdater();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
@@ -69,7 +69,7 @@ namespace test.UnitTests.DataLayer
         public void TestNoSqlUpdateDeleteBook()
         {
             //SETUP
-            var fakeUpdater = new FakeNoSqlUpdater();
+            var fakeUpdater = new FakeRavenStoreAndUpdater();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
@@ -91,7 +91,7 @@ namespace test.UnitTests.DataLayer
         public void TestNoSqlUpdateSoftDeleteBook()
         {
             //SETUP
-            var fakeUpdater = new FakeNoSqlUpdater();
+            var fakeUpdater = new FakeRavenStoreAndUpdater();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
@@ -113,7 +113,7 @@ namespace test.UnitTests.DataLayer
         public void TestNoSqlUpdateSoftDeleteUndoneBook()
         {
             //SETUP
-            var fakeUpdater = new FakeNoSqlUpdater();
+            var fakeUpdater = new FakeRavenStoreAndUpdater();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
