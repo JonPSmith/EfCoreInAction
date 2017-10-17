@@ -6,6 +6,5 @@ namespace DataNoSql
     public interface IRavenStore
     {
         DocumentStore Store { get; }
-        INoSqlUpdater CreateSqlUpdater(ILogger logger);
     }
 }

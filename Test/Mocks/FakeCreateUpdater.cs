@@ -8,14 +8,12 @@ using Raven.Client.Document;
 
 namespace test.Mocks
 {
-    public class FakeRavenStoreAndUpdater : IRavenStore
+    public class FakeCreateUpdater : IUpdateCreator
     {
-        private FakeNoSqlUpdater _updater = new FakeNoSqlUpdater();
+        private readonly FakeNoSqlUpdater _updater = new FakeNoSqlUpdater();
 
         public List<string> Logs => _updater.Logs;
         public string AllLogs => string.Join(",", Logs);
-
-        public DocumentStore Store { get; } = null;
 
         public INoSqlUpdater CreateSqlUpdater(ILogger logger)
         {

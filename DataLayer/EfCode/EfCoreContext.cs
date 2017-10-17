@@ -17,7 +17,7 @@ namespace DataLayer.EfCode
 {
     public class EfCoreContext : DbContext
     {
-        private INoSqlUpdater _updater;
+        private readonly INoSqlUpdater _updater;
 
         public DbSet<Book> Books { get; set; }              //#A
         public DbSet<Author> Authors { get; set; }          //#A
@@ -25,10 +25,10 @@ namespace DataLayer.EfCode
         public DbSet<Order> Orders { get; set; }            //#A
 
         public EfCoreContext(                             
-            DbContextOptions<EfCoreContext> options, IRavenStore ravenStore = null, ILogger<RavenStore> logger = null)      
+            DbContextOptions<EfCoreContext> options, IUpdateCreator updateCreator = null, ILogger<INoSqlUpdater> logger = null)      
             : base(options)
         {
-            _updater = ravenStore?.CreateSqlUpdater(logger);
+            _updater = updateCreator?.CreateSqlUpdater(logger);
         }
 
         public override int SaveChanges() //#A

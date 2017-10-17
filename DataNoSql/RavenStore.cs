@@ -6,7 +6,7 @@ using Raven.Client.Document;
 
 namespace DataNoSql
 {
-    public class RavenStore : IRavenStore
+    public class RavenStore : IRavenStore, IUpdateCreator
     {
         public const string RavenEventIdStart = "EfCoreInAction.NoSql.RavenDb";
 
