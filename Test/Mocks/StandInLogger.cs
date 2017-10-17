@@ -13,7 +13,7 @@ namespace test.Mocks
         private readonly List<string> _logs;
         private readonly LogLevel _logLevel;
 
-        public StandInLogger(List<string> logs, LogLevel logLevel)
+        public StandInLogger(List<string> logs, LogLevel logLevel = LogLevel.Information)
         {
             _logs = logs;
             _logLevel = logLevel;

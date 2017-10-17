@@ -22,7 +22,7 @@ namespace Test.UnitTests.ServiceLayer
         private readonly ITestOutputHelper _output;
         private static List<string> _logList;
 
-        private static readonly Lazy<IRavenStore> LazyStoreFactory = new Lazy<IRavenStore>(() =>
+        private static readonly Lazy<RavenStore> LazyStoreFactory = new Lazy<RavenStore>(() =>
         {
             var ravenDbTestConnection = AppSettings.GetConfiguration().GetConnectionString("RavenDb-Test");
             if (string.IsNullOrEmpty( ravenDbTestConnection ))
@@ -31,7 +31,7 @@ namespace Test.UnitTests.ServiceLayer
             return storeFactory;
         });
 
-        private IRavenStore StoreFactory => LazyStoreFactory.Value;
+        private RavenStore StoreFactory => LazyStoreFactory.Value;
 
         private int _numEntries;
         public Ch14_ListBooksNoSqlService(ITestOutputHelper output)
@@ -49,7 +49,9 @@ namespace Test.UnitTests.ServiceLayer
         public void TestDefaultSettings()
         {
             //SETUP
-            var service = new ListBooksNoSqlService(StoreFactory);
+            var logs = new List<string>();
+            var logger = new StandInLogger(logs);
+            var service = new ListBooksNoSqlService(StoreFactory.CreateNoSqlAccessor(logger).BookListQuery());
             var options = new NoSqlSortFilterPageOptions();
 
             //ATTEMPT
@@ -65,7 +67,9 @@ namespace Test.UnitTests.ServiceLayer
         public void TestPagingFirstPage(int pageNum)
         {
             //SETUP
-            var service = new ListBooksNoSqlService(StoreFactory);
+            var logs = new List<string>();
+            var logger = new StandInLogger(logs);
+            var service = new ListBooksNoSqlService(StoreFactory.CreateNoSqlAccessor(logger).BookListQuery());
             var options = new NoSqlSortFilterPageOptions();
 
             //ATTEMPT
@@ -83,7 +87,9 @@ namespace Test.UnitTests.ServiceLayer
         public void TestSortByPriceLowestFirst()
         {
             //SETUP
-            var service = new ListBooksNoSqlService(StoreFactory);
+            var logs = new List<string>();
+            var logger = new StandInLogger(logs);
+            var service = new ListBooksNoSqlService(StoreFactory.CreateNoSqlAccessor(logger).BookListQuery());
             var options = new NoSqlSortFilterPageOptions();
 
             //ATTEMPT
@@ -104,7 +110,9 @@ namespace Test.UnitTests.ServiceLayer
         public void TestFilterByVotes()
         {
             //SETUP
-            var service = new ListBooksNoSqlService(StoreFactory);
+            var logs = new List<string>();
+            var logger = new StandInLogger(logs);
+            var service = new ListBooksNoSqlService(StoreFactory.CreateNoSqlAccessor(logger).BookListQuery());
             var options = new NoSqlSortFilterPageOptions();
 
             //ATTEMPT

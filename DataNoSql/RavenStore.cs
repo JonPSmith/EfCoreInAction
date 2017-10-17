@@ -33,5 +33,10 @@ namespace DataNoSql
         {
             return Store == null ? null : new RavenUpdater(Store, logger);
         }
+
+        public INoSqlAccessor CreateNoSqlAccessor(ILogger logger)
+        {
+            return Store == null ? null : new RavenBookAccesser(Store, logger);
+        }
     }
 }

@@ -17,5 +17,10 @@ namespace DataNoSql
         {
             return null;
         }
+
+        public INoSqlAccessor CreateNoSqlAccessor(ILogger logger)
+        {
+            return null;
+        }
     }
 }

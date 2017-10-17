@@ -28,13 +28,11 @@ namespace EfCoreInAction.Controllers
             [FromServices] IRavenStore storeFactory,
             [FromServices] ILogger<RavenStore> ravenLogger)         
         {
-            var listService =                       
-                new ListBooksNoSqlService(storeFactory);
-
 
             List<BookListNoSql> bookList;
-            using (new LogRavenCommand($"Query = {options}", ravenLogger))
+            using (var context = storeFactory.CreateNoSqlAccessor(ravenLogger))
             {
+                var listService = new ListBooksNoSqlService(context.BookListQuery());
                 bookList = listService
                     .SortFilterPage(options)
                     .ToList();
