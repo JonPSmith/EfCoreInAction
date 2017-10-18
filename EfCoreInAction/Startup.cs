@@ -39,16 +39,6 @@ namespace EfCoreInAction
             services.AddSingleton(new AppInformation(gitBranchName));
 
             var connection = Configuration.GetConnectionString("DefaultConnection");
-            var ravenDbConnection = Configuration.GetConnectionString("RavenDbConnection");
-
-            services.AddSingleton(ctr =>
-            {
-                var logger = ctr.GetService<ILogger<RavenStore>>();
-                return new RavenStore(ravenDbConnection, logger);
-            });
-            services.AddSingleton<IUpdateCreator>(ctr => ctr.GetService<RavenStore>());
-            services.AddSingleton<IQueryCreator>(ctr => ctr.GetService<RavenStore>());
-
             services.AddDbContext<EfCoreContext>(
                 options => options.UseMySql(connection,
                     b => b.MigrationsAssembly("DataLayer")
