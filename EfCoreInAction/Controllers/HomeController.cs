@@ -36,6 +36,7 @@ namespace EfCoreInAction.Controllers
                 bookList = listService
                     .SortFilterPage(options)
                     .ToList();
+                context.Command = options.ToString();
             }
                  
             SetupTraceInfo();           //REMOVE THIS FOR BOOK as it could be confusing
