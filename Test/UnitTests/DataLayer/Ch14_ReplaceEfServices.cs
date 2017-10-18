@@ -35,12 +35,15 @@ namespace Test.UnitTests.DataLayer
                 var currentMapping = base.FindMapping(property); //#D
                 if (property.ClrType == typeof(string)   //#E
                     && property.Name.EndsWith("Ascii"))  //#E
-                    return new StringTypeMapping( //#F
-                        "varchar(" +         //#G
-                        currentMapping.Size  //#G
-                        ?? "max" + ")",      //#G 
-                       DbType.AnsiString, true, //#H
-                       currentMapping.Size); //#H
+                {
+                    var size = currentMapping.Size == null //#F
+                        ? "max"                            //#F
+                        : currentMapping.Size.ToString();  //#F
+                    return new StringTypeMapping(//#G
+                        $"varchar({size})",      //#G
+                        DbType.AnsiString, true, //#G
+                        currentMapping.Size);    //#G
+                }
 
                 return currentMapping; //#I
             }
@@ -51,10 +54,9 @@ namespace Test.UnitTests.DataLayer
         #C I only override the FindMapping method that deals with .NET type to SQL type. All the other mapping methods I leave as they were
         #D I get the mapping that the Sql Server database provider would nomally do. This gives me information I can use
         #E This is where I insert my new rule. If the property is of .NET type 'string' and the property name ends with "Ascii" then I want to set it as a SQL varchar, instead of the normal SQL nvarchar
-        #F The if was true, so now I return a new SQL mapping result
-        #G This forms a SQL type string of "varchar(<size>)", where <size> is either the string length defined by my EF Core configuration, or "max" if nothing is defined
-        #H This fills in the other parts of the mapping information
-        #I If the property didn’t fit my new rule, then I want the normal EF Core mapping. I therefore I return the SQL type mapping the base method has calculated
+        #F I work out the size part of SQL type string. Either the size provided, or "max" if the size is null
+        #G This builds a StringTypeMapping with the various parts set to a 'varchar' type column, that is, an 8-bit character string
+        #H If the property didn’t fit my new rule, then I want the normal EF Core mapping. I therefore I return the SQL type mapping the base method has calculated
          * **********************************************************/
 
         public class CustomSqlServerModelValidator : SqlServerModelValidator
