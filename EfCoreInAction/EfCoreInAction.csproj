@@ -18,9 +18,6 @@
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="wwwroot\AddUserDefinedFunctions.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\BizLogic\BizLogic.csproj" />
     <ProjectReference Include="..\DataLayer\DataLayer.csproj" />
     <ProjectReference Include="..\ServiceLayer\ServiceLayer.csproj" />

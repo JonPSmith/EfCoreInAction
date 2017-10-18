@@ -3,7 +3,6 @@
 
 using System.Linq;
 using DataLayer.EfClasses;
-using DataLayer.SqlCode;
 
 namespace ServiceLayer.BookServices.QueryObjects
 {
@@ -24,13 +23,10 @@ namespace ServiceLayer.BookServices.QueryObjects
                 PromotionPromotionalText =               
                         p.Promotion == null              
                           ? null                         
-                          : p.Promotion.PromotionalText, 
-                AuthorsOrdered = UdfDefinitions.AuthorsStringUdf(p.BookId),
-                //There is a bug in EF Core 2.0.0 on this client vs. server query - see https://github.com/aspnet/EntityFrameworkCore/issues/9519
-                //AuthorsOrdered = string.Join(", ",    
-                //        p.AuthorsLink                 
-                //        .OrderBy(q => q.Order)        
-                //        .Select(q => q.Author.Name)), 
+                          : p.Promotion.PromotionalText,
+                AuthorNames = p.AuthorsLink
+                        .OrderBy(q => q.Order)
+                        .Select(q => q.Author.Name).ToList(),
                 ReviewsCount = p.Reviews.Count,         
                 ReviewsAverageVotes =                   
                     p.Reviews.Select(y =>               

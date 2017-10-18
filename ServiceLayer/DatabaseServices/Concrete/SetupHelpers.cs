@@ -6,7 +6,6 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using DataLayer.EfCode;
-using DataLayer.SqlCode;
 using DataNoSql;
 using EfCoreInAction.DatabaseHelpers;
 using Microsoft.EntityFrameworkCore;
@@ -58,8 +57,6 @@ namespace ServiceLayer.DatabaseServices.Concrete
             if (migrationsNeeded)
             {
                 db.Database.Migrate();
-                var filepath = Path.Combine(wwwrootDirectory, UdfDefinitions.SqlScriptName);
-                db.ExecuteScriptFileInTransaction(filepath);
             }
         }
 

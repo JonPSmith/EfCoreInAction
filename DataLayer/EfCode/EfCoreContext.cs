@@ -1,17 +1,13 @@
 ﻿// Copyright (c) 2016 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DataLayer.EfClasses;
 using DataLayer.EfCode.Configurations;
 using Microsoft.EntityFrameworkCore;
-using DataLayer.EfCode.Configurations;
 using DataLayer.NoSql;
-using DataLayer.SqlCode;
 using DataNoSql;
-using Microsoft.Extensions.Logging;
 
 namespace DataLayer.EfCode
 {
@@ -77,8 +73,6 @@ namespace DataLayer.EfCode
             modelBuilder.ApplyConfiguration(new BookAuthorConfig()); //#B
             modelBuilder.ApplyConfiguration(new PriceOfferConfig()); //#B
             modelBuilder.ApplyConfiguration(new LineItemConfig());   //#B
-
-            modelBuilder.RegisterUdfDefintions();
         }
         /*****************************************************************
         #A We only define three of the five tables in the database: Books, Authors and PriceOffers. The other two tables, Review and BookAuthor are found via navigational links from the other tables
