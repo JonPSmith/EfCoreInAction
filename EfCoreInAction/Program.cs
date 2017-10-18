@@ -28,7 +28,7 @@ namespace EfCoreInAction
                 })
                 .UseStartup<Startup>()
                 .Build()
-                .SetupDevelopmentDatabase(false);
+                .SetupDevelopmentDatabase();
 
             webHost.Run();
         }
