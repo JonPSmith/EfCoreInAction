@@ -1,22 +1,20 @@
-﻿-- SQL script file to add SQL code to improve performance
+﻿-- MySQL script file to add SQL code to improve performance
 -- I have built this as an Idempotent Script, that is, it can be applied even if there isn't a change and it will ensure the database is up to date
+-- NOTE: The GO is removed by the ExecuteScriptFileInTransaction
 
-IF OBJECT_ID('dbo.AuthorsStringUdf') IS NOT NULL
-	DROP FUNCTION dbo.AuthorsStringUdf
+DROP FUNCTION IF EXISTS AuthorsStringUdf
 GO
 
-CREATE FUNCTION AuthorsStringUdf (@bookId int)
-RETURNS NVARCHAR(4000)
-AS
+CREATE FUNCTION AuthorsStringUdf (bookId int) RETURNS VARCHAR(4000)
 BEGIN
--- Thanks to https://stackoverflow.com/a/194887/1434764
-DECLARE @Names AS NVARCHAR(4000)
-SELECT @Names = COALESCE(@Names + ', ', '') + a.Name
+DECLARE Names VARCHAR(4000);
+SELECT COALESCE(Names + ', ', '') + a.Name INTO Names
 FROM Authors AS a, Books AS b, BookAuthor AS ba 
-WHERE ba.BookId = @bookId
+WHERE ba.BookId = bookId
       AND ba.AuthorId = a.AuthorId 
 	  AND ba.BookId = b.BookId
-ORDER BY ba.[Order]
-RETURN @Names
-END
+ORDER BY ba.Order;
+RETURN Names;
+END 
 GO
+

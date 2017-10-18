@@ -33,18 +33,9 @@ namespace Test.Chapter10Listings.QueryObjects
                 //        .Select(q => q.Author.Name)),         //#E
                 ReviewsCount = p.Reviews.Count(),       
                 ReviewsAverageVotes = p.Reviews           
-                            .Select(q => (double?)q.NumStars).Average()
+                            .Select(q => (decimal?)q.NumStars).Average()
             });
         }
-        /*********************************************************
-        #A This method takes in IQueryable<Book> and returns IQueryable<BookListDto>
-        #B These are simple copies of existing columns in the Books table
-        #C This calculates the selling price, which is the normal price, or the promotion price if that relationship exists 
-        #D The PromotionalText depends on whether a PriceOffer exists for this book
-        #E This obtains an array of Authors' names, in the right order. We are using a Client vs. Server evaluation as we want the author's names combined into one string
-        #F We need to calculate how many reviews there are
-        #G There is a bug in EF Core 2.0.0 that means I need to check for empty collection. 
-        * *******************************************************/
 
     }
 }

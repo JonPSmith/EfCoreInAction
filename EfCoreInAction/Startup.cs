@@ -40,11 +40,7 @@ namespace EfCoreInAction
 
             var connection = Configuration.GetConnectionString("DefaultConnection");
             var ravenDbConnection = Configuration.GetConnectionString("RavenDbConnection");
-            if (Configuration["ENVIRONMENT"] == "Development")
-            {
-                //if running in development mode then we alter the connection to have the branch name in it
-                connection = connection.FormDatabaseConnection(gitBranchName);
-            }
+
             services.AddSingleton(ctr =>
             {
                 var logger = ctr.GetService<ILogger<RavenStore>>();
@@ -54,8 +50,9 @@ namespace EfCoreInAction
             services.AddSingleton<IQueryCreator>(ctr => ctr.GetService<RavenStore>());
 
             services.AddDbContext<EfCoreContext>(
-                options => options.UseSqlServer(connection,
-                    b => b.MigrationsAssembly("DataLayer")));
+                options => options.UseMySql(connection,
+                    b => b.MigrationsAssembly("DataLayer")
+                          .MaxBatchSize(1))); //Needed to overcome https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/issues/397
 
             //Add AutoFac
             var containerBuilder = new ContainerBuilder();

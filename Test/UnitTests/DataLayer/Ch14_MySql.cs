@@ -35,10 +35,9 @@ namespace test.UnitTests.DataLayer
         public void TestMySqlDatabaseExists()
         {
             //SETUP
-
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseMySql(connection, mysqlOptions => mysqlOptions.MaxBatchSize(1)); //Needed to overcome https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/issues/397
+            optionsBuilder.UseMySql(_connection, mysqlOptions => mysqlOptions.MaxBatchSize(1)); //Needed to overcome https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/issues/397
 
             //ATTEMPT
             using (var context = new EfCoreContext(optionsBuilder.Options))
@@ -56,7 +55,7 @@ namespace test.UnitTests.DataLayer
             //SETUP
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseMySql(connection, mysqlOptions => mysqlOptions.MaxBatchSize(1));
+            optionsBuilder.UseMySql(_connection, mysqlOptions => mysqlOptions.MaxBatchSize(1));
 
             //ATTEMPT
             using (var context = new EfCoreContext(optionsBuilder.Options))
@@ -76,10 +75,9 @@ namespace test.UnitTests.DataLayer
         public void TestMySqlDatabaseDeleteAndCreate()
         {
             //SETUP
-            var connection = AppSettings.GetConfiguration().GetConnectionString("MySqlDatabaseUnitTest");
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseMySql(connection, mysqlOptions => mysqlOptions.MaxBatchSize(1));
+            optionsBuilder.UseMySql(_connection, mysqlOptions => mysqlOptions.MaxBatchSize(1));
 
             //ATTEMPT
             using (var context = new EfCoreContext(optionsBuilder.Options))
@@ -97,10 +95,9 @@ namespace test.UnitTests.DataLayer
         public void TestMySqlAddBook()
         {
             //SETUP
-            var connection = AppSettings.GetConfiguration().GetConnectionString("MySqlDatabaseUnitTest");
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseMySql(connection, mysqlOptions => mysqlOptions.MaxBatchSize(1));
+            optionsBuilder.UseMySql(_connection, mysqlOptions => mysqlOptions.MaxBatchSize(1));
             optionsBuilder.EnableSensitiveDataLogging();
 
             using (var context = new EfCoreContext(optionsBuilder.Options))
@@ -122,10 +119,9 @@ namespace test.UnitTests.DataLayer
         public void TestMySqlAddBookWithReview()
         {
             //SETUP
-            var connection = AppSettings.GetConfiguration().GetConnectionString("MySqlDatabaseUnitTest");
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseMySql(connection, mysqlOptions => mysqlOptions.MaxBatchSize(1));
+            optionsBuilder.UseMySql(_connection, mysqlOptions => mysqlOptions.MaxBatchSize(1));
             optionsBuilder.EnableSensitiveDataLogging();
 
             using (var context = new EfCoreContext(optionsBuilder.Options))
@@ -151,10 +147,9 @@ namespace test.UnitTests.DataLayer
         public void TestMySqlAddBookWithTwoReview()
         {
             //SETUP
-            var connection = AppSettings.GetConfiguration().GetConnectionString("MySqlDatabaseUnitTest");
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseMySql(connection, mysqlOptions => mysqlOptions.MaxBatchSize(1));
+            optionsBuilder.UseMySql(_connection, mysqlOptions => mysqlOptions.MaxBatchSize(1));
             optionsBuilder.EnableSensitiveDataLogging();
 
             using (var context = new EfCoreContext(optionsBuilder.Options))
@@ -180,10 +175,9 @@ namespace test.UnitTests.DataLayer
         public void TestMySqlWipeDatabase()
         {
             //SETUP
-            var connection = AppSettings.GetConfiguration().GetConnectionString("MySqlDatabaseUnitTest");
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseMySql(connection, mysqlOptions => mysqlOptions.MaxBatchSize(1));
+            optionsBuilder.UseMySql(_connection, mysqlOptions => mysqlOptions.MaxBatchSize(1));
             optionsBuilder.EnableSensitiveDataLogging();
 
             using (var context = new EfCoreContext(optionsBuilder.Options))
@@ -202,10 +196,9 @@ namespace test.UnitTests.DataLayer
         public void TestMySqlCreateBooks()
         {
             //SETUP
-            var connection = AppSettings.GetConfiguration().GetConnectionString("MySqlDatabaseUnitTest");
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseMySql(connection, 
+            optionsBuilder.UseMySql(_connection, 
                 mysqlOptions => mysqlOptions.MaxBatchSize(1)); //Needed to overcome https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/issues/397
             optionsBuilder.EnableSensitiveDataLogging();
 

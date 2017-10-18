@@ -57,7 +57,7 @@ namespace test.EfHelpers
             return optionsBuilder;
         }
 
-        private static void EnsureDatabaseIsCreatedAndSeeded(DbContextOptions<EfCoreContext> options, bool seedDatabase, bool deleteDatabase)
+        internal static void EnsureDatabaseIsCreatedAndSeeded(DbContextOptions<EfCoreContext> options, bool seedDatabase, bool deleteDatabase)
         {
             using (var context = new EfCoreContext(options))
             {

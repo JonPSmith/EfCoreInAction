@@ -24,31 +24,20 @@ namespace EfCoreInAction.Controllers
         }
 
         public IActionResult Index
-        (NoSqlSortFilterPageOptions options,
-            [FromServices] IQueryCreator creator,
-            [FromServices] ILogger<RavenStore> ravenLogger)         
+            (SortFilterPageOptions options)
         {
+            var listService =
+                new ListBooksService(_context);
 
-            List<BookListNoSql> bookList;
-            using (var context = creator.CreateNoSqlAccessor())
-            {
-                var listService = new ListBooksNoSqlService(context.BookListQuery());
-                bookList = listService
-                    .SortFilterPage(options)
-                    .ToList();
-                context.Command = options.ToString();
-            }
-                 
+            var bookList = listService     
+                .SortFilterPage(options)
+                .ToList();               
+
             SetupTraceInfo();           //REMOVE THIS FOR BOOK as it could be confusing
 
-            return View(new BookListNoSqlCombinedDto
-                (options, bookList));              
+            return View(new BookListCombinedDto
+                (options, bookList));
         }
-        /*******************************************************
-        #A I have to make the Index action method async, by using the async keyword and the returned type has to be wrapped in a generic task
-        #B I have to await the result of the ToListAsync method, which is an async command
-        #C Because my SortFilterPage method returned IQueryable<T> I can change is to async simply by replacing the .ToList() by the .ToListAsync() method 
-        * *****************************************************/
 
         /// <summary>
         /// This provides the filter search dropdown content

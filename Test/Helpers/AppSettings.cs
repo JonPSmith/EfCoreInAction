@@ -27,15 +27,35 @@ namespace test.Helpers
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static string GetUniqueDatabaseConnectionString<T>(this T testClass, string optionalMethodName = null)
+        public static string GetUniqueDatabaseConnectionString<T>(this T testClass, string optionalMethodName = null, char separator = '.')
         {
             var config = GetConfiguration();
             var orgConnect = config.GetConnectionString(ConnectionStringName);
             var builder = new SqlConnectionStringBuilder(orgConnect);
             string branchName = GetGitBranchName();
 
-            var extraDatabaseName = $".{branchName}.{typeof(T).Name}";
-            if (optionalMethodName != null) extraDatabaseName += $".{optionalMethodName}";
+            var extraDatabaseName = $"{separator}{branchName}{separator}{typeof(T).Name}";
+            if (optionalMethodName != null) extraDatabaseName += $"{separator}{optionalMethodName}";
+
+            builder.InitialCatalog += extraDatabaseName;
+
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// This creates a unique database name based on the branch name and the test class name
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static string GetMySqlUniqueDatabaseConnectionString<T>(this T testClass, string optionalMethodName = null, char separator = '_')
+        {
+            var config = GetConfiguration();
+            var orgConnect = config.GetConnectionString("MySqlDatabaseUnitTest");
+            var builder = new SqlConnectionStringBuilder(orgConnect);
+            string branchName = GetGitBranchName();
+
+            var extraDatabaseName = $"{separator}{branchName}{separator}{typeof(T).Name}";
+            if (optionalMethodName != null) extraDatabaseName += $"{separator}{optionalMethodName}";
 
             builder.InitialCatalog += extraDatabaseName;
 

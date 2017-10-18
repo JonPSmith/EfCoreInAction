@@ -23,7 +23,7 @@ namespace ServiceLayer.BookServices
         public string AuthorsOrdered { get; set; }  //#F
 
         public int ReviewsCount { get; set; }      //#G
-        public double? 
+        public decimal? 
             ReviewsAverageVotes { get; set; }      //#H
     /******************************************************
     #A I need the Primary Key if the customer clicks the entry to buy the book

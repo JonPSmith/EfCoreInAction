@@ -73,7 +73,7 @@ namespace Test.UnitTests.ServiceLayer
 
                 //VERIFY
                 books.Select(x => x.ReviewsAverageVotes).ToArray()
-                    .ShouldEqual(new double?[] { null, null, null, 5 });
+                    .ShouldEqual(new decimal?[] { null, null, null, 5 });
                 books.Select(x => x.ReviewsCount).ToArray()
                     .ShouldEqual(new int[] { 0, 0, 0, 2 });
                 foreach (var log in logIt.Logs)

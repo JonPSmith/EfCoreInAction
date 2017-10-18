@@ -13,8 +13,8 @@ namespace DataLayer.SqlCode
         public static void RegisterUdfDefintions(this ModelBuilder modelBuilder)
         {
             modelBuilder.HasDbFunction(
-                    () => AuthorsStringUdf(default(int)))
-                .HasSchema("dbo");
+                () => AuthorsStringUdf(default(int)));
+            //.HasSchema("dbo");
         }
 
         public static double? AverageVotesUdf(int bookId)
