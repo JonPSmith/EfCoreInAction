@@ -38,11 +38,11 @@ namespace Test.UnitTests.ServiceLayer
         public Ch14_ListBooksNoSqlService(ITestOutputHelper output)
         {
             _output = output;
-            _numEntries = StoreFactory.Store.NumEntriesInDb();
+            _numEntries = StoreFactory.NumEntriesInDb();
             if (_numEntries <= 0)
             {
-                StoreFactory.Store.SeedDummyBooks();
-                _numEntries = StoreFactory.Store.NumEntriesInDb();
+                StoreFactory.SeedDummyBooks();
+                _numEntries = StoreFactory.NumEntriesInDb();
             }
         }
 

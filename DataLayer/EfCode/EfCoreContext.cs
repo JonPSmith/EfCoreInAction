@@ -25,7 +25,7 @@ namespace DataLayer.EfCode
         public DbSet<Order> Orders { get; set; }            //#A
 
         public EfCoreContext(                             
-            DbContextOptions<EfCoreContext> options, IUpdateCreator updateCreator = null, ILogger<INoSqlUpdater> logger = null)      
+            DbContextOptions<EfCoreContext> options, IUpdateCreator updateCreator = null)      
             : base(options)
         {
             _updater = updateCreator?.CreateSqlUpdater();

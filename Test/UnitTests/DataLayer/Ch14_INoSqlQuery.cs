@@ -35,9 +35,9 @@ namespace test.UnitTests.DataLayer
         public Ch14_INoSqlQuery(ITestOutputHelper output)
         {
             _output = output;
-            if (StoreFactory.Store.NumEntriesInDb() <= 0)
+            if (StoreFactory.NumEntriesInDb() <= 0)
             {
-                StoreFactory.Store.SeedDummyBooks();
+                StoreFactory.SeedDummyBooks();
             }
         }
 
