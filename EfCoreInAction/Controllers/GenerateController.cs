@@ -35,8 +35,8 @@ namespace EfCoreInAction.Controllers
         public IActionResult Books(int numBooks, bool wipeDatabase, 
             [FromServices]EfCoreContext context,
             [FromServices]DbContextOptions<EfCoreContext> options,
-            [FromServices]IRavenStore storeProvider,
-            [FromServices]ILogger<RavenStore> ravenLogger,
+            [FromServices]IUpdateCreator updateCreator,
+            [FromServices]ILogger<RavenStore> logger,
             [FromServices]IHostingEnvironment env)
         {
             if (numBooks == 0)
@@ -46,8 +46,7 @@ namespace EfCoreInAction.Controllers
 
             if (wipeDatabase)
                 context.DevelopmentWipeCreated(env.WebRootPath);
-            options.GenerateBooks(storeProvider, ravenLogger,
-                numBooks, env.WebRootPath, numWritten =>
+            options.GenerateBooks(updateCreator, logger, numBooks, env.WebRootPath, numWritten =>
             {
                 _progress = numWritten * 100.0 / numBooks;
                 return _cancel;

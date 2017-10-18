@@ -23,17 +23,19 @@ namespace test.UnitTests.DataLayer
     {
         private readonly ITestOutputHelper _output;
 
+        private readonly string _connection;
 
         public Ch14_MySql(ITestOutputHelper output)
         {
             _output = output;
+            _connection = AppSettings.GetConfiguration().GetConnectionString("MySqlDatabaseUnitTest");
         }
 
-        [Fact]
+        [RunnableInDebugOnly]
         public void TestMySqlDatabaseExists()
         {
             //SETUP
-            var connection = AppSettings.GetConfiguration().GetConnectionString("MySqlDatabaseUnitTest");
+
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
             optionsBuilder.UseMySql(connection, mysqlOptions => mysqlOptions.MaxBatchSize(1)); //Needed to overcome https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/issues/397
@@ -52,7 +54,6 @@ namespace test.UnitTests.DataLayer
         public void TestMySqlDatabaseCreate()
         {
             //SETUP
-            var connection = AppSettings.GetConfiguration().GetConnectionString("MySqlDatabaseUnitTest");
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
             optionsBuilder.UseMySql(connection, mysqlOptions => mysqlOptions.MaxBatchSize(1));

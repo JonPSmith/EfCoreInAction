@@ -27,9 +27,9 @@ namespace test.UnitTests.DataLayer
         public void TestNoSqlUpdateNewBook()
         {
             //SETUP
-            var fakeUpdater = new FakeNoSqlUpdater();
+            var fakeCreateUpdater = new FakeCreateUpdater();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
-            using (var context = new EfCoreContext(options, fakeUpdater))
+            using (var context = new EfCoreContext(options, fakeCreateUpdater))
             {
                 context.Database.EnsureCreated();
                 var book = EfTestData.CreateDummyBookOneAuthor();
@@ -39,7 +39,7 @@ namespace test.UnitTests.DataLayer
                 context.SaveChanges();
 
                 //VERIFY    
-                fakeUpdater.AllLogs.ShouldEqual("Create: BookId = 1");
+                fakeCreateUpdater.AllLogs.ShouldEqual("Create: BookId = 1");
             }
         }
 
@@ -47,21 +47,21 @@ namespace test.UnitTests.DataLayer
         public void TestNoSqlUpdateUpdatedBook()
         {
             //SETUP
-            var fakeUpdater = new FakeNoSqlUpdater();
+            var fakeCreateUpdater = new FakeCreateUpdater();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
             }
-            using (var context = new EfCoreContext(options, fakeUpdater))
+            using (var context = new EfCoreContext(options, fakeCreateUpdater))
             {
                 //ATTEMPT
                 context.Books.First().Title = "new title";
                 context.SaveChanges();
 
                 //VERIFY    
-                fakeUpdater.AllLogs.ShouldEqual("Update: BookId = 1");
+                fakeCreateUpdater.AllLogs.ShouldEqual("Update: BookId = 1");
             }
         }
 
@@ -69,21 +69,21 @@ namespace test.UnitTests.DataLayer
         public void TestNoSqlUpdateDeleteBook()
         {
             //SETUP
-            var fakeUpdater = new FakeNoSqlUpdater();
+            var fakeCreateUpdater = new FakeCreateUpdater();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
             }
-            using (var context = new EfCoreContext(options, fakeUpdater))
+            using (var context = new EfCoreContext(options, fakeCreateUpdater))
             {
                 //ATTEMPT
                 context.Remove(context.Books.First());
                 context.SaveChanges();
 
                 //VERIFY    
-                fakeUpdater.AllLogs.ShouldEqual("Delete: BookId = 1");
+                fakeCreateUpdater.AllLogs.ShouldEqual("Delete: BookId = 1");
             }
         }
 
@@ -91,21 +91,21 @@ namespace test.UnitTests.DataLayer
         public void TestNoSqlUpdateSoftDeleteBook()
         {
             //SETUP
-            var fakeUpdater = new FakeNoSqlUpdater();
+            var fakeCreateUpdater = new FakeCreateUpdater();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
                 context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
             }
-            using (var context = new EfCoreContext(options, fakeUpdater))
+            using (var context = new EfCoreContext(options, fakeCreateUpdater))
             {
                 //ATTEMPT
                 context.Books.First().SoftDeleted = true;
                 context.SaveChanges();
 
                 //VERIFY    
-                fakeUpdater.AllLogs.ShouldEqual("Delete: BookId = 1");
+                fakeCreateUpdater.AllLogs.ShouldEqual("Delete: BookId = 1");
             }
         }
 
@@ -113,7 +113,7 @@ namespace test.UnitTests.DataLayer
         public void TestNoSqlUpdateSoftDeleteUndoneBook()
         {
             //SETUP
-            var fakeUpdater = new FakeNoSqlUpdater();
+            var fakeCreateUpdater = new FakeCreateUpdater();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
@@ -122,14 +122,14 @@ namespace test.UnitTests.DataLayer
                 context.Books.First().SoftDeleted = true;
                 context.SaveChanges();
             }
-            using (var context = new EfCoreContext(options, fakeUpdater))
+            using (var context = new EfCoreContext(options, fakeCreateUpdater))
             {
                 //ATTEMPT
                 context.Books.IgnoreQueryFilters().First().SoftDeleted = false;
                 context.SaveChanges();
 
                 //VERIFY    
-                fakeUpdater.AllLogs.ShouldEqual("Create: BookId = 1");
+                fakeCreateUpdater.AllLogs.ShouldEqual("Create: BookId = 1");
             }
         }
     }

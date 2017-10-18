@@ -49,7 +49,7 @@
                                 <li>@Html.ActionLink("Run tasks and wait", "RunTaskWait", "Admin")</li>
                                 @if (Context.Request.IsLocal())
                                 {
-                                    <li>@Html.ActionLink("Reset database", "ResetDatabase", "Admin")</li>
+                                    @*<li>@Html.ActionLink("Reset database", "ResetDatabase", "Admin")</li>*@
                                     <li>@Html.ActionLink("Generate books", "Index", "Generate")</li>
                                     @*<li>@Html.ActionLink("Add Book", "AddBook", "Admin")</li>*@
                                 }

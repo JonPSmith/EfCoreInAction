@@ -2,7 +2,6 @@
 
   <PropertyGroup>    
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <UserSecretsId>3797a52d-6825-4452-b14b-76f715e4ccce</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +17,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.0.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.0.1-preview-10068" />
     <PackageReference Include="RavenDB.Client" Version="3.5.4" />
     <PackageReference Include="System.Data.SqlClient" Version="4.4.0" />

@@ -11,12 +11,13 @@ using DataLayer.EfCode.Configurations;
 using DataLayer.NoSql;
 using DataLayer.SqlCode;
 using DataNoSql;
+using Microsoft.Extensions.Logging;
 
 namespace DataLayer.EfCode
 {
     public class EfCoreContext : DbContext
     {
-        private INoSqlUpdater _updater;
+        private readonly INoSqlUpdater _updater;
 
         public DbSet<Book> Books { get; set; }              //#A
         public DbSet<Author> Authors { get; set; }          //#A
@@ -24,10 +25,10 @@ namespace DataLayer.EfCode
         public DbSet<Order> Orders { get; set; }            //#A
 
         public EfCoreContext(                             
-            DbContextOptions<EfCoreContext> options, INoSqlUpdater updater = null)      
+            DbContextOptions<EfCoreContext> options, IUpdateCreator updateCreator = null)      
             : base(options)
         {
-            _updater = updater;
+            _updater = updateCreator?.CreateSqlUpdater();
         }
 
         public override int SaveChanges() //#A

@@ -2,10 +2,14 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DataNoSql;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Raven.Client;
 using test.Helpers;
+using test.Mocks;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -15,26 +19,26 @@ namespace test.UnitTests.DataLayer
     public class Ch14_RavenDb
     {
         private readonly ITestOutputHelper _output;
+        private static List<string> _logList = new List<string>();
+        private static ILogger _logger = new StandInLogger(_logList);
 
-        private static readonly Lazy<IDocumentStore> LazyStore = new Lazy<IDocumentStore>(() =>
+        private static readonly Lazy<RavenStore> LazyStore = new Lazy<RavenStore>(() =>
         {
-            //var ravenDbTestConnection = AppSettings.GetConfiguration().GetConnectionString("RavenDb-Test");
-            var ravenDbTestConnection = AppSettings.GetConfiguration()["RavenDb-Unit-Test"];
+            var ravenDbTestConnection = AppSettings.GetConfiguration().GetConnectionString("RavenDb-Test");
             if (string.IsNullOrEmpty( ravenDbTestConnection ))
-                throw new InvalidOperationException("You need a RavenDb database host to run these tests." +
-                                                    " You can get a free RavenDb database at http://www.ravenhq.com/");
-            var storeFactory = new RavenStore(ravenDbTestConnection);
-            return storeFactory.Store;
+                throw new InvalidOperationException("You need a connection string in the test's appsetting.json file.");
+            var storeFactory = new RavenStore(ravenDbTestConnection, _logger);
+            return storeFactory;
         });
 
-        private IDocumentStore Store => LazyStore.Value;
+        private RavenStore StoreFactory => LazyStore.Value;
 
         public Ch14_RavenDb(ITestOutputHelper output)
         {
             _output = output;
-            if (Store.NumEntriesInDb() <= 0)
+            if (StoreFactory.NumEntriesInDb() <= 0)
             {
-                Store.SeedDummyBooks();
+                StoreFactory.SeedDummyBooks();
             }
         }
 
@@ -57,7 +61,7 @@ namespace test.UnitTests.DataLayer
             //SETUP
 
             //ATTEMPT
-            var count = Store.NumEntriesInDb();
+            var count = StoreFactory.NumEntriesInDb();
 
             //VERIFY
             count.ShouldEqual(10);
@@ -67,39 +71,25 @@ namespace test.UnitTests.DataLayer
         public void TestQuery()
         {
             //SETUP
-            using (var session = Store.OpenSession())
+            using (var context = StoreFactory.CreateNoSqlAccessor())
             {
                 //ATTEMPT
-                var data = session.Query<BookListNoSql>().ToList();
+                var data = context.BookListQuery().ToList();
 
                 //VERIFY
                 data.Count.ShouldEqual(10);
             }
         }
 
-        [Fact]
-        public void TestQueryWithFilter()
-        {
-            //SETUP
-            using (var session = Store.OpenSession())
-            {
-                //ATTEMPT
-                var data = session .Load<BookListNoSql>(BookListNoSql.ConvertIdToNoSqlId(1));
-
-                //VERIFY
-                data.ShouldNotBeNull();
-                data.Title.ShouldEqual("Book0000 Title");
-            }
-        }
 
         [Fact]
         public void TestQueryWithIndexSort()
         {
             //SETUP
-            using (var session = Store.OpenSession())
+            using (var context = StoreFactory.CreateNoSqlAccessor())
             {
                 //ATTEMPT
-                var data = session.Query<BookListNoSql>().OrderByDescending(x => x.Id)
+                var data = context.BookListQuery().OrderByDescending(x => x.Id)
                     .ToList();
 
                 //VERIFY
@@ -112,10 +102,10 @@ namespace test.UnitTests.DataLayer
         public void TestQueryWithIndexSortAndPage()
         {
             //SETUP
-            using (var session = Store.OpenSession())
+            using (var context = StoreFactory.CreateNoSqlAccessor())
             {
                 //ATTEMPT
-                var data = session.Query<BookListNoSql>().OrderByDescending(x => x.Id)
+                var data = context.BookListQuery().OrderByDescending(x => x.Id)
                     .Skip(5)
                     .Take(2)
                     .ToList();
@@ -131,10 +121,10 @@ namespace test.UnitTests.DataLayer
         public void TestQueryWithPriceSort()
         {
             //SETUP
-            using (var session = Store.OpenSession())
+            using (var context = StoreFactory.CreateNoSqlAccessor())
             {
                 //ATTEMPT
-                var data = session.Query<BookListNoSql>().OrderByDescending(x => x.ActualPrice)
+                var data = context.BookListQuery().OrderByDescending(x => x.ActualPrice)
                     .ToList();
 
                 //VERIFY
@@ -147,10 +137,10 @@ namespace test.UnitTests.DataLayer
         public void TestQuerySortAndFilter()
         {
             //SETUP
-            using (var session = Store.OpenSession())
+            using (var context = StoreFactory.CreateNoSqlAccessor())
             {
                 //ATTEMPT
-                var data = session.Query<BookListNoSql>().OrderBy(x => x.ActualPrice)
+                var data = context.BookListQuery().OrderBy(x => x.ActualPrice)
                     .Where(x => x.ReviewsAverageVotes > 2.75)
                     .ToList();
 

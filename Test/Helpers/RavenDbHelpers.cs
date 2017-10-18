@@ -6,22 +6,20 @@ using System.Collections.Generic;
 using System.Linq;
 using DataLayer.NoSql;
 using DataNoSql;
-using Microsoft.Extensions.Configuration;
 using Raven.Client;
-using Raven.Client.Document;
 using test.EfHelpers;
 
 namespace test.Helpers
 {
     internal static class RavenDbHelpers
     {
-        public static int NumEntriesInDb(this IDocumentStore store)
+        public static int NumEntriesInDb(this RavenStore creator)
         {
             try
             {
-                using (IDocumentSession session = store.OpenSession())
+                using (var context = creator.CreateNoSqlAccessor())
                 {
-                    return session.Query<BookListNoSql>().Count();
+                    return context.BookListQuery().Count();
                 }
             }
             catch (InvalidOperationException e)
@@ -41,15 +39,11 @@ namespace test.Helpers
 
         }
 
-        public static void SeedDummyBooks(this IDocumentStore store, int numBooks = 10, bool stepByYears = false)
+        public static void SeedDummyBooks(this RavenStore creator, int numBooks = 10, bool stepByYears = false)
         {
-            using (var session = store.OpenSession())
+            var updater = creator.CreateSqlUpdater();
             {
-                foreach (var dto in CreateDummyBooks(numBooks, stepByYears))
-                {
-                    session.Store(dto);
-                    session.SaveChanges();
-                }
+                updater.BulkLoad(CreateDummyBooks(numBooks, stepByYears).ToList());
             }
         }
 

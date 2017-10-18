@@ -97,13 +97,13 @@ namespace ServiceLayer.DatabaseServices.Concrete
         }
 
         public static void GenerateBooks(this DbContextOptions<EfCoreContext> options,
-            IRavenStore storeProvider,
+            IUpdateCreator updateCreator,
             ILogger logger,
             int numBooksToAdd, string wwwrootDirectory, Func<int, bool> progessCancel)
         {           
             //add generated books
             var gen = new BookGenerator(Path.Combine(wwwrootDirectory, SeedFileSubDirectory, TemplateFileName),
-                storeProvider.CreateSqlUpdater(logger), true);
+                updateCreator.CreateSqlUpdater(), true);
             gen.WriteBooks(numBooksToAdd, options, progessCancel);
         }
     }

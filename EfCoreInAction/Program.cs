@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace EfCoreInAction
 {
@@ -18,21 +19,16 @@ namespace EfCoreInAction
                     config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                         .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
                     config.AddEnvironmentVariables();
-                    if (env.IsDevelopment())
-                    {
-                        config.AddUserSecrets<Startup>();
-                    }
                 })
-                //Normally you would configure logging here, but I needed access to IHttpContextAccessor, so I had to do it in the Configure method
-                //.ConfigureLogging((hostingContext, logging) =>
-                //{
-                //    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                //    logging.AddConsole();
-                //    logging.AddDebug();
-                //})
+                .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    //logging.AddConsole();
+                    //logging.AddDebug();
+                })
                 .UseStartup<Startup>()
                 .Build()
-                .SetupDevelopmentDatabase();
+                .SetupDevelopmentDatabase(false);
 
             webHost.Run();
         }
