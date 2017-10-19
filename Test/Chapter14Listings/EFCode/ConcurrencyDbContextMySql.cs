@@ -1,0 +1,36 @@
+﻿// Copyright (c) 2017 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
+// Licensed under MIT licence. See License.txt in the project root for license information.
+
+using Microsoft.EntityFrameworkCore;
+using Test.Chapter14Listings.EfClasses;
+
+namespace Test.Chapter14Listings.EFCode
+{
+    public class ConcurrencyDbContextMySql : DbContext
+    {
+        public DbSet<ConcurrencyBookMySql> Books { get; set; }
+        public DbSet<ConcurrencyAuthorMySql> Authors { get; set; }
+
+        public ConcurrencyDbContextMySql(
+            DbContextOptions<ConcurrencyDbContextMySql> options)      
+                : base(options) { }
+
+        protected override void
+            OnModelCreating(ModelBuilder modelBuilder) //#A
+        {
+            modelBuilder.Entity<ConcurrencyBookMySql>()//#B
+                .Property(p => p.PublishedOn)    //#B
+                .IsConcurrencyToken();           //#B
+
+            modelBuilder.Entity<ConcurrencyAuthorMySql>()//#C
+                .Property(p => p.ChangeCheck)         //#C
+                .ValueGeneratedOnAddOrUpdate()      //#C
+                .IsConcurrencyToken();              //#C
+        }
+        /****************************************************
+        #A The OnModelCreating method is where I place the configuration of the concurrecy detection
+        #B I define the property PublishedOn as a concurrency token, which means EF Core checks it hasn't changed when write out an update
+        #C I define an extra property called Timestamp, that will be changed every time the row is created/updated. EF Core checks it hasn't changed when write out an update
+            * ************************************************/
+    }
+}

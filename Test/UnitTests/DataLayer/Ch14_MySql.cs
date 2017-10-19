@@ -198,8 +198,8 @@ namespace test.UnitTests.DataLayer
             //SETUP
             var optionsBuilder =
                 new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseMySql(_connection, 
-                mysqlOptions => mysqlOptions.MaxBatchSize(1)); //Needed to overcome https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/issues/397
+            optionsBuilder.UseMySql(_connection); 
+                //mysqlOptions => mysqlOptions.MaxBatchSize(1)); //Needed to overcome https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/issues/397
             optionsBuilder.EnableSensitiveDataLogging();
 
             using (var context = new EfCoreContext(optionsBuilder.Options))
