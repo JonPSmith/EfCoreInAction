@@ -133,11 +133,20 @@ namespace Test.UnitTests.DataLayer
             }
             /*******************************************************************
             #A I get an instance of the DesignTimeBuilder. If there are any errors the Errors property of this instance will contain the error messages
-            #B
-
+            #B This returns a service provider for the scaffolding design-time services
+            #C I now ask for the IDatabaseModelFactory service, which contains a method that reads a database an return an IModel result
+            #D I use the service's Create method that takes in a connection string to the database I want to look at
+            #E These two parameters allow me to pick specific tables and/or schemas respectively. An empty list means return all tables for all schemas
+            #F I now loop through each tabel found in the database
+            #G This outputs the CREATE TABLE command in SQL Server syntax
+            #H I then loop through each column in the table
+            #I This forms the correct string for a primary key, or an empty string if the column is not a priamry key
+            #J This forms the NOT NULL/NULL part of the column definition
+            #K I now output the whole column definition
+            #L I add the primary key constraint on the end
+            #M I end here. I could have output the foreign key constraints too, but to save space I didn't bother with that.
              * ****************************************************************/
         }
-
 
         [Fact]
         public void TestScaffoldingSuggestedEntityNames()
