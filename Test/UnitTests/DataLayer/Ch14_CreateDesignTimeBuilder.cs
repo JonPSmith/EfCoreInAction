@@ -10,7 +10,7 @@ using Xunit.Extensions.AssertExtensions;
 
 namespace Test.UnitTests.DataLayer
 {
-    public class Ch14_CreateDesignTimeProvider
+    public class Ch14_CreateDesignTimeBuilder
     {
         private readonly ITestOutputHelper _output;
 
@@ -22,9 +22,9 @@ namespace Test.UnitTests.DataLayer
             var optionsBuilder = this.SetupOptionsWithCorrectConnection();
             using (var context = new EfCoreContext(optionsBuilder.Options))
             {
-                var builder = new DesignTimeProvider();
+                var builder = new DesignTimeBuilder();
                 //ATTEMPT 
-                var serviceProvider = builder.GetDesignTimeProvider(context);
+                var serviceProvider = builder.GetScaffolderService(context);
 
                 //VERIFY
                 serviceProvider.ShouldNotBeNull();
@@ -40,9 +40,9 @@ namespace Test.UnitTests.DataLayer
             var optionsBuilder = this.SetupOptionsWithCorrectConnection();
             using (var context = new EfCoreContext(optionsBuilder.Options))
             {
-                var builder = new DesignTimeProvider();
+                var builder = new DesignTimeBuilder();
                 //ATTEMPT 
-                var serviceProvider = builder.GetDesignTimeProvider(context);
+                var serviceProvider = builder.GetScaffolderService(context);
 
                 //ATTEMPT 
                 var factory = serviceProvider.GetService<IDatabaseModelFactory>();
