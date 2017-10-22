@@ -54,10 +54,13 @@ master    Ch1    Ch2 --> Ch3 --> Ch4 --> Ch5 -->
                                       /
                                      |     Ch13-Part3
                                      |        /
-                                     |  Ch13-Part2
-                                     |      /
-(ch9) --> Ch10 --> Ch11 --> Ch12 --> Ch13-Part1
+                                     |  Ch13-Part2    Ch14MySql
+                                     |      /         /
+(ch9) --> Ch10 --> Ch11 --> Ch12 --> Ch13-Part1 --> Ch14  --> (Ch15) Note1
 ```
+*Note1: Chapter 15, on unit testing has its own Git repo https://github.com/JonPSmith/EfCore.TestSupport 
+and a NuGet package called [EfCore.TestSupport](https://www.nuget.org/packages/EfCore.TestSupport/).*
+
 
 ## Live example book selling site
 
@@ -92,8 +95,9 @@ that will delete all the unit test databases in the branch you are in.
 
 [MIT](https://github.com/JonPSmith/EfCoreInAction/blob/master/LICENSE)
 
-## My own blog site
-My own blog site is at http://www.thereformedprogrammer.net/ where you will find articles on EF 6.x
+## Other links
+My twitter handle is @thereformedprog.  
+My blog site is at http://www.thereformedprogrammer.net/ where you will find articles on EF 6.x
 and some on EF Core.
 
 Happy coding!
