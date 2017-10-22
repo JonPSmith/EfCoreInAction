@@ -50,12 +50,10 @@ master    Ch1    Ch2 --> Ch3 --> Ch4 --> Ch5 -->
 ```
 ### Part 3 - Using Entity Framework in real-world applications
 ```
-                                       Ch13-Part4
-                                      /
-                                     |     Ch13-Part3
-                                     |        /
-                                     |  Ch13-Part2    Ch14MySql
-                                     |      /         /
+                                           Ch13-Part3
+                                              /
+                                        Ch13-Part2    Ch14MySql
+                                            /         /
 (ch9) --> Ch10 --> Ch11 --> Ch12 --> Ch13-Part1 --> Ch14  --> (Ch15) Note1
 ```
 *Note1: Chapter 15, on unit testing has its own Git repo https://github.com/JonPSmith/EfCore.TestSupport 
