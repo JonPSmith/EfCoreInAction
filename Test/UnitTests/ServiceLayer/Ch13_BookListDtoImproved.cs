@@ -14,7 +14,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
 
-namespace Test.UnitTests.ServiceLayer
+namespace test.UnitTests.ServiceLayer
 {
     public class Ch13_BookListDtoImproved
     {
