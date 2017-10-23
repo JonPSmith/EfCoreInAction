@@ -6,9 +6,20 @@
     "tasks": [
       {
         "taskName": "build",
-        "args": ["${workspaceRoot}/EfCoreInAction/EfCoreInAction.csproj"],
+        "args": [
+          "${workspaceRoot}/EfCoreInAction/EfCoreInAction.csproj"
+        ],
         "isBuildCommand": true,
         "problemMatcher": "$msCompile"
-      }
+      },
+      {
+        "taskName": "test",
+        "args": [ 
+          "${workspaceRoot}/Test/Test.csproj"
+        ],
+        "isTestCommand": true,
+        "showOutput": "always",
+        "problemMatcher": "$msCompile"
+    }
     ]
 }
