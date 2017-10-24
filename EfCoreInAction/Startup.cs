@@ -45,13 +45,11 @@ namespace EfCoreInAction
                 //if running in development mode then we alter the connection to have the branch name in it
                 connection = connection.FormDatabaseConnection(gitBranchName);
             }
-            services.AddSingleton(ctr =>
+            services.AddSingleton<INoSqlCreators>(ctr =>
             {
                 var logger = ctr.GetService<ILogger<RavenStore>>();
                 return new RavenStore(ravenDbConnection, logger);
             });
-            services.AddSingleton<IUpdateCreator>(ctr => ctr.GetService<RavenStore>());
-            services.AddSingleton<IQueryCreator>(ctr => ctr.GetService<RavenStore>());
 
             services.AddDbContext<EfCoreContext>(
                 options => options.UseSqlServer(connection,

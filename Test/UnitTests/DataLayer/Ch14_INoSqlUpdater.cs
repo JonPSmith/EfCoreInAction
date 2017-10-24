@@ -27,7 +27,7 @@ namespace test.UnitTests.DataLayer
         public void TestNoSqlUpdateNewBook()
         {
             //SETUP
-            var fakeCreateUpdater = new FakeCreateUpdater();
+            var fakeCreateUpdater = new FakeNoSqlCreator();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options, fakeCreateUpdater))
             {
@@ -47,7 +47,7 @@ namespace test.UnitTests.DataLayer
         public void TestNoSqlUpdateUpdatedBook()
         {
             //SETUP
-            var fakeCreateUpdater = new FakeCreateUpdater();
+            var fakeCreateUpdater = new FakeNoSqlCreator();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
@@ -69,7 +69,7 @@ namespace test.UnitTests.DataLayer
         public void TestNoSqlUpdateDeleteBook()
         {
             //SETUP
-            var fakeCreateUpdater = new FakeCreateUpdater();
+            var fakeCreateUpdater = new FakeNoSqlCreator();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
@@ -91,7 +91,7 @@ namespace test.UnitTests.DataLayer
         public void TestNoSqlUpdateSoftDeleteBook()
         {
             //SETUP
-            var fakeCreateUpdater = new FakeCreateUpdater();
+            var fakeCreateUpdater = new FakeNoSqlCreator();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
@@ -113,7 +113,7 @@ namespace test.UnitTests.DataLayer
         public void TestNoSqlUpdateSoftDeleteUndoneBook()
         {
             //SETUP
-            var fakeCreateUpdater = new FakeCreateUpdater();
+            var fakeCreateUpdater = new FakeNoSqlCreator();
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {

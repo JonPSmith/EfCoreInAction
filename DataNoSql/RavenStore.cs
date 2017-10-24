@@ -6,9 +6,8 @@ using Raven.Client.Document;
 
 namespace DataNoSql
 {
-    public class RavenStore : 
-        IUpdateCreator, //#A
-        IQueryCreator   //#B
+    public class RavenStore : //#A
+        INoSqlCreators //#B
     {
         public const string RavenEventIdStart  //#C
             = "EfCoreInAction.NoSql.RavenDb";  //#C
@@ -34,7 +33,7 @@ namespace DataNoSql
             _store = store; //#H
         }
 
-        public INoSqlUpdater CreateSqlUpdater()      //#I
+        public INoSqlUpdater CreateNoSqlUpdater()    //#I
         {                                            //#I
             return new RavenUpdater(_store, _logger);//#I
         }                                            //#I
@@ -45,8 +44,8 @@ namespace DataNoSql
         }                                                 //#J
     }
     /********************************************************
-    #A This interface defines the CreateSqlUpdater method, which the DataLayer uses to obtain a class to write to the database
-    #B This interface defines the CreateNoSqlAccessor method, which the ServiceLayer uses to obtain a class to query the BookListNoSql document
+    #A This is the primary class to access the RavenDB store. There should only be one instance of this class in an application
+    #B This interface defines the two creator methods: CreateNoSqlUpdater and CreateNoSqlAccessor
     #C I use this EventId name when logging accesses. It allows my logging display to mark these as database accesses
     #D The RavenStore needs the RavenDB connection string, and a logger
     #E To stop the application from throwing an exception on startup if there is no connection string I just leave the store as null. I can throw a better exception later on

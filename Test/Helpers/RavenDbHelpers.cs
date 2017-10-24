@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DataLayer.NoSql;
 using DataNoSql;
-using Raven.Client;
 using test.EfHelpers;
 
 namespace test.Helpers
@@ -41,7 +40,7 @@ namespace test.Helpers
 
         public static void SeedDummyBooks(this RavenStore creator, int numBooks = 10, bool stepByYears = false)
         {
-            var updater = creator.CreateSqlUpdater();
+            var updater = creator.CreateNoSqlUpdater();
             {
                 updater.BulkLoad(CreateDummyBooks(numBooks, stepByYears).ToList());
             }

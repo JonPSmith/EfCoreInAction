@@ -25,7 +25,7 @@ namespace EfCoreInAction.Controllers
 
         public IActionResult Index
         (NoSqlSortFilterPageOptions options,
-            [FromServices] IQueryCreator creator,
+            [FromServices] INoSqlCreators creator,
             [FromServices] ILogger<RavenStore> ravenLogger)         
         {
 

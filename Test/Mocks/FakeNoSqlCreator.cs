@@ -3,21 +3,24 @@
 
 using System.Collections.Generic;
 using DataNoSql;
-using Microsoft.Extensions.Logging;
-using Raven.Client.Document;
 
 namespace test.Mocks
 {
-    public class FakeCreateUpdater : IUpdateCreator
+    public class FakeNoSqlCreator : INoSqlCreators
     {
         private readonly FakeNoSqlUpdater _updater = new FakeNoSqlUpdater();
 
         public List<string> Logs => _updater.Logs;
         public string AllLogs => string.Join(",", Logs);
 
-        public INoSqlUpdater CreateSqlUpdater()
+        public INoSqlUpdater CreateNoSqlUpdater()
         {
             return _updater;
+        }
+
+        public INoSqlAccessor CreateNoSqlAccessor()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

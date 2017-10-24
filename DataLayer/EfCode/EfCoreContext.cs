@@ -25,10 +25,10 @@ namespace DataLayer.EfCode
         public DbSet<Order> Orders { get; set; }            //#A
 
         public EfCoreContext(                             
-            DbContextOptions<EfCoreContext> options, IUpdateCreator updateCreator = null)      
+            DbContextOptions<EfCoreContext> options, INoSqlCreators noSqlCreators = null)      
             : base(options)
         {
-            _updater = updateCreator?.CreateSqlUpdater();
+            _updater = noSqlCreators?.CreateNoSqlUpdater();
         }
 
         public override int SaveChanges() //#A

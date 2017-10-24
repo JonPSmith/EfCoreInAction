@@ -5,8 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace DataNoSql
 {
-    public interface IUpdateCreator
+    public interface INoSqlCreators
     {
-        INoSqlUpdater CreateSqlUpdater();
+        INoSqlUpdater CreateNoSqlUpdater();
+        INoSqlAccessor CreateNoSqlAccessor();
     }
 }
