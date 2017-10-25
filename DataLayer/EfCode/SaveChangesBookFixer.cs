@@ -76,7 +76,7 @@ namespace DataLayer.EfCode
     #C This method can only handle Book entities, so I filter those out
     #D I only expect one Book concurrency issue, so I check that is the case
     #E If its not a book I rethrow the exception as I can't handle it
-    #F I now call my private method to handle this book concurrecy issue. If it returns true then it has updated the book entity, so SaveChanges needs to be called again to save the changes
+    #F I now call my private method to handle this book concurrency issue. If it returns true then it has updated the book entity, so I call SaveChangesWithReviewCheck again. This covers the possibility of another concurrent update happening while I was fixing it
     #G If someone deleted the book you were updating then we leave that as it was and return 0 to say nothing was updated 
     #H I cast the entity to a book so that I can access the properties I know
     #I This complex statement gets the combination of the reviews in the database and any new reviews that are being added. That is what the cached values must match
