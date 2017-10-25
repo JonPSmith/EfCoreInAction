@@ -25,7 +25,7 @@ namespace DataLayer.EfCode
                     throw; //#E
 
                 if ( FixReviewCachedValues(context, entityToFix)) //#F
-                    return context.SaveChanges();                 //#F
+                    return context.SaveChangesWithReviewCheck();  //#F
             }
             return 0; //#G
         }
