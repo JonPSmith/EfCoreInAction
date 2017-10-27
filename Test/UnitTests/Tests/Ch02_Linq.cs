@@ -2,6 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -11,6 +12,119 @@ namespace test.UnitTests.Tests
 {
     public class Ch02_Linq
     {
+
+        [Fact]
+        public void MethodSyntaxLinqExample()
+        {
+            //SETUP
+            int[] nums = new[] {1, 5, 4, 2, 3}; //#A
+
+            int[] result = nums //#B
+                .Where(x => x > 3) //#C
+                .OrderBy(x => x)   //#D
+                .ToArray();        //#E
+            /**************************************************
+            A# I create an array of integers from 1 to 5, but in a random order
+            B# I am going to apply some LINQ commands and then return a new array of integers
+            C# I first filter out all the integers 3 and below
+            D# Now I order the numbers
+            E# This turns the query back into an array. The result is an array of ints { 4, 5 }
+             * *************************************************/
+            //VERIFY
+            result.ShouldEqual(new[] { 4, 5 });
+        }
+
+        [Fact]
+        public void QuerySyntaxLinqExample()
+        {
+            //SETUP
+            int[] nums = new[] { 1, 5, 4, 2, 3 }; //#A
+
+            IOrderedEnumerable<int> result = //#B
+                from num in nums //#C
+                where num > 3 //#D
+                orderby num   //#E
+                select num;   //#F
+            /**************************************************
+            A# I create an array of integers from 1 to 5, but in a random order
+            B# The result returns here is an IOrderedEnumerable<int>
+            C# The query syntax starts with a from <item> in <collection>
+            D# I first filter out all the integers 3 and below
+            E# Now I order the numbers
+            F# I finally apply a select to choose what I want. The result is an IOrderedEnumerable<int> containing { 4, 5 }
+             * *************************************************/
+            //VERIFY
+            result.ToArray().ShouldEqual(new[] { 4, 5 });
+        }
+
+        class Review
+        {
+            public string VoterName { get; set; }
+            public int NumStars { get; set; }
+            public string Comment { get; set; }
+        }
+
+        List<Review> ReviewsList = new List<Review>
+        {
+            new Review
+            {
+                VoterName = "Jack",
+                NumStars = 5,
+                Comment = "Great book!"
+            },
+            new Review
+            {
+                VoterName = "Jill",
+                NumStars = 1,
+                Comment = "I hated it!"
+            }
+        };
+
+        [Fact]
+        public void ReviewLinqExamples()
+        {
+            //SETUP
+
+            //ATTEMPT
+            string[] voters = ReviewsList
+                .Select(p => p.VoterName).ToArray();
+            double aveVotes = ReviewsList
+                .Average(p => p.NumStars);
+            string firstVoter = ReviewsList
+                .First().VoterName;
+            bool any5stars = ReviewsList
+                .Any(p => p.NumStars == 1);
+
+
+            //VERIFY
+            voters.ShouldEqual(new string[]{"Jack", "Jill"});
+            aveVotes.ShouldEqual(3);
+            firstVoter.ShouldEqual("Jack");
+            any5stars.ShouldBeTrue();
+        }
+
+        [Theory]
+        [InlineData(true, new[] { 4, 5 })]
+        [InlineData(false, new[] { 5, 4})]
+        public void LinqExampleWithExtensionMethod(bool ascending, int[] expectedResult)
+        {
+            //SETUP
+            var numsQ = new[] { 1, 5, 4, 2, 3 }
+                .AsQueryable();            //#A
+
+            var result = numsQ
+                .MyOrder(ascending)       //#B
+                .Where(x => x > 3)   //#C
+                .ToArray();          //#D
+            /**************************************************
+            A# This turns an array of integers into a queryable object
+            B# I call the MyOrder extension method 
+            c# Then we filter out all the numbers 3 and below
+            D# This executes the IQueryable and turns the result into an array. The result is an array of ints { 4, 5 }
+             * *************************************************/
+            //VERIFY
+            result.ShouldEqual(expectedResult);
+        }
 
         [Fact]
         public void SimpleLinqExampleChapter01()
