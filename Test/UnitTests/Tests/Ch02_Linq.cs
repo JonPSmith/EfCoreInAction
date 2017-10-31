@@ -17,18 +17,18 @@ namespace test.UnitTests.Tests
         public void MethodSyntaxLinqExample()
         {
             //SETUP
-            int[] nums = new[] {1, 5, 4, 2, 3}; //#A
+            int[] nums = new[] {1, 5, 4, 2, 3, 0}; //#A
 
             int[] result = nums //#B
                 .Where(x => x > 3) //#C
                 .OrderBy(x => x)   //#D
                 .ToArray();        //#E
             /**************************************************
-            A# I create an array of integers from 1 to 5, but in a random order
-            B# I am going to apply some LINQ commands and then return a new array of integers
-            C# I first filter out all the integers 3 and below
-            D# Now I order the numbers
-            E# This turns the query back into an array. The result is an array of ints { 4, 5 }
+            #A I create an array of integers from 0 to 5, but in a random order
+            #B I am going to apply some LINQ commands and then return a new array of integers
+            #C I first filter out all the integers 3 and below
+            #D Now I order the numbers
+            #E This turns the query back into an array. The result is an array of ints { 4, 5 }
              * *************************************************/
             //VERIFY
             result.ShouldEqual(new[] { 4, 5 });
@@ -38,7 +38,7 @@ namespace test.UnitTests.Tests
         public void QuerySyntaxLinqExample()
         {
             //SETUP
-            int[] nums = new[] { 1, 5, 4, 2, 3 }; //#A
+            int[] nums = new[] { 1, 5, 4, 2, 3, 0}; //#A
 
             IOrderedEnumerable<int> result = //#B
                 from num in nums //#C
@@ -46,15 +46,73 @@ namespace test.UnitTests.Tests
                 orderby num   //#E
                 select num;   //#F
             /**************************************************
-            A# I create an array of integers from 1 to 5, but in a random order
-            B# The result returns here is an IOrderedEnumerable<int>
-            C# The query syntax starts with a from <item> in <collection>
-            D# I first filter out all the integers 3 and below
-            E# Now I order the numbers
-            F# I finally apply a select to choose what I want. The result is an IOrderedEnumerable<int> containing { 4, 5 }
+            #A I create an array of integers from 0 to 5, but in a random order
+            #B The result returns here is an IOrderedEnumerable<int>
+            #C The query syntax starts with a from <item> in <collection>
+            #D I first filter out all the integers 3 and below
+            #E Now I order the numbers
+            #F I finally apply a select to choose what I want. The result is an IOrderedEnumerable<int> containing { 4, 5 }
              * *************************************************/
             //VERIFY
             result.ToArray().ShouldEqual(new[] { 4, 5 });
+        }
+
+        [Fact]
+        public void QuerySyntaxWithLetLinqExample()
+        {
+            //SETUP
+            int[] nums = new[] { 1, 5, 4, 2, 3, 0 }; //#A
+            string [] numLookop = new[]
+                {"zero","one","two","three","four","five"}; //#B
+
+            IEnumerable<int> result = //#C
+                from num in nums //#D
+                let numString = numLookop[num] //#E
+                where numString.Length > 3 //#F
+                orderby numString   //#G
+                select num;   //#H
+            /**************************************************
+            #A I create an array of integers from 0 to 5, but in a random order
+            #B This is a lookup to convert a number to its word format
+            #C The result returns here is an IEnumerable<int>
+            #D The query syntax starts with a from <item> in <collection>
+            #E This is the let syntax that allows you to calculate a value once, and use it multiple times in the query
+            #F I first filter out all the numbers where the word is shorter than three letters
+            #G Now I order the number by the word form 
+            #H I finally apply a select to choose what I want. The result is an IEnumerable<int> containing { 5,4,3,0 }
+             * *************************************************/
+            //VERIFY
+            result.ToArray().ShouldEqual(new[] { 5,4,3,0 });
+        }
+
+        [Fact]
+        public void MethodSyntaxWithLetLinqExample()
+        {
+            //SETUP
+            int[] nums = new[] { 1, 5, 4, 2, 3, 0 }; //#A
+            string[] numLookop = new[]
+                {"zero","one","two","three","four","five"}; //#B
+
+            IEnumerable<int> result = nums //#C
+                .Select( num => new                //#D
+                    {                              //#D
+                        num,                       //#D
+                        numString = numLookop[num] //#D
+                    })                             //#D
+                .Where(r => r.numString.Length > 3) //#E
+                .OrderBy(r => r.numString) //#F
+                .Select(r => r.num);   //#G
+            /**************************************************
+            #A I create an array of integers from 0 to 5, but in a random order
+            #B This is a lookup to convert a number to its word format
+            #C The result returns here is an IEnumerable<int>
+            #D Here I use a anonymous type to hold the original integer value, and my numString  word lookup 
+            #E I first filter out all the numbers where the word is shorter than three letters
+            #F Now I order the number by the word form 
+            #G I finally apply another select to choose what I want. The result is an IEnumerable<int> containing { 5,4,3,0 }
+             * *************************************************/
+            //VERIFY
+            result.ToArray().ShouldEqual(new[] { 5, 4, 3, 0 });
         }
 
         class Review
