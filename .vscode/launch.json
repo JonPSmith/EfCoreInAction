@@ -11,7 +11,7 @@
         "preLaunchTask": "build",
         "program": "${workspaceRoot}/MyFirstEfCoreApp/bin/Debug/netcoreapp2.0/MyFirstEfCoreApp.dll",
         "args": [],
-        "cwd": "${workspaceRoot}/EfCoreInAction/",
+        "cwd": "${workspaceRoot}",
         "stopAtEntry": false,
         "externalConsole": true
     },
