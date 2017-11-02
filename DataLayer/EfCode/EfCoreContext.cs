@@ -4,7 +4,6 @@
 using DataLayer.EfClasses;
 using DataLayer.EfCode.Configurations;
 using Microsoft.EntityFrameworkCore;
-using DataLayer.EfCode.Configurations;
 
 namespace DataLayer.EfCode
 {
