@@ -3,7 +3,6 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace DataLayer.EfCode
 {
@@ -14,18 +13,28 @@ namespace DataLayer.EfCode
     /// but it is Ok on a local machine, which is where you want to run the command
     /// see https://docs.microsoft.com/en-us/ef/core/miscellaneous/configuring-dbcontext#using-idesigntimedbcontextfactorytcontext
     /// </summary>
-    public class ContextFactoryNeededForMigrations : IDesignTimeDbContextFactory<EfCoreContext>
+    public class ContextFactoryNeededForMigrations   //#A
+        : IDesignTimeDbContextFactory<EfCoreContext> //#A
     {
-        private const string ConnectionString =
+        private const string ConnectionString = //#B
             "Server=(localdb)\\mssqllocaldb;Database=EfCoreInActionDb;Trusted_Connection=True;MultipleActiveResultSets=true";
 
-        public EfCoreContext CreateDbContext(string[] args)
+        public EfCoreContext CreateDbContext(string[] args) //#C
         {
-            var optionsBuilder = new DbContextOptionsBuilder<EfCoreContext>();
-            optionsBuilder.UseSqlServer(ConnectionString,
-                b => b.MigrationsAssembly("DataLayer"));
+            var optionsBuilder = new                      //#D
+                DbContextOptionsBuilder<EfCoreContext>(); //#D
+            optionsBuilder.UseSqlServer(ConnectionString, //#E
+                b => b.MigrationsAssembly("DataLayer"));  //#E
 
-            return new EfCoreContext(optionsBuilder.Options);
+            return new EfCoreContext(optionsBuilder.Options); //#F
         }
     }
+    /*****************************************************************
+    #A This is my class that implements the IDesignTimeDbContextFactory<T> interface, where the <T> is the application's DbContext. The EF Core migration tools need this class to obtain a fully configured instance of the application's DbContext
+    #B I provide a connection string to a database. Some of the migration commands, such as Update-Database, will access this database
+    #C This is the method that I must implement. The database migrations tools call this to get an instance of the applications's DbContext
+    #D I create the DbContextOptionsBuilder<T> builder that I need for configuring the database options
+    #E Here I select the SQL Server database provider with the connection string to the database. I also add any options I need, in this case I tell EF Core where the database migrations are
+    #F Finally I use these options to create an instance on the application's DbContext that the migration tools can use
+     * ***************************************************************/
 }
