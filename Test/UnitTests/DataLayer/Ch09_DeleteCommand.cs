@@ -276,5 +276,33 @@ namespace test.UnitTests.DataLayer
                 context.GetAllPropsNavsIsModified(oneToOne).ShouldEqual("MyEntityId");
             }
         }
+
+        [Fact]
+        public void TestDeleteNotTrackedOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter09DbContext>();
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.Add(new MyEntity());
+                context.SaveChanges();
+            }
+
+            using (var context = new Chapter09DbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                //ATTEMPT
+                var entity = context.MyEntities
+                    .AsNoTracking()
+                        .First();
+                context.Remove(entity);
+                context.SaveChanges();
+
+                //VERIFY
+                context.MyEntities.Count().ShouldEqual(0);
+            }
+        }
     }
 }
