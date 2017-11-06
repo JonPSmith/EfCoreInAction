@@ -1,0 +1,25 @@
+{
+    "version": "0.1.0",
+    "command": "dotnet",
+    "isShellCommand": true,
+    "args": [],
+    "tasks": [
+      {
+        "taskName": "build",
+        "args": [
+          "${workspaceRoot}/EfCoreInAction/EfCoreInAction.csproj"
+        ],
+        "isBuildCommand": true,
+        "problemMatcher": "$msCompile"
+      },
+      {
+        "taskName": "test",
+        "args": [ 
+          "${workspaceRoot}/Test/Test.csproj"
+        ],
+        "isTestCommand": true,
+        "showOutput": "always",
+        "problemMatcher": "$msCompile"
+    }
+    ]
+}
