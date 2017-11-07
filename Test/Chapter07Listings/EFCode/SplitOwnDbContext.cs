@@ -12,6 +12,7 @@ namespace Test.Chapter07Listings.EFCode
  
         public DbSet<BookSummary> BookSummaries { get; set; }
         public DbSet<OrderInfo> Orders { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public SplitOwnDbContext(
             DbContextOptions<SplitOwnDbContext> options)
@@ -24,6 +25,7 @@ namespace Test.Chapter07Listings.EFCode
             modelBuilder.ApplyConfiguration(new BookSummaryConfig());
             modelBuilder.ApplyConfiguration(new BookDetailConfig());
             modelBuilder.ApplyConfiguration(new OrderInfoConfig());
+            modelBuilder.ApplyConfiguration(new UserConfig());
         }
     }
     /****************************************************
