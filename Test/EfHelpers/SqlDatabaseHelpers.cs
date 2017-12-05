@@ -30,6 +30,20 @@ namespace test.EfHelpers
             return databaseNamesToDelete.Count;
         }
 
+        public static int DeleteAllUnitTestDatabasesForAllBranches()
+        {
+            var config = AppSettings.GetConfiguration();
+            var builder = new SqlConnectionStringBuilder(config.GetConnectionString(AppSettings.ConnectionStringName));
+            var orgDbName = builder.InitialCatalog;
+
+            var databaseNamesToDelete = GetAllMatchingDatabases($"{orgDbName}");
+            foreach (var databaseName in databaseNamesToDelete)
+            {
+                DeleteDatabase(databaseName);
+            }
+            return databaseNamesToDelete.Count;
+        }
+
         public static List<string> GetAllMatchingDatabases(this string startsWith, 
             string connectionString = LocalHostConnectionString)
         {
@@ -54,7 +68,7 @@ namespace test.EfHelpers
         //-------------------------------------------------------------------
         //private methods
 
-        private static void DeleteDatabase(string databaseName)
+        private static void DeleteDatabase(this string databaseName)
         {
             LocalHostConnectionString.ExecuteNonQuery("DROP DATABASE [" + databaseName + "]");
             if (LocalHostConnectionString.ExecuteRowCount("sys.databases", $"WHERE [Name] = '{databaseName}'") == 1)

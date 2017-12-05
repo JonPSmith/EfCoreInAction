@@ -24,5 +24,14 @@ namespace test.UnitCommands
             var numDeleted = SqlDatabaseHelpers.DeleteAllUnitTestBranchDatabases();
             _output.WriteLine("This deleted {0} databases.", numDeleted);
         }
+
+        //Run this method to wipe ALL the test database for the current branch
+        //You need to run it in debug mode - that stops it being run when you "run all" unit tests
+        [RunnableInDebugOnly]
+        public void DeleteAllTestDatabasesForAllBranchesOk()
+        {
+            var numDeleted = SqlDatabaseHelpers.DeleteAllUnitTestDatabasesForAllBranches();
+            _output.WriteLine("This deleted {0} databases.", numDeleted);
+        }
     }
 }
