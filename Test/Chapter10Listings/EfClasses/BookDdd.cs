@@ -43,8 +43,10 @@ namespace Test.Chapter10Listings.EfClasses
             decimal price, string imageUrl,
             IReadOnlyList<AuthorDdd> authors)
         {
-            Title = title ?? throw new 
-                ArgumentNullException(nameof(title)); //#F
+            if (string.IsNullOrWhiteSpace(title))
+                throw new 
+               ArgumentNullException(nameof(title)); //#F
+            Title = title;
             Description = description;
             PublishedOn = publishedOn;
             Publisher = publisher;
@@ -68,7 +70,7 @@ namespace Test.Chapter10Listings.EfClasses
         #C The collection navigational properties are now IEnumerable<T>, which does not have the Add and Remove methods, so you can only change them via the DDD repository methods
         #D I create an internal, no parameter constructor for EF Core to use. This stops code in other assemblies from being able to create a BookDdd other than via the parameterised constructor
         #E The developer uses this contructor to create the BookDdd. This takes all the parameters it needs to create a book, inlcuding the Author(s)
-        #F Using a constuctor to create the BookDdd allows me to add a few system checks
+        #F Using a constructor to create the BookDdd allows me to add a few system checks, such as the book title not being empty
         #G The called does have to worry about setting up the BookAuthorDdd linking table as I do it inside the constructor.
         * ****************************************************/
 
