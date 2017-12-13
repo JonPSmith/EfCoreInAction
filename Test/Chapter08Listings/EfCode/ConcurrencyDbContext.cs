@@ -23,15 +23,15 @@ namespace Test.Chapter08Listings.EfCode
                 .Property(p => p.PublishedOn)    //#B
                 .IsConcurrencyToken();           //#B
 
-            modelBuilder.Entity<ConcurrencyAuthor>()//#C
-                .Property(p => p.ChangeCheck)         //#C
-                .ValueGeneratedOnAddOrUpdate()      //#C
-                .IsConcurrencyToken();              //#C
+            modelBuilder.Entity<ConcurrencyAuthor>() //#C
+                .Property(p => p.ChangeCheck) //#C
+                .IsRowVersion(); //#C
+
         }
         /****************************************************
         #A The OnModelCreating method is where I place the configuration of the concurrecy detection
         #B I define the property PublishedOn as a concurrency token, which means EF Core checks it hasn't changed when write out an update
-        #C I define an extra property called Timestamp, that will be changed every time the row is created/updated. EF Core checks it hasn't changed when write out an update
+        #C I define an extra property called ChangeCheck, that will be changed every time the row is created/updated. EF Core checks it hasn't changed when write out an update
             * ************************************************/
     }
 }
