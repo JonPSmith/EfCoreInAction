@@ -83,17 +83,32 @@ namespace Test.UnitTests.DataLayer
         public void TestDatabaseModelTableNames()
         {
             //SETUP
-            var builder = new DesignTimeBuilder();
-            var serviceProvider = builder.GetScaffolderService(DatabaseProviders.SqlServer);
-            var factory = serviceProvider.GetService<IDatabaseModelFactory>();
-
-            var model = factory.Create(_connectionString, new string[] { }, new string[] { });
+            var connectionString = "Server=... shorten to fit"; //#A
+            var builder = new DesignTimeBuilder();  //#B
+            var serviceProvider = builder         //#C
+                .GetScaffolderService(            //#C
+                     DatabaseProviders.SqlServer);//#D
+            var service = serviceProvider             //#E
+                .GetService<IDatabaseModelFactory>(); //#E
 
             //ATTEMPT 
-            var tables = model?.Tables;
+            var model = service.Create(_connectionString, //#F
+                new string[] { }, new string[] { });      //#G
+            var tables = model.Tables;   //#H
 
             //VERIFY
-            tables.Select(x => x.Name).ShouldEqual(new[] { "Authors", "Books", "Orders", "BookAuthor", "PriceOffers", "Review", "LineItem"});
+            tables.Select(x => x.Name).ShouldEqual(new[] 
+                { "Authors", "Books", "Orders", "BookAuthor", "PriceOffers", "Review", "LineItem"});
+            /*********************************************************************
+            #A I provide the connection string to the database I want to read.
+            #B This is my DesignTimeBuilder which holds the code I show in listing 14.11
+            #C Now I get the ServiceProvider specifically set up by my code to contain the setting needed for the scaffolder.
+            #D I need to tell it what database provider I need, which must match the type of database I am reading
+            #E Now I can create one of the services that the scaffolder has in in. In this case I use the method that will return a class DatabaseModel
+            #F The service only has one method, called Create, which takes the connection string and reads its schema, returning a DatabaseModel instance
+            #G These two parameters allows me to target specific tables and/or schema names. I use an empty collection to say I want all the tables in all the schemas
+            #H The DatabaseModel has a property, called Tables, that returns information on the tables it could find
+             * *******************************************************************/
         }
 
         [Fact]
