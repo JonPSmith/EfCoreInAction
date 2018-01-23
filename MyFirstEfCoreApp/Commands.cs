@@ -19,20 +19,13 @@ namespace MyFirstEfCoreApp
         {
             using (var db = new AppDbContext())              //#A
             {
-                foreach (var book in
-                    db.Books.AsNoTracking()                  //#B
-
+                foreach (var book in db.Books.AsNoTracking() //#B
                     .Include(a => a.Author))                 //#C
                 {
-                    var webUrl = book.Author.WebUrl == null
-                        ? "- no web url given -"
-                        : book.Author.WebUrl;
-                    Console.WriteLine(
-                        $"{book.Title} by {book.Author.Name}");
-                    Console.WriteLine("     " +
-                        "Published on " +
-                        $"{book.PublishedOn:dd-MMM-yyyy}" +
-                        $". {webUrl}");
+                    var webUrl = book.Author.WebUrl ?? "- no web url given -";
+                    Console.WriteLine($"{book.Title} by {book.Author.Name}");
+                    Console.WriteLine("     Published on " +
+                        $"{book.PublishedOn:dd-MMM-yyyy}. {webUrl}");
                 }
             }
         }
