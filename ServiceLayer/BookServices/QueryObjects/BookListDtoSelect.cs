@@ -18,20 +18,20 @@ namespace ServiceLayer.BookServices.QueryObjects
                 Price = p.Price,                          //#B
                 PublishedOn = p.PublishedOn,              //#B
                 ActualPrice = p.Promotion == null         //#C
-                        ? p.Price                             //#C
-                        : p.Promotion.NewPrice,               //#C
+                        ? p.Price                         //#C
+                        : p.Promotion.NewPrice,           //#C
                 PromotionPromotionalText =                //#D
-                        p.Promotion == null                   //#D
-                          ? null                              //#D
-                          : p.Promotion.PromotionalText,      //#D
+                        p.Promotion == null               //#D
+                          ? null                          //#D
+                          : p.Promotion.PromotionalText,  //#D
                 AuthorsOrdered = string.Join(", ",        //#E
-                        p.AuthorsLink                         //#E
-                        .OrderBy(q => q.Order)                //#E
-                        .Select(q => q.Author.Name)),         //#E
+                        p.AuthorsLink                     //#E
+                        .OrderBy(q => q.Order)            //#E
+                        .Select(q => q.Author.Name)),     //#E
                 ReviewsCount = p.Reviews.Count,           //#F
-                ReviewsAverageVotes =                  //#G
-                    p.Reviews.Select(y =>              //#G
-                        (double?)y.NumStars).Average() //#G
+                ReviewsAverageVotes =                     //#G
+                    p.Reviews.Select(y =>                 //#G
+                        (double?)y.NumStars).Average()    //#G
 
             });
         }
