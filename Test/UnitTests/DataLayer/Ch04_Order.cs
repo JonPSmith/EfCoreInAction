@@ -192,10 +192,11 @@ namespace test.UnitTests.DataLayer
         public void TestUpdateLineItemInOrder()
         {
             //SETUP
-            var options = EfInMemory.CreateNewContextOptions();
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
 
             using (var context = new EfCoreContext(options))
             {
+                context.Database.EnsureCreated();
                 context.SeedDatabaseFourBooks();
                 var userId = Guid.NewGuid();
                 var order = new Order
@@ -219,6 +220,7 @@ namespace test.UnitTests.DataLayer
             //ATTEMPT
             using (var context = new EfCoreContext(options))
             {
+                var logger = new LogDbContext(context);
                 var order = context.Orders.Include(x => x.LineItems).First();
                 order.LineItems = new List<LineItem>
                 {
@@ -231,7 +233,6 @@ namespace test.UnitTests.DataLayer
                     }
                 };
                 context.SaveChanges();
-
             }
 
             //VERIFY
