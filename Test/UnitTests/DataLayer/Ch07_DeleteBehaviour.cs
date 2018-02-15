@@ -65,6 +65,35 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void TestDeletePrincipalNonNullDefaultNoIncludeOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<Chapter07DbContext>();
+            using (var context = new Chapter07DbContext(options))
+            {
+                context.Database.EnsureCreated();
+
+                var entity = new DeletePrincipal { DependentNonNullDefault = new DeleteNonNullDefault() };
+                //Guard test - check the deafault delete behaviour for non-nullable key is Cascade
+                context.Model.FindEntityType(entity.DependentNonNullDefault.GetType().FullName)
+                    .GetForeignKeys().Single().DeleteBehavior.ShouldEqual(DeleteBehavior.Cascade);
+                context.Add(entity);
+                context.SaveChanges();
+            }
+            using (var context = new Chapter07DbContext(options))
+            {
+                //ATTEMPT
+                var entity = context.DeletePrincipals
+                    .Single(p => p.DeletePrincipalId == 1);
+                context.Remove(entity);
+                context.SaveChanges();
+
+                //VERIFY
+                context.Set<DeleteNonNullDefault>().Count().ShouldEqual(0);
+            }
+        }
+
+        [Fact]
         public void TestDeletePrincipalDefaultWithIncludeOk()
         {
             //SETUP
