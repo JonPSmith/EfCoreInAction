@@ -87,6 +87,25 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void TestFromSqlEntityIsTrackedOk()
+        {
+            //SETUP
+            using (var context = new EfCoreContext(_options))
+            {
+                //ATTEMPT
+                const int rankFilterBy = 5;
+                var books = context.Books 
+                    .FromSql( 
+                        "EXECUTE dbo.FilterOnReviewRank " + 
+                        $"@RankFilter = {rankFilterBy}")
+                    .ToList();
+
+                //VERIFY
+                context.Entry(books.First()).State.ShouldEqual(EntityState.Unchanged);
+            }
+        }
+
+        [Fact]
         public void TestFromSqlWithIncludeOk()
         {
             //SETUP
