@@ -12,6 +12,10 @@ namespace Test.Chapter10Listings.EfCode
     {
         public DbSet<BookDdd> Books { get; set; }
 
+        public DbSet<Blogger> Bloggers { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+
         public Chapter10DbContext(
             DbContextOptions<Chapter10DbContext> options)
             : base(options) { }
@@ -30,6 +34,8 @@ namespace Test.Chapter10Listings.EfCode
 
             modelBuilder.Entity<MyUnique>().Configure();
             modelBuilder.Entity<BookDdd>().Configure();
+
+            modelBuilder.Entity<PostTag>().Configure();
         }
 
     }
