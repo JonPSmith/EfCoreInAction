@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using test.EfHelpers;
@@ -138,7 +139,7 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void TestListBloggersDto()
+        public void TestListBloggersAutoMapperInjectConfigDto()
         {
             //SETUP
             var mapperConfig = AutoMapperHelpers.MapperConfig<ListBloggersDto>();
@@ -154,6 +155,72 @@ namespace test.UnitTests.DataLayer
                 //ATTEMPT
                 var dtos = context.Bloggers
                     .ProjectTo<ListBloggersDto>(mapperConfig)
+                    .ToList();
+
+                //VERIFY
+                dtos.Count.ShouldEqual(2);
+                dtos.Select(x => x.Name).ShouldEqual(new[] { AdaName, SherlockName });
+                dtos.Select(x => x.PostsCount).ShouldEqual(new[] { 2,1 });
+
+                foreach (var log in logs)
+                {
+                    _output.WriteLine(log);
+                }
+            }
+        }
+
+        [Fact]
+        public void TestListBloggersAutoMapperMapperConfigDto()
+        {
+            //SETUP
+            var config = new MapperConfiguration(cfg => { cfg.CreateMap<Blogger, ListBloggersDto>(); });
+            var mapper = config.CreateMapper();
+
+            var options = SqliteInMemory.CreateOptions<Chapter10DbContext>();
+            using (var context = new Chapter10DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.AddRange(SetupPosts());
+                context.SaveChanges();
+                var logs = new List<string>();
+                SqliteInMemory.SetupLogging(context, logs);
+
+                //ATTEMPT
+                var dtos = context.Bloggers
+                    .ProjectTo<ListBloggersDto>(mapper)
+                    .ToList();
+
+                //VERIFY
+                dtos.Count.ShouldEqual(2);
+                dtos.Select(x => x.Name).ShouldEqual(new[] { AdaName, SherlockName });
+                dtos.Select(x => x.PostsCount).ShouldEqual(new[] { 2, 1 });
+
+                foreach (var log in logs)
+                {
+                    _output.WriteLine(log);
+                }
+            }
+        }
+
+        [Fact]
+        public void TestListBloggersStaticProjectToDto()
+        {
+            //SETUP
+            Mapper.Initialize(cfg =>
+                cfg.CreateMap<Blogger, ListBloggersDto>());
+
+            var options = SqliteInMemory.CreateOptions<Chapter10DbContext>();
+            using (var context = new Chapter10DbContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.AddRange(SetupPosts());
+                context.SaveChanges();
+                var logs = new List<string>();
+                SqliteInMemory.SetupLogging(context, logs);
+
+                //ATTEMPT
+                var dtos = context.Bloggers
+                    .ProjectTo<ListBloggersDto>()
                     .ToList();
 
                 //VERIFY
