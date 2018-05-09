@@ -335,6 +335,8 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 context.GetEntityState(entity.OneToOne).ShouldEqual(EntityState.Unchanged);
                 context.GetEntityState(oldOneToOne).ShouldEqual(EntityState.Unchanged);
+                context.GetAllPropsNavsIsModified(entity).ShouldEqual("");
+                context.GetAllPropsNavsIsModified(oldOneToOne).ShouldEqual("");
                 context.OneEntities.Count().ShouldEqual(2);
             }
         }
