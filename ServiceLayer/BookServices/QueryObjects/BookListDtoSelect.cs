@@ -27,7 +27,7 @@ namespace ServiceLayer.BookServices.QueryObjects
                 AuthorsOrdered = string.Join(", ",        //#E
                         p.AuthorsLink                     //#E
                         .OrderBy(q => q.Order)            //#E
-                        .Select(q => q.Author.Name)),     //#E
+                        .Select(q => q.Author.Name).ToList()), //#E  !!! changed to take advantage of improved querying in 2.1 !!!
                 ReviewsCount = p.Reviews.Count,           //#F
                 ReviewsAverageVotes =                     //#G
                     p.Reviews.Select(y =>                 //#G
