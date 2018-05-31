@@ -31,7 +31,7 @@ namespace test.Chapter05Listings
             (IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc();
+            //services.AddMvc();
             var connection = Configuration                
                 .GetConnectionString("DefaultConnection");
             services.AddDbContext<EfCoreContext>(
@@ -62,24 +62,25 @@ namespace test.Chapter05Listings
             //loggerFactory.AddConsole(Configuration.GetSection("Logging"));   removed because it slows things down!   
             loggerFactory.AddProvider(new RequestTransientLogger(() => httpContextAccessor));
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
+            //changed with 2.1
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //    app.UseBrowserLink();
+            //}
+            //else
+            //{
+            //    app.UseExceptionHandler("/Home/Error");
+            //}
 
-            app.UseStaticFiles();
+            //app.UseStaticFiles();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            //app.UseMvc(routes =>
+            //{
+            //    routes.MapRoute(
+            //        name: "default",
+            //        template: "{controller=Home}/{action=Index}/{id?}");
+            //});
         }
     }
 }

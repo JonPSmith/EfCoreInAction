@@ -30,7 +30,7 @@ namespace test.Chapter05Listings
             (IServiceCollection services)//#A
         {
             // Add framework services.
-            services.AddMvc();  //#B
+            //services.AddMvc();  //#B
             var connection = Configuration                //#C
                 .GetConnectionString("DefaultConnection");//#C
             services.AddDbContext<EfCoreContext>(          //#D
@@ -62,22 +62,22 @@ namespace test.Chapter05Listings
 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
+                //app.UseDeveloperExceptionPage();
+                //app.UseBrowserLink();
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                //app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseStaticFiles();
+            //app.UseStaticFiles();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            //app.UseMvc(routes =>
+            //{
+            //    routes.MapRoute(
+            //        name: "default",
+            //        template: "{controller=Home}/{action=Index}/{id?}");
+            //});
         }
     }
 }

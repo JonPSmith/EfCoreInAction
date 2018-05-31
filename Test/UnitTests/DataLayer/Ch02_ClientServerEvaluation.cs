@@ -163,7 +163,7 @@ namespace test.UnitTests.DataLayer
 
 
                 //VERIFY
-                Assert.StartsWith("Warning as error exception for warning 'Microsoft.EntityFrameworkCore.Query.QueryClientEvaluationWarning':", ex.Message);
+                Assert.StartsWith("Error generated for warning 'Microsoft.EntityFrameworkCore.Query.QueryClientEvaluationWarning:", ex.Message);
             }
         }
     }

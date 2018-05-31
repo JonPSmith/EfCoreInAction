@@ -64,10 +64,10 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 context.Books.Remove(context.Books.First());
-                var ex = Assert.Throws<InvalidOperationException>(() => context.SaveChanges());
+                var ex = Assert.Throws<DbUpdateException> (() => context.SaveChanges());
 
                 //VERIFY
-                ex.Message.ShouldEqual("The association between entity types 'Book' and 'LineItem' has been severed but the foreign key for this relationship cannot be set to null. If the dependent entity should be deleted, then setup the relationship to use cascade deletes.");
+                ex.InnerException.Message.ShouldEqual("SQLite Error 19: 'FOREIGN KEY constraint failed'.");
             }
         }
 
