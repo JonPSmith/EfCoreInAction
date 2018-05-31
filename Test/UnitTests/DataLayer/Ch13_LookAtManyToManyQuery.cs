@@ -47,7 +47,6 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 bookWithAuthors.First().AuthorNames.Count().ShouldEqual(1);
                 bookWithAuthors.First().AuthorNames.First().ShouldEqual("Martin Fowler");
-                logIt.Logs.Count.ShouldEqual(4);
                 foreach (var log in logIt.Logs)
                 {
                     _output.WriteLine(log);
@@ -81,7 +80,6 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 bookWithAuthors.First().AuthorNames.Count().ShouldEqual(1);
                 bookWithAuthors.First().AuthorNames.First().ShouldEqual("Martin Fowler");
-                logIt.Logs.Count.ShouldEqual(6);
                 foreach (var log in logIt.Logs)
                 {
                     _output.WriteLine(log);
