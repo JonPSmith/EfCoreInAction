@@ -46,6 +46,21 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
+        public void TestCountWorksOk()
+        {
+            //SETUP
+            using (var context = new EfCoreContext(_options))
+            {
+                //ATTEMPT
+                var count = context.Database.GetDbConnection().ConnectionString
+                    .ExecuteRowCount("Books", "WHERE Title = 'Quantum Networking'");
+
+                //VERIFY
+                count.ShouldEqual(1);
+            }
+        }
+
+        [Fact]
         public void TestCheckProcExistsOk()
         {
             //SETUP

@@ -48,8 +48,8 @@ namespace test.UnitTests.Tests
             mockCookieRequests.CookiesOut.Append("Test", "Content");
 
             //VERIFY
-            mockCookieRequests.ResponseCookies.Count.ShouldEqual(1);
-            mockCookieRequests.ResponseCookies.First().ShouldEqual("Test=Content; path=/");
+            mockCookieRequests.Headers.Values.Count.ShouldEqual(1);
+            mockCookieRequests.Headers.Values.First().ToString().ShouldEqual("Test=Content; path=/");
         }
     }
 }

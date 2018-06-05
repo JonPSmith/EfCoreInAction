@@ -112,13 +112,13 @@ namespace test.UnitTests.DataLayer
 
             using (var context = new Chapter09DbContext(options))
             {
-                context.Database.EnsureCreated();
 
-                //ATTEMPT
+                context.Database.EnsureCreated();
                 var loggerFactory = context.GetService<ILoggerFactory>();
                 loggerFactory.AddProvider(new MyLoggerProvider(logs));
 
-                context.Add(new MyEntity());
+                //ATTEMPT
+                context.Add(new MyEntity{MyString = "Hello"});
                 context.SaveChanges();
 
                 //VERIFY

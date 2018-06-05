@@ -162,6 +162,7 @@ namespace test.UnitTests.DataLayer
                 //VERIFY
                 context.NumTrackedEntities().ShouldEqual(2);
                 context.GetEntityState(entity).ShouldEqual(EntityState.Unchanged);
+                var xx = context.GetAllPropsNavsIsModified(entity);
                 context.GetNavigationalIsModified(entity, x => x.Many).ShouldBeFalse();
                 context.GetEntityState(entity.Many.First()).ShouldEqual(EntityState.Added);
            }

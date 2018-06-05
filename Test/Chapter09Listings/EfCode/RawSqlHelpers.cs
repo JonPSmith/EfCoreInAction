@@ -10,7 +10,6 @@ namespace Test.Chapter09Listings.EfCode
     public static class RawSqlHelpers
     {
         public const string FilterOnReviewRank = "FilterOnReviewRank";
-        public const string UdfAverageVotes = "udf_AverageVotes";
 
         public static void AddUpdateSqlProcs(this DbContext context)
         {
@@ -48,10 +47,7 @@ WHERE (SELECT AVG(CAST([NumStars] AS float)) FROM dbo.Review AS r WHERE b.BookId
         public static bool EnsureSqlProcsSet(this DbContext context)
         {
             var connection = context.Database.GetDbConnection().ConnectionString;
-            return connection.ExecuteRowCount("sysobjects", $"WHERE type='P' AND name='{FilterOnReviewRank}'") == 1
-                   && connection.ExecuteRowCount("sys.objects",
-                       $"WHERE object_id = OBJECT_ID(N'[dbo].[{UdfAverageVotes}]')" +
-                       " AND type IN ( N'FN', N'IF', N'TF', N'FS', N'FT' )") == 1;
+            return connection.ExecuteRowCount("sysobjects", $"WHERE type='P' AND name='{FilterOnReviewRank}'") == 1;
         }
     }
 }

@@ -3,6 +3,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using Microsoft.Extensions.Logging;
 
 namespace test.EfHelpers
@@ -47,6 +50,9 @@ namespace test.EfHelpers
                 TState state, Exception exception, 
                 Func<TState, Exception, string> formatter)
             {
+                var s = new StackTrace();
+                var b = s.GetFrames();
+                var a = b[14].GetMethod();
                 if (!IsEnabled(logLevel)) //#H
                     return;
 

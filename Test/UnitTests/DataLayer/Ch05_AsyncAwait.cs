@@ -108,7 +108,7 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public async Task GetNumBooksAsync()
+        public async Task TestGetNumBooksAsync()
         {
             //SETUP
             var inMemDb = new SqliteInMemory();

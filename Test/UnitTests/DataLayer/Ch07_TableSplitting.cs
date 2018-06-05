@@ -82,7 +82,7 @@ namespace test.UnitTests.DataLayer
                 var ex = Assert.Throws<InvalidOperationException>(() => context.SaveChanges());
 
                 //VERIFY
-                ex.Message.StartsWith("The entity of 'BookSummary' is sharing the table 'Books' with 'BookDetail', but there is no entity of this type with the same key value ")
+                ex.Message.StartsWith("The entity of type 'BookSummary' is sharing the table 'Books' with entities of type 'BookDetail', but there is no entity of this type with the same key value")
                     .ShouldBeTrue();
             }
         }
