@@ -118,7 +118,7 @@ namespace test.UnitTests.DataLayer
                 context.SeedDatabaseFourBooks();
 
                 //ATTEMPT
-                var numBooks = await GetNumBooksAsync(context);
+                var numBooks = await LocalGetNumBooksAsync(context);
 
                 //VERIFY
                 numBooks.ShouldEqual(4);
@@ -126,7 +126,7 @@ namespace test.UnitTests.DataLayer
         }
 
         public async Task<int> //#A
-            GetNumBooksAsync(EfCoreContext context) //#B
+            LocalGetNumBooksAsync(EfCoreContext context) //#B
         {
             return await //#C
                 context.Books
