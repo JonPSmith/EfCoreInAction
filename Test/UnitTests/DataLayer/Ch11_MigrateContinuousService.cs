@@ -47,13 +47,13 @@ namespace test.UnitTests.DataLayer
         [Fact]
         public void Test01CreateInitialDatabase()
         {
-            Test01CreateInitialDatabase(this.GetUniqueDatabaseConnectionString(nameof(Test01CreateInitialDatabase)));
+            LocalTest01CreateInitialDatabase(this.GetUniqueDatabaseConnectionString(nameof(LocalTest01CreateInitialDatabase)));
         }
 
         [Fact]
         public void Test02FirstMigrationCreateTablesAndStoredProc()
         {
-            Test02FirstMigrationCreateTablesAndStoredProc(this.GetUniqueDatabaseConnectionString(nameof(Test02FirstMigrationCreateTablesAndStoredProc)));
+            LocalTest02FirstMigrationCreateTablesAndStoredProc(this.GetUniqueDatabaseConnectionString(nameof(LocalTest02FirstMigrationCreateTablesAndStoredProc)));
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace test.UnitTests.DataLayer
         {
             //SETUP
             var connection = this.GetUniqueDatabaseConnectionString(nameof(Test02AInterimCodeReadData));
-            Test02FirstMigrationCreateTablesAndStoredProc(connection);
+            LocalTest02FirstMigrationCreateTablesAndStoredProc(connection);
 
             var optionsBuilder =
                 new DbContextOptionsBuilder<Chapter11ContinuousInterimDb>();
@@ -81,7 +81,7 @@ namespace test.UnitTests.DataLayer
         {
             //SETUP
             var connection = this.GetUniqueDatabaseConnectionString(nameof(Test02BInterimCodeWriteData));
-            Test02FirstMigrationCreateTablesAndStoredProc(connection);
+            LocalTest02FirstMigrationCreateTablesAndStoredProc(connection);
 
             var optionsBuilder =
                 new DbContextOptionsBuilder<Chapter11ContinuousInterimDb>();
@@ -103,7 +103,7 @@ namespace test.UnitTests.DataLayer
         [Fact]
         public void Test03SecondMigrationCopyData()
         {
-            Test03SecondMigrationCopyData(this.GetUniqueDatabaseConnectionString(nameof(Test03SecondMigrationCopyData)));
+            LocalTest03SecondMigrationCopyData(this.GetUniqueDatabaseConnectionString(nameof(LocalTest03SecondMigrationCopyData)));
         }
 
         [Fact]
@@ -111,7 +111,7 @@ namespace test.UnitTests.DataLayer
         {
             //SETUP
             var connection = this.GetUniqueDatabaseConnectionString(nameof(Test03AFinalCodeReadData));
-            Test03SecondMigrationCopyData(connection);
+            LocalTest03SecondMigrationCopyData(connection);
 
             var optionsBuilder =
                 new DbContextOptionsBuilder<Chapter11ContinuousFinalDb>();
@@ -129,10 +129,10 @@ namespace test.UnitTests.DataLayer
         [Fact]
         public void Test04FinalMigrationTidyUp()
         {
-            Test04FinalMigrationTidyUp(this.GetUniqueDatabaseConnectionString(nameof(Test04FinalMigrationTidyUp)));
+            LocalTest04FinalMigrationTidyUp(this.GetUniqueDatabaseConnectionString(nameof(LocalTest04FinalMigrationTidyUp)));
         }
 
-        private void Test01CreateInitialDatabase(string connectionString)
+        private void LocalTest01CreateInitialDatabase(string connectionString)
         {
             //SETUP
             connectionString.WipeCreateDatabase();
@@ -148,10 +148,10 @@ namespace test.UnitTests.DataLayer
         }
 
 
-        private void Test02FirstMigrationCreateTablesAndStoredProc(string connectionString)
+        private void LocalTest02FirstMigrationCreateTablesAndStoredProc(string connectionString)
         {
             //SETUP
-            Test01CreateInitialDatabase(connectionString);
+            LocalTest01CreateInitialDatabase(connectionString);
             var filePath = GetChapter11ScriptFilePath("Script01*.sql");
 
             //ATTEMPT
@@ -162,10 +162,10 @@ namespace test.UnitTests.DataLayer
                 $"WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_CATALOG='{GetDatabaseName(connectionString)}'").ShouldEqual(3);
         }
 
-        private void Test03SecondMigrationCopyData(string connectionString)
+        private void LocalTest03SecondMigrationCopyData(string connectionString)
         {
             //SETUP
-            Test02FirstMigrationCreateTablesAndStoredProc(connectionString);
+            LocalTest02FirstMigrationCreateTablesAndStoredProc(connectionString);
             var filePath = GetChapter11ScriptFilePath("Script02*.sql");
 
             //ATTEMPT
@@ -175,10 +175,10 @@ namespace test.UnitTests.DataLayer
             connectionString.ExecuteRowCount("[dbo].[Addresses]").ShouldEqual(3);
         }
 
-        private void Test04FinalMigrationTidyUp(string connectionString)
+        private void LocalTest04FinalMigrationTidyUp(string connectionString)
         {
             //SETUP
-            Test03SecondMigrationCopyData(connectionString);
+            LocalTest03SecondMigrationCopyData(connectionString);
             var filePath = GetChapter11ScriptFilePath("Script03*.sql");
 
             //ATTEMPT

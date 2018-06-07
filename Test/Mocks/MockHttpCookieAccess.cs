@@ -12,11 +12,9 @@ namespace test.Mocks
     {
         private readonly Dictionary<string, string> _requestCookies = new Dictionary<string, string>();
 
-        private readonly FrameResponseHeaders _responseCookies = new FrameResponseHeaders();
+        public IHeaderDictionary HeaderDict { get; } = new HeaderDictionary();
 
         public IRequestCookieCollection CookiesIn { get; private set; }
-
-        public Microsoft.Extensions.Primitives.StringValues ResponseCookies => _responseCookies.HeaderSetCookie;
 
         public IResponseCookies CookiesOut { get; private set; }
 
@@ -26,8 +24,7 @@ namespace test.Mocks
                 _requestCookies[cookieName] = cookieContent;
 
             CookiesIn = new RequestCookieCollection(_requestCookies);
-            CookiesOut = new ResponseCookies(_responseCookies, null);
-            var x = _responseCookies.HeaderSetCookie;
+            CookiesOut = new ResponseCookies(HeaderDict, null);
         }
 
     }

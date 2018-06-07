@@ -42,11 +42,15 @@ namespace EfCoreInAction
             //This makes the Git branch name available via injection
             services.AddSingleton(new AppInformation(gitBranchName));
 
-            var connection = Configuration.GetConnectionString("DefaultConnection");
-            if (Configuration["ENVIRONMENT"] == "Development")
+            var connection = Configuration.GetConnectionString("OverrideConnection");
+            if (connection == null)
             {
-                //if running in development mode then we alter the connection to have the branch name in it
-                connection = connection.FormDatabaseConnection(gitBranchName);
+                connection = Configuration.GetConnectionString("DefaultConnection");
+                if (Configuration["ENVIRONMENT"] == "Development")
+                {
+                    //if running in development mode then we alter the connection to have the branch name in it
+                    connection = connection.FormDatabaseConnection(gitBranchName);
+                }
             }
             //Swapped to DbContext Pooling
             services.AddDbContextPool<EfCoreContext>( //#A
@@ -77,7 +81,6 @@ namespace EfCoreInAction
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
             }
             else
             {
