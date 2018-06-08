@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}/EfCoreInAction/bin/Debug/netcoreapp2.0/EfCoreInAction.dll",
+            "program": "${workspaceRoot}/EfCoreInAction/bin/Debug/netcoreapp2.1/EfCoreInAction.dll",
             "args": [],
             "cwd": "${workspaceRoot}/EfCoreInAction/",
             "stopAtEntry": false,
