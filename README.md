@@ -1,36 +1,34 @@
 # EfCoreInAction
 
-Welcome to the Git repo that is associated with the book 
+Welcome to the Git repo that is associated with the book
 **[Entity Framework Core in Action](https://www.manning.com/books/entity-framework-core-in-action?a_aid=su4utaraxuTre8tuthup&a_bid=4cef27ce)**
 published by [Manning Publications](https://www.manning.com/).
 This book details how to use 
 [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/index) (EF Core)
-to develop database access code in [.NET Core](https://www.microsoft.com/net) applications. 
+to develop database access code in [.NET Core](https://www.microsoft.com/net) applications.
 
-This Git repo contains all the code in the book, plus an 
-[example book selling site](http://efcoreinaction.com/) 
+This Git repo contains all the code in the book, plus an
+[example book selling site](http://efcoreinaction.com/)
 that I develop, and improve, in the book.
 All the code uses Microsoft's, open-source 
 [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/index) library for database access.
 
-## NOTE: Now updated to .NET Core 2.0 release
+**NOTE: Code uses .NET Core 2.0, with a few branches converted to .NET Core 2.1**  
+*See [Where's the code](#wheres-the-code).*
 
-I have extensively updated the  Git repo https://github.com/JonPSmith/EfCoreInAction and each branch is now at the new .NET Core 2.0 release level. There are lots of changes to the code to match both changes in EF Core 2.0.0 and ASP.NET Core 2.0.0.
 To run the changed Git repo code you need to:
-1.	Install .NET Core 2.0 SDK – go to https://www.microsoft.com/net/download/core and select the correct SDK for your system
-2.	I recommend updating to Visual Studio 2017 15.3 as that has the new templates for ASP.NET Core 2.0.0. (I think my Git repo will work with Visual Studio 2017 15.2, but I haven’t tried it).
 
-### WARNING. 
-If you have already run any of the unit tests prior to the 2.0.0 update you do need to delete all the tests databases, as they are out of date and will throw errors. There is a unit test built specifically to do this called `DeleteAllTestDatabasesOk` in the class `Test.UnitCommands.DeleteAllUnitTestDatabases`, which you must run in debug mode.
+1. Install .NET Core 2.0 SDK – go to https://www.microsoft.com/net/download/core and select the correct SDK for your system
+2. I recommend updating to Visual Studio 2017 15.3 or later as that has the new templates for ASP.NET Core 2.0.0. Or use Visual Studio code (the code is designed to work with either VS2017 or VSCode)
 
-# Where's the code!
+## Where's the code!
 
 This repo has a branch-per-chapter, and sometime and branch-per-section, approach
 so if you are looking at the master branch then you won't see any code!
 Just click the [Branches](https://github.com/JonPSmith/EfCoreInAction/branches) on the site and you will
 find all the branches I have created so far.
 
-## Map of the branches
+### Map of the branches
 
 The branches mainly inhert from each other (shown as `-->` in the diagram)
 but a few are on there own, like `master` and `Chapter01` (shown with spaces between them).
@@ -38,18 +36,23 @@ The ones that are build for deployment to a web site are branches off the main s
 I did that because I built the normal code so you can run it locally without migrations.  
 **Note: to fit the diagram in I shorten the real branch names and use `Ch4` instead of `Chapter04`**
 
-### Part 1 - Getting started
-```
+#### Part 1 - Getting started
+
+```plaintext
                                         Ch5Migrate
                                           /
 master    Ch1    Ch2 --> Ch3 --> Ch4 --> Ch5 -->
 ```
-### Part 2 - Entity Framework in depth
-```
+
+#### Part 2 - Entity Framework in depth
+
+```plaintext
 (ch5) --> Ch6 --> Ch7 --> Ch8 --> Ch9
 ```
-### Part 3 - Using Entity Framework in real-world applications
-```
+
+#### Part 3 - Using Entity Framework in real-world applications
+
+```plaintext
                                            Ch13-Part3
                                               /
                                         Ch13-Part2    Ch14MySql
@@ -59,6 +62,14 @@ master    Ch1    Ch2 --> Ch3 --> Ch4 --> Ch5 -->
 *Note1: Chapter 15, on unit testing has its own Git repo https://github.com/JonPSmith/EfCore.TestSupport 
 and a NuGet package called [EfCore.TestSupport](https://www.nuget.org/packages/EfCore.TestSupport/).*
 
+### NET Core 2.1 examples
+
+I wanted to compare the performance of EF Core 2.0 and EF Core 2.1, so I created a few new branches.
+Here is the list:
+
+* Chapter05-NetCore21
+* Chapter13-Part1-NetCore21
+* Chapter13-Part2-NetCore21
 
 ## Live example book selling site
 
