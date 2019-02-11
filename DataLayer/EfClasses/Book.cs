@@ -32,7 +32,7 @@ namespace DataLayer.EfClasses
     #A The Book class contains the main book information
     #B I use EF Core's 'by convention' approach to defining the primary key of this entity class. In this case I use <ClassName>Id, and because the property if of type int EF Core assumes that the database will use the SQL IDENTITY command to create a unique key when a new row is added
     #C This is the link to the optional PriceOffer
-    #C There can be zero to many Reviews of the book
-    #D This provides a link to the Many-to-Many linking table that links to the Authors of this book
+    #D There can be zero to many Reviews of the book
+    #E This provides a link to the Many-to-Many linking table that links to the Authors of this book
      * **************************************************/
 }
