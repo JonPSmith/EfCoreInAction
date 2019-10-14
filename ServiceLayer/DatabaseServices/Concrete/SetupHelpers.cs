@@ -2,11 +2,11 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using DataLayer.EfCode;
 using EfCoreInAction.DatabaseHelpers;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;

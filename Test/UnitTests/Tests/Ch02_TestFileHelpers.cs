@@ -2,6 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using test.Helpers;
+using Test.Helpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
 
@@ -10,15 +11,15 @@ namespace test.UnitTests.Tests
     public class Ch02_TestFileHelpers
     {
         [Fact]
-        public void TestGetSolutionDirectoryOk()
+        public void TestGetCallingAssemblyTopLevelDirOk()
         {
             //SETUP
 
             //ATTEMPT
-            var testDir = TestFileHelpers.GetSolutionDirectory();
+            var testDir = TestData.GetCallingAssemblyTopLevelDir();
 
             //VERIFY
-            testDir.EndsWith(@"EfCoreInAction").ShouldBeTrue(testDir);
+            testDir.EndsWith(@"EfCoreInAction\Test").ShouldBeTrue(testDir);
         }
 
         [Fact]
@@ -27,10 +28,10 @@ namespace test.UnitTests.Tests
             //SETUP
 
             //ATTEMPT
-            var testDir = TestFileHelpers.GetTestDataFileDirectory();
+            var testDir = TestData.GetTestDataDir();
 
             //VERIFY
-            testDir.EndsWith(@"EfCoreInAction\test\TestData").ShouldBeTrue(testDir);
+            testDir.EndsWith(@"EfCoreInAction\Test\TestData").ShouldBeTrue(testDir);
         }
 
     }

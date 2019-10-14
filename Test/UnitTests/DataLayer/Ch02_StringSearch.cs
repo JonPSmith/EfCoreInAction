@@ -1,11 +1,13 @@
 ﻿// Copyright (c) 2016 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
+using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer.DatabaseServices.Concrete;
 using test.EfHelpers;
 using test.Helpers;
+using Test.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -129,7 +131,7 @@ namespace test.UnitTests.DataLayer
 
             using (var context = sqlite.GetContextWithSetup())
             {
-                context.SeedDatabase(TestFileHelpers.GetSolutionDirectory() + @"\EfCoreInAction\wwwroot\");
+                context.SeedDatabase(Path.Combine(TestData.GetCallingAssemblyTopLevelDir(), @"..\EfCoreInAction\\wwwroot\"));
                 sqlite.ClearLogs();
 
                 //ATTEMPT
@@ -154,7 +156,7 @@ namespace test.UnitTests.DataLayer
 
             using (var context = sqlite.GetContextWithSetup())
             {
-                context.SeedDatabase(TestFileHelpers.GetSolutionDirectory() + @"\EfCoreInAction\wwwroot\");
+                context.SeedDatabase(Path.Combine(TestData.GetCallingAssemblyTopLevelDir(), @"..\EfCoreInAction\wwwroot\"));
                 sqlite.ClearLogs();
 
                 //ATTEMPT

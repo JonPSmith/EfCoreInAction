@@ -250,9 +250,9 @@ namespace test.UnitTests.ServiceLayer
                 //ATTEMPT
                 var books =
                     context.Books
-                        .IgnoreQueryFilters() //Have to add this otherwise SQL fails because the SQL becomes a sub-query
-                        .FromSql(
-                            "SELECT * FROM dbo.books AS a ORDER BY (SELECT AVG(b.NumStars) FROM dbo.Review AS b WHERE b.BookId = a.BookId) DESC")
+                        //.IgnoreQueryFilters() //Have to add this otherwise SQL fails because the SQL becomes a sub-query
+                        .FromSqlRaw(
+                            "SELECT TOP(10) * FROM dbo.books AS a ORDER BY (SELECT AVG(b.NumStars) FROM dbo.Review AS b WHERE b.BookId = a.BookId) DESC")
                         .ToList();
 
                 //VERIFY

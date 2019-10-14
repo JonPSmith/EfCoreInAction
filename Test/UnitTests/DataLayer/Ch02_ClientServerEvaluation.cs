@@ -99,53 +99,49 @@ namespace test.UnitTests.DataLayer
             }
         }
 
-        [Fact]
-        public void TestClientServerSortOnEvaluatedPortion()
-        {
-            //SETUP
-            var options =
-                this.ClassUniqueDatabaseSeeded4Books();
+        //[Fact]
+        //public void TestClientServerSortOnEvaluatedPortion()
+        //{
+        //    //SETUP
+        //    var options =
+        //        this.ClassUniqueDatabaseSeeded4Books();
 
-            using (var context = new EfCoreContext(options))
-            {
-                var logIt = new LogDbContext(context);
+        //    using (var context = new EfCoreContext(options))
+        //    {
+        //        var logIt = new LogDbContext(context);
 
-                //ATTEMPT
-                var books = context.Books
-                    .Select(p => new
-                    {
-                        p.BookId,                        
-                        p.Title,                         
-                        //… other properties left out 
-                        AuthorsString = string.Join(", ",
-                            p.AuthorsLink                
-                            .OrderBy(q => q.Order)       
-                            .Select(q => q.Author.Name)),
-                    }
-                    ).OrderBy(p => p.AuthorsString).ToList();
+        //        //ATTEMPT
+        //        var books = context.Books
+        //            .Select(p => new
+        //            {
+        //                p.BookId,                        
+        //                p.Title,                         
+        //                //… other properties left out 
+        //                AuthorsString = string.Join(", ",
+        //                    p.AuthorsLink                
+        //                    .OrderBy(q => q.Order)       
+        //                    .Select(q => q.Author.Name)),
+        //            }
+        //            ).OrderBy(p => p.AuthorsString).ToList();
 
 
-                //VERIFY
-                books.Select(x => x.BookId).ShouldEqual(new []{3,4,1,2});
-                foreach (var log in logIt.Logs)
-                {
-                    _output.WriteLine(log);
-                }
-            }
-        }
+        //        //VERIFY
+        //        books.Select(x => x.BookId).ShouldEqual(new []{3,4,1,2});
+        //        foreach (var log in logIt.Logs)
+        //        {
+        //            _output.WriteLine(log);
+        //        }
+        //    }
+        //}
 
         [Fact]
         public void TestClientServerSortOnEvaluatedPortionThorwError()
         {
             //SETUP
-            var connection = this.GetUniqueDatabaseConnectionString();
-            var optionsBuilder =
-                new DbContextOptionsBuilder<EfCoreContext>();
+            var options =
+                    this.ClassUniqueDatabaseSeeded4Books();
 
-            optionsBuilder.UseSqlServer(connection)
-                .ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryClientEvaluationWarning));
-
-            using (var context = new EfCoreContext(optionsBuilder.Options))
+            using (var context = new EfCoreContext(options))
             {
                 //ATTEMPT
                 var ex = Assert.Throws<InvalidOperationException>(() => context.Books
@@ -163,7 +159,7 @@ namespace test.UnitTests.DataLayer
 
 
                 //VERIFY
-                Assert.StartsWith("Warning as error exception for warning 'Microsoft.EntityFrameworkCore.Query.QueryClientEvaluationWarning':", ex.Message);
+                Assert.Contains("could not be translated.", ex.Message);
             }
         }
     }
