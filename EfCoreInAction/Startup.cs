@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -16,6 +17,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NetCore.AutoRegisterDi;
+using ServiceLayer.BookServices;
 using ServiceLayer.DatabaseServices.Concrete;
 
 namespace EfCoreInAction
@@ -31,7 +34,7 @@ namespace EfCoreInAction
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             var gitBranchName = DatabaseStartupHelpers.GetWwwRootPath().GetBranchName();
 
@@ -54,21 +57,16 @@ namespace EfCoreInAction
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            //Add AutoFac
-            var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterModule<ServiceLayer.Utils.MyAutoFacModule>();
-            containerBuilder.Populate(services);
-            var container = containerBuilder.Build();
-            return new AutofacServiceProvider(container);
+            //replace AutoFac not so easy to use in ASP.NET Core 3 - uses one of my libraries
+            services.RegisterAssemblyPublicNonGenericClasses(Assembly.GetAssembly(typeof(BookListDto)))
+                .Where(c => c.Name.EndsWith("Service"))
+                .AsPublicImplementedInterfaces();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
             ILoggerFactory loggerFactory, IHttpContextAccessor httpContextAccessor)
         {
-            //Remove the standard loggers because they slow the applictaion down
-            //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            //loggerFactory.AddDebug();
             loggerFactory.AddProvider(new RequestTransientLogger(() => httpContextAccessor));
             if (env.IsDevelopment())
             {
@@ -83,7 +81,7 @@ namespace EfCoreInAction
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseStaticFiles();
+            app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {

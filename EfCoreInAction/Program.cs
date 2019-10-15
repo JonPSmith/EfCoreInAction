@@ -20,7 +20,7 @@ namespace EfCoreInAction
                     webBuilder.UseStartup<Startup>();
                 });
 
-        private static IHost BuildWebHost(string[] args)
+        public static IHost BuildWebHost(string[] args)
         {
             var iHost = CreateHostBuilder(args)
                 .Build();
