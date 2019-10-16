@@ -4,6 +4,7 @@
 using System.Linq;
 using EfCoreInAction.DatabaseHelpers;
 using test.Helpers;
+using Test.Helpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
 
@@ -16,7 +17,7 @@ namespace test.UnitTests.ServiceLayer
         {
             //SETUP
             const string searchFile = "JsonBooks01*.json";
-            var testDataDir = TestFileHelpers.GetTestDataFileDirectory();
+            var testDataDir = TestData.GetTestDataDir();
 
             //ATTEMPT
             var books = BookJsonLoader.LoadBooks(testDataDir, searchFile);
@@ -30,7 +31,7 @@ namespace test.UnitTests.ServiceLayer
         {
             //SETUP
             const string searchFile = "JsonBooks01*.json";
-            var testDataDir = TestFileHelpers.GetTestDataFileDirectory();
+            var testDataDir = TestData.GetTestDataDir();
 
 
             //ATTEMPT

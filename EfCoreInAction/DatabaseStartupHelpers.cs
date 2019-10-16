@@ -4,6 +4,7 @@ using DataLayer.EfCode;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ServiceLayer.DatabaseServices.Concrete;
 
@@ -51,7 +52,7 @@ namespace EfCoreInAction
             return webHost;
         }
 
-        public static IWebHost SetupDevelopmentDatabase(this IWebHost webHost)
+        public static IHost SetupDevelopmentDatabase(this IHost webHost)
         {
             using (var scope = webHost.Services.CreateScope())
             {

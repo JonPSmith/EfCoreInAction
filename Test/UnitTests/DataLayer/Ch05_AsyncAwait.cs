@@ -107,18 +107,9 @@ namespace test.UnitTests.DataLayer
             }
         }
 
-        [Fact]
-        public async Task GetNumBooksAsync()
-        {
-            //SETUP
-            var inMemDb = new SqliteInMemory();
-
-            using (var context = inMemDb.GetContextWithSetup())
-            {
-                context.SeedDatabaseFourBooks();
 
                 //ATTEMPT
-                var numBooks = await LocalGetNumBooksAsync(context);
+                var numBooks = await GetNumBooksAsync(context);
 
                 //VERIFY
                 numBooks.ShouldEqual(4);

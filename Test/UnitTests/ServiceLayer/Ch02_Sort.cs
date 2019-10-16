@@ -3,8 +3,11 @@
 
 using System.Linq;
 using DataLayer.EfClasses;
+using DataLayer.EfCode;
+using Microsoft.EntityFrameworkCore;
 using ServiceLayer.BookServices.QueryObjects;
 using test.EfHelpers;
+using test.Helpers;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
 
@@ -17,20 +20,31 @@ namespace test.UnitTests.ServiceLayer
         public void CheckSortOnPrice()
         {
             //SETUP
-            var inMemDb = new SqliteInMemory();
-            var books = EfTestData.CreateDummyBooks();
-            books[5].AddPromotion(1.5m, "Test to check order by works");
-        
+            var connectionString = this.GetUniqueDatabaseConnectionString();
+            var optionsBuilder = new DbContextOptionsBuilder<EfCoreContext>();
+            optionsBuilder.UseSqlServer(connectionString);
 
-            using (var db = inMemDb.GetContextWithSetup())
+            using (var db = new EfCoreContext(optionsBuilder.Options))
             {
-                db.Books.AddRange(books);
-                db.SaveChanges();
+                db.Database.EnsureCreated();
+
+                if (!db.Books.Any())
+                {
+                    var books = EfTestData.CreateDummyBooks(setBookId:false);
+                    books[5].Promotion = new PriceOffer
+                    {
+                        NewPrice = 1.5m,
+                        PromotionalText = "Test to check order by works"
+                    };
+                    db.Books.AddRange(books);
+                    db.SaveChanges();
+                }
 
                 //ATTEMPT
                 var sorted = db.Books.MapBookToDto().OrderBooksBy(OrderByOptions.ByPriceHigestFirst).ToList();
 
                 //VERIFY
+                (sorted.Count == 10).ShouldBeTrue("This relies on the books only being added once.");
                 sorted[8].ActualPrice.ShouldEqual(1.5m);
             }
         }

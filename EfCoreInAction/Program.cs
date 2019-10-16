@@ -1,6 +1,9 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace EfCoreInAction
 {
@@ -8,31 +11,29 @@ namespace EfCoreInAction
     {
         public static void Main(string[] args)
         {
-            //see https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging?tabs=aspnetcore2x#how-to-add-providers
-            var webHost = new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .ConfigureAppConfiguration((hostingContext, config) =>
-                {
-                    var env = hostingContext.HostingEnvironment;
-                    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
-                    config.AddEnvironmentVariables();
-                })
-                //Normally you would configure logging here, but I needed access to IHttpContextAccessor, so I had to do it in the Configure method
-                //.ConfigureLogging((hostingContext, logging) =>
-                //{
-                //    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                //    logging.AddConsole();
-                //    logging.AddDebug();
-                //})
-                .UseStartup<Startup>()
-                .Build()
-                .SetupDevelopmentDatabase();
-
-            webHost.Run();
+            BuildWebHost(args).Run();
         }
 
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                //see https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?tabs=aspnetcore2x&view=aspnetcore-3.0#how-to-add-providers
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                })
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+
+        public static IHost BuildWebHost(string[] args)
+        {
+            var iHost = CreateHostBuilder(args)
+                .Build();
+
+            iHost.SetupDevelopmentDatabase();
+            return iHost;
+        }
 
     }
 }

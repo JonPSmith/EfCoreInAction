@@ -1,9 +1,10 @@
 ﻿// Copyright (c) 2016 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using Test.Helpers;
 
 namespace test.Helpers
 {
@@ -14,7 +15,7 @@ namespace test.Helpers
 
         public static IConfigurationRoot GetConfiguration()
         {
-            var testDir = Path.Combine(TestFileHelpers.GetSolutionDirectory(), "test");
+            var testDir = TestData.GetCallingAssemblyTopLevelDir();
             var builder = new ConfigurationBuilder()
                 .SetBasePath(testDir)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)               
@@ -44,7 +45,7 @@ namespace test.Helpers
 
         public static string GetGitBranchName()
         {
-            var gitBranchFilePath = Path.Combine(TestFileHelpers.GetSolutionDirectory(), @"EfCoreInAction\wwwroot", "GitBranchName.txt");
+            var gitBranchFilePath = Path.Combine(TestData.GetCallingAssemblyTopLevelDir(), @"..\EfCoreInAction\wwwroot", "GitBranchName.txt");
             var branchName = File.ReadAllText(gitBranchFilePath);
             return branchName;
         }
