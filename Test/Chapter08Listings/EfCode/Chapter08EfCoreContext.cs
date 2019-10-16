@@ -28,8 +28,8 @@ namespace Test.Chapter08Listings.EfCode
 
             //needed this to add .HasSchema - see bug https://github.com/aspnet/EntityFrameworkCore/issues/9663
             modelBuilder.HasDbFunction(
-                () => MyUdfMethods.AverageVotes(default(int)))
-                .HasSchema("dbo");
+                () => MyUdfMethods.AverageVotes(default(int)));
+            //.HasSchema("dbo");
         }
 
     }
