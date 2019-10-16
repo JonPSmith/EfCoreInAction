@@ -91,19 +91,9 @@ namespace test.UnitTests.DataLayer
             }
             using (var context = new Chapter07DbContext(options))
             {
-                //You MUST read it untracked because of issue #7340
-                var untracked = context.Payments.AsNoTracking().Single();
-                //Then you need to copy ALL the information to the new TPH type, especially its primary key.
-                var changed = new PaymentCash
-                {
-                    PaymentId = untracked.PaymentId,
-                    Amount = untracked.Amount,
-                    //You MUST explictly set the discriminator
-                    //NOTE: this only works because the PaymentConfig code contains the following Fluent API command below - see EF Core issue #7510
-                    //entity.Property(p => p.PType).Metadata.AfterSaveBehavior = PropertySaveBehavior.Save;
-                    PType = PTypes.Cash //You MUST explictly set the discriminator
-                };
-                context.Update(changed);
+                //This now works in EF Core 3
+                var tracked = context.Payments.Single();
+                tracked.PType = PTypes.Cash;
                 context.SaveChanges();
             }
             //VERITY
