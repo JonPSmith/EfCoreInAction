@@ -26,10 +26,9 @@ namespace Test.Chapter08Listings.EfCode
             modelBuilder.ApplyConfiguration(new BookAuthorConfig());
             modelBuilder.ApplyConfiguration(new LineItemConfig());
 
-            //needed this to add .HasSchema - see bug https://github.com/aspnet/EntityFrameworkCore/issues/9663
             modelBuilder.HasDbFunction(
                 () => MyUdfMethods.AverageVotes(default(int)));
-            //.HasSchema("dbo");
+            //.HasSchema("dbo"); - you don't need to set the schema if its the default
         }
 
     }
