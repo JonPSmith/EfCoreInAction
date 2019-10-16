@@ -10,7 +10,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
 
-namespace Test.UnitTests.DataLayer
+namespace test.UnitTests.DataLayer
 {
     public class Ch13_SaveChangesBookFixer
     {
@@ -62,9 +62,8 @@ namespace Test.UnitTests.DataLayer
 
                 var book = context.Books.First();
                 book.AddReview(context, 3, null, null);
-                context.Database.ExecuteSqlCommand(      
-                    "UPDATE Books SET ReviewsCount = 10" +
-                    $" WHERE BookId = {book.BookId}");
+                context.Database.ExecuteSqlInterpolated(      
+                    $"UPDATE Books SET ReviewsCount = 10 WHERE BookId = {book.BookId}");
                 var ex = Assert.Throws<DbUpdateConcurrencyException>(() => context.SaveChanges());
 
                 //VERIFY
@@ -96,9 +95,8 @@ namespace Test.UnitTests.DataLayer
 
                 var book = context.Books.Single(x => x.BookId == bookId);
                 book.AddReview(context, 3, null, null);
-                context.Database.ExecuteSqlCommand(
-                    "UPDATE Books SET ReviewsCount = 10" +
-                    $" WHERE BookId = {bookId}");
+                context.Database.ExecuteSqlInterpolated(
+                    $"UPDATE Books SET ReviewsCount = 10 WHERE BookId = {bookId}");
                 context.SaveChangesWithReviewCheck();
 
                 //VERIFY
@@ -124,11 +122,10 @@ namespace Test.UnitTests.DataLayer
 
                 var book = context.Books.Single(x => x.BookId == bookId);
                 book.AddReview(context, 1, null, null);
-                context.Database.ExecuteSqlCommand(
+                context.Database.ExecuteSqlInterpolated(
                     $"INSERT INTO Review (BookId, NumStars) VALUES ({bookId}, 5)");
-                context.Database.ExecuteSqlCommand(
-                    "UPDATE Books SET ReviewsCount = 99" +
-                    $" WHERE BookId = {bookId}");
+                context.Database.ExecuteSqlInterpolated(
+                    $"UPDATE Books SET ReviewsCount = 99 WHERE BookId = {bookId}");
                 context.SaveChangesWithReviewCheck();
 
                 //VERIFY
@@ -153,11 +150,10 @@ namespace Test.UnitTests.DataLayer
 
                 var book = context.Books.Include(x => x.Reviews).Single(x => x.BookId == bookId);
                 book.AddReview(context, 3, null, null);
-                context.Database.ExecuteSqlCommand(
+                context.Database.ExecuteSqlInterpolated(
                     $"DELETE FROM Review WHERE ReviewId = {book.Reviews.First().ReviewId}");
-                context.Database.ExecuteSqlCommand(
-                    "UPDATE Books SET ReviewsCount = 99" +
-                    $" WHERE BookId = {bookId}");
+                context.Database.ExecuteSqlInterpolated(
+                    $"UPDATE Books SET ReviewsCount = 99 WHERE BookId = {bookId}");
                 context.SaveChangesWithReviewCheck();
 
                 //VERIFY
@@ -182,9 +178,8 @@ namespace Test.UnitTests.DataLayer
 
                 var book = context.Books.Include(x => x.Reviews).Single(x => x.BookId == bookId);
                 book.RemoveReview(context, book.Reviews.First());
-                context.Database.ExecuteSqlCommand(
-                    "UPDATE Books SET ReviewsCount = 99" +
-                    $" WHERE BookId = {bookId}");
+                context.Database.ExecuteSqlInterpolated(
+                    $"UPDATE Books SET ReviewsCount = 99 WHERE BookId = {bookId}");
                 context.SaveChangesWithReviewCheck();
 
                 //VERIFY
@@ -209,7 +204,7 @@ namespace Test.UnitTests.DataLayer
 
                 var book = context.Books.Single(x => x.BookId == bookId);
                 book.AddReview(context, 1, null, null);
-                context.Database.ExecuteSqlCommand(
+                context.Database.ExecuteSqlInterpolated(
                     $"DELETE FROM Books WHERE BookId = {bookId}");
                 context.SaveChangesWithReviewCheck();
 

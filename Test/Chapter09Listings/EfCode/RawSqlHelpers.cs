@@ -19,18 +19,15 @@ namespace Test.Chapter09Listings.EfCode
             {
                 try
                 {
-                    context.Database.ExecuteSqlCommand(
-                        $"IF OBJECT_ID('dbo.{FilterOnReviewRank}') IS NOT NULL " +
-                        $"DROP PROC dbo.{FilterOnReviewRank}");
+                    context.Database.ExecuteSqlInterpolated(
+                        $"IF OBJECT_ID('dbo.{FilterOnReviewRank}') IS NOT NULL DROP PROC dbo.{FilterOnReviewRank}");
 
-                    context.Database.ExecuteSqlCommand(
-                        $"CREATE PROC dbo.{FilterOnReviewRank}" +
-                        @"(  @RankFilter int )
-AS
-
+                    context.Database.ExecuteSqlRaw(
+                        $"CREATE PROC dbo.{0}" +
+                        @"(  @RankFilter int ) AS 
 SELECT * FROM dbo.Books b 
 WHERE (SELECT AVG(CAST([NumStars] AS float)) FROM dbo.Review AS r WHERE b.BookId = r.BookId) >= @RankFilter
-");
+", FilterOnReviewRank);
 
 
 

@@ -17,12 +17,11 @@ namespace Test.Chapter08Listings.EfCode
             {
                 try
                 {
-                    context.Database.ExecuteSqlCommand(
-                        $"IF OBJECT_ID('dbo.{UdfAverageVotes}', N'FN') IS NOT NULL " +
-                        $"DROP FUNCTION dbo.{UdfAverageVotes}");
+                    context.Database.ExecuteSqlInterpolated(
+                        $"IF OBJECT_ID('dbo.{UdfAverageVotes}', N'FN') IS NOT NULL DROP FUNCTION dbo.{UdfAverageVotes}");
 
-                    context.Database.ExecuteSqlCommand( //#B
-                        $"CREATE FUNCTION {UdfAverageVotes} (@bookId int)" + //#C
+                    context.Database.ExecuteSqlRaw( //#B
+                        "CREATE FUNCTION {0} (@bookId int)" + //#C
                         @"  RETURNS float
                           AS
                           BEGIN
@@ -31,7 +30,7 @@ namespace Test.Chapter08Listings.EfCode
                                FROM dbo.Review AS r
                                WHERE @bookId = r.BookId
                           RETURN @result
-                          END");
+                          END", UdfAverageVotes);
                     /*****************************************************
                     #A I capture the name of the static method that represents my UDF and use it as the name of my UDF I add to the database
                     #B I use EF Core's ExecuteSqlCommand method to add the UDF into the database

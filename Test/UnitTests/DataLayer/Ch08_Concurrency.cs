@@ -82,8 +82,8 @@ namespace test.UnitTests.DataLayer
                 var firstBook = context.Books.First(k => k.ConcurrencyBookId == firstBookId);
                 var sqlTitle = Guid.NewGuid().ToString();
                 var newDate = DateTime.Now.AddDays(100);
-                context.Database.ExecuteSqlCommand(
-                    "UPDATE dbo.Books SET Title = @p0 WHERE ConcurrencyBookId = @p1", 
+                context.Database.ExecuteSqlRaw(
+                    "UPDATE dbo.Books SET Title = {0} WHERE ConcurrencyBookId = {2}", 
                     sqlTitle, firstBookId);
                 firstBook.PublishedOn = newDate;
                 context.SaveChanges();
@@ -112,8 +112,8 @@ namespace test.UnitTests.DataLayer
                 var logIt = new LogDbContext(context);
                 var firstBook = context.Books.First();
 
-                context.Database.ExecuteSqlCommand(
-                    "DELETE dbo.Books WHERE ConcurrencyBookId = @p0", 
+                context.Database.ExecuteSqlRaw(
+                    "DELETE dbo.Books WHERE ConcurrencyBookId = {0}", 
                     firstBook.ConcurrencyBookId);
                 firstBook.Title = Guid.NewGuid().ToString();
 
@@ -135,9 +135,9 @@ namespace test.UnitTests.DataLayer
                 var logIt = new LogDbContext(context);
                 var firstBook = context.Books.First(); //#A
 
-                context.Database.ExecuteSqlCommand(
+                context.Database.ExecuteSqlRaw(
                     "UPDATE dbo.Books SET PublishedOn = GETDATE()" + //#B
-                    " WHERE ConcurrencyBookId = @p0",                //#B
+                    " WHERE ConcurrencyBookId = {0}",                //#B
                     firstBook.ConcurrencyBookId);                    //#B
                 firstBook.Title = Guid.NewGuid().ToString(); //#C
                 //context.SaveChanges(); //#D
@@ -166,9 +166,9 @@ namespace test.UnitTests.DataLayer
                 var logIt = new LogDbContext(context);
 
                 var firstAuthor = context.Authors.First(); //#A
-                context.Database.ExecuteSqlCommand(      //#B
-                    "UPDATE dbo.Authors SET Name = @p0"+ //#B
-                    " WHERE ConcurrencyAuthorId = @p1",  //#B
+                context.Database.ExecuteSqlRaw(      //#B
+                    "UPDATE dbo.Authors SET Name = {0}"+ //#B
+                    " WHERE ConcurrencyAuthorId = {1}",  //#B
                     firstAuthor.Name,                    //#B
                     firstAuthor.ConcurrencyAuthorId);    //#B
                 firstAuthor.Name = "Concurrecy Name"; //#C
@@ -203,9 +203,9 @@ namespace test.UnitTests.DataLayer
                 //ATTEMPT
                 var firstBook = context.Books.First(); //#A
 
-                context.Database.ExecuteSqlCommand(
+                context.Database.ExecuteSqlRaw(
                     "UPDATE dbo.Books SET PublishedOn = GETDATE()" +  //#B
-                    " WHERE ConcurrencyBookId = @p0",                  //#B
+                    " WHERE ConcurrencyBookId = {0}",                  //#B
                     firstBook.ConcurrencyBookId);                      //#B
                 firstBook.Title = Guid.NewGuid().ToString(); //#C
                 var error = BookSaveChangesWithChecks(context);
@@ -230,8 +230,8 @@ namespace test.UnitTests.DataLayer
                 //ATTEMPT
                 var firstBook = context.Books.First();
 
-                context.Database.ExecuteSqlCommand(
-                    "DELETE dbo.Books WHERE ConcurrencyBookId = @p0",
+                context.Database.ExecuteSqlRaw(
+                    "DELETE dbo.Books WHERE ConcurrencyBookId = {0}",
                     firstBook.ConcurrencyBookId);
                 firstBook.Title = Guid.NewGuid().ToString();
                 var error = BookSaveChangesWithChecks(context);

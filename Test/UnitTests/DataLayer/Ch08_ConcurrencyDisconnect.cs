@@ -109,8 +109,8 @@ namespace test.UnitTests.DataLayer
             {
                 //ATTEMPT
                 var entity = context.Employees.Find(johnDoeId);
-                context.Database.ExecuteSqlCommand(
-                    "DELETE dbo.Employees WHERE EmployeeId = @p0",
+                context.Database.ExecuteSqlRaw(
+                    "DELETE dbo.Employees WHERE EmployeeId = {0}",
                     johnDoeId);
                 entity.UpdateSalary(context, 1000, 1100);
 
@@ -174,8 +174,8 @@ namespace test.UnitTests.DataLayer
                 //ATTEMPT
                 var entity = context //#A
                     .Find<Employee>(employeeId); //#A
-                context.Database.ExecuteSqlCommand(
-                    "DELETE dbo.Employees WHERE EmployeeId = @p0",
+                context.Database.ExecuteSqlRaw(
+                    "DELETE dbo.Employees WHERE EmployeeId = {0}",
                     employeeId);
                 entity.UpdateSalary(context, 1000, 1100);
 
@@ -299,8 +299,8 @@ namespace test.UnitTests.DataLayer
             {
                 //ATTEMPT
                 var johnDoe = context.Employees.Find(johnDoeId);
-                context.Database.ExecuteSqlCommand(
-                    "DELETE dbo.Employees WHERE EmployeeId = @p0",
+                context.Database.ExecuteSqlRaw(
+                    "DELETE dbo.Employees WHERE EmployeeId = {0}",
                     johnDoeId);
                 johnDoe.UpdateSalary(context, 1000, 1100);
 

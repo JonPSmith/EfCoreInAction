@@ -224,8 +224,8 @@ namespace test.UnitTests.DataLayer
                 context.SaveChanges();
 
                 //ATTEMPT
-                Assert.Throws<SqliteException>( () => context.Database.ExecuteSqlCommand("DELETE FROM Top"));
-                Assert.Throws<SqliteException>(() => context.Database.ExecuteSqlCommand("DELETE FROM SelfRef"));
+                Assert.Throws<SqliteException>( () => context.Database.ExecuteSqlRaw("DELETE FROM Top"));
+                Assert.Throws<SqliteException>(() => context.Database.ExecuteSqlRaw("DELETE FROM SelfRef"));
             }
         }
     }
