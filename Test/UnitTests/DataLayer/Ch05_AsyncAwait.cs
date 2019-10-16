@@ -107,15 +107,6 @@ namespace test.UnitTests.DataLayer
             }
         }
 
-
-                //ATTEMPT
-                var numBooks = await GetNumBooksAsync(context);
-
-                //VERIFY
-                numBooks.ShouldEqual(4);
-            }
-        }
-
         public async Task<int> //#A
             LocalGetNumBooksAsync(EfCoreContext context) //#B
         {

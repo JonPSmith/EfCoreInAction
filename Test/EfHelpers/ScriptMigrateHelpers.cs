@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Text.RegularExpressions;
+using Microsoft.Data.SqlClient;
 
 namespace test.EfHelpers
 {

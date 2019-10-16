@@ -12,6 +12,7 @@ using test.EfHelpers;
 using test.Helpers;
 using Test.Chapter12Listings.EfClasses;
 using Test.Chapter12Listings.EfCode;
+using Test.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -38,8 +39,8 @@ namespace test.UnitTests.DataLayer
                 if (context.Database.EnsureCreated())
                 {
                     //only add the UDF if its a new database (as drop will fail as column uses it)
-                    var scriptFilePath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
-                        @"Test\Chapter12Listings\EfCode\AddUserDefinedFunction.sql");
+                    var scriptFilePath = Path.Combine(TestData.GetCallingAssemblyTopLevelDir(),
+                        @"Chapter12Listings\EfCode\AddUserDefinedFunction.sql");
                     connection.ExecuteScriptFileInTransaction(scriptFilePath);
                 }
 

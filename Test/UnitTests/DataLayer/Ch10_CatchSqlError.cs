@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using DataLayer.EfCode;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using test.Helpers;
 using Test.Chapter10Listings.EfClasses;

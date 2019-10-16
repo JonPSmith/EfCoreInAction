@@ -83,22 +83,22 @@ namespace test.UnitTests.Tests
             }
         }
 
-        [Fact]
-        public void TestGetColumnStoreTypesDirect()
-        {
-            //SETUP
-            var inMemDb = new SqliteInMemory();
+        //[Fact]
+        //public void TestGetColumnStoreTypesDirect()
+        //{
+        //    //SETUP
+        //    var inMemDb = new SqliteInMemory();
 
-            //ATTEMPT
-            using (var context = inMemDb.GetContextWithSetup())
-            {
-                var efProperty = context.Entry(new Order()).Metadata.GetProperties().Single(x => x.Name == "DateOrderedUtc");
-                var typeMapper = context.GetService<IRelationalTypeMapper>();
-                var mappings = typeMapper.FindMapping(efProperty);
-                mappings.StoreType.ShouldEqual("TEXT");
+        //    //ATTEMPT
+        //    using (var context = inMemDb.GetContextWithSetup())
+        //    {
+        //        var efProperty = context.Entry(new Order()).Metadata.GetProperties().Single(x => x.Name == "DateOrderedUtc");
+        //        var typeMapper = context.GetService<IRelationalTypeMapper>();
+        //        var mappings = typeMapper.FindMapping(efProperty);
+        //        mappings.StoreType.ShouldEqual("TEXT");
 
-            }
-        }
+        //    }
+        //}
 
         [Theory]
         [InlineData("BookId", "int")]

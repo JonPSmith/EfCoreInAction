@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DataLayer.EfCode
 {
     public delegate ValidationResult FormatSqlException(
-        System.Data.SqlClient.SqlException exception, IReadOnlyList<EntityEntry> entitiesThatErrored);
+        SqlException exception, IReadOnlyList<EntityEntry> entitiesThatErrored);
 
     public class SaveChangesSqlCheck
     {

@@ -19,8 +19,7 @@ namespace test.EfHelpers
         public static string GetTableName<TEntity>(this DbContext context)
         {
             var efType = context.Model.FindEntityType(typeof(TEntity).FullName);
-            var relational = efType.Relational();
-            return relational.TableName;
+            return efType.GetTableName();
         }
 
         public static IEnumerable<IProperty> GetProperties<TEntity>(this DbContext context)
@@ -34,13 +33,13 @@ namespace test.EfHelpers
         {
             var efType = context.Model.FindEntityType(typeof(TEntity).FullName);
             var propInfo = GetPropertyInfoFromLambda(model);
-            return efType.FindProperty(propInfo.Name).Relational().ColumnName;
+            return efType.FindProperty(propInfo.Name).GetColumnName();
         }
 
         public static string GetColumnName<TEntity>(this DbContext context, string propertyName) where TEntity : class
         {
             var efType = context.Model.FindEntityType(typeof(TEntity).FullName);
-            return efType.FindProperty(propertyName).Relational().ColumnName;
+            return efType.FindProperty(propertyName).GetColumnName();
         }
 
         public static string GetColumnStoreType<TEntity, TProperty>(this DbContext context, 
@@ -48,13 +47,13 @@ namespace test.EfHelpers
         {
             var efType = context.Model.FindEntityType(typeof(TEntity).FullName);
             var propInfo = GetPropertyInfoFromLambda(model);
-            return efType.FindProperty(propInfo.Name).Relational().ColumnType;
+            return efType.FindProperty(propInfo.Name).GetColumnType();
         }
 
         public static string GetColumnStoreType<TEntity>(this DbContext context, string propertyName) where TEntity : class
         {
             var efType = context.Model.FindEntityType(typeof(TEntity).FullName);
-            return efType.FindProperty(propertyName).Relational().ColumnType;
+            return efType.FindProperty(propertyName).GetColumnType();
         }
 
         //---------------------------------------------------

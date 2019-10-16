@@ -18,8 +18,9 @@ namespace Test.Chapter07Listings.EFCode.Configurations
                 .HasValue<PaymentCard>(PTypes.Card); //#C
 
             //This is needed for TestChangePaymentTypeOk to work - see EF Core issue #7510
-            entity.Property(p => p.PType)
-                .Metadata.AfterSaveBehavior = PropertySaveBehavior.Save;
+            //NOT ALLOWED IN NET Core 3
+            //entity.Property(p => p.PType)
+            //    .Metadata.AfterSaveBehavior = PropertySaveBehavior.Save;
         }
     }
     /*******************************************

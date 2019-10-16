@@ -54,7 +54,7 @@ namespace test.UnitTests.DataLayer
                 //ATTEMPT
                 const int rankFilterBy = 5;
                 var books = context.Books //#A
-                    .FromSql( //#B
+                    .FromSqlRaw( //#B
                         "EXECUTE dbo.FilterOnReviewRank " + //#C
                         $"@RankFilter = {rankFilterBy}") //#D
                     .ToList();
@@ -81,7 +81,7 @@ namespace test.UnitTests.DataLayer
                 var logIt = new LogDbContext(context);
                 //ATTEMPT
                 var books = context.Books
-                    .FromSql(
+                    .FromSqlRaw(
                        "SELECT * FROM Books b WHERE " +              //#A
                          "(SELECT AVG(CAST([NumStars] AS float)) " + //#A
                          "FROM dbo.Review AS r " +                   //#A
@@ -118,9 +118,9 @@ namespace test.UnitTests.DataLayer
                 var logIt = new LogDbContext(context);
 
                 //ATTEMPT
-                var ex = Assert.Throws<System.Data.SqlClient.SqlException>(
+                var ex = Assert.Throws<Microsoft.Data.SqlClient.SqlException>(
                     () => context.Books
-                        .FromSql(
+                        .FromSqlRaw(
                             "SELECT * FROM Books AS a ORDER BY PublishedOn DESC")
                         .ToList());
 
@@ -130,37 +130,51 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void TestFromSqlWithOrderAndIgnoreQueryFiltersOk()
+        public void TestFromSqlQueryFiltersHasNoEffectOk()
         {
             //SETUP
-            var options =
-                this.ClassUniqueDatabaseSeeded4Books();
-
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
             using (var context = new EfCoreContext(options))
             {
-                var logIt = new LogDbContext(context);
+                context.Database.EnsureCreated();
+                var fourBooks = EfTestData.CreateFourBooks();
+                fourBooks[1].SoftDeleted = true;
+                context.AddRange(fourBooks);
+                context.SaveChanges();
 
                 //ATTEMPT
                 var books =
                     context.Books
-                        .IgnoreQueryFilters() //#A
-                        .FromSql(
-                            "SELECT * FROM Books " +
-                            "WHERE SoftDeleted = 0 " + //#B
-                            "ORDER BY PublishedOn DESC") //#C
+                        .FromSqlRaw("SELECT * FROM Books") 
                         .ToList();
 
-                /************************************************************
-                #A You have to remove the effect of a model-level query filter in certain SQL commands such as ORDER BY as they won't work
-                #B I add the model-query filter code back in by hand
-                #C It is the ORDER BY in this case that cannot be run with a model-level query filter 
-                 * ********************************************************/
                 //VERIFY
-                books.First().Title.ShouldEqual("Quantum Networking");
-                foreach (var log in logIt.Logs)
-                {
-                    _output.WriteLine(log);
-                }
+                books.Count.ShouldEqual(4);
+            }
+        }
+
+        [Fact]
+        public void TestFromSqlIgnoreQueryFiltersOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<EfCoreContext>();
+            using (var context = new EfCoreContext(options))
+            {
+                context.Database.EnsureCreated();
+                var fourBooks = EfTestData.CreateFourBooks();
+                fourBooks[1].SoftDeleted = true;
+                context.AddRange(fourBooks);
+                context.SaveChanges();
+
+                //ATTEMPT
+                var books =
+                    context.Books
+                        .FromSqlRaw(
+                            "SELECT * FROM Books WHERE SoftDeleted = 0")
+                        .ToList();
+
+                //VERIFY
+                books.Count.ShouldEqual(3);
             }
         }
 
@@ -193,8 +207,8 @@ namespace test.UnitTests.DataLayer
                                 {
                                     BookId = reader.GetInt32(0), //#H
                                     Title = reader.GetString(1), //#H
-                                    AverageVotes = reader.IsDBNull(2) 
-                                        ? null : (double?) reader.GetDouble(2) //#H
+                                    AverageVotes = reader.IsDBNull(2)
+                                        ? null : (double?)reader.GetDouble(2) //#H
                                 };
                                 bookDtos.Add(row);
                             }
@@ -237,7 +251,7 @@ namespace test.UnitTests.DataLayer
 
                 //ATTEMPT
                 var rowsAffected = context.Database //#A
-                    .ExecuteSqlCommand( //#B
+                    .ExecuteSqlRaw( //#B
                         "UPDATE Books " + //#C
                         "SET Description = {0} " +
                         "WHERE BookId = {1}",
@@ -264,11 +278,11 @@ namespace test.UnitTests.DataLayer
                     Single(x => x.Title == "Quantum Networking");
                 var uniqueString = Guid.NewGuid().ToString();
 
-                context.Database.ExecuteSqlCommand( //#B
-                        "UPDATE Books " + 
+                context.Database.ExecuteSqlRaw( //#B
+                        "UPDATE Books " +
                         "SET Description = {0} " +
                         "WHERE BookId = {1}",
-                        uniqueString, entity.BookId); 
+                        uniqueString, entity.BookId);
 
                 //ATTEMPT
                 context.Entry(entity).Reload(); //#C
@@ -293,12 +307,12 @@ namespace test.UnitTests.DataLayer
                     Single(x => x.Title == "Quantum Networking");
                 var uniqueString = Guid.NewGuid().ToString();
 
-                var rowsAffected = context.Database 
-                    .ExecuteSqlCommand( 
-                        "UPDATE Books " + 
+                var rowsAffected = context.Database
+                    .ExecuteSqlRaw(
+                        "UPDATE Books " +
                         "SET Description = {0} " +
                         "WHERE BookId = {1}",
-                        uniqueString, entity.BookId); 
+                        uniqueString, entity.BookId);
 
                 //ATTEMPT
                 entity.Title = "Changed it";
@@ -321,7 +335,7 @@ namespace test.UnitTests.DataLayer
                 var uniqueString = Guid.NewGuid().ToString();
 
                 var rowsAffected = context.Database
-                    .ExecuteSqlCommand(
+                    .ExecuteSqlRaw(
                         "UPDATE Books " +
                         "SET Description = {0} " +
                         "WHERE BookId = {1}",
@@ -348,7 +362,7 @@ namespace test.UnitTests.DataLayer
                 var uniqueString = Guid.NewGuid().ToString();
 
                 var rowsAffected = context.Database
-                    .ExecuteSqlCommand(
+                    .ExecuteSqlRaw(
                         "UPDATE Books " +
                         "SET Description = {0} " +
                         "WHERE BookId = {1}",
@@ -364,3 +378,4 @@ namespace test.UnitTests.DataLayer
         }
     }
 }
+

@@ -10,6 +10,7 @@ using ServiceLayer.BookServices;
 using ServiceLayer.BookServices.QueryObjects;
 using test.EfHelpers;
 using test.Helpers;
+using Test.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -30,8 +31,7 @@ namespace Test.UnitTests.ServiceLayer
         {
             //SETUP
             var options = this.ClassUniqueDatabaseSeeded4Books();
-            var filepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
-                @"EfCoreInAction\wwwroot\",
+            var filepath = Path.Combine(TestData.GetCallingAssemblyTopLevelDir(), @"..\EfCoreInAction\wwwroot",
                 UdfDefinitions.SqlScriptName);
 
             using (var context = new EfCoreContext(options))
@@ -58,8 +58,7 @@ namespace Test.UnitTests.ServiceLayer
         {
             //SETUP
             var options = this.ClassUniqueDatabaseSeeded4Books();
-            var filepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
-                @"EfCoreInAction\wwwroot\",
+            var filepath = Path.Combine(TestData.GetCallingAssemblyTopLevelDir(), @"..\EfCoreInAction\wwwroot",
                 UdfDefinitions.SqlScriptName);
 
             using (var context = new EfCoreContext(options))
@@ -88,8 +87,7 @@ namespace Test.UnitTests.ServiceLayer
         {
             //SETUP
             var options = this.ClassUniqueDatabaseSeeded4Books();
-            var filepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
-                @"EfCoreInAction\wwwroot\",
+            var filepath = Path.Combine(TestData.GetCallingAssemblyTopLevelDir(), @"..\EfCoreInAction\wwwroot",
                 UdfDefinitions.SqlScriptName);
 
             using (var context = new EfCoreContext(options))
@@ -116,8 +114,7 @@ namespace Test.UnitTests.ServiceLayer
         {
             //SETUP
             var options = this.ClassUniqueDatabaseSeeded4Books();
-            var filepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
-                @"EfCoreInAction\wwwroot\",
+            var filepath = Path.Combine(TestData.GetCallingAssemblyTopLevelDir(), @"..\EfCoreInAction\wwwroot",
                 UdfDefinitions.SqlScriptName);
 
             using (var context = new EfCoreContext(options))

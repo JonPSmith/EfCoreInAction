@@ -7,6 +7,7 @@ using DataLayer.EfCode;
 using DataLayer.SqlCode;
 using test.EfHelpers;
 using test.Helpers;
+using Test.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -28,8 +29,7 @@ namespace test.UnitTests.DataLayer
             //SETUP
 
             //ATTEMPT
-            var filepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
-                @"EfCoreInAction\wwwroot\",
+            var filepath = Path.Combine(TestData.GetCallingAssemblyTopLevelDir(), @"..\EfCoreInAction\wwwroot",
                 UdfDefinitions.SqlScriptName);
 
             //VERIFY
@@ -42,8 +42,7 @@ namespace test.UnitTests.DataLayer
         {
             //SETUP
             var options = this.ClassUniqueDatabaseSeeded4Books();
-            var filepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
-                @"EfCoreInAction\wwwroot\",
+            var filepath = Path.Combine(TestData.GetCallingAssemblyTopLevelDir(), @"..\EfCoreInAction\wwwroot",
                 UdfDefinitions.SqlScriptName);
 
             using (var context = new EfCoreContext(options))

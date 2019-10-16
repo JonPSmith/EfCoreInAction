@@ -27,41 +27,6 @@ namespace test.UnitTests.DataLayer
         }
 
         [Fact]
-        public void TestClientServerSimpleBookOk()
-        {
-            //SETUP
-            var options =
-                this.ClassUniqueDatabaseSeeded4Books();
-
-            using (var context = new EfCoreContext(options))
-            {
-                var logIt = new LogDbContext(context);
-
-                //ATTEMPT
-                var us = new CultureInfo("en-US");      //#A 
-                var books = context.Books
-                    .Select(p => new
-                    {                
-                        p.Title,
-                        PriceString = p.Price.ToString("C"),  //#B
-                        NumReviews = p.Reviews.Count
-                    }
-                    ).ToList();
-                /*********************************************************
-                #A This creates a culture for the USA, so that the ToString will use a dollar sign on the currency
-                #B ToString("C", culture) is not a supported SQL command, so EF Core applies it to the data after the SQL query
-                * *******************************************************/
-
-                //VERIFY
-                books.First().PriceString.ShouldNotBeNull();
-                foreach (var log in logIt.Logs)
-                {
-                    _output.WriteLine(log);
-                }
-            }
-        }
-
-        [Fact]
         public void TestClientServerComplexBookOk()
         {
             //SETUP

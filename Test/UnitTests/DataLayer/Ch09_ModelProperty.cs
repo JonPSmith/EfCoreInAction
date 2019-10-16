@@ -38,8 +38,7 @@ namespace test.UnitTests.DataLayer
                 //ATTEMPT
                 var eType = context.Model
                     .FindEntityType(typeof(Book).FullName);
-                var bookTableName = eType
-                    .Relational().TableName;
+                var bookTableName = eType.GetTableName();
 
                 //VERIFY
                 bookTableName.ShouldEqual("Books");

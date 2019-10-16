@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using ServiceLayer.DatabaseServices.Concrete;
 using test.EfHelpers;
 using test.Helpers;
+using Test.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -29,7 +30,7 @@ namespace Test.UnitTests.ServiceLayer
         {
             //SETUP
             const int numBooks = 20;
-            var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
+            var filePath = TestData.GetFilePath("Manning books - only 10.json");
 
             //ATTEMPT
             var gen = new BookGenerator(filePath, false);
@@ -46,7 +47,7 @@ namespace Test.UnitTests.ServiceLayer
         {
             //SETUP
             const int numBooks = 20;
-            var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
+            var filePath = TestData.GetFilePath("Manning books - only 10.json");
 
             //ATTEMPT
             var gen = new BookGenerator(filePath, false);
@@ -63,7 +64,7 @@ namespace Test.UnitTests.ServiceLayer
         {
             //SETUP
             const int numBooks = 20;
-            var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
+            var filePath = TestData.GetFilePath("Manning books - only 10.json");
 
             //ATTEMPT
             var gen = new BookGenerator(filePath, true);
@@ -80,7 +81,7 @@ namespace Test.UnitTests.ServiceLayer
         {
             //SETUP
             const int numBooks = 20;
-            var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
+            var filePath = TestData.GetFilePath("Manning books - only 10.json");
 
             //ATTEMPT
             var gen = new BookGenerator(filePath, false);
@@ -101,9 +102,8 @@ namespace Test.UnitTests.ServiceLayer
         public void CheckMainData()
         {
             //SETUP
-            var filePath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
-                @"EfCoreInAction\wwwroot\", SetupHelpers.SeedFileSubDirectory,
-                SetupHelpers.TemplateFileName);
+            var filePath = Path.Combine(TestData.GetCallingAssemblyTopLevelDir(), @"..\EfCoreInAction\wwwroot", 
+                SetupHelpers.SeedFileSubDirectory, SetupHelpers.TemplateFileName);
 
             //ATTEMPT
             var templateBooks = JsonConvert.DeserializeObject<List<BookGenerator.BookData>>(File.ReadAllText(filePath));
@@ -118,8 +118,8 @@ namespace Test.UnitTests.ServiceLayer
         {
             //SETUP
             const int numBooks = 600;
-            var filePath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
-                @"EfCoreInAction\wwwroot\", SetupHelpers.SeedFileSubDirectory,
+            var filePath = Path.Combine(TestData.GetCallingAssemblyTopLevelDir(), @"..\EfCoreInAction\wwwroot",
+                SetupHelpers.SeedFileSubDirectory,
                 SetupHelpers.TemplateFileName);
 
             //ATTEMPT
@@ -136,8 +136,8 @@ namespace Test.UnitTests.ServiceLayer
         {
             //SETUP
             const int numBooks = 600;
-            var filePath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
-                @"EfCoreInAction\wwwroot\", SetupHelpers.SeedFileSubDirectory,
+            var filePath = Path.Combine(TestData.GetCallingAssemblyTopLevelDir(), @"..\EfCoreInAction\wwwroot",
+                SetupHelpers.SeedFileSubDirectory,
                 SetupHelpers.TemplateFileName);
 
             //ATTEMPT
@@ -157,7 +157,7 @@ namespace Test.UnitTests.ServiceLayer
         {
             //SETUP
             const int numBooks = 20;
-            var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
+            var filePath = TestData.GetFilePath("Manning books - only 10.json");
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
 
             using (var context = new EfCoreContext(options))
@@ -183,7 +183,7 @@ namespace Test.UnitTests.ServiceLayer
         {
             //SETUP
             const int numBooks = 20;
-            var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
+            var filePath = TestData.GetFilePath("Manning books - only 10.json");
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
 
             using (var context = new EfCoreContext(options))
@@ -214,7 +214,7 @@ namespace Test.UnitTests.ServiceLayer
         {
             //SETUP
             const int numBooks = 20;
-            var filePath = TestFileHelpers.GetTestFileFilePath("Manning books - only 10.json");
+            var filePath = TestData.GetFilePath("Manning books - only 10.json");
             var options = SqliteInMemory.CreateOptions<EfCoreContext>();
 
             using (var context = new EfCoreContext(options))

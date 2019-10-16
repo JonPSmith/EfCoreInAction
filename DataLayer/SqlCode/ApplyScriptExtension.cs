@@ -2,7 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;

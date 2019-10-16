@@ -99,7 +99,7 @@ namespace test.EfHelpers
             {
                 var commandString = $"DELETE FROM {tableName}";
                 context.Database
-                    .ExecuteSqlCommand(commandString);
+                    .ExecuteSqlRaw(commandString);
             }
         }
 
@@ -108,11 +108,10 @@ namespace test.EfHelpers
 
         private static string FormTableNameWithSchema(IEntityType entityType)
         {
-            var relational = entityType.Relational();
-            return "[" + (relational.Schema == null
+            return "[" + (entityType.GetSchema() == null
                        ? ""
-                       : relational.Schema + "].[")
-                   + relational.TableName + "]";
+                       : entityType.GetSchema() + "].[")
+                   + entityType.GetTableName() + "]";
         }
 
         private static void ThrowExceptionIfCannotWipeSelfRef(List<IEntityType> allEntities)

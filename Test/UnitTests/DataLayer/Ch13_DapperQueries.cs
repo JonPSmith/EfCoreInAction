@@ -11,6 +11,7 @@ using ServiceLayer.BookServices;
 using ServiceLayer.BookServices.DapperQueries;
 using test.EfHelpers;
 using test.Helpers;
+using Test.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -22,9 +23,8 @@ namespace test.UnitTests.DataLayer
         private readonly DbContextOptions<EfCoreContext> _options;
         private readonly ITestOutputHelper _output;
 
-        private readonly string _sqlScriptFilepath = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
-            @"EfCoreInAction\wwwroot\",
-            UdfDefinitions.SqlScriptName);
+        private readonly string _sqlScriptFilepath = Path.Combine(TestData.GetCallingAssemblyTopLevelDir(), 
+            @"..\EfCoreInAction\wwwroot", UdfDefinitions.SqlScriptName);
 
         public Ch13_DapperQueries(ITestOutputHelper output)
         {

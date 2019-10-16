@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using test.EfHelpers;
 using test.Helpers;
 using Test.Chapter11Listings.EfCode;
+using Test.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -27,8 +29,8 @@ namespace test.UnitTests.DataLayer
 
         private string GetChapter11ScriptFilePath(string searchPattern)
         {
-            var directory = Path.Combine(TestFileHelpers.GetSolutionDirectory(),
-                @"Test\Chapter11Listings\Scripts");
+            var directory = Path.Combine(TestData.GetCallingAssemblyTopLevelDir(),
+                @"Chapter11Listings\Scripts");
             var files = Directory.GetFiles(directory, searchPattern);
             if (files.Length != 1)
                 throw new InvalidOperationException($"Could not find, or was ambiguous name - {searchPattern}");
@@ -89,7 +91,7 @@ namespace test.UnitTests.DataLayer
             using (var context = new Chapter11ContinuousInterimDb(optionsBuilder.Options))
             {
                 //ATTEMPT
-                var entity = context.CustomerAndAddresses.FromSql(
+                var entity = context.CustomerAndAddresses.FromSqlRaw(
                     "EXECUTE InterimCustomerAndAddressUpdate {0}, {1}",
                     "EF mid-migate name", "EF mid-migrate address").Single();
 
