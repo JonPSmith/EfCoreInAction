@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2017 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
+using System.Collections.Generic;
 using System.Linq;
 using test.Mocks;
 using Xunit;
@@ -48,8 +49,9 @@ namespace test.UnitTests.Tests
             mockCookieRequests.CookiesOut.Append("Test", "Content");
 
             //VERIFY
-            mockCookieRequests.ResponseCookies.Count.ShouldEqual(1);
-            mockCookieRequests.ResponseCookies.First().ShouldEqual("Test=Content; path=/");
+            mockCookieRequests.ResponseCookieValues.Count.ShouldEqual(1);
+            mockCookieRequests.ResponseCookieValues.First().ShouldEqual(
+                new KeyValuePair<string, string>("Test", "Content"));
         }
     }
 }

@@ -9,18 +9,18 @@ namespace test.Mocks
 {
     public class MockHttpCookieAccess
     {
-        private readonly Dictionary<string, string> _requestCookies = new Dictionary<string, string>();
+        private readonly FakeResponseCookies _fakeResponse = new FakeResponseCookies();
 
         public IRequestCookieCollection CookiesIn { get; private set; }
 
-        public Microsoft.Extensions.Primitives.StringValues ResponseCookies { get; }
-    
-
         public IResponseCookies CookiesOut { get; private set; }
+
+        public List<KeyValuePair<string, string>> ResponseCookieValues => _fakeResponse.Responses;
 
         public MockHttpCookieAccess(string cookieName = null, string cookieContent = null)
         {
-            throw new NotImplementedException("cannot find out how to mock cookies in NET Core 3");
+            CookiesIn = new FakeRequestCookieCollection(cookieName, cookieContent);
+            CookiesOut = _fakeResponse;
         }
 
     }

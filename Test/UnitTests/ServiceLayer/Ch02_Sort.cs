@@ -28,19 +28,23 @@ namespace test.UnitTests.ServiceLayer
             {
                 db.Database.EnsureCreated();
 
-                var books = EfTestData.CreateDummyBooks(setBookId:false);
-                books[5].Promotion = new PriceOffer
+                if (!db.Books.Any())
                 {
-                    NewPrice = 1.5m,
-                    PromotionalText = "Test to check order by works"
-                };
-                db.Books.AddRange(books);
-                db.SaveChanges();
+                    var books = EfTestData.CreateDummyBooks(setBookId:false);
+                    books[5].Promotion = new PriceOffer
+                    {
+                        NewPrice = 1.5m,
+                        PromotionalText = "Test to check order by works"
+                    };
+                    db.Books.AddRange(books);
+                    db.SaveChanges();
+                }
 
                 //ATTEMPT
                 var sorted = db.Books.MapBookToDto().OrderBooksBy(OrderByOptions.ByPriceHigestFirst).ToList();
 
                 //VERIFY
+                (sorted.Count == 10).ShouldBeTrue("This relies on the books only being added once.");
                 sorted[8].ActualPrice.ShouldEqual(1.5m);
             }
         }
