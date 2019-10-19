@@ -30,7 +30,7 @@ find all the branches I have created so far.
 
 ### Map of the branches
 
-The branches mainly inhert from each other (shown as `-->` in the diagram)
+The branches mainly inherit from each other (shown as `-->` in the diagram)
 but a few are on there own, like `master` and `Chapter01` (shown with spaces between them).
 The ones that are build for deployment to a web site are branches off the main stem (shown as higher offshoots).
 I did that because I built the normal code so you can run it locally without migrations.  
@@ -70,6 +70,16 @@ Here is the list:
 * Chapter05-NetCore21
 * Chapter13-Part1-NetCore21
 * Chapter13-Part2-NetCore21
+
+### NET Core 3 examples
+
+To support EF Core 3 I created new branches. They are there to help you if you want to work with EF Core 3.
+I also used the **Chapter13-Part3-NetCore3** branch to find all the changes between EF Core 2 and EF Core 3 (the unit tests are very helpful for that).
+Here is the list:
+
+* Chapter01-NetCore3
+* Chapter05-NetCore3
+* Chapter13-Part3-NetCore3
 
 ## Live example book selling site
 
